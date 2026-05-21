@@ -1,0 +1,20 @@
+id: OSINT_INVALID_BAD_ENUM
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+name: Invalid Bad Enum Fixture
+category: OSINT
+description: Fixture with an unsupported assessment claim enum.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: unsupported
+  basis: assessed
+  scope: entity_level
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

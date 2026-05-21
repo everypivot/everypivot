@@ -1,0 +1,22 @@
+id: BAD_INVALID_CATEGORY
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: deferred
+name: Invalid Category Fixture
+category: BAD
+description: Fixture proving category values are controlled by the schema.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

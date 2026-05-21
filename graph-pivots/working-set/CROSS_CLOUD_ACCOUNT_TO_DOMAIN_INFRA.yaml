@@ -1,0 +1,69 @@
+id: CROSS_CLOUD_ACCOUNT_TO_DOMAIN_INFRA
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'Shared reseller, MSP, or umbrella cloud accounts can host assets for unrelated tenants.'
+- 'Infrastructure expansion from parent-account data should be corroborated with billing, admin, or deployment evidence.'
+capability_requirements:
+  required:
+  - 'cloud_control_telemetry'
+  - 'cloud_asset_inventory'
+  optional:
+  - 'dns_public_lookup'
+  - 'passive_dns'
+  - 'cloud_audit_log_access'
+name: Cloud Account -> Domain or Infra
+category: CROSS
+description: Expand from a parent cloud account or project to the domains and infrastructure it operates through owned services and assets.
+source: cloud:account
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: owns
+  direction: out
+  form: cloud:bucket|cloud:service
+- via: referenced_by|hosts
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - account.firstseen <= asset.firstseen <= infra.seen
+    window_days: 1825
+  degree_caps:
+    cloud:account: 5000
+  negative_nodes:
+  - form: cloud:account
+    list: shared_platform_cloud_accounts
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- cloud_asset_inventory
+- pdns
+- osint_web

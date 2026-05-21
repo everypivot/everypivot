@@ -1,0 +1,75 @@
+id: ADTECH_IMPRESSION_ID_REUSE_CLUSTER
+version: 0.1.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: ownership_signal
+hazards:
+- 'Impression IDs can be propagated through legitimate verification, billing, or analytics partners without implying operator control.'
+- 'Malformed URL parsing can overcluster unrelated impressions if parameter boundaries are not normalized.'
+- 'Shared tracking vendors, redirects, and common verification pixels can create false reuse; corroborate with additional campaign evidence.'
+capability_requirements:
+  required:
+  - 'web_request_telemetry'
+  - 'adtech_identifier_normalization'
+  optional:
+  - 'browser_client_uid_normalization'
+  - 'campaign_context_enrichment'
+review:
+  last_reviewed: '2026-05-20'
+  review_cadence_days: 90
+  next_review: '2026-08-18'
+name: Impression ID Reuse -> Ad-Tech Domain Cluster
+category: ADTECH
+description: Cluster domains, analytics endpoints, and campaign surfaces that carry the same ad impression or auction identifier.
+source: adtech:impression:id
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: campaign_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: observed_in
+  direction: in
+  form: inet:url
+- via: hosted_by
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - impression.firstseen <= fqdn.seen
+    window_days: 30
+  degree_caps:
+    adtech:impression:id: 200
+    inet:fqdn: 1000
+  negative_nodes:
+  - form: inet:fqdn
+    list: known_measurement_vendors
+  - form: inet:fqdn
+    list: high_volume_ad_exchange_endpoints
+  provenance:
+    min_unique_sources: 1
+features:
+- exact_identifier_match
+- domain_role_diversity
+- path_count_capped
+- first_seen_delta
+- publisher_overlap
+- campaign_parameter_overlap
+- measurement_vendor_penalty
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- proxy_logs
+- url_corpus
+- adtech_logs
+- cti_reports

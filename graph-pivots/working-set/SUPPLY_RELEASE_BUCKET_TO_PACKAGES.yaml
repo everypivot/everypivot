@@ -1,0 +1,68 @@
+id: SUPPLY_RELEASE_BUCKET_TO_PACKAGES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'Shared release buckets and CDN edges can distribute artifacts for many unrelated publishers behind the same bucket reference.'
+- 'Bucket→package edges should be observed at distribution time; retroactive inference from registry metadata can be misleading after a publisher migrates or revokes a bucket.'
+capability_requirements:
+  required:
+  - 'cloud_bucket_resolution'
+  - 'package_metadata_collection'
+  optional:
+  - 'dns_public_lookup'
+  - 'package_registry_history'
+review:
+  last_reviewed: '2026-05-20'
+  review_cadence_days: 90
+  next_review: '2026-08-18'
+name: Release Bucket -> Packages
+category: SUPPLY
+description: Cluster packages or release artifacts distributed from the same object-storage release bucket or release endpoint.
+source: cloud:bucket
+target: it:prod:softver
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: distributes
+  direction: out
+  form: it:prod:softver
+constraints:
+  temporal:
+    order:
+    - bucket.firstseen <= package.created
+    window_days: 3650
+  degree_caps:
+    cloud:bucket: 10000
+  negative_nodes:
+  - form: cloud:bucket
+    list: public_cdn_buckets
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- package_registry
+- cloud_asset_inventory

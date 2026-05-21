@@ -1,0 +1,62 @@
+id: CTI_SAMPLE_RICHPE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Common toolchains, packers, or vendor build environments can legitimately share RichPE fingerprints.'
+- 'Packed, stripped, or corrupted samples can reduce coverage and bias the cluster toward better-preserved binaries.'
+capability_requirements:
+  required:
+  - 'pe_metadata_extraction'
+  - 'resource_section_hashing'
+  optional:
+  - 'packer_detection'
+  - 'sample_prevalence_enrichment'
+name: RichPE Fingerprint -> Sample Cluster
+category: CTI
+description: Cluster Windows samples sharing the same Rich header fingerprint or canonicalized RichPE hash.
+source: pe:rich:hash
+target: file:bytes
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: observed_in
+  direction: out
+  form: file:bytes
+constraints:
+  temporal:
+    order:
+    - richpe.firstseen <= sample.firstseen
+    window_days: 3650
+  degree_caps:
+    pe:rich:hash: 10000
+  negative_nodes:
+  - form: pe:rich:hash
+    list: common_compiler_richpe_hashes
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- sandbox
+- malware_corpus

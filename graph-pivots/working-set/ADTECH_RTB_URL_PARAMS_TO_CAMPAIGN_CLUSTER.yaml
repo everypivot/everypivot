@@ -1,0 +1,77 @@
+id: ADTECH_RTB_URL_PARAMS_TO_CAMPAIGN_CLUSTER
+version: 0.1.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: multi_hop_inference
+hazards:
+- 'Campaign, DSP, auction, and device parameters can be opaque vendor-local IDs that collide across platforms.'
+- 'Precise geolocation parameters may be estimated, rounded, or inherited from upstream bid streams rather than directly selected by the advertiser.'
+- 'Shared vendor namespaces, redirects, and tracking macros can create false parameter clusters; corroborate with advertiser and campaign evidence.'
+capability_requirements:
+  required:
+  - 'web_request_telemetry'
+  - 'query_parameter_normalization'
+  optional:
+  - 'browser_client_uid_normalization'
+  - 'campaign_context_enrichment'
+name: RTB URL Parameters -> Campaign Cluster
+category: ADTECH
+description: Cluster ad-tech requests into candidate campaigns using recurring RTB query parameters such as campaign IDs, DSP IDs, impression IDs, device IDs, location, OS, browser, and auction fields.
+source: inet:url
+target: risk:campaign
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: campaign_level
+  subject_role: behavioural_cluster
+  object_role: campaign
+hops:
+- via: has_query_param
+  direction: out
+  form: url:query:param
+- via: groups
+  direction: out
+  form: adtech:campaign:key
+- via: observed_as
+  direction: in
+  form: risk:campaign
+constraints:
+  temporal:
+    order:
+    - request.firstseen <= campaign.lastseen
+    window_days: 90
+  degree_caps:
+    url:query:param: 5000
+    adtech:campaign:key: 1000
+  negative_nodes:
+  - form: url:query:param
+    list: generic_cachebuster_params
+  - form: inet:fqdn
+    list: high_volume_ad_exchange_endpoints
+  provenance:
+    min_unique_sources: 1
+features:
+- campaign_id_match
+- dsp_id_match
+- impression_id_overlap
+- device_id_overlap
+- geo_parameter_consistency
+- os_browser_consistency
+- auction_id_overlap
+- publisher_overlap
+- param_entropy
+- generic_param_penalty
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- proxy_logs
+- browser_telemetry
+- adtech_logs
+- url_corpus

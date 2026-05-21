@@ -1,0 +1,74 @@
+id: CTI_THREAT_CVE_TOOL_IP
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'cti_report_extraction'
+  - 'vulnerability_intelligence'
+  - 'passive_dns'
+  optional:
+  - 'tool_family_normalization'
+  - 'ip_normalization'
+hazards:
+- Named threat, CVE, and tool reports can be broad, stale, or based on public exploit adoption by unrelated actors.
+- Corroborate IP links with observation time, tool telemetry, and independent reporting; the chain does not prove threat attribution.
+name: Threat → CVE → Tool → IP
+category: CTI
+description: Attribution/support chain from a named threat to IP infrastructure through exploited CVE and tool family.
+source: risk:threat
+target: inet:ipv4
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: refs
+  direction: out
+  form: it:sec:vuln
+- via: uses|delivers|exploits
+  direction: out
+  form: it:prod:soft
+- via: communicates|hosts|connects
+  direction: out
+  form: inet:ipv4
+constraints:
+  temporal:
+    order:
+    - threat.firstseen <= vuln.published
+    - vuln.published <= ip.seen
+    window_days: 540
+  degree_caps:
+    it:prod:soft: 300
+  negative_nodes:
+  - form: inet:ipv4
+    list: known_vpn_exits
+  - form: inet:ipv4
+    list: cdn_edges
+  provenance:
+    min_unique_sources: 2
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- cti_reports
+- nvd_cve
+- pdns
+- siem

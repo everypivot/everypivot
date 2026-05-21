@@ -1,0 +1,67 @@
+id: FIN_SUPPLIER_SPLIT_PAYMENTS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'payment_chain_context'
+  optional:
+  - 'beneficial_ownership_resolution'
+  - 'kyc_context'
+hazards:
+- Shared officers or addresses can reflect procurement agents, affiliates, or registration services rather than coordinated structuring.
+- Payment records are restricted financial data; corroborate order timing, account control, and sanctions or KYC context before flagging split payments.
+name: Supplier → Split Payments Pattern
+category: FIN
+description: Detect order splitting or structuring across suppliers linked by officers/addresses.
+source: org:org
+target: org:org
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: received_payment_from
+  direction: in
+  form: fin:transaction
+- via: shares_officer|shares_address
+  direction: out
+  form: org:org
+constraints:
+  temporal:
+    order:
+    - txn.ts <= now()
+    window_days: 3650
+  degree_caps:
+    org:org: 10000
+  negative_nodes:
+  - form: org:org
+    list: shared_procurement_agents
+  - form: org:org
+    list: registration_service_shared_entities
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- bank_txn
+- opencorp

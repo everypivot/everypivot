@@ -1,0 +1,72 @@
+id: CTI_FILE_HASH_TO_ENDPOINT_UIDS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'File-hash-to-endpoint pivots can reflect common benign software, shared installers, test files, or malware-sandbox artifacts.'
+- 'Prevalence and endpoint spread are context, not attribution; common files need suppression before clustering.'
+- 'Endpoint observations can be stale, deduplicated, or copied between telemetry products, so timing and source provenance must be retained.'
+capability_requirements:
+  required:
+  - 'endpoint_file_inventory'
+  - 'file_hash_normalization'
+  optional:
+  - 'software_prevalence_enrichment'
+  - 'sandbox_artifact_suppression'
+name: File Hash -> Endpoint UIDs
+category: CTI
+description: Pivot from a normalized file hash to endpoint identifiers where the file was observed.
+source: file:hash
+target: endpoint:uid
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: observed_on
+  direction: out
+  form: endpoint:uid
+constraints:
+  temporal:
+    order:
+    - file.firstseen <= endpoint.observed
+    window_days: 365
+  degree_caps:
+    file:hash: 1000000
+    endpoint:uid: 100000
+  negative_nodes:
+  - form: file:hash
+    list: common_benign_software_hashes
+  - form: file:hash
+    list: shared_installer_or_update_hashes
+  - form: endpoint:uid
+    list: malware_sandbox_or_lab_endpoints
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- endpoint_prevalence
+- software_reputation
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- edr
+- endpoint
+- malware_corpus

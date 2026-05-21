@@ -1,0 +1,16 @@
+id: OSINT_INVALID_V14_NO_ASSESSMENT
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: deferred
+name: Invalid Missing Assessment V1.4 Fixture
+category: OSINT
+description: Fixture omitting the required v1.4 assessment block.
+source: inet:fqdn
+target: inet:fqdn
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

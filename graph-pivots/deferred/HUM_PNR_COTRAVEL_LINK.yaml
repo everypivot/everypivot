@@ -1,0 +1,69 @@
+id: HUM_PNR_COTRAVEL_LINK
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+name: PNR → Co‑Travel Link
+category: HUMINT_SIGINT
+description: Identify co‑travelers via shared PNR/segments within a time window.
+hazards:
+- 'Shared itineraries do not by themselves establish association, intent, or operational collaboration.'
+- 'PNR data is regulated and often restricted to travel operators or law-enforcement-style access models.'
+- 'Use only under lawful authority and jurisdiction-specific privacy controls; corroborate co-travel to avoid false positives from group bookings.'
+capability_requirements:
+  required:
+  - 'pnr_access'
+  - 'itinerary_correlation'
+  optional:
+  - 'seat_or_booking_context'
+  - 'legal_review'
+source: travel:pnr
+target: person
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: includes_passenger
+  direction: out
+  form: person
+- via: same_segment_within_window
+  direction: in
+  form: person
+constraints:
+  temporal:
+    order:
+    - segment.dep_ts within window
+    window_days: 30
+  degree_caps:
+    travel:pnr: 100000
+  negative_nodes:
+  - form: travel:pnr
+    list: group_booking_records
+  - form: travel:pnr
+    list: package_tour_or_crew_itineraries
+  - form: travel:pnr
+    list: mass_delay_or_rebooking_events
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- pnr

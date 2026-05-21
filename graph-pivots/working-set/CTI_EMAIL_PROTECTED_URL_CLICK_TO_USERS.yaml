@@ -1,0 +1,72 @@
+id: CTI_EMAIL_PROTECTED_URL_CLICK_TO_USERS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: domain_expansion
+hazards:
+- 'Security scanners, link detonation systems, prefetchers, and mailbox protection services can generate click telemetry that does not represent user action.'
+- 'Shared mailboxes, aliases, forwarding, and delegated access can obscure which human actually clicked a URL.'
+capability_requirements:
+  required:
+  - 'protected_url_click_telemetry'
+  - 'identity_normalization'
+  optional:
+  - 'security_scanner_filtering'
+  - 'message_trace_join'
+name: Protected URL Click -> Users
+category: CTI
+description: Pivot from a protected email URL click event to the user identity and message context associated with the click.
+source: email:url_click
+target: identity:user|email:message
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: clicked_by
+  direction: out
+  form: identity:user
+- via: associated_message
+  direction: out
+  form: email:message
+constraints:
+  temporal:
+    order:
+    - message.received <= click.observed
+    window_days: 90
+  degree_caps:
+    email:url_click: 1000
+    identity:user: 100000
+  negative_nodes:
+  - form: identity:user
+    list: automated_security_mailboxes
+  - form: email:url_click
+    list: security_scanner_clicks
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- user_action_confidence
+- scanner_penalty
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_click_telemetry
+- identity
+- mail_telemetry

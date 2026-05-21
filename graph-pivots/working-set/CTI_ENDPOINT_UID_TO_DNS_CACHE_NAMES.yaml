@@ -1,0 +1,72 @@
+id: CTI_ENDPOINT_UID_TO_DNS_CACHE_NAMES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Endpoint DNS cache and recent-resolution data can include prefetches, retries, stale cache entries, captive portals, sinkholes, and benign shared services.'
+- 'Endpoint identifiers can reset, collide, be scrubbed, or represent different identity layers across telemetry sources.'
+- 'A DNS cache name observed on an endpoint is context for further investigation, not proof of actor control or intent.'
+capability_requirements:
+  required:
+  - 'endpoint_dns_cache_telemetry'
+  - 'endpoint_identity_normalization'
+  optional:
+  - 'dns_query_deduplication'
+  - 'sinkhole_or_captive_portal_suppression'
+name: Endpoint UID -> DNS Cache Names
+category: CTI
+description: Pivot from a normalized endpoint identifier to DNS names observed in endpoint DNS cache or recent-resolution telemetry.
+source: endpoint:uid
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: resolved_or_cached
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - endpoint.observed <= dns_cache.observed
+    window_days: 30
+  degree_caps:
+    endpoint:uid: 100000
+    inet:fqdn: 1000000
+  negative_nodes:
+  - form: inet:fqdn
+    list: captive_portal_or_probe_domains
+  - form: inet:fqdn
+    list: dns_sinkhole_or_blockpage_domains
+  - form: inet:fqdn
+    list: common_os_update_or_telemetry_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- cache_observation_type
+- dns_result_context
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- edr
+- endpoint
+- dns

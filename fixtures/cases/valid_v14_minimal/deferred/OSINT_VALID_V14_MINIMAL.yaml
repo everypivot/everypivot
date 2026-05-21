@@ -1,0 +1,23 @@
+id: OSINT_VALID_V14_MINIMAL
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: deferred
+deferred_reason: schema_migration_pending
+name: Valid Minimal V1.4 Pattern
+category: OSINT
+description: Minimal deferred fixture that satisfies the current assessment bridge contract.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

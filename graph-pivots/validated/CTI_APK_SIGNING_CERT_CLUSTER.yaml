@@ -1,0 +1,67 @@
+id: CTI_APK_SIGNING_CERT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: high
+robustness_class: exact_cryptographic
+hazards:
+- 'Shared OEM, test, or repackaging certificates can cluster APKs that do not belong to the same malware family.'
+- 'Certificate reuse shows signer overlap, not necessarily identical developer intent or campaign ownership.'
+capability_requirements:
+  required:
+  - 'apk_signature_extraction'
+  - 'sample_collection'
+  optional:
+  - 'sandbox_analysis'
+review:
+  last_reviewed: '2026-04-04'
+  review_cadence_days: 90
+  next_review: '2026-07-03'
+name: Android APK Signing Certificate → Apps/Samples
+category: CTI
+description: Cluster APKs signed with the same Android signing certificate (issuer+serial or SPKI).
+source: x509:cert
+target: file:bytes
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: signs
+  direction: out
+  form: file:bytes
+constraints:
+  temporal:
+    order:
+    - cert.not_before <= sample.firstseen
+    window_days: 3650
+  degree_caps:
+    x509:cert: 10000
+  negative_nodes:
+  - form: x509:cert
+    list: known_mass_dev_apk_certs
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- sandbox
+- osint_web

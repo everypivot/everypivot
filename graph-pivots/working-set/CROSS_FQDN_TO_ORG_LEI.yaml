@@ -1,0 +1,68 @@
+id: CROSS_FQDN_TO_ORG_LEI
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: domain_expansion
+hazards:
+- 'RDAP and corporate registry data can be stale, privacy-filtered, or registrar-noisy.'
+- 'Legal-entity resolution may identify an intermediary, hoster, or service provider rather than the operational controller.'
+- 'Common registrant strings and shared service-provider records require corroboration with current RDAP and LEI evidence before clustering.'
+capability_requirements:
+  required:
+  - 'rdap_enrichment'
+  - 'lei_resolution'
+  optional:
+  - 'registrar_reseller_context'
+  - 'privacy_service_suppression'
+name: FQDN -> Org -> LEI
+category: CROSS
+description: Resolve a domain to an identified legal entity record without requiring a sanctions overlay.
+source: inet:fqdn
+target: lei:record
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: registered_to
+  direction: out
+  form: org:org
+- via: identified_by
+  direction: out
+  form: lei:record
+constraints:
+  temporal:
+    order:
+    - fqdn.created <= org.seen <= lei.issued
+    window_days: 3650
+  degree_caps:
+    inet:fqdn: 10000
+  negative_nodes:
+  - form: org:org
+    list: privacy_redacted_registrants
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- rdap
+- lei

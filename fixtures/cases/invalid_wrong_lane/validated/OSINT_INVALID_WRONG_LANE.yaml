@@ -1,0 +1,20 @@
+id: OSINT_INVALID_WRONG_LANE
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+name: Invalid Wrong Lane Fixture
+category: OSINT
+description: Fixture intentionally mismatches its directory lane and validation state.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

@@ -1,0 +1,73 @@
+id: FIN_CRYPTO_TX_TO_SANCTIONED
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'crypto_transaction_enrichment'
+  - 'sanctions_list_access'
+  optional:
+  - 'address_cluster_context'
+  - 'transaction_timing_context'
+hazards:
+- Blockchain heuristics can over-attribute flows through mixers, exchanges, bridges, or shared custody accounts.
+- Sanctions lists and address clusters are temporal; corroborate transaction timing and ownership before drawing compliance conclusions.
+name: Crypto Address → On‑Chain Tx → Sanctioned Address/Entity
+category: FIN
+description: Trace on‑chain flows to sanctioned addresses/entities.
+source: crypto:address
+target: sanction:entry
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: transfers_to|transfers_from
+  direction: out
+  form: ledger:tx
+- via: to|from
+  direction: out
+  form: crypto:address
+- via: listed_as
+  direction: out
+  form: sanction:entry
+constraints:
+  temporal:
+    order:
+    - tx.ts <= sanction.listed
+    window_days: 3650
+  degree_caps:
+    ledger:tx: 100000
+  negative_nodes:
+  - form: crypto:address
+    list: exchange_or_custody_addresses
+  - form: crypto:address
+    list: high_volume_non_sanctioned_bridge_addresses
+  - form: ledger:tx
+    list: dust_or_airdrop_transactions
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- blockchain
+- sanctions

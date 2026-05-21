@@ -1,0 +1,66 @@
+id: CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'package_metadata_collection'
+  - 'repo_resolution'
+  optional:
+  - 'dns_public_lookup'
+  - 'passive_dns'
+hazards:
+- Package registries, mirrors, CDNs, and abandoned repositories can link unrelated projects to shared distribution infrastructure.
+- Corroborate repository ownership with signed releases, maintainer history, and current DNS or hosting control before clustering.
+name: Repo -> Package -> Domain or Infra
+category: CROSS
+description: Bridge repository identity through published packages or release endpoints to the domains or infrastructure serving them.
+source: code:repo
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: publishes
+  direction: out
+  form: it:prod:softver
+- via: distributed_from|referenced_by
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - repo.created <= package.created <= infra.seen
+    window_days: 3650
+  degree_caps:
+    code:repo: 10000
+  negative_nodes:
+  - form: code:repo
+    list: mass_fork_mirrors
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- package_registry
+- osint_web
+- pdns

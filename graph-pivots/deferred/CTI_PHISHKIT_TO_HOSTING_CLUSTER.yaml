@@ -1,0 +1,66 @@
+id: CTI_PHISHKIT_TO_HOSTING_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'web_content_collection'
+  - 'phishing_kit_hashing'
+  optional:
+  - 'passive_dns'
+  - 'hosting_provider_classification'
+hazards:
+- Popular phishkits, copied path structures, and hosting panels can be shared across unrelated actors.
+- Corroborate kit or path matches with deployment timing, config values, and infrastructure ownership; hosting reuse is not attribution.
+name: Phish Kit → Hosting Domain/IP Cluster
+category: CTI
+description: Cluster infrastructure hosting the same phishing kit hash or path structure.
+source: phish:kit
+target: inet:fqdn|inet:ipv4
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: hosted_on
+  direction: out
+  form: inet:fqdn|inet:ipv4
+- via: same_kit_hash|similar_path
+  direction: in
+  form: phish:kit
+constraints:
+  temporal:
+    order:
+    - kit.firstseen <= infra.seen
+    window_days: 180
+  degree_caps:
+    phish:kit: 10000
+  negative_nodes:
+  - form: inet:fqdn
+    list: shared_hosting_ranges
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- phishtank
+- abuse_ch
+- osint_web

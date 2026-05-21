@@ -1,0 +1,68 @@
+id: OSINT_SSH_HOSTKEY_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: high
+robustness_class: exact_cryptographic
+hazards:
+- 'Golden images and failed key rotation can legitimately duplicate SSH host keys across unrelated environments.'
+- 'Shared bastions or fronted services can hide the true endpoint population behind one observed key.'
+capability_requirements:
+  required:
+  - 'ssh_scanning'
+  - 'hostkey_normalization'
+  optional:
+  - 'asset_allowlists'
+review:
+  last_reviewed: '2026-04-04'
+  review_cadence_days: 90
+  next_review: '2026-07-03'
+name: SSH Host Key Fingerprint → Host Cluster
+category: OSINT
+description: Cluster servers that present the exact same SSH host key (e.g., ed25519/rsa SHA256).
+source: ssh:hostkey
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: presented_by
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - hostkey.seen <= host.seen
+    window_days: 730
+  degree_caps:
+    ssh:hostkey: 5000
+  negative_nodes:
+  - form: inet:ipv4
+    list: known_scanner_asns
+  - form: inet:ipv4
+    list: shared_hosting_ranges
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- shodan_censys

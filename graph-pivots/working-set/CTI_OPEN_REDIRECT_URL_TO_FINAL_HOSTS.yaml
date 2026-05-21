@@ -1,0 +1,76 @@
+id: CTI_OPEN_REDIRECT_URL_TO_FINAL_HOSTS
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Open redirect chains often traverse benign websites, SaaS platforms, tracking systems, and security products.'
+- 'Redirect behavior can depend on geography, user agent, cookies, time, and server-side state.'
+- 'A redirect target is delivery-chain evidence, not proof that the redirector owner participated.'
+- 'Common redirect services and shared tracking infrastructure can create false final-host clusters; corroborate with lure and timing evidence.'
+capability_requirements:
+  required:
+  - 'redirect_chain_extraction'
+  - 'url_normalization'
+  optional:
+  - 'open_redirect_parameter_detection'
+  - 'conditional_redirect_replay'
+  - 'common_redirector_suppression'
+name: Open Redirect URL -> Final Hosts
+category: CTI
+description: Pivot from a URL with open-redirect behavior to final destination hosts observed in redirect chains.
+source: inet:url
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: redirects_to
+  direction: out
+  form: inet:url
+- via: final_host
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - source.observed <= redirect.observed <= target.observed
+    window_days: 30
+  degree_caps:
+    inet:url: 10000
+    inet:fqdn: 100000
+  negative_nodes:
+  - form: inet:fqdn
+    list: common_saas_redirectors
+  - form: inet:fqdn
+    list: link_shorteners
+  - form: inet:fqdn
+    list: analytics_and_consent_platforms
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- redirect_chain_position
+- same_origin_flag
+- redirect_parameter_name
+- common_redirector_penalty
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- proxy_logs
+- url_corpus

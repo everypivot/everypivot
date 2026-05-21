@@ -1,0 +1,71 @@
+id: CTI_IDENTITY_UID_TO_AUTH_SESSIONS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: domain_expansion
+hazards:
+- 'Authentication-session pivots must stay time-bounded; stale or merged sessions can connect unrelated identity activity.'
+- 'A session associated with an identity can reflect shared accounts, delegated access, service principals, replay, or compromised credentials.'
+- 'Identity-to-session context is not proof of actor control and should retain source, time, and authentication-method evidence.'
+capability_requirements:
+  required:
+  - 'identity_uid_normalization'
+  - 'auth_session_telemetry'
+  optional:
+  - 'mfa_context_join'
+  - 'service_principal_classification'
+name: Identity UID -> Auth Sessions
+category: CTI
+description: Pivot from a normalized user identity identifier to authentication sessions observed for that identity.
+source: identity:user:uid
+target: auth:session
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: authenticated_in
+  direction: out
+  form: auth:session
+constraints:
+  temporal:
+    order:
+    - identity.observed <= auth_session.started
+    window_days: 30
+  degree_caps:
+    identity:user:uid: 100000
+    auth:session: 1000000
+  negative_nodes:
+  - form: identity:user:uid
+    list: shared_or_service_accounts
+  - form: auth:session
+    list: synthetic_or_healthcheck_sessions
+  - form: auth:session
+    list: stale_or_merged_session_records
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- auth_method
+- session_duration
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- identity
+- auth_logs

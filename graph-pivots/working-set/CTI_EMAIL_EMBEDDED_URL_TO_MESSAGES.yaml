@@ -1,0 +1,67 @@
+id: CTI_EMAIL_EMBEDDED_URL_TO_MESSAGES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Common embedded URLs such as unsubscribe endpoints, social links, image CDNs, and sender infrastructure can appear in unrelated messages.'
+- 'URL normalization choices can overjoin messages when query parameters, fragments, or protection wrappers are stripped too aggressively.'
+capability_requirements:
+  required:
+  - 'email_url_extraction'
+  - 'url_normalization'
+  optional:
+  - 'campaign_message_clustering'
+  - 'protected_url_decoding'
+name: Embedded URL -> Email Messages
+category: CTI
+description: Pivot from an embedded URL to email messages that contained it, retaining normalized and raw URL forms.
+source: inet:url
+target: email:message
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: embedded_in
+  direction: out
+  form: email:message
+constraints:
+  temporal:
+    order:
+    - url.firstseen <= message.received
+    window_days: 365
+  degree_caps:
+    inet:url: 100000
+  negative_nodes:
+  - form: inet:url
+    list: high_volume_email_service_urls
+  - form: inet:fqdn
+    list: common_marketing_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- url_normalization_level
+- tenant_spread
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- url_corpus

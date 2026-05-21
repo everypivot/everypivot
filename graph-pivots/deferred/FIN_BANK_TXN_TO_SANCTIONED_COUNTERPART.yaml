@@ -1,0 +1,70 @@
+id: FIN_BANK_TXN_TO_SANCTIONED_COUNTERPART
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'sanctions_list_access'
+  optional:
+  - 'kyc_context'
+  - 'payment_chain_context'
+hazards:
+- Sanctions screening and transaction data are sensitive, regulated, and time-dependent; list membership can change after the transaction date.
+- Shared accounts, correspondents, and intermediaries can create false positives; corroborate with KYC and payment-chain context.
+name: Bank Account → Transactions → Sanctioned Counterparty
+category: FIN
+description: Flag accounts transacting with sanctioned entities or intermediaries.
+source: fin:account
+target: sanction:entry
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: transfers_to|transfers_from
+  direction: out
+  form: fin:transaction
+- via: counterparty
+  direction: out
+  form: org:org|person
+- via: listed_as
+  direction: out
+  form: sanction:entry
+constraints:
+  temporal:
+    order:
+    - txn.ts <= sanction.listed
+    window_days: 3650
+  degree_caps:
+    fin:transaction: 100000
+  negative_nodes:
+  - form: fin:account
+    list: correspondent_or_intermediary_bank_accounts
+  - form: fin:transaction
+    list: batch_or_test_payment_records
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- bank_txn
+- sanctions

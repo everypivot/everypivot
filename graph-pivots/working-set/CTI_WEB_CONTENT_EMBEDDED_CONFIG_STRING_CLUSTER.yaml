@@ -1,0 +1,73 @@
+id: CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: multi_hop_inference
+hazards:
+- 'Embedded web strings can be comments, templates, copied code, analytics markers, or benign application configuration.'
+- 'High-traffic or compromised sites can host unrelated embedded content, so page ownership and content provenance must stay separate.'
+- 'A shared embedded config string is clustering evidence, not proof that the page owner controls malware infrastructure.'
+capability_requirements:
+  required:
+  - 'web_content_collection'
+  - 'config_string_extraction'
+  optional:
+  - 'html_comment_extraction'
+  - 'script_body_hashing'
+  - 'benign_template_suppression'
+name: Web Content Embedded Config String Cluster
+category: CTI
+description: Cluster URLs or hosted pages that expose the same distinctive embedded configuration string, comment token, or protocol marker.
+source: malware:config:string|web:content:token
+target: inet:url|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: embedded_in_web_content
+  direction: in
+  form: inet:url
+- via: has_host
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - token.extracted <= url.observed
+    window_days: 90
+  degree_caps:
+    web:content:token: 10000
+    inet:url: 100000
+  negative_nodes:
+  - form: web:content:token
+    list: common_framework_or_analytics_tokens
+  - form: inet:fqdn
+    list: common_hosting_or_cdn_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- token_length
+- page_context
+- template_penalty
+- hosting_context
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- internet_scan_archives
+- url_corpus

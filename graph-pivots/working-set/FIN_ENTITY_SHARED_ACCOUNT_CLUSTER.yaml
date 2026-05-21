@@ -1,0 +1,69 @@
+id: FIN_ENTITY_SHARED_ACCOUNT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'Processor settlement accounts, treasury sweeps, or shared finance operations can reflect legitimate pooling.'
+- 'KYC or beneficiary data can be stale or incomplete, so the visible account holder may not be the controlling party.'
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'account_identifier_normalization'
+  optional:
+  - 'identity_records'
+  - 'kyc_context'
+  - 'settlement_account_suppression'
+review:
+  last_reviewed: '2026-05-20'
+  review_cadence_days: 90
+  next_review: '2026-08-18'
+name: Financial Account -> Shared Entity Cluster
+category: FIN
+description: Cluster people or organisations sharing the same bank, payout, or beneficiary account after filtering processor settlement noise.
+source: fin:account
+target: org:org|person
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: held_by|used_by
+  direction: out
+  form: org:org|person
+constraints:
+  temporal:
+    order:
+    - account.firstseen <= entity.seen
+    window_days: 3650
+  degree_caps:
+    fin:account: 200
+  negative_nodes:
+  - form: fin:account
+    list: known_settlement_accounts
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- bank_txn
+- kyc

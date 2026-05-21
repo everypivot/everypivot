@@ -1,0 +1,74 @@
+id: CTI_ENDPOINT_UID_TO_EGRESS_IPS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Endpoint egress IPs are weak ownership evidence because NAT, VPN, proxy, corporate or shared egress, DHCP churn, and cloud-hosted workloads can overjoin unrelated endpoints without corroboration.'
+- 'Endpoint identifiers can reset, collide, be scrubbed, or represent different identity layers across telemetry sources.'
+- 'An endpoint-to-egress-IP observation is network context, not actor attribution or proof of endpoint ownership.'
+capability_requirements:
+  required:
+  - 'endpoint_network_telemetry'
+  - 'endpoint_identity_normalization'
+  optional:
+  - 'proxy_chain_parsing'
+  - 'vpn_or_proxy_enrichment'
+  - 'egress_ip_suppression'
+name: Endpoint UID -> Egress IPs
+category: CTI
+description: Pivot from a normalized endpoint identifier to public IP addresses observed as endpoint egress or source IP context.
+source: endpoint:uid
+target: inet:ipv4
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: sourced_from
+  direction: out
+  form: inet:ipv4
+constraints:
+  temporal:
+    order:
+    - endpoint.observed <= network.observed
+    window_days: 30
+  degree_caps:
+    endpoint:uid: 100000
+    inet:ipv4: 100000
+  negative_nodes:
+  - form: inet:ipv4
+    list: private_or_reserved_ranges
+  - form: inet:ipv4
+    list: high_volume_corporate_egress_ips
+  - form: inet:ipv4
+    list: known_vpn_proxy_or_tor_egress
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- source_ip_role
+- egress_context
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- edr
+- endpoint
+- proxy_logs
+- netflow

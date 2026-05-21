@@ -1,0 +1,17 @@
+id: OSINT_VALID_V11_NO_ASSESSMENT
+version: 1.0.0
+pattern_schema_version: 1.1
+validation_state: deferred
+deferred_reason: schema_migration_pending
+name: Valid V1.1 No Assessment Fixture
+category: OSINT
+description: Fixture proving v1.1 compatibility without the v1.2 assessment block.
+source: inet:fqdn
+target: inet:fqdn
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

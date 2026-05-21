@@ -1,0 +1,67 @@
+id: CTI_SAMPLE_CODESIGN_CERT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: high
+robustness_class: exact_cryptographic
+hazards:
+- 'Shared signing infrastructure can reflect outsourced build or release services rather than common operator ownership.'
+- 'Signer reuse alone should not be treated as final campaign attribution without supporting code, infra, or behavioural overlap.'
+capability_requirements:
+  required:
+  - 'codesign_certificate_parsing'
+  - 'sample_collection'
+  optional:
+  - 'publisher_allowlists'
+review:
+  last_reviewed: '2026-04-04'
+  review_cadence_days: 90
+  next_review: '2026-07-03'
+name: Code-signing Certificate → Signed Samples
+category: CTI
+description: Cluster samples signed with the same code-signing certificate (issuer+serial or SPKI).
+source: x509:cert
+target: file:bytes
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: signs
+  direction: out
+  form: file:bytes
+constraints:
+  temporal:
+    order:
+    - cert.not_before <= sample.firstseen
+    window_days: 3650
+  degree_caps:
+    x509:cert: 10000
+  negative_nodes:
+  - form: x509:cert
+    list: known_mass_developer_certs
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- sandbox
+- osint_web

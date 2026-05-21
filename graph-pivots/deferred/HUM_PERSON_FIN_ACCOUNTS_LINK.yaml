@@ -1,0 +1,71 @@
+id: HUM_PERSON_FIN_ACCOUNTS_LINK
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+name: Person → Financial Accounts Link
+category: HUMINT_SIGINT
+description: Link persons by shared devices/IPs used to access multiple accounts within short windows.
+hazards:
+- 'CGNAT, shared Wi-Fi, and corporate NAT create systemic false matches when IP reuse is interpreted as person-level linkage.'
+- 'Financial-access telemetry is highly sensitive and may be legally restricted or require explicit governance approval.'
+capability_requirements:
+  required:
+  - 'regulated_account_access_logs'
+  - 'device_or_network_correlation'
+  optional:
+  - 'kyc_context'
+  - 'legal_review'
+source: person
+target: person
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: owns_account
+  direction: out
+  form: fin:account
+- via: accessed_from_ip
+  direction: out
+  form: inet:ipv4
+- via: accessed_from_ip
+  direction: in
+  form: fin:account
+- via: owned_by
+  direction: in
+  form: person
+constraints:
+  temporal:
+    order:
+    - access.ts within window
+    window_days: 30
+  degree_caps:
+    inet:ipv4: 10000
+  negative_nodes:
+  - form: inet:ipv4
+    list: public_proxies_vpns
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- bank_txn
+- siem

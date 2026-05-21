@@ -1,0 +1,74 @@
+id: CTI_TLS_CERT_SUBJECT_PROFILE_TO_INFRA
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'TLS subject profiles are weaker than certificate fingerprints because subject fields can be copied, templated, self-signed, or auto-generated.'
+- 'Shared hosting, reverse proxies, captive portals, and security products can expose certificates unrelated to the investigated service.'
+- 'Subject-profile matches require negative controls for commodity certificate templates and default organizational strings.'
+capability_requirements:
+  required:
+  - 'tls_certificate_collection'
+  - 'certificate_subject_normalization'
+  optional:
+  - 'certificate_fingerprint_extraction'
+  - 'spki_hashing'
+  - 'common_subject_template_suppression'
+name: TLS Certificate Subject Profile -> Infrastructure
+category: CTI
+description: Pivot from a normalized TLS certificate subject profile to infrastructure observed presenting certificates with that profile.
+source: x509:subject
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: presented_by
+  direction: in
+  form: network:service
+- via: hosted_at
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - certificate.valid_from <= service.observed
+    window_days: 365
+  degree_caps:
+    x509:subject: 50000
+    inet:ipv4: 100000
+  negative_nodes:
+  - form: x509:subject
+    list: common_self_signed_or_default_subjects
+  - form: inet:fqdn
+    list: shared_tls_termination_hosts
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- subject_field_specificity
+- issuer_context
+- validity_window
+- common_subject_penalty
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- certificate_transparency
+- internet_scan_archives
+- osint_web

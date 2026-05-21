@@ -1,0 +1,65 @@
+id: FIN_REGISTERED_ADDRESS_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'address_normalization'
+  optional:
+  - 'identity_records'
+  - 'company_registry_context'
+hazards:
+- Registered agents, mail drops, coworking spaces, and residential blocks can create common address clusters at scale.
+- Address data can be privacy-sensitive and stale; corroborate with officer, account, and temporal registry context before inferring control.
+name: Registered Address → Company Cluster
+category: FIN
+description: Identify mass‑registration addresses linked to many entities (possible formation agents).
+source: geo:address
+target: org:org
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: registered_address_of
+  direction: out
+  form: org:org
+constraints:
+  temporal:
+    order:
+    - address.firstseen <= org.created
+    window_days: 3650
+  degree_caps:
+    geo:address: 10000
+  negative_nodes:
+  - form: geo:address
+    list: registered_agent_addresses
+  - form: geo:address
+    list: virtual_office_or_maildrop_addresses
+  - form: geo:address
+    list: large_residential_or_coworking_addresses
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- opencorp

@@ -1,0 +1,65 @@
+id: CTI_HTTP_TITLE_TEMPLATE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'Generic placeholder titles, CMS defaults, and reused web themes create obvious false positives unless paired with stronger infra evidence.'
+- 'HTTP titles are easy to change, localization-sensitive, and often absent or inconsistent across scanners.'
+capability_requirements:
+  required:
+  - 'http_title_collection'
+  optional:
+  - 'content_fingerprinting'
+  - 'passive_dns'
+name: HTTP Title Template -> FQDN Cluster
+category: CTI
+description: Cluster websites and hosted domains that expose the same distinctive HTTP title or placeholder template marker.
+source: web:http:title
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: titled_page
+  direction: out
+  form: web:site
+- via: hosts
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - title.seen <= fqdn.seen
+    window_days: 365
+  degree_caps:
+    web:http:title: 5000
+  negative_nodes:
+  - form: web:http:title
+    list: popular_cms_default_titles
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- shodan_censys
+- pdns

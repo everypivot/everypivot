@@ -1,0 +1,72 @@
+id: CTI_EMAIL_ATTACHMENT_HASH_TO_MESSAGES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Mail attachment pivots can be inflated by forwarding, detonation, bulk mail, shared mailboxes, and rewritten attachment metadata.'
+- 'Common documents, logos, signatures, invoices, and benign software attachments can connect unrelated messages.'
+- 'Attachment reuse is message evidence, not actor attribution; corroborate with sender, recipient, timing, and file context.'
+capability_requirements:
+  required:
+  - 'mail_attachment_telemetry'
+  - 'file_hash_normalization'
+  optional:
+  - 'message_trace_join'
+  - 'detonation_artifact_suppression'
+name: Email Attachment Hash -> Messages
+category: CTI
+description: Pivot from a normalized attachment file hash to email messages where that attachment was observed.
+source: file:hash
+target: email:message
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: attached_to
+  direction: out
+  form: email:message
+constraints:
+  temporal:
+    order:
+    - file.firstseen <= message.received
+    window_days: 365
+  degree_caps:
+    file:hash: 1000000
+    email:message: 1000000
+  negative_nodes:
+  - form: file:hash
+    list: common_benign_attachment_hashes
+  - form: email:message
+    list: bulk_or_newsletter_messages
+  - form: email:message
+    list: detonation_generated_messages
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- attachment_count
+- sender_recipient_context
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- malware_corpus
+- sandbox

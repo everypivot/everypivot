@@ -1,0 +1,21 @@
+id: OSINT_INVALID_DEFERRED_REASON
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: vague_backlog_bucket
+name: Invalid Deferred Reason Fixture
+category: OSINT
+description: Fixture with an unsupported deferred_reason enum.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

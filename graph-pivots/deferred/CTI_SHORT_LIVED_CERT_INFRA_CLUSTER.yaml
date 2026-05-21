@@ -1,0 +1,68 @@
+id: CTI_SHORT_LIVED_CERT_INFRA_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Short-lived certificates are increasingly normal in automated PKI ecosystems, so lifespan alone is too weak to imply malicious infrastructure.'
+- 'Test, staging, and ephemeral cloud deployments can overproduce the same signal while having no adversary relevance.'
+- 'Common ACME defaults and shared cloud automation can create false clusters; corroborate with SAN, hosting, and CTI context.'
+capability_requirements:
+  required:
+  - 'tls_scanning'
+  - 'certificate_normalization'
+  optional:
+  - 'ct_history'
+name: Short-Lived TLS Certificate Profile -> Infra Cluster
+category: CTI
+description: Expand infrastructure presenting certificates that match a short-lived validity profile.
+source: x509:cert:lifetime_profile
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: matches_profile
+  direction: out
+  form: x509:cert
+- via: presented_at
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - profile.seen <= cert.not_before <= infra.seen
+    window_days: 120
+  degree_caps:
+    x509:cert: 5000
+  negative_nodes:
+  - form: x509:cert
+    list: common_acme_short_lived_certificates
+  - form: inet:ipv4
+    list: cdn_edges
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- tls
+- ct

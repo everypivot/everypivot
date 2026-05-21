@@ -1,0 +1,70 @@
+id: CTI_EMAIL_PROTECTED_URL_TO_ORIGINAL_URL
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: high
+robustness_class: domain_expansion
+hazards:
+- 'Protected URL decoders can fail or produce partial output when providers change encodings, nest wrappers, or omit destination parameters.'
+- 'Decoded destinations can still be benign intermediary links that redirect again at click time.'
+- 'Common redirectors and shared security wrappers can create false joins; corroborate decoded destinations with message context.'
+capability_requirements:
+  required:
+  - 'protected_url_decoding'
+  - 'url_normalization'
+  optional:
+  - 'redirect_resolution'
+  - 'provider_adapter_metadata'
+review:
+  last_reviewed: '2026-05-14'
+  review_cadence_days: 90
+  next_review: '2026-08-12'
+name: Email Protected URL -> Original URL
+category: CTI
+description: Decode a protected or rewritten email URL into the original embedded destination URL while preserving provider and adapter provenance.
+source: email:protected_url
+target: inet:url
+assessment:
+  claim: indicates
+  basis: demonstrated
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: decodes_to
+  direction: out
+  form: inet:url
+constraints:
+  temporal:
+    order:
+    - protected_url.observed <= original_url.decoded
+    window_days: 1
+  degree_caps:
+    email:protected_url: 100
+  negative_nodes:
+  - form: email:protected_url
+    list: malformed_or_unsupported_protected_urls
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- decoder_confidence
+- nested_wrapper_depth
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- url_corpus

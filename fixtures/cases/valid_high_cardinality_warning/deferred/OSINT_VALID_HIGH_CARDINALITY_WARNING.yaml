@@ -1,0 +1,45 @@
+id: OSINT_VALID_HIGH_CARDINALITY_WARNING
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: deferred
+deferred_reason: high_cardinality
+precision_tier: exploratory
+robustness_class: enumeration
+hazards:
+- 'Analytics and advertising identifiers can appear on many unrelated domains through shared agencies, tag managers, or vendor defaults.'
+- 'This fixture is a warning-oriented selector: reuse should identify fan-out and suppression candidates before it is used for clustering.'
+capability_requirements:
+  required:
+  - 'web_fingerprinting'
+  - 'tracking_id_extraction'
+  optional:
+  - 'tag_manager_suppression'
+name: High-Cardinality Warning Fixture
+category: OSINT
+description: Valid deferred fixture for a high-cardinality selector that must be presented as warning-oriented metadata.
+source: web:tracking:id
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: present_on
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - trackingid.seen <= fqdn.seen
+    window_days: 365
+  degree_caps:
+    web:tracking:id: 10000
+  negative_nodes:
+  - form: web:tracking:id
+    list: common_analytics_or_ad_network_ids
+  - form: web:tracking:id
+    list: shared_tag_manager_container_ids
+  provenance:
+    min_unique_sources: 1

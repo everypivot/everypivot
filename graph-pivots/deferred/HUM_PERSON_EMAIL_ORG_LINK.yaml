@@ -1,0 +1,72 @@
+id: HUM_PERSON_EMAIL_ORG_LINK
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+name: Person Email → Organization Link
+category: HUMINT_SIGINT
+description: Associate a person to an organization via corporate email domains observed in communications.
+hazards:
+- 'Corporate email usage can reflect contractors, temporary roles, or historical affiliations rather than current membership.'
+- 'Forwarders, aliases, and consumer mailboxes using branded domains can misstate organisational control.'
+- 'Lawful authority, jurisdiction, privacy constraints, and corroboration are required because shared aliases and stale emails create false positives.'
+capability_requirements:
+  required:
+  - 'communication_metadata'
+  - 'domain_ownership_resolution'
+  optional:
+  - 'employment_context'
+source: person
+target: org:org
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: uses_email
+  direction: out
+  form: email:addr
+- via: domain_of
+  direction: out
+  form: inet:fqdn
+- via: owned_by
+  direction: out
+  form: org:org
+constraints:
+  temporal:
+    order:
+    - email.firstseen <= org.created
+    window_days: 1095
+  degree_caps:
+    email:addr: 1000
+  negative_nodes:
+  - form: email:addr
+    list: role_or_shared_mailboxes
+  - form: email:addr
+    list: contractor_or_alumni_aliases
+  - form: email:addr
+    list: consumer_forwarding_aliases
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- rdap

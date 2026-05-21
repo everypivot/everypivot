@@ -1,0 +1,132 @@
+name: EveryPivot Validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Validate corpus
+        run: ruby tools/validate_pivots.rb
+
+      - name: Validate corpus with strict metadata
+        run: ruby tools/validate_pivots.rb --strict-metadata
+
+      - name: Run fixture suite
+        run: ruby tools/check_fixture_suite.rb
+
+      # build_registry_index.rb derives release-manifest, patterns.tar.gz, and
+      # fixtures.tar.gz alongside the --output path. The .preview. infix is
+      # carried through from the registry-index.preview.json filename.
+      - name: Build preview registry bundle
+        run: |
+          ruby tools/build_registry_index.rb \
+            --repo-root . \
+            --release ci-preview \
+            --published-at "$(date -u +%F)" \
+            --output "${RUNNER_TEMP}/registry-index.preview.json" \
+            --site-data-root "${RUNNER_TEMP}/site-data"
+
+      - name: Verify preview artifacts exist
+        run: |
+          missing=0
+          for f in \
+            "${RUNNER_TEMP}/registry-index.preview.json" \
+            "${RUNNER_TEMP}/release-manifest.preview.json" \
+            "${RUNNER_TEMP}/patterns.preview.tar.gz" \
+            "${RUNNER_TEMP}/fixtures.preview.tar.gz"; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing preview artifact: $f"
+              missing=1
+            else
+              echo "ok: $f"
+            fi
+          done
+          if [ ! -d "${RUNNER_TEMP}/site-data" ]; then
+            echo "::error::Missing site-data directory: ${RUNNER_TEMP}/site-data"
+            missing=1
+          fi
+          exit "$missing"
+
+      - name: Upload preview artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: everypivot-preview-bundle
+          path: |
+            ${{ runner.temp }}/registry-index.preview.json
+            ${{ runner.temp }}/release-manifest.preview.json
+            ${{ runner.temp }}/patterns.preview.tar.gz
+            ${{ runner.temp }}/fixtures.preview.tar.gz
+            ${{ runner.temp }}/site-data
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      # build_registry_index.rb writes registry-index.json plus three derived
+      # siblings (release-manifest.json, patterns.tar.gz, fixtures.tar.gz)
+      # into the same directory as --output. All four are required for the
+      # release upload below.
+      - name: Build release artifacts
+        run: |
+          mkdir -p "${RUNNER_TEMP}/release"
+          ruby tools/build_registry_index.rb \
+            --repo-root . \
+            --release "${GITHUB_REF_NAME}" \
+            --published-at "$(date -u +%F)" \
+            --output "${RUNNER_TEMP}/release/registry-index.json"
+
+      - name: Verify release artifacts exist
+        run: |
+          missing=0
+          for f in \
+            "${RUNNER_TEMP}/release/registry-index.json" \
+            "${RUNNER_TEMP}/release/release-manifest.json" \
+            "${RUNNER_TEMP}/release/patterns.tar.gz" \
+            "${RUNNER_TEMP}/release/fixtures.tar.gz"; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing release artifact: $f"
+              missing=1
+            else
+              echo "ok: $f"
+            fi
+          done
+          exit "$missing"
+
+      - name: Publish GitHub release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ runner.temp }}/release/registry-index.json
+            ${{ runner.temp }}/release/release-manifest.json
+            ${{ runner.temp }}/release/patterns.tar.gz
+            ${{ runner.temp }}/release/fixtures.tar.gz

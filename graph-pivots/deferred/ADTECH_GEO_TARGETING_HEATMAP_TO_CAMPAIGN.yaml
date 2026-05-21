@@ -1,0 +1,75 @@
+id: ADTECH_GEO_TARGETING_HEATMAP_TO_CAMPAIGN
+version: 0.1.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'web_request_telemetry'
+  - 'geo_targeting_observation_normalization'
+  optional:
+  - 'campaign_context_enrichment'
+  - 'publisher_context'
+robustness_class: multi_hop_inference
+hazards:
+- 'Ad traffic volume by country can reflect publisher audience composition rather than deliberate targeting.'
+- 'Location fields in bid streams may be estimated, rounded, stale, or supplied by an upstream partner.'
+- 'Shared vendor reporting, tracking pixels, and geo-CDN routing can create false targeting patterns; corroborate with campaign configuration.'
+name: Geo-Targeting Heatmap -> Campaign
+category: ADTECH
+description: Link recurring geographic concentration in ad-tech observations to candidate campaign targeting hypotheses when supported by campaign, publisher, or DSP identifiers.
+source: geo:place
+target: risk:campaign
+assessment:
+  claim: targets
+  basis: assessed
+  scope: campaign_level
+  subject_role: campaign
+  object_role: target
+hops:
+- via: observed_in
+  direction: in
+  form: http:request
+- via: carries
+  direction: out
+  form: adtech:campaign:key
+- via: groups
+  direction: out
+  form: risk:campaign
+constraints:
+  temporal:
+    order:
+    - geo_observation.firstseen <= campaign.lastseen
+    window_days: 180
+  degree_caps:
+    geo:place: 5000
+    adtech:campaign:key: 2000
+  negative_nodes:
+  - form: geo:place
+    list: broad_publisher_audience_baselines
+  - form: inet:fqdn
+    list: high_volume_ad_exchange_endpoints
+  provenance:
+    min_unique_sources: 2
+features:
+- geo_concentration_ratio
+- campaign_id_overlap
+- dsp_id_overlap
+- publisher_specificity
+- baseline_country_traffic_delta
+- time_window_concentration
+- broad_audience_penalty
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- adtech_logs
+- proxy_logs
+- browser_telemetry
+- cti_reports

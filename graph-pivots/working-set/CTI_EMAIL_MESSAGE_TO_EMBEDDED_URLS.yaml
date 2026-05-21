@@ -1,0 +1,68 @@
+id: CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: domain_expansion
+hazards:
+- 'Marketing, notification, and newsletter emails can contain many benign tracking, unsubscribe, image, and CDN URLs.'
+- 'Security gateways may rewrite or enrich URLs, so extraction must distinguish original message content from protected or detonation-added links.'
+- 'Common tracking and CDN links should be suppressed or corroborated before treating URL overlap as meaningful.'
+capability_requirements:
+  required:
+  - 'email_url_extraction'
+  - 'url_normalization'
+  optional:
+  - 'message_body_parsing'
+  - 'protected_url_decoding'
+name: Email Message -> Embedded URLs
+category: CTI
+description: Pivot from a normalized email message identifier to URLs embedded in its body, headers, attachments, or rendered content.
+source: email:message
+target: inet:url
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: contains_url
+  direction: out
+  form: inet:url
+constraints:
+  temporal:
+    order:
+    - message.received <= url.extracted
+    window_days: 7
+  degree_caps:
+    email:message: 5000
+  negative_nodes:
+  - form: inet:url
+    list: common_email_service_links
+  - form: inet:fqdn
+    list: common_cdn_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- body_context_weight
+- common_domain_penalty
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- url_corpus

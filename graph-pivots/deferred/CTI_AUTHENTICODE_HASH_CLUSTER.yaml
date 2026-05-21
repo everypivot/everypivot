@@ -1,0 +1,76 @@
+id: CTI_AUTHENTICODE_HASH_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Authenticode, signer, issuer, and certificate-derived hashes can mix certificate identity, signature metadata, timestamping, and file lineage if adapters normalize them inconsistently.'
+- 'Common or shared enterprise signing services, timestamp authorities, test certificates, and mass-signing infrastructure can create high-degree clusters that require corroborating file lineage.'
+- 'Promotion needs fixtures that distinguish signature hash, signer certificate, issuer, serial, and file hash semantics before this can graduate.'
+capability_requirements:
+  required:
+  - 'authenticode_metadata_extraction'
+  - 'file_hash_normalization'
+  optional:
+  - 'signer_certificate_chain_resolution'
+  - 'timestamp_authority_classification'
+name: Authenticode Hash Cluster
+category: CTI
+description: Cluster signed files by normalized Authenticode or signature-derived hash material while preserving certificate and file-hash context.
+source: code:authenticode:hash
+target: file:hash|x509:cert
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: signs_or_describes
+  direction: out
+  form: file:hash
+- via: derived_from_certificate
+  direction: out
+  form: x509:cert
+constraints:
+  temporal:
+    order:
+    - signature.firstseen <= file.firstseen
+    window_days: 3650
+  degree_caps:
+    code:authenticode:hash: 100000
+    x509:cert: 100000
+  negative_nodes:
+  - form: code:authenticode:hash
+    list: timestamp_authority_or_mass_signing_hashes
+  - form: x509:cert
+    list: enterprise_mass_signing_services
+  - form: x509:cert
+    list: test_or_default_signing_certificates
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- signature_role
+- certificate_context
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- malware_corpus
+- sandbox
+- code_signing_metadata

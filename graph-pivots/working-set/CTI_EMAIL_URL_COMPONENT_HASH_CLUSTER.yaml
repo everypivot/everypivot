@@ -1,0 +1,70 @@
+id: CTI_EMAIL_URL_COMPONENT_HASH_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'URL component hashes can overcluster benign services when generic paths, empty queries, tracking parameters, or CDN paths dominate.'
+- 'Canonicalization differences across products can make equivalent URLs fail to match or unrelated URLs collide after aggressive normalization.'
+capability_requirements:
+  required:
+  - 'url_canonicalization'
+  - 'email_url_extraction'
+  optional:
+  - 'redirect_resolution'
+  - 'campaign_message_clustering'
+name: Email URL Component Hash -> URL Cluster
+category: CTI
+description: Cluster embedded or final email URLs by normalized component hashes such as canonical URL, host, path, query, or final URL hash.
+source: url:component_hash
+target: inet:url|email:message
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: component_of
+  direction: out
+  form: inet:url
+- via: embedded_in
+  direction: out
+  form: email:message
+constraints:
+  temporal:
+    order:
+    - component_hash.firstseen <= url.firstseen <= message.received
+    window_days: 365
+  degree_caps:
+    url:component_hash: 100000
+  negative_nodes:
+  - form: url:component_hash
+    list: generic_url_component_hashes
+  - form: inet:fqdn
+    list: common_marketing_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- component_specificity
+- normalization_level
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- url_corpus

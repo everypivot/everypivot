@@ -1,0 +1,65 @@
+id: HUM_BLUETOOTH_PROXIMITY
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+name: Device → Bluetooth Proximity → Device
+category: HUMINT_SIGINT
+description: Proximity graph from Bluetooth beacon observations to infer meetings.
+hazards:
+- 'Dense public venues, transit, and office environments create near-certain false positives for co-presence.'
+- 'Bluetooth collection can carry significant privacy and consent implications depending on jurisdiction and collection method.'
+capability_requirements:
+  required:
+  - 'bluetooth_observation_collection'
+  - 'spatiotemporal_correlation'
+  optional:
+  - 'venue_context'
+  - 'legal_review'
+source: device:device
+target: device:device
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: bt_seen_within
+  direction: out
+  form: device:device
+constraints:
+  temporal:
+    order:
+    - bt.ts within window
+    window_days: 7
+  degree_caps:
+    device:device: 100000
+  negative_nodes:
+  - form: device:device
+    list: transit_hub_observations
+  - form: device:device
+    list: conference_or_public_venue_devices
+  - form: device:device
+    list: beacon_or_kiosk_devices
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- siem

@@ -1,0 +1,68 @@
+id: SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: medium
+robustness_class: domain_expansion
+hazards:
+- 'Package-to-repository attribution can break across forks, mirrors, or vendored source releases.'
+- 'Distribution domains may be CDN or hosting intermediaries rather than developer-controlled infrastructure.'
+- 'Common registry CDNs and shared release infrastructure require corroboration with package ownership and version context.'
+capability_requirements:
+  required:
+  - 'package_metadata_collection'
+  - 'repo_resolution'
+  optional:
+  - 'dns_public_lookup'
+  - 'passive_dns'
+  - 'package_registry_history'
+name: Package -> Repo -> Domain or Infra
+category: SUPPLY
+description: Bridge software packages to their source repositories and the domains or infrastructure that distribute or operate them.
+source: it:prod:softver
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: published_from
+  direction: out
+  form: code:repo
+- via: operated_via|distributed_from
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - package.created <= repo.created <= infra.seen
+    window_days: 3650
+  degree_caps:
+    it:prod:softver: 5000
+  negative_nodes:
+  - form: code:repo
+    list: mass_mirror_repositories
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- package_registry
+- osint_web
+- pdns

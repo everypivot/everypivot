@@ -1,0 +1,74 @@
+id: CTI_DOMAIN_REGISTRATION_PROFILE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Registration profiles are composite, often privacy-protected, and can reflect registrar defaults or reseller workflows rather than operator behavior.'
+- 'Shared registrars, nameservers, privacy services, and hosting providers can create broad false-positive clusters.'
+- 'This pattern must not duplicate atomic RDAP, nameserver, DNS, certificate, or ASN pivots that already exist.'
+capability_requirements:
+  required:
+  - 'rdap_or_whois_normalization'
+  - 'domain_registration_feature_extraction'
+  optional:
+  - 'privacy_service_suppression'
+  - 'registrar_reseller_context'
+  - 'nameserver_enrichment'
+name: Domain Registration Profile Cluster
+category: CTI
+description: Cluster domains that share a narrow, normalized registration profile across registrar, registrant, nameserver, timing, and hosting features.
+source: domain:registration:profile
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: profile_matches_domain
+  direction: in
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - domain.registered <= profile.observed
+    window_days: 365
+  degree_caps:
+    domain:registration:profile: 10000
+    inet:fqdn: 100000
+  negative_nodes:
+  - form: domain:registrar
+    list: commodity_registrars
+  - form: rdap:registrant
+    list: privacy_or_proxy_registrants
+  - form: dns:nameserver
+    list: managed_dns_provider_nameservers
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- profile_component_count
+- registrar_context
+- nameserver_rarity
+- registration_time_window
+- privacy_service_penalty
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- rdap
+- whois_history
+- pdns
+- dns

@@ -1,0 +1,73 @@
+id: CTI_FILE_LSHASH_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Locality-sensitive hashes can overcluster files that share boilerplate, packers, libraries, templates, or benign build artifacts.'
+- 'Distance thresholds, hash-family configuration, and corpus composition strongly affect matches; promotion needs fixtures for positive, near-miss, and common-benign cases.'
+- 'An LSH match is a similarity lead, not proof of common authorship, common control, or actor attribution.'
+capability_requirements:
+  required:
+  - 'file_lshash_extraction'
+  - 'file_hash_normalization'
+  optional:
+  - 'packer_detection'
+  - 'benign_corpus_prevalence'
+name: File LSHASH Cluster
+category: CTI
+description: Cluster files by locality-sensitive hash values while preserving threshold, corpus, and exact-hash context.
+source: file:lshash
+target: file:hash
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: similar_to
+  direction: out
+  form: file:hash
+constraints:
+  temporal:
+    order:
+    - file.firstseen <= lshash.observed
+    window_days: 3650
+  degree_caps:
+    file:lshash: 100000
+    file:hash: 1000000
+  negative_nodes:
+  - form: file:lshash
+    list: common_library_or_packer_lshashes
+  - form: file:hash
+    list: common_benign_software_hashes
+  - form: file:lshash
+    list: low_entropy_or_short_lshash_values
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- similarity_threshold
+- corpus_scope
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- malware_corpus
+- sandbox
+- edr

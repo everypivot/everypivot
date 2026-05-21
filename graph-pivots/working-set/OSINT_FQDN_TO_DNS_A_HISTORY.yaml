@@ -1,0 +1,72 @@
+id: OSINT_FQDN_TO_DNS_A_HISTORY
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'DNS A records can be transient, CDN-backed, sinkholed, parked, or reassigned long before later investigation.'
+- 'A single historical resolution does not imply operator control unless the timing overlaps the investigated activity.'
+- 'Common CDN, parking, and shared-hosting IPs require corroboration with contemporaneous DNS and service evidence.'
+capability_requirements:
+  required:
+  - 'passive_dns'
+  - 'dns_record_normalization'
+  optional:
+  - 'active_resolution'
+  - 'asn_enrichment'
+name: FQDN -> DNS A History
+category: OSINT
+description: Pivot from an FQDN to IPv4 addresses observed in passive or current DNS A records, preserving observation windows.
+source: inet:fqdn
+target: inet:ipv4
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: resolved_to
+  direction: out
+  form: inet:ipv4
+constraints:
+  temporal:
+    order:
+    - fqdn.firstseen <= dns_a.lastseen
+    window_days: 1095
+  degree_caps:
+    inet:fqdn: 1000
+    inet:ipv4: 10000
+  negative_nodes:
+  - form: inet:ipv4
+    list: cdn_edges
+  - form: inet:ipv4
+    list: parking_infrastructure
+  - form: inet:ipv4
+    list: shared_hosting_edges
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- ttl_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- pdns
+- dns
+- asn

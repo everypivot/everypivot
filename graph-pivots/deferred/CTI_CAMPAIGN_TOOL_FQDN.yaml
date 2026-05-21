@@ -1,0 +1,66 @@
+id: CTI_CAMPAIGN_TOOL_FQDN
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'cti_report_extraction'
+  - 'tool_family_normalization'
+  optional:
+  - 'passive_dns'
+  - 'domain_normalization'
+hazards:
+- Commodity tools and shared hosting can put unrelated campaigns on common domains or infrastructure.
+- Corroborate tool-family evidence with temporal observations and independent indicators; this pivot is not attribution by itself.
+name: Campaign ↔ Tool → FQDN
+category: CTI
+description: Campaign-to-domain linkage via shared tool family evidence across sources.
+source: risk:campaign
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: uses
+  direction: out
+  form: it:prod:soft
+- via: communicates|hosts|connects|c2
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - campaign.firstseen <= fqdn.created
+    window_days: 720
+  degree_caps:
+    it:prod:soft: 300
+  negative_nodes:
+  - form: inet:fqdn
+    list: dynamic_dns_providers
+  provenance:
+    min_unique_sources: 2
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- cti_reports
+- pdns
+- siem

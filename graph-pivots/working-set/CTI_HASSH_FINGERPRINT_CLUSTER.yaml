@@ -1,0 +1,71 @@
+id: CTI_HASSH_FINGERPRINT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'Common SSH clients, libraries, automation frameworks, and scanning tools can reuse HASSH fingerprints across unrelated activity.'
+- 'HASSH is sensitive to protocol implementation and capture quality, and should be corroborated with service, timing, or infrastructure context.'
+capability_requirements:
+  required:
+  - 'ssh_fingerprint_telemetry'
+  - 'network_session_normalization'
+  optional:
+  - 'honeypot_telemetry'
+  - 'ssh_banner_collection'
+name: HASSH Fingerprint -> Host Cluster
+category: CTI
+description: Cluster hosts or services observed with the same SSH HASSH client/server fingerprint while filtering common tools and scanners.
+source: network:fingerprint:hassh
+target: inet:ipv4|inet:fqdn|network:service
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: observed_on
+  direction: out
+  form: network:service
+- via: hosted_by
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - hassh.firstseen <= service.lastseen
+    window_days: 365
+  degree_caps:
+    network:fingerprint:hassh: 5000
+  negative_nodes:
+  - form: network:fingerprint:hassh
+    list: common_ssh_client_fingerprints
+  - form: inet:ipv4
+    list: known_scanner_asns
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- ssh_banner_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- honeypot
+- netflow
+- shodan_censys

@@ -1,0 +1,63 @@
+id: AITS_SHARED_PROMPT_ASSET_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'restricted_records'
+  - 'platform_abuse_records'
+  - 'content_fingerprinting'
+  optional:
+  - 'privacy_minimization'
+  - 'prompt_asset_normalization'
+hazards:
+- Public jailbreak corpora, copied prompt libraries, and common templates can be reused by unrelated accounts and create false positives.
+- Prompt-asset matches should be corroborated with timing, account behavior, and non-public artifacts; raw prompts may contain privacy-sensitive content.
+name: Prompt Asset -> Account Cluster
+category: AITS
+description: Cluster accounts reusing identical prompt assets, jailbreak snippets, or packaged instruction sets.
+source: file:bytes|message:prompt
+target: inet:web:acct
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: submitted_by|used_by
+  direction: out
+  form: inet:web:acct
+constraints:
+  temporal:
+    order:
+    - asset.firstseen <= account.seen
+    window_days: 365
+  degree_caps:
+    file:bytes|message:prompt: 5000
+  negative_nodes:
+  - form: file:bytes|message:prompt
+    list: public_prompt_examples
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- platform_abuse
+- trust_safety

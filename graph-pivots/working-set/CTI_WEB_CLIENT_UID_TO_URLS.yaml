@@ -1,0 +1,77 @@
+id: CTI_WEB_CLIENT_UID_TO_URLS
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Browser/client identifiers can be reset, synced, shared, replayed, truncated, hashed, or scoped to one vendor telemetry source.'
+- 'URL telemetry can include prefetches, scanners, redirects, embedded resources, and background requests rather than deliberate user navigation.'
+- 'A browser/client UID match is not actor attribution.'
+capability_requirements:
+  required:
+  - 'browser_client_uid_normalization'
+  - 'web_request_telemetry'
+  optional:
+  - 'url_normalization'
+  - 'redirect_chain_extraction'
+  - 'scanner_prefetch_suppression'
+name: Web Client UID -> URLs
+category: CTI
+description: Pivot from a normalized browser or web client identifier to URLs and HTTP requests observed with that identifier.
+source: web:client:uid
+target: inet:url|http:request
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: observed_in_request
+  direction: out
+  form: http:request
+- via: requested
+  direction: out
+  form: inet:url
+constraints:
+  temporal:
+    order:
+    - client_uid.firstseen <= request.observed
+    window_days: 90
+  degree_caps:
+    web:client:uid: 100000
+    http:request: 1000000
+  negative_nodes:
+  - form: inet:fqdn
+    list: browser_prefetch_or_update_domains
+  - form: http:request
+    list: scanner_or_security_product_requests
+  - form: inet:url
+    list: static_embedded_resource_urls
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- request_context
+- navigation_type
+- redirect_chain_position
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- proxy_logs
+- browser_telemetry
+- url_corpus

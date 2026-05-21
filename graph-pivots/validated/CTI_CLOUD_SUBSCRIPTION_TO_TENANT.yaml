@@ -1,0 +1,69 @@
+id: CTI_CLOUD_SUBSCRIPTION_TO_TENANT
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: high
+robustness_class: ownership_signal
+hazards:
+- 'Subscriptions can move between tenants, be delegated, or be managed by service providers, so observation time must be preserved.'
+- 'Subscription-to-tenant containment is an administrative relationship and must not imply compromise or actor control.'
+- 'Multi-tenant service principals and delegated administration can create legitimate cross-tenant edges.'
+- 'Shared or default provider delegation patterns require corroboration with tenant-specific administrative evidence before clustering.'
+capability_requirements:
+  required:
+  - 'cloud_subscription_identifier_normalization'
+  - 'cloud_tenant_identifier_normalization'
+  optional:
+  - 'delegated_admin_relationships'
+  - 'cloud_audit_log_access'
+review:
+  last_reviewed: '2026-05-14'
+  review_cadence_days: 90
+  next_review: '2026-08-12'
+name: Cloud Subscription -> Tenant
+category: CTI
+description: Pivot from a normalized cloud subscription identifier to the tenant observed as owning or administering that subscription.
+source: cloud:subscription:uid
+target: cloud:tenant:uid
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: contained_by_tenant
+  direction: out
+  form: cloud:tenant:uid
+constraints:
+  temporal:
+    order:
+    - subscription.observed <= tenant.observed
+    window_days: 30
+  degree_caps:
+    cloud:subscription:uid: 100000
+    cloud:tenant:uid: 100000
+  negative_nodes:
+  - form: cloud:tenant:uid
+    list: provider_service_or_support_tenants
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- subscription_tenant_match
+- delegated_admin_flag
+- tenant_age
+- temporal_consistency
+- provider_scope
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- cloud_inventory
+- cloud_audit_logs

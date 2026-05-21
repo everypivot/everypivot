@@ -1,0 +1,73 @@
+id: CTI_ENDPOINT_UID_TO_DEVICE_UID_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: ownership_signal
+hazards:
+- 'Endpoint and device identifiers can reset, collide, be scrubbed, be cloned across images, or represent different identity layers in different sources.'
+- 'Device UID clustering is many-to-many and needs degree caps, noisy-ID suppression, and cross-source provenance before promotion.'
+- 'A shared endpoint or device UID cluster is not actor attribution and should be corroborated with independent endpoint or identity evidence.'
+capability_requirements:
+  required:
+  - 'endpoint_identity_normalization'
+  - 'device_identity_mapping'
+  optional:
+  - 'asset_inventory_join'
+  - 'edr_device_identity_resolution'
+  - 'image_clone_detection'
+name: Endpoint UID -> Device UID Cluster
+category: CTI
+description: Pivot from a normalized endpoint identifier to device-level identifiers that may group endpoint telemetry across identity namespaces.
+source: endpoint:uid
+target: device:uid
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: maps_to_device_uid
+  direction: out
+  form: device:uid
+constraints:
+  temporal:
+    order:
+    - endpoint.observed <= device_identity.observed
+    window_days: 365
+  degree_caps:
+    endpoint:uid: 100000
+    device:uid: 100000
+  negative_nodes:
+  - form: device:uid
+    list: default_or_null_device_identifiers
+  - form: device:uid
+    list: cloned_image_device_identifiers
+  - form: endpoint:uid
+    list: shared_kiosk_or_lab_endpoints
+  provenance:
+    min_unique_sources: 2
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- identity_namespace_count
+- clone_indicator
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- edr
+- endpoint
+- asset_inventory

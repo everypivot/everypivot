@@ -1,0 +1,68 @@
+id: SUPPLY_MAINTAINER_EMAIL_TO_PACKAGES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: ownership_signal
+hazards:
+- 'Role accounts, relays, and marketplace-managed aliases can span unrelated packages.'
+- 'Maintainer email is weaker than publisher, repo, or signing evidence and should be treated as corroborative.'
+capability_requirements:
+  required:
+  - 'package_metadata_collection'
+  - 'maintainer_email_normalization'
+  optional:
+  - 'privacy_relay_suppression'
+  - 'package_registry_history'
+review:
+  last_reviewed: '2026-05-20'
+  review_cadence_days: 90
+  next_review: '2026-08-18'
+name: Maintainer Email -> Packages
+category: SUPPLY
+description: Cluster packages maintained or published by the same maintainer email while filtering privacy and relay addresses.
+source: email:addr
+target: it:prod:softver
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: maintains|publishes
+  direction: out
+  form: it:prod:softver
+constraints:
+  temporal:
+    order:
+    - email.created <= package.created
+    window_days: 3650
+  degree_caps:
+    email:addr: 5000
+  negative_nodes:
+  - form: email:addr
+    list: package_privacy_proxy_addresses
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- package_registry
+- osint_web

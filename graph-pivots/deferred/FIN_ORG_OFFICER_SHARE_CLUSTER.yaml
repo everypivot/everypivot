@@ -1,0 +1,66 @@
+id: FIN_ORG_OFFICER_SHARE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'identity_records'
+  optional:
+  - 'officer_record_normalization'
+  - 'company_registry_context'
+hazards:
+- Common professional directors, formation agents, family names, and stale registry records can connect unrelated companies.
+- Officer data can be jurisdiction-limited and privacy-sensitive; corroborate with KYC, address, and temporal appointment evidence.
+name: Org Officer/Director → Cross‑Directorship Cluster
+category: FIN
+description: Cluster companies by shared officers/directors to identify shell networks.
+source: person
+target: org:org
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: officer_of|director_of
+  direction: out
+  form: org:org
+- via: officer_of|director_of
+  direction: in
+  form: person
+constraints:
+  temporal:
+    order:
+    - person.firstseen <= org.created
+    window_days: 3650
+  degree_caps:
+    person: 200
+  negative_nodes:
+  - form: person
+    list: nominee_directors_or_formation_agents
+  - form: person
+    list: mass_professional_officers
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- opencorp

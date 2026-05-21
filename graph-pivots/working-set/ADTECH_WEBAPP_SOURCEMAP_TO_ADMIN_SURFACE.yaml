@@ -1,0 +1,75 @@
+id: ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE
+version: 0.1.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Exposed JavaScript bundles and source maps can identify benign SaaS administration surfaces.'
+- 'Recovered route names are evidence of application capability, not proof that the surface is used in a specific operation.'
+- 'Shared SaaS vendors, CDNs, and common admin-route names can create false matches; corroborate with tenant-specific artifacts.'
+capability_requirements:
+  required:
+  - 'web_fingerprinting'
+  - 'web_script_extraction'
+  optional:
+  - 'dynamic_rendering'
+  - 'route_recovery'
+name: Webapp Source Map -> Admin Surface
+category: ADTECH
+description: Pivot from exposed JavaScript bundles or source maps to recovered application routes, panel strings, and administration surfaces.
+source: web:asset
+target: web:admin:surface
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_kind: concept
+hops:
+- via: references
+  direction: out
+  form: web:asset
+- via: exposes_route
+  direction: out
+  form: web:route
+- via: belongs_to
+  direction: out
+  form: web:admin:surface
+constraints:
+  temporal:
+    order:
+    - asset.seen <= route.extracted
+    window_days: 30
+  degree_caps:
+    web:asset: 1000
+    web:route: 5000
+  negative_nodes:
+  - form: web:asset
+    list: common_frontend_framework_assets
+  - form: web:admin:surface
+    list: known_benign_saas_panels
+  provenance:
+    min_unique_sources: 1
+features:
+- sourcemap_present
+- route_count
+- admin_keyword_density
+- auth_surface_present
+- campaign_keyword_present
+- customer_admin_keyword_present
+- bundle_path_rarity
+- benign_saas_penalty
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- url_corpus
+- web_crawl
+- cti_reports

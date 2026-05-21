@@ -1,0 +1,63 @@
+id: FIN_REFUND_DESTINATION_ACCOUNT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'payout_account_normalization'
+  optional:
+  - 'merchant_profile_context'
+  - 'refund_timing_context'
+hazards:
+- Refund receivers, processors, and settlement accounts can be shared legitimately by marketplaces or service providers.
+- Bank account data is restricted; corroborate account control, refund timing, and merchant context before treating reuse as fraud.
+name: Refund Destination Account -> Merchant Cluster
+category: FIN
+description: Cluster merchants or actors whose refunds repeatedly terminate in the same beneficiary account or refund receiver.
+source: fin:account
+target: fin:merchant|person
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: receives_refund_for
+  direction: out
+  form: fin:merchant|person
+constraints:
+  temporal:
+    order:
+    - account.firstseen <= refund.ts
+    window_days: 1825
+  degree_caps:
+    fin:account: 500
+  negative_nodes:
+  - form: fin:account
+    list: merchant_customer_support_accounts
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- payments
+- bank_txn
+- ecommerce

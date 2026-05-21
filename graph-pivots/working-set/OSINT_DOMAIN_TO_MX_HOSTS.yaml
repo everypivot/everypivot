@@ -1,0 +1,71 @@
+id: OSINT_DOMAIN_TO_MX_HOSTS
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'MX records can be delegated to managed mail providers and usually do not imply domain ownership beyond DNS configuration.'
+- 'Historical MX records can be stale, parked, sinkholed, or changed after the activity window.'
+- 'Shared mail providers create high-degree nodes that need suppression for clustering use cases.'
+capability_requirements:
+  required:
+  - 'dns_mx_lookup'
+  - 'dns_name_normalization'
+  optional:
+  - 'passive_dns_history'
+  - 'managed_mail_provider_suppression'
+  - 'rdap_enrichment'
+name: Domain -> MX Hosts
+category: OSINT
+description: Enumerate MX hosts configured for a domain using current or historical DNS observations while preserving observation time.
+source: inet:fqdn
+target: dns:mx|inet:fqdn
+assessment:
+  claim: indicates
+  basis: demonstrated
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: has_mx
+  direction: out
+  form: dns:mx
+- via: points_to_host
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - domain.observed <= mx.observed
+    window_days: 365
+  degree_caps:
+    inet:fqdn: 10000
+    dns:mx: 100000
+  negative_nodes:
+  - form: inet:fqdn
+    list: managed_mail_provider_hosts
+  - form: dns:mx
+    list: parked_or_sinkhole_mx_records
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- mx_preference
+- temporal_consistency
+- managed_provider_flag
+- mx_host_rarity
+- historical_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- dns
+- pdns
+- rdap

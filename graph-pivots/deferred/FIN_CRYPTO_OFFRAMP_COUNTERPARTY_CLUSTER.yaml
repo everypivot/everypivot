@@ -1,0 +1,66 @@
+id: FIN_CRYPTO_OFFRAMP_COUNTERPARTY_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'crypto_transaction_enrichment'
+  optional:
+  - 'kyc_context'
+  - 'offramp_account_resolution'
+hazards:
+- Exchange deposit addresses, processors, mixers, and omnibus accounts can group unrelated crypto users.
+- Off-ramp data is restricted financial and KYC evidence; corroborate shared account links with timing and transaction context to avoid false positives.
+name: Crypto Address -> Off-Ramp Counterparty Cluster
+category: FIN
+description: Trace recurring crypto addresses through withdrawal or cash-out paths to shared off-ramp accounts, merchants, or beneficiary entities.
+source: crypto:address
+target: fin:account|fin:merchant|org:org
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: transfers_to|transfers_from
+  direction: out
+  form: ledger:tx
+- via: cashed_out_via
+  direction: out
+  form: fin:account|fin:merchant|org:org
+constraints:
+  temporal:
+    order:
+    - address.firstseen <= tx.ts
+    window_days: 3650
+  degree_caps:
+    ledger:tx: 100000
+  negative_nodes:
+  - form: crypto:address
+    list: exchange_hot_wallets
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- blockchain
+- bank_txn
+- payments

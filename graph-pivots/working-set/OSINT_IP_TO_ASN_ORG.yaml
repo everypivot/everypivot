@@ -1,0 +1,71 @@
+id: OSINT_IP_TO_ASN_ORG
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'BGP origin, RIR allocation, hosting reseller, and customer assignment can point to different organizations for the same IP.'
+- 'Anycast, cloud providers, and reassigned address space can make current ASN/org context misleading for historical investigations.'
+- 'Common cloud and shared-hosting ASNs require corroboration with customer-level or temporal allocation evidence.'
+capability_requirements:
+  required:
+  - 'ip_to_asn_mapping'
+  - 'rir_whois_or_rdap'
+  optional:
+  - 'bgp_history'
+  - 'hosting_provider_classification'
+name: IP -> ASN Organization
+category: OSINT
+description: Pivot from an IP address to its observed origin ASN and owning or operating organization, preserving observation time.
+source: inet:ipv4
+target: net:asn|org:org
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: announced_by
+  direction: out
+  form: net:asn
+- via: operated_by
+  direction: out
+  form: org:org
+constraints:
+  temporal:
+    order:
+    - ip.seen <= asn.observed
+    window_days: 30
+  degree_caps:
+    inet:ipv4: 10
+    net:asn: 1000000
+  negative_nodes:
+  - form: net:asn
+    list: public_cloud_and_cdn_asns
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- allocation_specificity
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- bgp
+- rir
+- rdap

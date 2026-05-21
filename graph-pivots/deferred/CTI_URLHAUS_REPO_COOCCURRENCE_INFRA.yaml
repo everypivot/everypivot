@@ -1,0 +1,81 @@
+id: CTI_URLHAUS_REPO_COOCCURRENCE_INFRA
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Code repositories frequently contain copied indicators, sample configs, blocklists, tests, or security research artifacts unrelated to operator infrastructure.'
+- 'Repository co-occurrence can inflate weak associations unless commit provenance, file context, and benign-project filters are preserved.'
+- 'Common sample repositories and shared indicator lists need corroboration with commit context before linking infrastructure.'
+capability_requirements:
+  required:
+  - 'abuse_ch_urlhaus'
+  - 'code_search'
+  - 'git_metadata'
+  optional:
+  - 'secret_scanning_context'
+  - 'repository_reputation'
+name: URLhaus Repo Co-Occurrence -> Infra
+category: CTI
+description: Pivot from abuse-listed infrastructure through code-repository co-occurrence to additional domains or IPs, preserving repository and extraction provenance.
+source: inet:ipv4|inet:fqdn|inet:url
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: suspected
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: listed_by
+  direction: out
+  form: abuse:urlhaus:record
+- via: appears_in
+  direction: out
+  form: code:repo
+- via: co_occurs_with
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - abuse.firstseen <= repo.commit_time <= target.firstseen
+    window_days: 3650
+  degree_caps:
+    abuse:urlhaus:record: 1000
+    code:repo: 5000
+  negative_nodes:
+  - form: code:repo
+    list: mass_fork_mirrors
+  - form: code:repo
+    list: benign_security_research_repos
+  - form: inet:fqdn
+    list: package_registry_domains
+  provenance:
+    min_unique_sources: 2
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- repo_file_context_weight
+- cooccurrence_count
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- abuse_ch
+- code_search
+- git_metadata
+- url_corpus

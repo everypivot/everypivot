@@ -1,0 +1,75 @@
+id: CTI_HTTP_STATUS_LINE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'HTTP status lines are very weak fingerprints; default servers, middleware, scanners, redirects, CDNs, and WAFs can reuse the same status behavior.'
+- 'Status-line observations can vary by method, path, user agent, authentication state, region, and time.'
+- 'A shared status line is triage context only and must not be treated as ownership, compromise, or actor attribution.'
+capability_requirements:
+  required:
+  - 'http_response_capture'
+  - 'http_status_normalization'
+  optional:
+  - 'scanner_artifact_suppression'
+  - 'request_context_preservation'
+name: HTTP Status Line Cluster
+category: CTI
+description: Cluster HTTP observations by normalized response status line while preserving request context.
+source: http:status_line
+target: inet:url|inet:fqdn|http:response
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: status_of
+  direction: out
+  form: http:response
+- via: observed_on
+  direction: out
+  form: inet:url|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - response.observed <= status_line.observed
+    window_days: 30
+  degree_caps:
+    http:status_line: 1000000
+    inet:fqdn: 1000000
+  negative_nodes:
+  - form: http:status_line
+    list: common_http_status_lines
+  - form: inet:fqdn
+    list: common_cdn_or_waf_domains
+  - form: http:response
+    list: scanner_or_security_product_responses
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- request_method
+- response_role
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- http_scans
+- proxy_logs
+- osint_web

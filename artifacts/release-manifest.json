@@ -1,0 +1,69 @@
+{
+  "release": "v0.1.0",
+  "channel": "stable",
+  "published_at": "2026-05-21",
+  "site": {
+    "homepage": "/releases/v0.1.0/",
+    "patterns": "/releases/v0.1.0/patterns"
+  },
+  "downloads": [
+    {
+      "name": "registry-index",
+      "path": "artifacts/registry-index.json"
+    },
+    {
+      "name": "patterns-bundle",
+      "path": "artifacts/patterns.tar.gz"
+    },
+    {
+      "name": "fixtures-bundle",
+      "path": "artifacts/fixtures.tar.gz"
+    },
+    {
+      "name": "schema",
+      "path": "schemas/pivot_pattern.schema.json"
+    },
+    {
+      "name": "validator",
+      "path": "tools/validate_pivots.rb"
+    }
+  ],
+  "counts": {
+    "validated": 19,
+    "working_set": 76,
+    "deferred": 81
+  },
+  "license": {
+    "copyright": "© 2026 EveryPivot Project",
+    "copyright_holder_notice": "The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. \"EveryPivot Project\" is the designated attribution party for redistribution under CC BY-SA 4.0 §3(a)(1)(A)(ii).",
+    "code": {
+      "spdx": "Apache-2.0",
+      "url": "LICENSE-CODE",
+      "applies_to": [
+        "schemas/",
+        "tools/",
+        "site/",
+        "docs/"
+      ]
+    },
+    "corpus": {
+      "spdx": "CC-BY-SA-4.0",
+      "url": "LICENSE-DATA",
+      "applies_to": [
+        "graph-pivots/",
+        "fixtures/"
+      ],
+      "share_alike": true
+    },
+    "attribution_required": "Pattern definitions and tooling from EveryPivot (EveryPivot Project), used under Apache-2.0 (code) and CC BY-SA 4.0 (patterns).",
+    "notice_url": "NOTICE",
+    "license_summary_url": "LICENSE",
+    "trademark": {
+      "mark": "EveryPivot",
+      "symbol": "™",
+      "policy_url": "TRADEMARK.md",
+      "owner_notice": "See TRADEMARK.md for the named trademark owner.",
+      "note": "EveryPivot is a trademark. The license grants above do not include any right to use the EveryPivot name, logo, or other trademarks to identify your own products, services, forks, or competing registries."
+    }
+  }
+}

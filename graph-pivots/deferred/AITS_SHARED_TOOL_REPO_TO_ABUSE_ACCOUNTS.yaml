@@ -1,0 +1,66 @@
+id: AITS_SHARED_TOOL_REPO_TO_ABUSE_ACCOUNTS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'restricted_records'
+  - 'platform_abuse_records'
+  - 'code_search'
+  optional:
+  - 'repository_reputation'
+  - 'tool_artifact_normalization'
+hazards:
+- Public tool repositories, forks, mirrors, and tutorial code can be shared across benign and abusive accounts.
+- Corroborate repository reuse with account behavior and artifact execution; tool adoption alone can create false common-control claims.
+name: Abuse Tool Repo -> Account Cluster
+category: AITS
+description: Connect shared abuse tooling or prompt-library repositories to model accounts reusing the resulting tools or artifacts.
+source: code:repo
+target: inet:web:acct
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: referenced_by
+  direction: out
+  form: risk:tool:software|file:bytes
+- via: used_by
+  direction: out
+  form: inet:web:acct
+constraints:
+  temporal:
+    order:
+    - repo.created <= tool.seen <= account.seen
+    window_days: 730
+  degree_caps:
+    code:repo: 10000
+  negative_nodes:
+  - form: code:repo
+    list: benign_public_prompt_repos
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- platform_abuse
+- osint_web

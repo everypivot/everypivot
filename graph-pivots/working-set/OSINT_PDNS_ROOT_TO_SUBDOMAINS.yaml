@@ -1,0 +1,68 @@
+id: OSINT_PDNS_ROOT_TO_SUBDOMAINS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Passive DNS coverage is uneven across resolvers, geographies, and time windows, so absence of a subdomain is not evidence that it never existed.'
+- 'Wildcard DNS, parking platforms, managed hosting, and scanner artifacts can produce large numbers of low-value hostnames under a root.'
+- 'Common wildcard and shared-hosting patterns should be corroborated with current DNS and service context before clustering.'
+capability_requirements:
+  required:
+  - 'passive_dns'
+  - 'public_suffix_normalization'
+  optional:
+  - 'dns_wildcard_detection'
+  - 'active_resolution'
+name: Passive DNS Root -> Subdomains
+category: OSINT
+description: Enumerate FQDNs observed under a registrable root or apex domain using passive DNS observations.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: passive_dns_subdomain
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - root.firstseen <= fqdn.lastseen
+    window_days: 1825
+  degree_caps:
+    inet:fqdn: 25000
+  negative_nodes:
+  - form: inet:fqdn
+    list: wildcard_dns_roots
+  - form: inet:fqdn
+    list: parked_domain_roots
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- wildcard_penalty
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- pdns
+- dns

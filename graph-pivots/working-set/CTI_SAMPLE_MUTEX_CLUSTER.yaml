@@ -1,0 +1,62 @@
+id: CTI_SAMPLE_MUTEX_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+name: Mutex Name -> Sample Cluster
+category: CTI
+description: Cluster samples reusing mutex names or mutex families while filtering common installer and commodity-software values.
+hazards:
+- 'Generic mutex names and framework defaults can cluster unrelated malware or even benign software.'
+- 'Unpacking and normalization errors can overcount mutex reuse if strings are not canonicalized carefully.'
+capability_requirements:
+  required:
+  - 'malware_static_analysis'
+  - 'sample_hash_normalization'
+  optional:
+  - 'common_string_suppression'
+  - 'sample_prevalence_enrichment'
+source: it:exec:mutex
+target: file:bytes
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: observed_in
+  direction: out
+  form: file:bytes
+constraints:
+  temporal:
+    order:
+    - mutex.firstseen <= sample.firstseen
+    window_days: 3650
+  degree_caps:
+    it:exec:mutex: 10000
+  negative_nodes:
+  - form: it:exec:mutex
+    list: common_benign_mutexes
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- sandbox
+- malware_corpus

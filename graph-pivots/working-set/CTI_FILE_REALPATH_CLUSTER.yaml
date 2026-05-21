@@ -1,0 +1,74 @@
+id: CTI_FILE_REALPATH_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: multi_hop_inference
+hazards:
+- 'Runtime paths can be generic, installer-created, user-specific, localized, or inherited from shared tooling.'
+- 'Real paths can expose sensitive host or user details and should be normalized and minimized before publication.'
+- 'A shared path supports clustering only when paired with prevalence, temporal, and host-context controls.'
+capability_requirements:
+  required:
+  - 'endpoint_file_path_telemetry'
+  - 'path_normalization'
+  optional:
+  - 'common_path_suppression'
+  - 'file_hash_enrichment'
+  - 'endpoint_context'
+name: File Real Path Cluster
+category: CTI
+description: Cluster file hashes or endpoint file observations that share the same normalized runtime or real filesystem path.
+source: file:path
+target: file:hash|endpoint:file
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: observed_at_path
+  direction: in
+  form: endpoint:file
+- via: hashes_to
+  direction: out
+  form: file:hash
+constraints:
+  temporal:
+    order:
+    - path.observed <= file.observed
+    window_days: 180
+  degree_caps:
+    file:path: 10000
+    file:hash: 100000
+    endpoint:file: 1000000
+  negative_nodes:
+  - form: file:path
+    list: common_system_or_application_paths
+  - form: file:hash
+    list: common_benign_file_hashes
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- normalized_path_depth
+- endpoint_diversity
+- common_path_penalty
+- prevalence
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- endpoint_telemetry
+- malware_analysis
+- file_reputation

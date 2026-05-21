@@ -1,0 +1,69 @@
+id: CROSS_PHISH_DOMAIN_TO_PAYMENT_PROCESSOR
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: missing_negative_controls
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'web_content_collection'
+  - 'payment_processor_artifact_extraction'
+  optional:
+  - 'financial_records'
+  - 'merchant_profile_context'
+hazards:
+- Large payment processors and checkout providers are shared by many unrelated merchants and create high false-positive risk.
+- Merchant IDs and processor artifacts are sensitive financial data; corroborate with page content, account-level evidence, and transaction timing.
+name: Phish Domain → Payment Processor → Merchant Network
+category: CROSS
+description: Trace phishing pages to their payment processors and connected merchant IDs.
+source: inet:fqdn
+target: fin:merchant
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: collects_payments_via
+  direction: out
+  form: fin:processor
+- via: services
+  direction: out
+  form: fin:merchant
+constraints:
+  temporal:
+    order:
+    - page.seen <= merchant.active_ts
+    window_days: 365
+  degree_caps:
+    fin:processor: 10000
+  negative_nodes:
+  - form: fin:merchant
+    list: test_or_sandbox_merchant_accounts
+  - form: fin:merchant
+    list: known_good_high_volume_merchants
+  - form: fin:merchant
+    list: shared_checkout_demo_merchants
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- bank_txn

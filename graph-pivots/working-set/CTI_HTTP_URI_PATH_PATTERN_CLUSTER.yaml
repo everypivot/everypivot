@@ -1,0 +1,73 @@
+id: CTI_HTTP_URI_PATH_PATTERN_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'URI paths are often default framework routes, CMS files, static resources, or copied phishing-kit paths.'
+- 'Path-only matches lose query, method, body, and server-context evidence.'
+- 'High-degree common paths require aggressive negative controls before clustering is useful.'
+capability_requirements:
+  required:
+  - 'http_request_or_scan_path_extraction'
+  - 'uri_path_normalization'
+  optional:
+  - 'query_parameter_normalization'
+  - 'common_path_suppression'
+  - 'http_body_fingerprinting'
+name: HTTP URI Path Pattern Cluster
+category: CTI
+description: Cluster URLs or hosts that expose the same distinctive HTTP URI path pattern across telemetry or scan observations.
+source: http:uri:path_pattern
+target: inet:url|inet:fqdn
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: path_observed_on_url
+  direction: in
+  form: inet:url
+- via: has_host
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - path.observed <= url.observed
+    window_days: 90
+  degree_caps:
+    http:uri:path_pattern: 100000
+    inet:url: 1000000
+  negative_nodes:
+  - form: http:uri:path_pattern
+    list: common_framework_or_cms_paths
+  - form: inet:fqdn
+    list: common_hosting_or_cdn_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- normalized_path_depth
+- query_shape
+- common_path_penalty
+- scan_source_count
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- proxy_logs
+- osint_web
+- internet_scan_archives

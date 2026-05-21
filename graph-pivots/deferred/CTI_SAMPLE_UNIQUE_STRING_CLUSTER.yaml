@@ -1,0 +1,70 @@
+id: CTI_SAMPLE_UNIQUE_STRING_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Strings can be copied from public source, libraries, compiler output, debug text, or benign dependencies.'
+- 'Short, localized, encoded, or common strings create noisy clusters.'
+- 'String pivots require rarity, context, and negative controls before they should influence analyst conclusions.'
+capability_requirements:
+  required:
+  - 'sample_string_extraction'
+  - 'string_normalization'
+  optional:
+  - 'common_string_suppression'
+  - 'library_string_filtering'
+  - 'sample_prevalence_enrichment'
+name: Sample Unique String Cluster
+category: CTI
+description: Cluster samples that share a rare normalized string extracted from static or decoded content.
+source: file:feature:string
+target: file:hash
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: string_extracted_from
+  direction: in
+  form: file:hash
+constraints:
+  temporal:
+    order:
+    - sample.observed >= string.extracted
+    window_days: 365
+  degree_caps:
+    file:feature:string: 100000
+    file:hash: 1000000
+  negative_nodes:
+  - form: file:feature:string
+    list: common_library_or_compiler_strings
+  - form: file:hash
+    list: common_benign_file_hashes
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- string_length
+- string_entropy
+- encoding_type
+- common_string_penalty
+- prevalence
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- malware_analysis
+- file_reputation

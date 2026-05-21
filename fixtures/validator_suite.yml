@@ -1,0 +1,100 @@
+cases:
+  - id: valid_v12_minimal
+    root: fixtures/cases/valid_v12_minimal
+    expect_exit: 0
+  - id: valid_v13_minimal
+    root: fixtures/cases/valid_v13_minimal
+    expect_exit: 0
+  - id: valid_v14_minimal
+    root: fixtures/cases/valid_v14_minimal
+    expect_exit: 0
+  - id: valid_low_precision
+    root: fixtures/cases/valid_low_precision
+    expect_exit: 0
+  - id: strict_low_precision
+    root: fixtures/cases/valid_low_precision
+    strict_metadata: true
+    expect_exit: 0
+  - id: valid_full
+    root: fixtures/cases/valid_full
+    expect_exit: 0
+  - id: invalid_missing_id
+    root: fixtures/cases/invalid_missing_id
+    expect_exit: 1
+    expect_output:
+      - "id is required"
+  - id: invalid_wrong_lane
+    root: fixtures/cases/invalid_wrong_lane
+    expect_exit: 1
+    expect_output:
+      - "`validation_state` should match lane `validated`"
+  - id: invalid_bad_enum
+    root: fixtures/cases/invalid_bad_enum
+    expect_exit: 1
+    expect_output:
+      - "assessment.claim must be one of"
+  - id: invalid_bad_category
+    root: fixtures/cases/invalid_bad_category
+    expect_exit: 1
+    expect_output:
+      - "category must be one of"
+  - id: invalid_bad_direction
+    root: fixtures/cases/invalid_bad_direction
+    expect_exit: 1
+    expect_output:
+      - "hops[0].direction must be one of"
+  - id: invalid_empty_hops
+    root: fixtures/cases/invalid_empty_hops
+    expect_exit: 1
+    expect_output:
+      - "hops must contain at least 1 item(s)"
+  - id: invalid_extra_property
+    root: fixtures/cases/invalid_extra_property
+    expect_exit: 1
+    expect_output:
+      - "unexpected_field is not allowed"
+  - id: invalid_deferred_reason
+    root: fixtures/cases/invalid_deferred_reason
+    expect_exit: 1
+    expect_output:
+      - "deferred_reason must be one of"
+  - id: invalid_missing_deferred_reason
+    root: fixtures/cases/invalid_missing_deferred_reason
+    expect_exit: 1
+    expect_output:
+      - "deferred_reason is required"
+  - id: invalid_v13_no_assessment
+    root: fixtures/cases/invalid_v13_no_assessment
+    expect_exit: 1
+    expect_output:
+      - "assessment is required"
+  - id: invalid_v14_no_assessment
+    root: fixtures/cases/invalid_v14_no_assessment
+    expect_exit: 1
+    expect_output:
+      - "assessment is required"
+  - id: invalid_v13_missing_bridge
+    root: fixtures/cases/invalid_v13_missing_bridge
+    expect_exit: 1
+    expect_output:
+      - "assessment.subject_role is required"
+      - "assessment must match at least one allowed schema shape"
+  - id: valid_v11_no_assessment
+    root: fixtures/cases/valid_v11_no_assessment
+    expect_exit: 0
+  - id: valid_deferred_minimal
+    root: fixtures/cases/valid_deferred_minimal
+    expect_exit: 0
+  - id: valid_deferred_with_reason
+    root: fixtures/cases/valid_deferred_with_reason
+    expect_exit: 0
+  - id: valid_weak_selector_presentation
+    root: fixtures/cases/valid_weak_selector_presentation
+    expect_exit: 0
+  - id: valid_high_cardinality_warning
+    root: fixtures/cases/valid_high_cardinality_warning
+    expect_exit: 0
+  - id: strict_validated_full
+    root: fixtures/cases/valid_full
+    strict_metadata: true
+    expect_exit: 0

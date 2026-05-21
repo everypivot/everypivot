@@ -1,0 +1,35 @@
+EveryPivot — Licensing Summary
+==============================
+
+Copyright (c) 2026 EveryPivot Project. All rights reserved except as licensed below.
+
+EveryPivot is published under a dual-license model so the appropriate terms
+apply to each asset type:
+
+  * Source code, tooling, schema, validator, build scripts, and the site
+    (everything outside the pattern corpus and its fixtures) is licensed
+    under the Apache License, Version 2.0. See LICENSE-CODE for the full
+    text.
+
+  * The pattern corpus and its associated fixtures — specifically the
+    contents of `graph-pivots/` and `fixtures/`, including all `.yaml` and
+    fixture data files — is licensed under the Creative Commons
+    Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0). See
+    LICENSE-DATA for the full text.
+
+In both cases, attribution to EveryPivot must be preserved in any
+redistribution or derivative work. See NOTICE for the required
+attribution string.
+
+"EveryPivot" is an unregistered trademark associated with the EveryPivot
+Project. The license grants above do not include any right to use the
+EveryPivot name, logo, or other trademarks except as required for reasonable
+and customary use in describing the origin of the work. See TRADEMARK.md for
+the trademark notice.
+
+If you are unsure which license applies to a given file, refer to the file's
+location:
+
+  graph-pivots/**         CC BY-SA 4.0  (LICENSE-DATA)
+  fixtures/**             CC BY-SA 4.0  (LICENSE-DATA)
+  everything else         Apache-2.0    (LICENSE-CODE)

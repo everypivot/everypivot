@@ -1,0 +1,73 @@
+id: CTI_MARKETPLACE_SOLD_DOMAIN_CERT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: medium
+robustness_class: multi_hop_inference
+hazards:
+- 'Sold domains can be reactivated for benign projects, parking, or speculative holding, so post-sale certificate issuance is not inherently malicious.'
+- 'Managed certificates, shared hosts, and CT/scanner lag can expand one sold domain into infrastructure that is unrelated or no longer active.'
+capability_requirements:
+  required:
+  - 'marketplace_sale_history'
+  - 'tls_scanning'
+  - 'certificate_normalization'
+  optional:
+  - 'ct_history'
+  - 'passive_dns'
+name: Marketplace Sold Domain -> TLS Cert -> Infra Cluster
+category: CTI
+description: Expand recently sold domains into certificate-linked infrastructure by following post-sale TLS issuance and presentation.
+source: osint:marketplace:sale
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: sold_domain|transacted_domain
+  direction: out
+  form: inet:fqdn
+- via: tls_cert
+  direction: out
+  form: x509:cert
+- via: presented_at
+  direction: out
+  form: inet:ipv4|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - sale.seen <= cert.not_before <= infra.seen
+    window_days: 180
+  degree_caps:
+    x509:cert: 2000
+  negative_nodes:
+  - form: x509:cert
+    list: letsencrypt_mass_certificates
+  - form: inet:ipv4
+    list: cdn_edges
+  provenance:
+    min_unique_sources: 2
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- marketplace
+- tls
+- ct
+- pdns

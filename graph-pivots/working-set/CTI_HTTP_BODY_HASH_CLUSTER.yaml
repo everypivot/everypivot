@@ -1,0 +1,75 @@
+id: CTI_HTTP_BODY_HASH_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'HTTP body hashes are weak fingerprints when default pages, parked domains, error pages, CDN responses, WAF blocks, and scanner artifacts dominate.'
+- 'Body hashing can vary with compression, localization, A/B tests, timestamps, personalization, and fetch context.'
+- 'A shared HTTP body hash is clustering evidence only; corroborate with infrastructure, timing, or content context before drawing conclusions.'
+capability_requirements:
+  required:
+  - 'http_body_capture'
+  - 'http_body_hashing'
+  optional:
+  - 'dynamic_content_normalization'
+  - 'scanner_artifact_suppression'
+name: HTTP Body Hash Cluster
+category: CTI
+description: Cluster URLs, hosts, or HTTP observations by a normalized hash of the HTTP response body.
+source: http:body:hash
+target: inet:url|inet:fqdn|http:response
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: body_of
+  direction: out
+  form: http:response
+- via: served_by
+  direction: out
+  form: inet:url|inet:fqdn
+constraints:
+  temporal:
+    order:
+    - response.observed <= body_hash.observed
+    window_days: 90
+  degree_caps:
+    http:body:hash: 100000
+    inet:fqdn: 1000000
+  negative_nodes:
+  - form: http:body:hash
+    list: default_or_error_page_body_hashes
+  - form: http:body:hash
+    list: parked_domain_or_cdn_body_hashes
+  - form: http:response
+    list: scanner_or_security_product_responses
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- response_status
+- content_length_bucket
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- http_scans
+- proxy_logs
+- osint_web

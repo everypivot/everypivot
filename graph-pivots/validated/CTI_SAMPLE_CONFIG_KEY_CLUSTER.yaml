@@ -1,0 +1,69 @@
+id: CTI_SAMPLE_CONFIG_KEY_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: high
+robustness_class: exact_cryptographic
+hazards:
+- 'Default builder keys, campaign IDs, or templated config material can overcluster adjacent operations.'
+- 'Common builder defaults and shared malware frameworks can reuse config key material across unrelated samples.'
+- 'Parser or extraction errors can create false exact matches if config fields are not normalized carefully.'
+capability_requirements:
+  required:
+  - 'config_extraction'
+  - 'sample_collection'
+  optional:
+  - 'sandbox_analysis'
+review:
+  last_reviewed: '2026-04-04'
+  review_cadence_days: 90
+  next_review: '2026-07-03'
+name: Malware Config Key/ID → Sample Cluster
+category: CTI
+description: Cluster malware sharing exact C2 crypto keys, campaign IDs, or license/public keys from config.
+source: c2:config:key
+target: file:bytes
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: observed_in
+  direction: out
+  form: file:bytes
+constraints:
+  temporal:
+    order:
+    - config.firstseen <= sample.firstseen
+    window_days: 1825
+  degree_caps:
+    c2:config:key: 20000
+  negative_nodes:
+  - form: c2:config:key
+    list: default_builder_keys
+  - form: c2:config:key
+    list: templated_campaign_ids
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- sandbox

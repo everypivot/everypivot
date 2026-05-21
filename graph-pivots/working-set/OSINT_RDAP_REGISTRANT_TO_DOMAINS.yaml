@@ -1,0 +1,68 @@
+id: OSINT_RDAP_REGISTRANT_TO_DOMAINS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'Corporate service providers and privacy layers can appear as registrants for unrelated customers.'
+- 'Registrant entities can change without immediate RDAP updates, leaving stale resolution trails.'
+- 'RDAP disclosure quality varies sharply by registrar and TLD, so nulls and redactions are common.'
+capability_requirements:
+  required:
+  - 'rdap_enrichment'
+  - 'registrant_normalization'
+  optional:
+  - 'entity_normalization'
+  - 'privacy_service_suppression'
+review:
+  last_reviewed: '2026-05-20'
+  review_cadence_days: 90
+  next_review: '2026-08-18'
+name: RDAP Registrant -> Domains
+category: OSINT
+description: Pivot by disclosed RDAP registrant entity to enumerate domains while filtering privacy and registrar-noise cases.
+source: rdap:registrant
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: registered
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - registrant.created <= fqdn.created
+    window_days: 3650
+  degree_caps:
+    rdap:registrant: 2000
+  negative_nodes:
+  - form: rdap:registrant
+    list: privacy_proxy_registrants
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- rdap

@@ -1,0 +1,76 @@
+id: CTI_WEB_CLIENT_UID_TO_IPS
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Browser/client identifiers can be reset, synced, shared, replayed, truncated, hashed, or scoped to one vendor telemetry source.'
+- 'NAT, VPN, proxy, carrier-grade NAT, and corporate egress can overjoin many unrelated users or browsers to one IP address.'
+- 'A browser/client UID to IP match is not actor attribution and should not be treated as proof of endpoint ownership.'
+capability_requirements:
+  required:
+  - 'browser_client_uid_normalization'
+  - 'web_request_source_ip_extraction'
+  optional:
+  - 'proxy_chain_parsing'
+  - 'egress_ip_suppression'
+  - 'vpn_or_proxy_enrichment'
+name: Web Client UID -> IPs
+category: CTI
+description: Pivot from a normalized browser or web client identifier to source IP addresses observed with that identifier.
+source: web:client:uid
+target: inet:ipv4
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: observed_in_request
+  direction: out
+  form: http:request
+- via: sourced_from
+  direction: out
+  form: inet:ipv4
+constraints:
+  temporal:
+    order:
+    - client_uid.firstseen <= request.observed
+    window_days: 90
+  degree_caps:
+    web:client:uid: 100000
+    inet:ipv4: 100000
+  negative_nodes:
+  - form: inet:ipv4
+    list: private_or_reserved_ranges
+  - form: inet:ipv4
+    list: high_volume_corporate_egress_ips
+  - form: inet:ipv4
+    list: known_vpn_proxy_or_tor_egress
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- ip_role_context
+- egress_degree
+- geo_asn_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- proxy_logs
+- browser_telemetry

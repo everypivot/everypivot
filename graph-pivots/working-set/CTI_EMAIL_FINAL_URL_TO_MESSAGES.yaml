@@ -1,0 +1,71 @@
+id: CTI_EMAIL_FINAL_URL_TO_MESSAGES
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Final URLs can vary by time, geography, user agent, authentication state, or security-sandbox handling.'
+- 'Final destinations may be benign shared services or interstitials rather than adversary-controlled infrastructure.'
+capability_requirements:
+  required:
+  - 'redirect_resolution'
+  - 'message_trace_join'
+  optional:
+  - 'protected_url_decoding'
+  - 'browser_sandbox_resolution'
+name: Email Final URL -> Messages
+category: CTI
+description: Pivot from a click-time or detonation-resolved final URL to email messages and original embedded URLs that reached it.
+source: email:final_url
+target: email:message|inet:url
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: resolved_from
+  direction: out
+  form: inet:url
+- via: embedded_in
+  direction: out
+  form: email:message
+constraints:
+  temporal:
+    order:
+    - message.received <= final_url.observed
+    window_days: 90
+  degree_caps:
+    email:final_url: 100000
+  negative_nodes:
+  - form: inet:fqdn
+    list: common_url_redirectors
+  - form: inet:fqdn
+    list: benign_shared_landing_services
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- redirect_chain_depth
+- final_url_stability
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- mail_click_telemetry
+- url_corpus

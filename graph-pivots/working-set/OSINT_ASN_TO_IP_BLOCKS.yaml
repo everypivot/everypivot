@@ -1,0 +1,66 @@
+id: OSINT_ASN_TO_IP_BLOCKS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Transit ASNs and cloud or CDN aggregators announce IP space on behalf of many unrelated customers; a shared ASN is not a shared operator.'
+- 'BGP origin is the announcing ASN, not the assigned or owning organization; reseller and customer assignments are not visible at this layer.'
+- 'Prefix delegation can change over time; historical IP/ASN bindings should be timestamped and not treated as current ownership.'
+capability_requirements:
+  required:
+  - 'rir_whois_or_rdap'
+  - 'bgp_history'
+  optional:
+  - 'passive_dns'
+  - 'active_resolution'
+name: ASN → IP Blocks
+category: OSINT
+description: Enumerate prefixes and live IPs announced by an ASN.
+source: net:asn
+target: inet:ipv4
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: announces
+  direction: out
+  form: inet:ipv4
+constraints:
+  temporal:
+    order:
+    - asn.firstseen <= ip.seen
+    window_days: 1825
+  degree_caps:
+    net:asn: 1
+  negative_nodes:
+  - form: net:asn
+    list: hyperscaler_asns
+  - form: net:asn
+    list: transit_provider_asns
+  - form: net:asn
+    list: cdn_asns
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- bgp

@@ -1,0 +1,66 @@
+id: CTI_EMAIL_TEMPLATE_OR_ASSET_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'email_telemetry'
+  - 'content_fingerprinting'
+  optional:
+  - 'phishing_template_suppression'
+  - 'campaign_message_clustering'
+hazards:
+- Common templates, stock images, and phishing-kit boilerplate can be shared by unrelated operators or reused by defenders in tests.
+- Corroborate asset reuse with delivery infrastructure, sender context, and timing before clustering campaigns.
+name: Email Template or Asset Hash -> Host Cluster
+category: CTI
+description: Cluster phishing or lure infrastructure reusing the same template asset, image, or packaged email content.
+source: hash:sha256
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: embedded_in
+  direction: out
+  form: phish:kit|message:template
+- via: hosted_on|used_by
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - asset.firstseen <= template.firstseen <= fqdn.seen
+    window_days: 730
+  degree_caps:
+    hash:sha256: 5000
+  negative_nodes:
+  - form: hash:sha256
+    list: common_marketing_asset_hashes
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- osint_web
+- sandbox

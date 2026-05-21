@@ -1,0 +1,70 @@
+id: CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Resource section hashes can group common packers, compilers, icons, manifests, or benign library resources.'
+- 'Minor rebuilds and localization changes can alter resource hashes while preserving functional similarity.'
+- 'The pivot should be paired with prevalence and negative controls for common toolchains before promotion.'
+capability_requirements:
+  required:
+  - 'sample_static_analysis'
+  - 'resource_section_hashing'
+  optional:
+  - 'packer_detection'
+  - 'sample_prevalence_enrichment'
+  - 'common_resource_suppression'
+name: Sample Resource Section Hash Cluster
+category: CTI
+description: Cluster samples that share an exact or normalized hash of an embedded resource section.
+source: file:resource_section:hash
+target: file:hash
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: resource_section_hash_of
+  direction: in
+  form: file:hash
+constraints:
+  temporal:
+    order:
+    - sample.observed >= resource_hash.extracted
+    window_days: 365
+  degree_caps:
+    file:resource_section:hash: 100000
+    file:hash: 1000000
+  negative_nodes:
+  - form: file:resource_section:hash
+    list: common_packer_or_icon_resource_hashes
+  - form: file:hash
+    list: common_benign_file_hashes
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- resource_type
+- packer_flag
+- prevalence
+- common_resource_penalty
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- malware_analysis
+- file_reputation

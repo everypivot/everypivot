@@ -1,0 +1,30 @@
+EveryPivot
+Copyright (c) 2026 EveryPivot Project
+
+This product includes software and data developed as part of the EveryPivot
+project (https://everypivot.io).
+
+  * Source code, tooling, schema, and site assets are licensed under the
+    Apache License, Version 2.0 (see LICENSE-CODE).
+
+  * The pattern corpus (`graph-pivots/`) and fixtures (`fixtures/`) are
+    licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License (CC BY-SA 4.0) (see LICENSE-DATA).
+
+Required attribution string (for downstream redistributors, derivative
+works, and any product that incorporates the corpus or tooling):
+
+    "Pattern definitions and tooling from EveryPivot Project,
+     used under Apache-2.0 (code) and CC BY-SA 4.0 (patterns)."
+
+Per Apache-2.0 §4(d), this NOTICE file (or its substantive contents) must
+be reproduced in any Derivative Works that distribute portions of the
+Apache-licensed material.
+
+Per CC BY-SA 4.0 §3, any adaptation of the pattern corpus must be released
+under CC BY-SA 4.0 (or a compatible license) and must retain this
+attribution.
+
+"EveryPivot" is an unregistered trademark associated with the EveryPivot
+Project. No license is granted to use the EveryPivot name or branding to
+identify your own products or services.

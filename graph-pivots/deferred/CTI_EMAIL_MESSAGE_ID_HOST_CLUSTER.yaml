@@ -1,0 +1,68 @@
+id: CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Message-ID host components can be forged, templated by mailing software, or inherited from legitimate mail infrastructure.'
+- 'Large mail platforms and common libraries can produce high-degree host patterns across unrelated messages.'
+- 'A Message-ID host overlap is weak unless paired with sender, attachment, relay, or campaign context.'
+capability_requirements:
+  required:
+  - 'message_id_parsing'
+  - 'mailflow_identifier_normalization'
+  optional:
+  - 'common_mailer_suppression'
+  - 'sender_domain_context'
+  - 'attachment_hash_enrichment'
+name: Email Message-ID Host Cluster
+category: CTI
+description: Cluster email messages that share the same normalized host or domain component extracted from Message-ID values.
+source: email:message:id:host
+target: email:message
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: appears_in_message_id
+  direction: in
+  form: email:message
+constraints:
+  temporal:
+    order:
+    - message.received >= message_id.extracted
+    window_days: 30
+  degree_caps:
+    email:message:id:host: 10000
+    email:message: 100000
+  negative_nodes:
+  - form: email:message:id:host
+    list: common_mail_platform_message_id_hosts
+  - form: email:message
+    list: bulk_or_marketing_messages
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- sender_domain_diversity
+- recipient_domain_diversity
+- common_mailer_penalty
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry

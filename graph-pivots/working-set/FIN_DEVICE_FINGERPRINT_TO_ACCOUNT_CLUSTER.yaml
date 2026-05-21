@@ -1,0 +1,70 @@
+id: FIN_DEVICE_FINGERPRINT_TO_ACCOUNT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'Shared devices, emulators, and device-farm infrastructure can connect unrelated users.'
+- 'Fingerprint drift across SDK or browser updates can fragment true reuse or create synthetic matches.'
+- 'Account-linking from fingerprints needs KYC or transaction corroboration because false positives are common in shared device pools.'
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'device_fingerprint_normalization'
+  optional:
+  - 'identity_records'
+  - 'emulator_device_farm_suppression'
+review:
+  last_reviewed: '2026-05-20'
+  review_cadence_days: 90
+  next_review: '2026-08-18'
+name: Device Fingerprint -> Account Cluster
+category: FIN
+description: Cluster fraud-linked accounts or identities reusing the same device fingerprint or canonical device profile.
+source: it:device:fingerprint
+target: fin:account|person
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: used_by
+  direction: out
+  form: fin:account|person
+constraints:
+  temporal:
+    order:
+    - device.firstseen <= account.seen
+    window_days: 1825
+  degree_caps:
+    it:device:fingerprint: 1000
+  negative_nodes:
+  - form: it:device:fingerprint
+    list: shared_enterprise_device_profiles
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- device_graph
+- bank_txn
+- kyc

@@ -1,0 +1,70 @@
+id: FIN_DROP_ADDRESS_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'Apartments, forwarding centres, and commercial mail drops can create benign many-to-one reuse.'
+- 'Address normalization errors can collapse near-matches or under-segment suites and unit identifiers.'
+- 'Shared addresses and account records need temporal KYC corroboration to avoid false positives from mail services.'
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'address_normalization'
+  optional:
+  - 'identity_records'
+  - 'forwarder_classification'
+review:
+  last_reviewed: '2026-05-20'
+  review_cadence_days: 90
+  next_review: '2026-08-18'
+name: Drop Address -> Entity Cluster
+category: FIN
+description: Cluster accounts, sellers, or identities sharing the same shipping, forwarding, or drop address.
+source: geo:address
+target: org:org|person
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: ships_to|registered_at
+  direction: out
+  form: org:org|person
+constraints:
+  temporal:
+    order:
+    - address.created <= entity.seen
+    window_days: 1825
+  degree_caps:
+    geo:address: 500
+  negative_nodes:
+  - form: geo:address
+    list: fulfillment_centers_and_forwarders
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- ecommerce
+- shipping
+- kyc

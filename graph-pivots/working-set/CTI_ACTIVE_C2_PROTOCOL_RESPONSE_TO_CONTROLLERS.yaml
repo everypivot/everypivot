@@ -1,0 +1,73 @@
+id: CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_CONTROLLERS
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: medium
+robustness_class: multi_hop_inference
+hazards:
+- 'Active protocol probes require authorization, scope control, and careful rate limiting; the pattern only models the observed relationship.'
+- 'Protocol emulation can trigger decoys, sinkholes, honeypots, middleboxes, or replayed responses that do not represent an operator-controlled controller.'
+- 'A matching response is infrastructure evidence, not actor attribution.'
+- 'Common or default protocol banners and shared test infrastructure can produce false matches; corroborate with independent malware or network evidence.'
+capability_requirements:
+  required:
+  - 'active_protocol_probe_result_normalization'
+  - 'controller_endpoint_extraction'
+  optional:
+  - 'payload_decoding'
+  - 'sinkhole_honeypot_suppression'
+  - 'internet_scan_archive_lookup'
+name: Active C2 Protocol Response -> Controllers
+category: CTI
+description: Pivot from a normalized active protocol probe response to controller endpoints that emitted the same distinctive response or handshake.
+source: network:service:probe_response
+target: inet:ipv4|inet:fqdn|inet:url
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: emitted_by
+  direction: out
+  form: network:service
+- via: hosted_at
+  direction: out
+  form: inet:ipv4|inet:fqdn|inet:url
+constraints:
+  temporal:
+    order:
+    - probe.sent <= response.observed
+    window_days: 30
+  degree_caps:
+    network:service:probe_response: 10000
+    inet:ipv4: 10000
+  negative_nodes:
+  - form: inet:ipv4
+    list: known_sinkholes_honeypots
+  - form: inet:fqdn
+    list: benign_protocol_testbeds
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- protocol_family
+- response_marker_rarity
+- temporal_consistency
+- sinkhole_penalty
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- active_discovery_results
+- internet_scan_archives
+- malware_analysis

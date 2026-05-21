@@ -1,0 +1,70 @@
+id: CROSS_FQDN_TO_ORG_LEI_SANCTIONS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: missing_negative_controls
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'rdap_enrichment'
+  - 'lei_resolution'
+  - 'sanctions_list_access'
+  optional:
+  - 'privacy_service_suppression'
+  - 'registrar_reseller_context'
+hazards:
+- RDAP registrants may be privacy-proxied, stale, reseller-owned, common service providers, or same-name collisions rather than the domain controller.
+- LEI and sanctions joins are temporal; corroborate current registration evidence and avoid treating intermediary links as direct control.
+name: FQDN → RDAP Org → LEI → Sanctions
+category: CROSS
+description: Bridge a domain to its org via RDAP, map to LEI, and screen against sanctions.
+source: inet:fqdn
+target: sanction:entry
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: registered_to
+  direction: out
+  form: org:org
+- via: has_lei
+  direction: out
+  form: lei:record
+- via: listed_as
+  direction: out
+  form: sanction:entry
+constraints:
+  temporal:
+    order:
+    - fqdn.created <= sanction.listed
+    window_days: 3650
+  degree_caps:
+    inet:fqdn: 10000
+  negative_nodes:
+  - form: org:org
+    list: privacy_protect_whois
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- rdap
+- lei
+- sanctions

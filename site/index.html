@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>EveryPivot™ — Pattern Library</title>
+    <style>
+      :root {
+        --fg: #1a1a1a;
+        --muted: #5b6066;
+        --line: #d8dadd;
+        --line-soft: #ecedef;
+        --bg: #fafafa;
+        --panel: #fff;
+        --accent: #2b4a8c;
+        --validated: #1f6f43;
+        --working: #7a5a00;
+        --deferred: #6b6b6b;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        color: var(--fg);
+        background: var(--bg);
+      }
+      header.page {
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+        padding: 18px 24px 14px;
+      }
+      header.page h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+      header.page .meta {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 4px;
+        font-family: var(--mono);
+      }
+      .stats {
+        display: flex;
+        gap: 18px;
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .stats b { color: var(--fg); font-weight: 600; }
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 18px 24px 60px;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        align-items: center;
+        padding: 12px 14px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        margin-bottom: 14px;
+      }
+      .controls label {
+        font-size: 12px;
+        color: var(--muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .controls input[type="text"],
+      .controls select {
+        font: inherit;
+        font-size: 13px;
+        padding: 5px 8px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #fff;
+        color: var(--fg);
+      }
+      .controls input[type="text"] { width: 260px; }
+      .controls .lane-toggles {
+        display: inline-flex;
+        gap: 10px;
+      }
+      .controls .lane-toggles label {
+        color: var(--fg);
+        font-size: 12px;
+      }
+      .result-count {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--muted);
+        font-family: var(--mono);
+      }
+      ul.patterns {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      li.pattern {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        margin-bottom: 8px;
+        overflow: hidden;
+      }
+      .pattern-head {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 10px 14px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .pattern-head:hover { background: var(--line-soft); }
+      .pattern-head .caret {
+        width: 12px;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      .pattern-title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 8px 10px;
+        min-width: 0;
+      }
+      .pattern-title .id {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .pattern-title .name {
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .pattern-title .desc {
+        color: var(--muted);
+        font-size: 12px;
+        flex-basis: 100%;
+      }
+      .badges {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: flex-end;
+      }
+      .badge {
+        font-size: 11px;
+        font-family: var(--mono);
+        padding: 2px 7px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        background: #f3f4f6;
+        white-space: nowrap;
+      }
+      .badge.lane-validated { color: var(--validated); border-color: #b8dcc6; background: #ecf6f0; }
+      .badge.lane-working_set { color: var(--working); border-color: #e6d49b; background: #fbf4dc; }
+      .badge.lane-deferred { color: var(--deferred); border-color: var(--line); background: #f3f4f6; }
+      .badge.cat { color: var(--accent); border-color: #c0cce6; background: #eef2fa; }
+      .pattern-body {
+        display: none;
+        border-top: 1px solid var(--line-soft);
+        padding: 12px 14px 14px;
+        background: #fcfcfd;
+      }
+      li.pattern.open .pattern-body { display: block; }
+      li.pattern.open .caret { transform: rotate(90deg); display: inline-block; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px 18px;
+      }
+      .field { font-size: 12px; }
+      .field .k {
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 10px;
+        margin-bottom: 2px;
+      }
+      .field .v { font-family: var(--mono); font-size: 12px; word-break: break-word; }
+      .field .v.plain { font-family: inherit; }
+      .chips { display: flex; flex-wrap: wrap; gap: 4px; }
+      .chip {
+        font-family: var(--mono);
+        font-size: 11px;
+        padding: 1px 6px;
+        background: #eef0f3;
+        border-radius: 3px;
+        color: var(--fg);
+      }
+      .hazards {
+        margin-top: 12px;
+        font-size: 12px;
+      }
+      .hazards h4 {
+        margin: 0 0 4px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .hazards ul { margin: 0; padding-left: 18px; color: var(--fg); }
+      .hazards li { margin-bottom: 2px; }
+      .pattern-foot {
+        margin-top: 12px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .pattern-foot a { color: var(--accent); text-decoration: none; }
+      .pattern-foot a:hover { text-decoration: underline; }
+      .empty {
+        padding: 30px;
+        text-align: center;
+        color: var(--muted);
+        background: var(--panel);
+        border: 1px dashed var(--line);
+        border-radius: 6px;
+      }
+      .load-error {
+        padding: 14px;
+        background: #fff4f4;
+        border: 1px solid #e0b4b4;
+        color: #6b1111;
+        border-radius: 6px;
+        font-size: 13px;
+      }
+      footer.page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px 24px 40px;
+        color: var(--muted);
+        font-size: 12px;
+        font-family: var(--mono);
+      }
+      .license-pill {
+        display: inline-block;
+        padding: 1px 7px;
+        border-radius: 10px;
+        background: #eef2fa;
+        color: var(--accent);
+        border: 1px solid #c0cce6;
+        font-family: var(--mono);
+        font-size: 11px;
+        margin-right: 2px;
+      }
+      .license-pill-data {
+        background: #f1eef9;
+        color: #4a3a8c;
+        border-color: #c8c0e6;
+      }
+      .tm {
+        font-size: 0.55em;
+        vertical-align: super;
+        margin-left: 1px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      section.license {
+        margin-top: 28px;
+        padding: 16px 18px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--accent);
+        border-radius: 6px;
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--fg);
+      }
+      section.license h2 {
+        margin: 0 0 6px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+      section.license .copy-line {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      section.license ul {
+        margin: 8px 0 0;
+        padding-left: 20px;
+      }
+      section.license li { margin-bottom: 4px; }
+      section.license a { color: var(--accent); }
+      section.license .cite-block {
+        margin-top: 12px;
+        padding: 10px 12px;
+        background: #f5f6f8;
+        border: 1px solid var(--line-soft);
+        border-radius: 4px;
+        font-family: var(--mono);
+        font-size: 12px;
+        white-space: pre-wrap;
+        color: var(--fg);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page">
+      <h1>EveryPivot<span class="tm">™</span> — Pattern Library</h1>
+      <div class="meta">
+        <span id="release">release …</span> · schema pivot_pattern <span id="schema">…</span> · published <span id="published">…</span> · <span class="license-pill" id="license-code-pill">code: Apache-2.0</span> <span class="license-pill license-pill-data" id="license-corpus-pill">corpus: CC BY-SA 4.0</span> · <span id="copyright-line">© 2026 EveryPivot Project</span>
+      </div>
+      <div class="stats">
+        <span><b id="c-validated">0</b> validated</span>
+        <span><b id="c-working">0</b> working set</span>
+        <span><b id="c-deferred">0</b> deferred</span>
+        <span><b id="c-total">0</b> total</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="controls">
+        <label>
+          Search
+          <input type="text" id="q" placeholder="id, name, source, target…" autocomplete="off" />
+        </label>
+        <label>
+          Category
+          <select id="cat"><option value="">all</option></select>
+        </label>
+        <label>
+          Precision
+          <select id="prec">
+            <option value="">all</option>
+            <option>high</option>
+            <option>medium</option>
+            <option>low</option>
+          </select>
+        </label>
+        <div class="lane-toggles">
+          <label><input type="checkbox" data-lane="validated" checked /> validated</label>
+          <label><input type="checkbox" data-lane="working_set" checked /> working set</label>
+          <label><input type="checkbox" data-lane="deferred" /> deferred</label>
+        </div>
+        <span class="result-count" id="result-count">0 patterns</span>
+      </div>
+
+      <div id="list-host"><div class="empty">Loading…</div></div>
+
+      <section class="license" aria-labelledby="license-h">
+        <h2 id="license-h">License &amp; attribution</h2>
+        <div class="copy-line">
+          EveryPivot™ © 2026 EveryPivot Project. Dual-licensed:
+          tooling, schema, and site under
+          <a href="./LICENSE-CODE" target="_blank" rel="noopener">Apache License 2.0</a>;
+          pattern corpus and fixtures under
+          <a href="./LICENSE-DATA" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+          See <a href="./LICENSE" target="_blank" rel="noopener">LICENSE</a>,
+          <a href="./NOTICE" target="_blank" rel="noopener">NOTICE</a>, and
+          <a href="./TRADEMARK.md" target="_blank" rel="noopener">TRADEMARK</a>
+          for the named copyright holder and trademark owner.
+        </div>
+        <p style="margin:0 0 6px;">
+          You may use, copy, modify, and redistribute the corpus and tooling
+          — including in commercial work — provided you follow the terms below.
+        </p>
+        <ul>
+          <li>
+            <strong>Credit EveryPivot</strong> in any redistribution or
+            derivative work — in your README, about page, third-party notices,
+            or wherever you list data sources. The named copyright holder is
+            listed in <a href="./NOTICE" target="_blank" rel="noopener">NOTICE</a>.
+          </li>
+          <li>
+            <strong>Pattern derivatives stay open under CC BY-SA 4.0.</strong>
+            If you publish a modified version of the corpus, it must carry
+            the same license. You may not relicense the patterns.
+          </li>
+          <li>
+            <strong>Mark your modifications</strong> (Apache-2.0 §4(b);
+            CC BY-SA §3(a)(1)(B)) so downstream users can tell your changes
+            from the canonical EveryPivot release.
+          </li>
+          <li>
+            <strong>Preserve this NOTICE</strong> in any redistribution
+            of Apache-licensed material (Apache-2.0 §4(d)).
+          </li>
+          <li>
+            <strong>Don't use the EveryPivot name</strong> or branding for
+            your fork, mirror, or competing product. The licenses cover the
+            content; the trademark does not transfer. Nominative use ("based
+            on EveryPivot") is fine.
+          </li>
+          <li>
+            <strong>No implied endorsement.</strong> Your derivative work is
+            yours; don't suggest the EveryPivot Project backs it.
+          </li>
+        </ul>
+        <p style="margin:10px 0 0;">Suggested attribution string:</p>
+        <div class="cite-block">Pattern definitions and tooling from EveryPivot™ (EveryPivot Project),
+used under Apache-2.0 (code) and CC BY-SA 4.0 (patterns).
+Source: https://everypivot.io.</div>
+      </section>
+    </main>
+
+    <footer class="page">
+      Data: <span id="src-path">data/registry-index.js</span>. Source YAMLs in
+      <code>graph-pivots/{validated,working-set,deferred}/</code>.
+      © 2026 EveryPivot Project · EveryPivot™ · code Apache-2.0 · corpus CC BY-SA 4.0.
+    </footer>
+
+    <script src="./data/registry-index.js"></script>
+    <script>
+      (function () {
+        const host = document.getElementById("list-host");
+        const data = window.__EVERYPIVOT_REGISTRY__;
+
+        if (!data || !Array.isArray(data.patterns)) {
+          host.innerHTML =
+            '<div class="load-error">Could not load registry index. ' +
+            'If you opened this via file://, the data script may have been blocked. ' +
+            'Try serving the site/ directory (e.g. <code>python3 -m http.server</code>) and reload.</div>';
+          return;
+        }
+
+        document.getElementById("release").textContent = data.release || "—";
+        document.getElementById("schema").textContent =
+          (data.schema_versions && data.schema_versions.pivot_pattern) || "—";
+        document.getElementById("published").textContent = data.published_at || "—";
+
+        // Apply license metadata from the registry data, if present.
+        // The static text in the markup acts as a fallback for older data files.
+        var lic = data.license || {};
+        if (lic.code && lic.code.spdx) {
+          document.getElementById("license-code-pill").textContent =
+            "code: " + lic.code.spdx;
+        }
+        if (lic.corpus && lic.corpus.spdx) {
+          // Pretty-print the SPDX id ("CC-BY-SA-4.0" -> "CC BY-SA 4.0")
+          var corpusLabel = lic.corpus.spdx.replace(/^CC-/, "CC ").replace(/-(\d)/, " $1");
+          document.getElementById("license-corpus-pill").textContent =
+            "corpus: " + corpusLabel;
+        }
+        if (lic.copyright) {
+          document.getElementById("copyright-line").textContent = lic.copyright;
+        }
+
+        const counts = data.counts || {};
+        document.getElementById("c-validated").textContent = counts.validated || 0;
+        document.getElementById("c-working").textContent = counts.working_set || 0;
+        document.getElementById("c-deferred").textContent = counts.deferred || 0;
+        document.getElementById("c-total").textContent = data.patterns.length;
+
+        // Populate categories
+        const cats = Array.from(new Set(data.patterns.map((p) => p.category).filter(Boolean))).sort();
+        const catSel = document.getElementById("cat");
+        for (const c of cats) {
+          const o = document.createElement("option");
+          o.value = c;
+          o.textContent = c;
+          catSel.appendChild(o);
+        }
+
+        function laneClass(lane) { return "badge lane-" + lane; }
+        function laneLabel(lane) { return (lane || "").replace(/_/g, " "); }
+
+        function escape(s) {
+          return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+            return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+          });
+        }
+
+        function chip(label) {
+          return '<span class="chip">' + escape(label) + "</span>";
+        }
+
+        function renderField(k, v, plain) {
+          if (v == null || v === "" || (Array.isArray(v) && !v.length)) return "";
+          let body;
+          if (Array.isArray(v)) {
+            body = '<div class="chips">' + v.map(chip).join("") + "</div>";
+          } else {
+            body =
+              '<div class="v' +
+              (plain ? " plain" : "") +
+              '">' +
+              escape(v) +
+              "</div>";
+          }
+          return (
+            '<div class="field"><div class="k">' +
+            escape(k) +
+            "</div>" +
+            body +
+            "</div>"
+          );
+        }
+
+        function renderBody(p) {
+          const a = p.assessment || {};
+          const cr = p.capability_requirements || {};
+          const review = p.review || {};
+          const hazards = Array.isArray(p.hazards) ? p.hazards : [];
+
+          let parts = [];
+          parts.push('<div class="grid">');
+          parts.push(renderField("source", p.source));
+          parts.push(renderField("target", p.target));
+          parts.push(renderField("hops", p.hop_count));
+          parts.push(renderField("precision", p.precision_tier));
+          parts.push(renderField("robustness", p.robustness_class));
+          parts.push(renderField("schema", p.pattern_schema_version));
+          parts.push(renderField("claim", a.claim));
+          parts.push(renderField("basis", a.basis));
+          parts.push(renderField("scope", a.scope));
+          parts.push(renderField("datasets", p.datasets));
+          parts.push(renderField("required capabilities", cr.required));
+          parts.push(renderField("optional capabilities", cr.optional));
+          parts.push(renderField("last reviewed", review.last_reviewed));
+          parts.push(renderField("next review", review.next_review));
+          parts.push("</div>");
+
+          if (hazards.length) {
+            parts.push('<div class="hazards"><h4>Hazards</h4><ul>');
+            for (const h of hazards) parts.push("<li>" + escape(h) + "</li>");
+            parts.push("</ul></div>");
+          }
+
+          const githubBase =
+            "https://github.com/everypivot/everypivot/blob/v0.1.0/";
+          parts.push(
+            '<div class="pattern-foot">YAML: <a href="' +
+              githubBase +
+              escape(p.path) +
+              '" target="_blank" rel="noopener">' +
+              escape(p.path) +
+              "</a></div>"
+          );
+          return parts.join("");
+        }
+
+        function renderItem(p) {
+          const summary = p.summary || p.description || "";
+          return (
+            '<li class="pattern" data-id="' + escape(p.id) + '">' +
+            '<div class="pattern-head">' +
+              '<span class="caret">▸</span>' +
+              '<div class="pattern-title">' +
+                '<span class="name">' + escape(p.name || p.id) + "</span>" +
+                '<span class="id">' + escape(p.id) + "</span>" +
+                '<span class="desc">' + escape(summary) + "</span>" +
+              "</div>" +
+              '<div class="badges">' +
+                '<span class="badge cat">' + escape(p.category || "—") + "</span>" +
+                '<span class="' + laneClass(p.lane) + '">' + escape(laneLabel(p.lane)) + "</span>" +
+              "</div>" +
+            "</div>" +
+            '<div class="pattern-body">' + renderBody(p) + "</div>" +
+            "</li>"
+          );
+        }
+
+        const state = {
+          q: "",
+          cat: "",
+          prec: "",
+          lanes: new Set(["validated", "working_set"]),
+        };
+
+        function patternMatches(p) {
+          if (!state.lanes.has(p.lane)) return false;
+          if (state.cat && p.category !== state.cat) return false;
+          if (state.prec && p.precision_tier !== state.prec) return false;
+          if (state.q) {
+            const hay = [
+              p.id, p.name, p.description, p.summary, p.source, p.target,
+              p.robustness_class, p.category,
+              (p.datasets || []).join(" "),
+            ].join(" ").toLowerCase();
+            if (!hay.includes(state.q)) return false;
+          }
+          return true;
+        }
+
+        const laneOrder = { validated: 0, working_set: 1, deferred: 2 };
+        const sorted = data.patterns.slice().sort(function (a, b) {
+          const la = laneOrder[a.lane] ?? 9;
+          const lb = laneOrder[b.lane] ?? 9;
+          if (la !== lb) return la - lb;
+          if (a.category !== b.category) return (a.category || "").localeCompare(b.category || "");
+          return (a.id || "").localeCompare(b.id || "");
+        });
+
+        function render() {
+          const visible = sorted.filter(patternMatches);
+          document.getElementById("result-count").textContent =
+            visible.length + " pattern" + (visible.length === 1 ? "" : "s");
+          if (!visible.length) {
+            host.innerHTML = '<div class="empty">No patterns match the current filters.</div>';
+            return;
+          }
+          host.innerHTML = '<ul class="patterns">' + visible.map(renderItem).join("") + "</ul>";
+        }
+
+        // Wire controls
+        document.getElementById("q").addEventListener("input", function (e) {
+          state.q = e.target.value.trim().toLowerCase();
+          render();
+        });
+        document.getElementById("cat").addEventListener("change", function (e) {
+          state.cat = e.target.value;
+          render();
+        });
+        document.getElementById("prec").addEventListener("change", function (e) {
+          state.prec = e.target.value;
+          render();
+        });
+        document.querySelectorAll('.lane-toggles input[type="checkbox"]').forEach(function (cb) {
+          cb.addEventListener("change", function () {
+            const lane = cb.getAttribute("data-lane");
+            if (cb.checked) state.lanes.add(lane);
+            else state.lanes.delete(lane);
+            render();
+          });
+        });
+
+        // Expand/collapse on click
+        host.addEventListener("click", function (e) {
+          const head = e.target.closest(".pattern-head");
+          if (!head) return;
+          head.parentElement.classList.toggle("open");
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+id: OSINT_IP_TO_EXPOSED_RDP
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Scanner snapshots can miss ephemeral services or record stale exposure after an endpoint changed state.'
+- 'NAT, protocol gateways, and shared jump hosts can make one IP appear more representative of an operator environment than it really is.'
+capability_requirements:
+  required:
+  - 'rdp_scanning'
+  optional:
+  - 'certificate_normalization'
+name: IP -> Exposed RDP Service
+category: OSINT
+description: Determine whether an IP exposes RDP and enumerate the observed RDP service surface.
+source: inet:ipv4
+target: it:service:rdp
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: exposes
+  direction: out
+  form: it:service:rdp
+constraints:
+  temporal:
+    order:
+    - ip.seen <= rdp.seen
+    window_days: 365
+  degree_caps:
+    inet:ipv4: 10
+  negative_nodes:
+  - form: inet:ipv4
+    list: shared_rdp_gateway_ips
+  - form: inet:ipv4
+    list: scanner_honeypot_or_research_ranges
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- shodan_censys

@@ -1,0 +1,62 @@
+id: OSINT_NS_TO_DOMAINS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'Provider and reseller nameservers can host large numbers of unrelated zones.'
+- 'Historical DNS data can retain delegations long after an operator moved or abandoned a domain.'
+- 'Common provider defaults and shared nameservers require corroboration with domain-specific records and timing.'
+capability_requirements:
+  required:
+  - 'dns_public_lookup'
+  - 'nameserver_enrichment'
+  optional:
+  - 'passive_dns'
+  - 'public_suffix_normalization'
+name: Nameserver → Domains
+category: OSINT
+description: Find domains delegated to a given NS; useful for clustering adversary-managed zones.
+source: inet:fqdn:ns
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: authoritative_for
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - ns.seen <= fqdn.seen
+    window_days: 1825
+  degree_caps:
+    inet:fqdn:ns: 5000
+  negative_nodes:
+  - form: inet:fqdn:ns
+    list: public_or_managed_dns_provider_nameservers
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- pdns

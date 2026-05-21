@@ -1,0 +1,72 @@
+id: CTI_INTEL_OBSERVABLE_TO_TELEMETRY_SIGHTINGS
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Broad, stale, low-confidence, or commodity observables can match large amounts of unrelated telemetry.'
+- 'A telemetry sighting of an observable is not actor attribution and should not inherit the source report confidence automatically.'
+- 'Common or generic observables require corroboration with freshness, sighting context, and confidence before analyst action.'
+capability_requirements:
+  required:
+  - 'intel_observable_normalization'
+  - 'telemetry_sighting_index'
+  optional:
+  - 'stix_mapping'
+  - 'sighting_deduplication'
+name: Intel Observable -> Telemetry Sightings
+category: CTI
+description: Pivot from a normalized intelligence observable to matching sightings across endpoint, mail, network, DNS, or proxy telemetry.
+source: intel:observable
+target: telemetry:sighting
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: matched_by
+  direction: out
+  form: telemetry:sighting
+constraints:
+  temporal:
+    order:
+    - observable.ingested <= sighting.matched
+    window_days: 3650
+  degree_caps:
+    intel:observable: 1000000
+  negative_nodes:
+  - form: intel:observable
+    list: noisy_or_expired_observables
+  - form: inet:ipv4
+    list: private_or_reserved_ranges
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- sighting_count
+- telemetry_dataset_diversity
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- threat_intel
+- siem
+- edr
+- mail_telemetry
+- proxy_logs
+- dns

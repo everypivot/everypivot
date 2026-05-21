@@ -1,0 +1,78 @@
+id: CTI_IMAGE_TEXT_REUSE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- Stock imagery, memes, common logos, boilerplate text, reused screenshots, and public templates can overcluster unrelated actors or campaigns.
+- OCR output is sensitive to language, font, compression, cropping, watermarking, and model or extractor version.
+- Bounded semantic descriptions are model- and prompt-dependent; any future use must record extractor and prompt version before promotion.
+- Image-derived text reuse is a weak lead and must not be treated as common control or attribution without independent corroboration.
+capability_requirements:
+  required:
+  - image_extraction
+  - ocr_extraction
+  - text_normalization
+  optional:
+  - perceptual_hashing
+  - bounded_image_description
+  - language_detection
+  - stock_image_suppression
+name: Image Text Reuse Cluster
+category: CTI
+description: Cluster image assets or webpages that share distinctive normalized OCR text extracted from rendered images.
+source: image:ocr:text_hash
+target: file:image|inet:url
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: ocr_text_extracted_from
+  direction: in
+  form: file:image
+- via: image_observed_on
+  direction: out
+  form: inet:url
+constraints:
+  temporal:
+    order:
+    - ocr_text.extracted <= image.observed <= page.observed
+    window_days: 365
+  degree_caps:
+    image:ocr:text_hash: 100000
+    file:image: 1000000
+  negative_nodes:
+  - form: image:ocr:text_hash
+    list: common_logo_boilerplate_or_template_text_hashes
+  - form: file:image
+    list: stock_image_or_meme_assets
+  - form: inet:url
+    list: common_hosting_or_cdn_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- ocr_language
+- text_length
+- extractor_version
+- stock_or_template_penalty
+- image_context
+- temporal_consistency
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- image_corpus
+- osint_web

@@ -1,0 +1,62 @@
+id: OSINT_MARKETPLACE_LISTING_TO_DOMAINS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Reseller and auction platforms are broad inventory sources, not threat-only collections, so most listed domains are benign.'
+- 'Relisting, duplicate feeds, and stale marketplace cache data can preserve domains after a listing changed or disappeared.'
+- 'Common marketplace inventory and shared reseller feeds require corroboration with current listing details.'
+capability_requirements:
+  required:
+  - 'marketplace_listing_collection'
+  optional:
+  - 'domain_normalization'
+name: Marketplace Listing -> Domains
+category: OSINT
+description: Enumerate domains observed on reseller or auction marketplace listing feeds.
+source: osint:marketplace:listing
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: lists|offers
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - listing.seen <= fqdn.seen
+    window_days: 90
+  degree_caps:
+    osint:marketplace:listing: 50000
+  negative_nodes:
+  - form: osint:marketplace:listing
+    list: bulk_reseller_inventory_feeds
+  - form: osint:marketplace:listing
+    list: parking_or_broker_listing_sources
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- marketplace

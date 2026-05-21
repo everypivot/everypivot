@@ -1,0 +1,508 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pivot Pattern v1.4",
+  "$comment": "EveryPivot pivot-pattern schema. © 2026 EveryPivot Project. The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. This schema file is licensed under Apache-2.0 (see LICENSE-CODE). Pattern instances that conform to this schema (i.e. the corpus under graph-pivots/) are licensed under CC BY-SA 4.0 (see LICENSE-DATA). EveryPivot is a trademark — see TRADEMARK.md.",
+  "x-license": {
+    "copyright": "© 2026 EveryPivot Project",
+    "copyright_holder_notice": "The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. \"EveryPivot Project\" is the designated attribution party for redistribution under CC BY-SA 4.0 §3(a)(1)(A)(ii).",
+    "schema": {
+      "spdx": "Apache-2.0",
+      "url": "LICENSE-CODE"
+    },
+    "instances": {
+      "spdx": "CC-BY-SA-4.0",
+      "url": "LICENSE-DATA",
+      "share_alike": true
+    },
+    "attribution_required": "Pattern definitions and tooling from EveryPivot (EveryPivot Project), used under Apache-2.0 (code) and CC BY-SA 4.0 (patterns).",
+    "notice_url": "NOTICE",
+    "trademark": {
+      "mark": "EveryPivot",
+      "policy_url": "TRADEMARK.md",
+      "owner_notice": "See TRADEMARK.md for the named trademark owner."
+    }
+  },
+  "type": "object",
+  "required": [
+    "pattern_schema_version",
+    "id",
+    "version",
+    "name",
+    "category",
+    "description",
+    "source",
+    "target",
+    "hops",
+    "constraints",
+    "validation_state"
+  ],
+  "properties": {
+    "pattern_schema_version": {
+      "oneOf": [
+        {
+          "type": "string",
+          "const": "1.1"
+        },
+        {
+          "type": "number",
+          "const": 1.1
+        },
+        {
+          "type": "string",
+          "const": "1.2"
+        },
+        {
+          "type": "number",
+          "const": 1.2
+        },
+        {
+          "type": "string",
+          "const": "1.3"
+        },
+        {
+          "type": "number",
+          "const": 1.3
+        },
+        {
+          "type": "string",
+          "const": "1.4"
+        },
+        {
+          "type": "number",
+          "const": 1.4
+        }
+      ]
+    },
+    "id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "ADTECH",
+        "AITS",
+        "CROSS",
+        "CTI",
+        "FIN",
+        "HUMINT_SIGINT",
+        "IO",
+        "OSINT",
+        "SUPPLY"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "precision_tier": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "exploratory"
+      ],
+      "description": "Honest signal-strength tier. `high` = cryptographic/ownership-deterministic. `medium` = enumeration on a deterministic key, scale-noisy but controllable. `low` = known-noisy signal whose noise is characterized and handled (e.g. favicon/JA3/mutex with negative-node controls). `exploratory` = precision not yet characterized. `low` patterns CAN be validated under the editorial principle 'honest + mature, not high-only'; `exploratory` patterns generally cannot until characterized."
+    },
+    "deferred_reason": {
+      "type": "string",
+      "enum": [
+        "insufficient_hazards",
+        "missing_negative_controls",
+        "restricted_data_access",
+        "high_cardinality",
+        "needs_fixtures",
+        "schema_migration_pending",
+        "needs_downstream_capability_mapping",
+        "out_of_v1_editorial_scope"
+      ],
+      "description": "Primary backlog reason a deferred pattern remains outside the working-set and validated lanes. This is backlog metadata, not runtime confidence, execution capability, or release state. When multiple blockers apply, choose the primary blocker; validation and review tooling can continue to surface secondary hazards, controls, capability, and review gaps."
+    },
+    "validation_state": {
+      "type": "string",
+      "enum": [
+        "validated",
+        "working_set",
+        "deferred",
+        "retired"
+      ]
+    },
+    "robustness_class": {
+      "type": "string",
+      "enum": [
+        "exact_cryptographic",
+        "ownership_signal",
+        "enumeration",
+        "multi_hop_inference",
+        "domain_expansion"
+      ]
+    },
+    "hazards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "capability_requirements": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optional": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "last_reviewed": {
+          "type": "string"
+        },
+        "review_cadence_days": {
+          "type": "integer"
+        },
+        "next_review": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "assessment": {
+      "type": "object",
+      "required": [
+        "claim",
+        "basis",
+        "scope"
+      ],
+      "properties": {
+        "claim": {
+          "type": "string",
+          "enum": [
+            "targets",
+            "uses",
+            "achieves",
+            "exploits",
+            "attributed_to",
+            "developing",
+            "indicates",
+            "mitigation_assessed",
+            "detection_coverage_assessed"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "demonstrated",
+            "assessed",
+            "suspected",
+            "theoretical"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "entity_level",
+            "campaign_level",
+            "incident_level"
+          ]
+        },
+        "subject_role": {
+          "type": "string",
+          "enum": [
+            "threat_actor",
+            "campaign",
+            "incident",
+            "observation",
+            "behavioural_cluster",
+            "tool",
+            "vulnerability",
+            "mitigation",
+            "detection_rule",
+            "target",
+            "technique",
+            "attribution_target"
+          ]
+        },
+        "object_role": {
+          "type": "string",
+          "enum": [
+            "threat_actor",
+            "campaign",
+            "incident",
+            "observation",
+            "behavioural_cluster",
+            "tool",
+            "vulnerability",
+            "mitigation",
+            "detection_rule",
+            "target",
+            "technique",
+            "concept",
+            "attribution_target",
+            "product",
+            "attack_pattern",
+            "assessment"
+          ],
+          "description": "Semantic object-role hint. Legacy structural values remain accepted in v0.4 for compatibility only; prefer object_kind for concept/product/attack_pattern/assessment."
+        },
+        "object_kind": {
+          "type": "string",
+          "enum": [
+            "concept",
+            "product",
+            "attack_pattern",
+            "assessment"
+          ],
+          "description": "Structural object-kind hint. Use this instead of object_role for concept/product/attack_pattern/assessment."
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "claim": {
+                "const": "indicates"
+              },
+              "subject_role": {
+                "const": "observation"
+              }
+            },
+            "required": [
+              "claim",
+              "subject_role"
+            ]
+          },
+          "then": {
+            "properties": {
+              "scope": {
+                "const": "incident_level"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "hops": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "via",
+          "direction",
+          "form"
+        ],
+        "properties": {
+          "via": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "in",
+              "out"
+            ]
+          },
+          "form": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "temporal": {
+          "type": "object",
+          "properties": {
+            "order": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "window_days": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "degree_caps": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "negative_nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "form",
+              "list"
+            ],
+            "properties": {
+              "form": {
+                "type": "string"
+              },
+              "list": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "min_unique_sources": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "type": "object"
+    },
+    "datasets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pattern_schema_version": {
+            "enum": [
+              "1.2",
+              1.2,
+              "1.3",
+              1.3,
+              "1.4",
+              1.4
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "assessment"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pattern_schema_version": {
+            "enum": [
+              "1.3",
+              1.3,
+              "1.4",
+              1.4
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "required": [
+              "subject_role"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "object_role"
+                ]
+              },
+              {
+                "required": [
+                  "object_kind"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validation_state": {
+            "const": "validated"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "precision_tier",
+          "robustness_class"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validation_state": {
+            "const": "working_set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "precision_tier",
+          "robustness_class"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validation_state": {
+            "const": "deferred"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "deferred_reason"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

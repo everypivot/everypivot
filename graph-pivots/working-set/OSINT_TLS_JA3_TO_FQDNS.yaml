@@ -1,0 +1,64 @@
+id: OSINT_TLS_JA3_TO_FQDNS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+name: TLS JA3 → FQDNs
+category: OSINT
+description: Cluster servers or panels that present identical JA3/JA3S fingerprints.
+hazards:
+- 'Common TLS client libraries share JA3 fingerprints across large benign populations, so this pivot is inherently noisy.'
+- 'Middleboxes, fingerprint evolution, and collection bias can make JA3 overlap unstable across time and vantage points.'
+capability_requirements:
+  required:
+  - 'tls_scanning'
+  - 'ja3_fingerprint_extraction'
+  optional:
+  - 'common_client_library_suppression'
+  - 'internet_scan_archive_lookup'
+source: tls:ja3
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: observed_on
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - ja3.seen <= fqdn.seen
+    window_days: 365
+  degree_caps:
+    tls:ja3: 5000
+  negative_nodes:
+  - form: tls:ja3
+    list: common_client_library_ja3
+  - form: tls:ja3
+    list: common_scanner_ja3
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- tls
+- shodan_censys

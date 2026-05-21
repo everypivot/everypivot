@@ -1,0 +1,72 @@
+id: CTI_AUTH_SESSION_TO_DOMAINS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Authentication-session pivots must stay time-bounded; a domain touched during auth is not proof of account ownership or actor control.'
+- 'Auth-session domains can include common or shared identity providers, redirects, CDNs, captive portals, telemetry beacons, and security-product probes, so corroborating request role is required.'
+- 'Session-to-domain expansion should retain request role and timing so benign login infrastructure is not clustered as adversary infrastructure.'
+capability_requirements:
+  required:
+  - 'auth_session_telemetry'
+  - 'domain_normalization'
+  optional:
+  - 'redirect_chain_extraction'
+  - 'identity_provider_domain_suppression'
+name: Auth Session -> Domains
+category: CTI
+description: Pivot from a bounded authentication session to domains observed during that session.
+source: auth:session
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: touched_domain
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - auth_session.started <= domain.observed <= auth_session.ended
+    window_days: 1
+  degree_caps:
+    auth:session: 1000000
+    inet:fqdn: 1000000
+  negative_nodes:
+  - form: inet:fqdn
+    list: identity_provider_or_sso_domains
+  - form: inet:fqdn
+    list: common_cdn_domains
+  - form: inet:fqdn
+    list: captive_portal_or_probe_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- request_role
+- redirect_depth
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- auth_logs
+- proxy_logs
+- dns

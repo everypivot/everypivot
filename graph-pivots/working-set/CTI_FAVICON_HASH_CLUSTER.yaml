@@ -1,0 +1,70 @@
+id: CTI_FAVICON_HASH_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'Common frameworks, panel kits, and copied web templates reuse favicons widely across unrelated sites.'
+- 'Favicon hashes are exploratory and should be paired with infra, certificate, or content corroboration.'
+capability_requirements:
+  required:
+  - 'web_fingerprinting'
+  - 'http_probe'
+  optional:
+  - 'passive_dns'
+  - 'tls_scanning'
+name: HTTP Favicon Hash → FQDN Cluster
+category: CTI
+description: Pivot by identical HTTP favicon hash to discover co-hosted panels or cloned kits.
+source: web:site
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: http_favicon_hash
+  direction: out
+  form: hash:md5|hash:sha1
+- via: http_favicon_hash
+  direction: in
+  form: web:site
+- via: hosts
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - site.seen <= fqdn.seen
+    window_days: 365
+  degree_caps:
+    hash:md5: 5000
+  negative_nodes:
+  - form: web:site
+    list: popular_cms_default_icons
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- tls
+- osint_web
+- pdns
+- shodan_censys

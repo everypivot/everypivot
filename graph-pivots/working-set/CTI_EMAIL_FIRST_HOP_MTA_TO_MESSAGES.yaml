@@ -1,0 +1,70 @@
+id: CTI_EMAIL_FIRST_HOP_MTA_TO_MESSAGES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Shared mail relays, cloud mail platforms, mailing lists, and security gateways can connect many unrelated messages.'
+- 'First-hop MTA observations can be rewritten or normalized differently across mail telemetry sources.'
+- 'Message expansion from an MTA must use time windows and degree caps to avoid overjoining campaigns.'
+capability_requirements:
+  required:
+  - 'mailflow_header_normalization'
+  - 'message_identifier_normalization'
+  optional:
+  - 'bulk_sender_suppression'
+  - 'tenant_or_recipient_domain_filtering'
+  - 'relay_chain_parsing'
+name: First-Hop MTA -> Email Messages
+category: CTI
+description: Pivot from a first-hop mail transfer agent IP or host to email messages observed using that relay within a bounded window.
+source: inet:ipv4|inet:fqdn
+target: email:message
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: first_hop_mta_for
+  direction: in
+  form: email:message
+constraints:
+  temporal:
+    order:
+    - mta.observed <= message.received
+    window_days: 14
+  degree_caps:
+    inet:ipv4: 100000
+    email:message: 100000
+  negative_nodes:
+  - form: inet:ipv4
+    list: common_bulk_mail_relays
+  - form: inet:fqdn
+    list: managed_mail_gateway_hosts
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- message_count
+- recipient_domain_diversity
+- sender_domain_diversity
+- bulk_sender_penalty
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- dns
+- asn_registry

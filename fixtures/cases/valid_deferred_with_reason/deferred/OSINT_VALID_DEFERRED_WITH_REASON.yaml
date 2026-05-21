@@ -1,0 +1,21 @@
+id: OSINT_VALID_DEFERRED_WITH_REASON
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: out_of_v1_editorial_scope
+name: Valid Deferred With Reason Fixture
+category: OSINT
+description: Deferred fixture exercising a supported deferred_reason enum value.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

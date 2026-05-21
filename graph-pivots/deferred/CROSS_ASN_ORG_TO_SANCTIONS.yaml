@@ -1,0 +1,67 @@
+id: CROSS_ASN_ORG_TO_SANCTIONS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: missing_negative_controls
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'rir_whois_or_rdap'
+  - 'sanctions_list_access'
+  optional:
+  - 'bgp_history'
+  - 'entity_normalization'
+hazards:
+- Shared cloud, hosting, reseller, and transit ASNs can map many unrelated customers to the same organization or sanction-adjacent entity.
+- Sanctions and ASN organization data change over time; corroborate allocation dates and customer-level evidence to avoid false positives.
+name: ASN Org → Sanctions
+category: CROSS
+description: Check the organization owning an ASN against sanctions (useful in risk screening).
+source: net:asn
+target: sanction:entry
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: owned_by
+  direction: out
+  form: org:org
+- via: listed_as
+  direction: out
+  form: sanction:entry
+constraints:
+  temporal:
+    order:
+    - asn.firstseen <= sanction.listed
+    window_days: 3650
+  degree_caps:
+    net:asn: 1
+  negative_nodes:
+  - form: net:asn
+    list: hyperscaler_or_transit_asns
+  - form: net:asn
+    list: shared_hosting_provider_asns
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- bgp
+- sanctions

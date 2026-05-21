@@ -1,0 +1,66 @@
+id: OSINT_CRT_SH_SUBDOMAINS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Certificate Transparency reveals requested names, not necessarily currently live or controlled subdomains.'
+- 'Wildcard and SAN-heavy certificates can add noisy names that were never independently deployed.'
+- 'Common CA defaults and shared CDN or hosting certificates should be corroborated with live DNS, HTTP, or ownership context.'
+capability_requirements:
+  required:
+  - 'ct_history'
+  - 'certificate_normalization'
+  optional:
+  - 'dns_wildcard_detection'
+  - 'active_resolution'
+name: CT Logs → Subdomain Enumeration
+category: OSINT
+description: Discover subdomains via Certificate Transparency entries for a registrable domain.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: ct_subject_alt_name
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - cert.not_before <= fqdn.created
+    window_days: 1825
+  degree_caps:
+    inet:fqdn: 10000
+  negative_nodes:
+  - form: inet:fqdn
+    list: wildcard_certificate_names
+  - form: inet:fqdn
+    list: shared_cdn_or_hosting_certificate_names
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- ct

@@ -1,0 +1,21 @@
+id: OSINT_VALID_DEFERRED_MINIMAL
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: schema_migration_pending
+name: Valid Deferred Minimal Fixture
+category: OSINT
+description: Deferred v1.2 fixture with required deferred rationale but without promoted-lane metadata.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

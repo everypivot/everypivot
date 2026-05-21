@@ -1,0 +1,69 @@
+id: FIN_TRADE_PARTNER_SANCTIONS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'sanctions_list_access'
+  optional:
+  - 'trade_record_normalization'
+  - 'beneficial_ownership_resolution'
+hazards:
+- Trade counterparties, shared intermediaries, ownership chains, and sanctions lists change over time and vary by jurisdiction.
+- Corroborate shipment date, beneficial ownership, and account or payment context; avoid false positives from same-name or intermediary partners.
+name: Importer/Exporter → Trade Partner → Sanctions
+category: FIN
+description: Cross‑border trade partners screened against sanctions lists.
+source: org:org
+target: sanction:entry
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: trades_with
+  direction: out
+  form: org:org
+- via: listed_as
+  direction: out
+  form: sanction:entry
+constraints:
+  temporal:
+    order:
+    - trade.ts <= sanction.listed
+    window_days: 3650
+  degree_caps:
+    org:org: 100000
+  negative_nodes:
+  - form: org:org
+    list: freight_forwarders_or_customs_brokers
+  - form: org:org
+    list: free_trade_zone_intermediaries
+  - form: org:org
+    list: same_name_unresolved_entities
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- sanctions
+- osint_web

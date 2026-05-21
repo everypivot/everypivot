@@ -1,0 +1,79 @@
+id: CTI_QR_PAYLOAD_REUSE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- Public QR generators, demo payloads, venue signage, shared payment flows, and URL shorteners can create unrelated decoded-payload reuse.
+- Image quality, cropping, rotation, compression, and QR error correction can change decode success or produce partial payloads.
+- Decoded payloads may contain personal, payment, access-token, or invite-link material and require minimization before publication or sharing.
+- QR payload reuse is a lead for follow-on analysis only; it does not imply common control, campaign membership, or malicious intent without corroboration.
+capability_requirements:
+  required:
+  - image_extraction
+  - qr_decode
+  - payload_normalization
+  optional:
+  - barcode_decode
+  - ocr_extraction
+  - url_unshortening
+  - payment_address_parsing
+name: QR Payload Reuse Cluster
+category: CTI
+description: Cluster campaign assets or webpages that reuse the same normalized decoded QR payload.
+source: visual:qr_payload
+target: inet:url|payment:address|identity:account|file:image
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: decoded_from_image
+  direction: in
+  form: file:image
+- via: payload_resolves_to
+  direction: out
+  form: inet:url|payment:address|identity:account
+constraints:
+  temporal:
+    order:
+    - qr_payload.decoded <= asset.observed
+    window_days: 365
+  degree_caps:
+    visual:qr_payload: 10000
+    inet:url: 1000000
+  negative_nodes:
+  - form: visual:qr_payload
+    list: demo_or_test_qr_payloads
+  - form: inet:url
+    list: mainstream_url_shorteners_or_shared_payment_landing_pages
+  - form: payment:address
+    list: high_volume_shared_payment_or_bridge_addresses
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- payload_type
+- decode_confidence_bucket
+- image_context
+- shared_provider_penalty
+- sensitive_payload_flag
+- temporal_consistency
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- image_corpus
+- document_assets

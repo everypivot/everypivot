@@ -1,0 +1,72 @@
+id: CTI_SAMPLE_IMPHASH_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Common packers, frameworks, malware builders, and benign software families can share import hashes without shared operation.'
+- 'Import hashes can change with minor build changes and can be distorted by packing, import reconstruction, or damaged PE metadata.'
+capability_requirements:
+  required:
+  - 'pe_metadata_extraction'
+  - 'sample_hash_normalization'
+  optional:
+  - 'sandbox'
+  - 'malware_family_labels'
+review:
+  last_reviewed: '2026-05-14'
+  review_cadence_days: 90
+  next_review: '2026-08-12'
+name: PE ImpHash -> Sample Cluster
+category: CTI
+description: Cluster Windows PE samples that share the same import hash, preserving file hashes and collection provenance.
+source: file:pe:imphash
+target: file:bytes
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: observed_in
+  direction: out
+  form: file:bytes
+constraints:
+  temporal:
+    order:
+    - imphash.firstseen <= sample.firstseen
+    window_days: 3650
+  degree_caps:
+    file:pe:imphash: 10000
+  negative_nodes:
+  - form: file:pe:imphash
+    list: common_benign_imphashes
+  - form: file:pe:imphash
+    list: common_packer_imphashes
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- packer_penalty
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- malware_corpus
+- sandbox
+- edr

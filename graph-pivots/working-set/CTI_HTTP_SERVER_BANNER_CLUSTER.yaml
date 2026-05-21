@@ -1,0 +1,72 @@
+id: CTI_HTTP_SERVER_BANNER_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'Server banners are often default, forged, normalized by proxies, or shared by common hosting stacks.'
+- 'Internet scan data can be stale, incomplete, or affected by transient middleware and CDN behavior.'
+- 'Banner reuse is a weak clustering signal unless paired with rarer content, certificate, or hosting evidence.'
+capability_requirements:
+  required:
+  - 'http_header_collection'
+  - 'server_banner_normalization'
+  optional:
+  - 'internet_scan_archive_lookup'
+  - 'common_banner_suppression'
+  - 'tls_certificate_enrichment'
+name: HTTP Server Banner Cluster
+category: CTI
+description: Cluster hosts or URLs that expose the same distinctive HTTP server banner or platform header value.
+source: http:server_header
+target: inet:fqdn|inet:ipv4|inet:url
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: observed_on_service
+  direction: in
+  form: network:service
+- via: hosted_at
+  direction: out
+  form: inet:fqdn|inet:ipv4|inet:url
+constraints:
+  temporal:
+    order:
+    - banner.observed <= service.observed
+    window_days: 90
+  degree_caps:
+    http:server_header: 100000
+    inet:fqdn: 100000
+  negative_nodes:
+  - form: http:server_header
+    list: common_default_server_banners
+  - form: inet:fqdn
+    list: common_cdn_or_hosting_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- banner_normalized
+- version_specificity
+- common_banner_penalty
+- scan_archive_count
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- internet_scan_archives

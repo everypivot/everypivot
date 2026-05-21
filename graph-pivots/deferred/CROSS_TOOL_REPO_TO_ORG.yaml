@@ -1,0 +1,66 @@
+id: CROSS_TOOL_REPO_TO_ORG
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'code_search'
+  - 'maintainer_identity_resolution'
+  optional:
+  - 'git_metadata'
+  - 'entity_normalization'
+hazards:
+- Public repositories, forks, vendor mirrors, and employment changes can misstate who controls or uses a tool.
+- Corroborate maintainer and organization links with signed commits, release ownership, and current affiliation before inferring relationship.
+name: Toolcode Repo → Author → Organization
+category: CROSS
+description: Map tool repositories to maintainers/authors and then to their organizations (OSINT).
+source: code:repo
+target: org:org
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: maintained_by|authored_by
+  direction: out
+  form: person
+- via: employed_by|owns
+  direction: out
+  form: org:org
+constraints:
+  temporal:
+    order:
+    - commit.ts within window
+    window_days: 1825
+  degree_caps:
+    code:repo: 100000
+  negative_nodes:
+  - form: code:repo
+    list: mass_fork_mirrors
+  - form: code:repo
+    list: vendor_mirror_or_template_repositories
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web

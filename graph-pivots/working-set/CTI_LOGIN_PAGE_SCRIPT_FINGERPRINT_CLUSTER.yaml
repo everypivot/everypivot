@@ -1,0 +1,74 @@
+id: CTI_LOGIN_PAGE_SCRIPT_FINGERPRINT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: multi_hop_inference
+hazards:
+- 'Login-page scripts can be copied from templates, frameworks, phishing kits, legitimate portals, or security products.'
+- 'Conditional rendering can depend on server replies, cookies, geography, time, or user agent.'
+- 'A script fingerprint can identify a kit or template, but it does not prove infrastructure ownership.'
+- 'Common framework scripts and default kit templates create false matches; corroborate with page content and infrastructure context.'
+capability_requirements:
+  required:
+  - 'web_script_extraction'
+  - 'script_fingerprinting'
+  optional:
+  - 'dynamic_rendering'
+  - 'phishing_template_suppression'
+  - 'redirect_chain_extraction'
+name: Login Page Script Fingerprint Cluster
+category: CTI
+description: Cluster login pages or hosts that expose the same distinctive JavaScript fingerprint or conditional-rendering script marker.
+source: javascript:hash|web:behavior:fingerprint
+target: inet:url|inet:fqdn
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: embedded_in_page
+  direction: in
+  form: inet:url
+- via: has_host
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - script.observed <= page.observed
+    window_days: 90
+  degree_caps:
+    javascript:hash: 100000
+    inet:url: 100000
+  negative_nodes:
+  - form: javascript:hash
+    list: common_login_framework_scripts
+  - form: inet:fqdn
+    list: legitimate_identity_provider_hosts
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- script_hash
+- behavior_marker
+- template_penalty
+- dynamic_rendering_flag
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- url_corpus
+- internet_scan_archives

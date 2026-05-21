@@ -1,0 +1,75 @@
+id: ADTECH_PIPELINE_PHASE_MISMATCH
+version: 0.1.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: multi_hop_inference
+hazards:
+- 'Domain names often reflect legacy product names rather than current ad-pipeline function.'
+- 'Some exchanges intentionally reuse event, prebid, or creative endpoints across multiple phases.'
+- 'Shared vendors, CDNs, redirects, and common tracking endpoints can create false phase mismatches; corroborate with observed request flow.'
+capability_requirements:
+  required:
+  - 'web_request_telemetry'
+  - 'endpoint_role_classification'
+  optional:
+  - 'web_fingerprinting'
+  - 'phase_classification'
+name: Ad Pipeline Phase Mismatch
+category: ADTECH
+description: Flag ad-tech URLs whose observed request phase conflicts with the domain, path, or declared role suggested by the endpoint.
+source: http:request
+target: risk:observation
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: incident_level
+  subject_role: observation
+  object_role: observation
+hops:
+- via: classified_as
+  direction: out
+  form: adtech:pipeline:phase
+- via: hosted_by
+  direction: out
+  form: inet:fqdn
+- via: declares_role
+  direction: out
+  form: adtech:platform:role
+constraints:
+  temporal:
+    order:
+    - page_load.seen <= request.seen
+    window_days: 1
+  mismatch:
+    require_phase_role_conflict: true
+  degree_caps:
+    inet:fqdn: 5000
+  negative_nodes:
+  - form: inet:fqdn
+    list: known_multi_phase_ad_endpoints
+  - form: inet:fqdn
+    list: major_ad_exchange_canonical_hosts
+  provenance:
+    min_unique_sources: 1
+features:
+- observed_phase
+- declared_role
+- domain_token_conflict
+- path_token_conflict
+- phase_timing_offset_ms
+- exchange_allowlist_penalty
+- repeated_mismatch_count
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- browser_telemetry
+- proxy_logs
+- adtech_logs
+- url_corpus

@@ -1,0 +1,76 @@
+id: CTI_HTTP_HREF_TO_LINKED_DOMAIN
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'Most web pages link to common benign services such as analytics, social media, CDNs, payment processors, and consent platforms.'
+- 'A linked domain is weak evidence of shared operation unless supported by link context, repeated co-occurrence, or additional infrastructure pivots.'
+capability_requirements:
+  required:
+  - 'web_crawling'
+  - 'url_normalization'
+  optional:
+  - 'content_extraction'
+  - 'link_context_classification'
+name: HTTP Href -> Linked Domain
+category: CTI
+description: Pivot from a crawled web page to external FQDNs referenced in href, script, image, form, or embedded resource links.
+source: web:page
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: suspected
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: links_to
+  direction: out
+  form: inet:url
+- via: has_host
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - page.observed <= link.observed
+    window_days: 30
+  degree_caps:
+    web:page: 10000
+    inet:fqdn: 50000
+  negative_nodes:
+  - form: inet:fqdn
+    list: social_media_platforms
+  - form: inet:fqdn
+    list: analytics_platforms
+  - form: inet:fqdn
+    list: common_cdn_domains
+  - form: inet:fqdn
+    list: payment_and_consent_platforms
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- link_context_weight
+- common_domain_penalty
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- proxy_logs
+- url_corpus

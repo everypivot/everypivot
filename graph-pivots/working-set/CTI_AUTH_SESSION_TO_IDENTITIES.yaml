@@ -1,0 +1,71 @@
+id: CTI_AUTH_SESSION_TO_IDENTITIES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: domain_expansion
+hazards:
+- 'Authentication sessions can be reused, merged, replayed, or associated with multiple identities through shared accounts, delegated access, and service principals.'
+- 'A session-to-identity join is account telemetry context, not proof that a human user controlled every event in the session.'
+- 'Session identifiers must remain time-bounded and source-scoped to avoid joining unrelated authentication records.'
+capability_requirements:
+  required:
+  - 'auth_session_telemetry'
+  - 'identity_uid_normalization'
+  optional:
+  - 'service_principal_classification'
+  - 'delegated_access_context'
+name: Auth Session -> Identities
+category: CTI
+description: Pivot from a bounded authentication session to normalized user or principal identities associated with that session.
+source: auth:session
+target: identity:user:uid
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: associated_identity
+  direction: out
+  form: identity:user:uid
+constraints:
+  temporal:
+    order:
+    - auth_session.started <= identity.observed <= auth_session.ended
+    window_days: 1
+  degree_caps:
+    auth:session: 1000000
+    identity:user:uid: 100000
+  negative_nodes:
+  - form: identity:user:uid
+    list: shared_or_service_accounts
+  - form: auth:session
+    list: stale_or_merged_session_records
+  - form: auth:session
+    list: synthetic_or_healthcheck_sessions
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- auth_method
+- principal_role
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- auth_logs
+- identity

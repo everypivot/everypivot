@@ -1,0 +1,76 @@
+id: ADTECH_DSP_ID_TO_VENDOR_BUNDLE
+version: 0.1.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'web_request_telemetry'
+  - 'adtech_identifier_normalization'
+  optional:
+  - 'domain_normalization'
+  - 'vendor_bundle_resolution'
+robustness_class: ownership_signal
+hazards:
+- 'DSP IDs can be local to a platform and may not resolve to globally stable vendors.'
+- 'White-label, reseller, and bidder-as-a-service deployments can make one DSP bundle serve multiple unrelated customers.'
+- 'Shared vendors, reseller redirects, and common tracking or CDN endpoints can create false matches; corroborate with platform-specific IDs.'
+name: DSP ID -> Vendor Bundle
+category: ADTECH
+description: Pivot from DSP IDs, advertiser IDs, worker domains, bolt domains, benign CDN URLs, and dynamic CDN URLs to a candidate ad-tech vendor or customer bundle.
+source: adtech:dsp:id
+target: org:org|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: configured_in
+  direction: in
+  form: adtech:bundle
+- via: uses_domain
+  direction: out
+  form: inet:fqdn
+- via: associated_with
+  direction: out
+  form: org:org
+constraints:
+  temporal:
+    order:
+    - dsp_id.seen <= bundle.seen
+    window_days: 365
+  degree_caps:
+    adtech:dsp:id: 500
+    adtech:bundle: 500
+  negative_nodes:
+  - form: org:org
+    list: major_public_ad_platforms
+  - form: inet:fqdn
+    list: shared_white_label_dsp_hosts
+  provenance:
+    min_unique_sources: 1
+features:
+- dsp_id_match
+- advertiser_id_match
+- worker_domain_overlap
+- bolt_domain_overlap
+- benign_cdn_overlap
+- dynamic_cdn_overlap
+- customer_config_overlap
+- white_label_penalty
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- cti_reports
+- osint_web
+- adtech_logs
+- url_corpus

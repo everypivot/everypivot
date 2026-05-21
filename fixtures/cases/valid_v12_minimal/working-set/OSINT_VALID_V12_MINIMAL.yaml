@@ -1,0 +1,24 @@
+id: OSINT_VALID_V12_MINIMAL
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- Shared hosting and sinkhole infrastructure can create benign co-tenancy noise.
+name: Valid Minimal V1.2 Pattern
+category: OSINT
+description: Minimal working-set fixture that still satisfies the live v1.2 contract.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

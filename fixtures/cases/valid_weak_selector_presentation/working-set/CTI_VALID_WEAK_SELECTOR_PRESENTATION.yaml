@@ -1,0 +1,42 @@
+id: CTI_VALID_WEAK_SELECTOR_PRESENTATION
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'Mutex names can be copied from public code, reused by benign software, or inherited from shared builders.'
+- 'A mutex match is a weak selector and should remain corroborative unless paired with stronger sample or infrastructure evidence.'
+capability_requirements:
+  required:
+  - 'sample_collection'
+  - 'mutex_extraction'
+  optional:
+  - 'common_mutex_suppression'
+name: Weak Selector Presentation Fixture
+category: CTI
+description: Valid working-set fixture for a weak-selector pattern that needs visible hazards and suppression controls.
+source: it:exec:mutex
+target: file:bytes
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: observed_in
+  direction: out
+  form: file:bytes
+constraints:
+  temporal:
+    order:
+    - mutex.firstseen <= sample.firstseen
+    window_days: 365
+  degree_caps:
+    it:exec:mutex: 1000
+  negative_nodes:
+  - form: it:exec:mutex
+    list: common_benign_mutexes
+  provenance:
+    min_unique_sources: 1

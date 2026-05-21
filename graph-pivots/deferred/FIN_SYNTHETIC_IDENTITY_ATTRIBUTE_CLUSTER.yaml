@@ -1,0 +1,65 @@
+id: FIN_SYNTHETIC_IDENTITY_ATTRIBUTE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'identity_records'
+  optional:
+  - 'attribute_normalization'
+  - 'kyc_context'
+hazards:
+- Shared phones, addresses, IPs, or devices can come from families, dorms, employers, proxies, or reused data brokers.
+- Identity attributes are privacy-sensitive; corroborate with KYC, account behavior, and temporal patterns before clustering synthetic identities.
+name: Synthetic Identity -> Shared Attribute Cluster
+category: FIN
+description: Link synthetic or mule identities reusing the same contact, address, or profile attributes across nominally distinct personas.
+source: person
+target: person
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: uses_attribute
+  direction: out
+  form: email:addr|tel:phone|geo:address
+- via: used_by
+  direction: out
+  form: person
+constraints:
+  temporal:
+    order:
+    - person.created <= attribute.seen <= linked_person.seen
+    window_days: 3650
+  degree_caps:
+    person: 1000
+  negative_nodes:
+  - form: email:addr
+    list: disposable_email_domains
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- kyc
+- fraud_ops

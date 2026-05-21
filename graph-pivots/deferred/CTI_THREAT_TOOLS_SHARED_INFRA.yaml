@@ -1,0 +1,73 @@
+id: CTI_THREAT_TOOLS_SHARED_INFRA
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'cti_report_extraction'
+  - 'tool_family_normalization'
+  optional:
+  - 'passive_dns'
+  - 'cluster_feature_export'
+hazards:
+- Commodity tools and public malware builders can create common infrastructure features across unrelated threats.
+- Corroborate shared infrastructure with campaign timing and multiple evidence paths; do not infer actor relationship from tool overlap alone.
+name: Threat ↔ Threat via Shared Tool/Infra
+category: CTI
+description: Suggest related threats when their tool families lead to overlapping infrastructure.
+source: risk:threat
+target: risk:threat
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: uses
+  direction: out
+  form: it:prod:soft
+- via: communicates|c2|hosts
+  direction: out
+  form: inet:fqdn|inet:ipv4
+- via: hosts|resolves|pdns_resolves
+  direction: in
+  form: it:prod:soft
+- via: used_by
+  direction: in
+  form: risk:threat
+constraints:
+  temporal:
+    order:
+    - threatA.firstseen <= infra.seen
+    - infra.seen <= threatB.lastseen
+    window_days: 540
+  degree_caps:
+    it:prod:soft: 300
+  negative_nodes:
+  - form: inet:ipv4
+    list: cdn_edges
+  provenance:
+    min_unique_sources: 2
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- pdns
+- siem
+- cti_reports

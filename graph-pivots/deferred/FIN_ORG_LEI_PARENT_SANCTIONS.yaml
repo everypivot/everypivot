@@ -1,0 +1,71 @@
+id: FIN_ORG_LEI_PARENT_SANCTIONS
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'lei_resolution'
+  - 'sanctions_list_access'
+  optional:
+  - 'beneficial_ownership_resolution'
+  - 'entity_normalization'
+hazards:
+- LEI parent relationships, shared holding structures, and sanctions lists can lag restructures, ownership changes, or jurisdiction-specific legal interpretations.
+- Corroborate temporal ownership, control, and sanctions effective dates; do not treat a parent link as automatic prohibited activity.
+name: Org → LEI → Parent → Sanctions
+category: FIN
+description: Screen organizations via LEI ‘who owns whom’ up the chain and check against sanctions.
+source: org:org
+target: sanction:entry
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: has_lei
+  direction: out
+  form: lei:record
+- via: parent_of|ultimate_parent
+  direction: out
+  form: lei:record
+- via: listed_as
+  direction: out
+  form: sanction:entry
+constraints:
+  temporal:
+    order:
+    - lei.issued <= sanction.listed
+    window_days: 3650
+  degree_caps:
+    lei:record: 10
+  negative_nodes:
+  - form: lei:record
+    list: stale_parent_relationships
+  - form: lei:record
+    list: intermediate_holding_companies
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- lei
+- sanctions

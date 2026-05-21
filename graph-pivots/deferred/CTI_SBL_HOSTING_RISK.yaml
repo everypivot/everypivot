@@ -1,0 +1,68 @@
+id: CTI_SBL_HOSTING_RISK
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'abuse_feed_ingestion'
+  - 'asn_enrichment'
+  optional:
+  - 'passive_dns'
+  - 'hosting_provider_classification'
+hazards:
+- Abuse blocklists, SBL entries, and hosting ASN reputation can lag cleanup or reflect one customer inside shared infrastructure.
+- Corroborate listing history with current observations; risk scoring should not label all tenants of a provider as malicious.
+name: IP → ASN with SBL/Abuse Reputation
+category: CTI
+description: Score IPs by ASN and presence in Spamhaus/abuse.ch datasets to prioritize likely bad infra.
+source: inet:ipv4
+target: net:asn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: bgp_origin|asn_of
+  direction: out
+  form: net:asn
+- via: reputation_of
+  direction: out
+  form: reputation:list
+constraints:
+  temporal:
+    order:
+    - asn.firstseen <= ip.seen
+    window_days: 1095
+  degree_caps:
+    net:asn: 1
+  negative_nodes:
+  - form: net:asn
+    list: hyperscaler_or_shared_hosting_asns
+  - form: reputation:list
+    list: remediated_blocklist_entries
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- bgp
+- spamhaus
+- abuse_ch

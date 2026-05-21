@@ -1,0 +1,75 @@
+id: CTI_HTTP_REDIRECT_TARGET_TO_FQDN
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: multi_hop_inference
+hazards:
+- 'Redirect chains often traverse benign SaaS, WAF, link-shortener, tracking, payment, consent, and CDN infrastructure.'
+- 'Conditional redirects can vary by geography, user agent, cookie state, or time and may not represent stable operator infrastructure.'
+- 'Common redirectors and shared tracking or CDN services can create false destination clusters; corroborate with source-page context.'
+capability_requirements:
+  required:
+  - 'http_redirect_extraction'
+  - 'url_normalization'
+  optional:
+  - 'http_header_collection'
+  - 'web_fingerprinting'
+name: HTTP Redirect Target -> FQDN
+category: CTI
+description: Pivot from a URL or host to FQDNs observed as redirect targets in HTTP, meta-refresh, or JavaScript redirect chains.
+source: inet:url|inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: redirects_to
+  direction: out
+  form: inet:url
+- via: has_host
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - source.observed <= redirect.observed <= target.observed
+    window_days: 90
+  degree_caps:
+    inet:url: 1000
+    inet:fqdn: 5000
+  negative_nodes:
+  - form: inet:fqdn
+    list: common_saas_redirectors
+  - form: inet:fqdn
+    list: link_shorteners
+  - form: inet:fqdn
+    list: analytics_and_consent_platforms
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- redirect_chain_position
+- same_origin_flag
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- shodan_censys
+- proxy_logs

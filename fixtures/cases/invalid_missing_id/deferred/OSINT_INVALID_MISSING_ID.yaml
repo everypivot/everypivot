@@ -1,0 +1,19 @@
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+name: Invalid Missing Id Fixture
+category: OSINT
+description: Fixture missing its id field.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

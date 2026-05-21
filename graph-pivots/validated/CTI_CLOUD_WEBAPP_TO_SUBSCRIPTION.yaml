@@ -1,0 +1,69 @@
+id: CTI_CLOUD_WEBAPP_TO_SUBSCRIPTION
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: high
+robustness_class: ownership_signal
+hazards:
+- 'Cloud web app hostnames can be reassigned, disabled, recycled, or fronted by shared platform infrastructure.'
+- 'A web app to subscription join describes administrative containment, not proof of malicious use or actor ownership.'
+- 'Provider-specific IDs and product names must remain adapter metadata.'
+capability_requirements:
+  required:
+  - 'cloud_webapp_inventory'
+  - 'cloud_subscription_identifier_normalization'
+  optional:
+  - 'cloud_audit_log_access'
+  - 'hostname_to_resource_mapping'
+review:
+  last_reviewed: '2026-05-14'
+  review_cadence_days: 90
+  next_review: '2026-08-12'
+name: Cloud Web App -> Subscription
+category: CTI
+description: Pivot from a normalized cloud web app hostname or resource identifier to the cloud subscription that contains it.
+source: cloud:webapp|inet:fqdn|inet:url
+target: cloud:subscription:uid
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: belongs_to_subscription
+  direction: out
+  form: cloud:subscription:uid
+constraints:
+  temporal:
+    order:
+    - webapp.observed <= subscription.observed
+    window_days: 30
+  degree_caps:
+    cloud:webapp: 1000
+    cloud:subscription:uid: 100000
+  negative_nodes:
+  - form: cloud:webapp
+    list: provider_default_or_recycled_webapps
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- resource_id_match
+- hostname_match
+- subscription_age
+- temporal_consistency
+- provider_scope
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- cloud_inventory
+- cloud_audit_logs
+- dns

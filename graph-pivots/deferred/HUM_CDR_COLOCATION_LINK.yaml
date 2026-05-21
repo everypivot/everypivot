@@ -1,0 +1,71 @@
+id: HUM_CDR_COLOCATION_LINK
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+name: Phone → CDR → Co‑Location Link
+category: HUMINT_SIGINT
+description: Infer links between MSISDNs via repeated co‑location in time and space (tower/sector).
+hazards:
+- 'CDR access is regulated in many jurisdictions and may require lawful-intercept or similarly restricted authority.'
+- 'Dense urban tower coverage, roaming, and shared sectors create systemic false positives without strong temporal controls.'
+capability_requirements:
+  required:
+  - 'cdr_access'
+  - 'spatiotemporal_correlation'
+  optional:
+  - 'tower_geography'
+  - 'legal_review'
+source: telecom:msisdn
+target: telecom:msisdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: cdr_event
+  direction: out
+  form: telecom:cdr
+- via: same_cell_same_time
+  direction: in
+  form: telecom:cdr
+- via: for
+  direction: in
+  form: telecom:msisdn
+constraints:
+  temporal:
+    order:
+    - cdr.ts within window
+    window_days: 30
+  degree_caps:
+    telecom:cdr: 200000
+  negative_nodes:
+  - form: telecom:cdr
+    list: dense_urban_sector_observations
+  - form: telecom:cdr
+    list: roaming_gateway_records
+  - form: telecom:cdr
+    list: mass_event_tower_observations
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- cdr

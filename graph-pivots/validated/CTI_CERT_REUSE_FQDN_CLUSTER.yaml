@@ -1,0 +1,72 @@
+id: CTI_CERT_REUSE_FQDN_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: high
+robustness_class: exact_cryptographic
+hazards:
+- 'Managed certificates, CDNs, and shared hosts can create benign domain clusters.'
+- 'Certificate history can lag rotation events and leave stale associations in passive datasets.'
+capability_requirements:
+  required:
+  - 'tls_scanning'
+  - 'certificate_normalization'
+  optional:
+  - 'ct_history'
+  - 'passive_dns'
+review:
+  last_reviewed: '2026-05-14'
+  review_cadence_days: 90
+  next_review: '2026-08-12'
+name: Cert Reuse → FQDN Cluster
+category: CTI
+description: Cluster domains by identical certificate (SPKI or cert SHA256) observed in CT logs or scanners.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: tls_cert
+  direction: out
+  form: x509:cert
+- via: tls_cert
+  direction: in
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - cert.not_before <= fqdn.seen
+    window_days: 825
+  degree_caps:
+    x509:cert: 2000
+  negative_nodes:
+  - form: x509:cert
+    list: letsencrypt_mass_certificates
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- ct
+- tls
+- pdns

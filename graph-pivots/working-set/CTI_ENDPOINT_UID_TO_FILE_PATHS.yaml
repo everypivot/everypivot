@@ -1,0 +1,71 @@
+id: CTI_ENDPOINT_UID_TO_FILE_PATHS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'File paths, directories, process names, and command-line fragments can be generic, localized, user-specific, copied, or privacy-sensitive.'
+- 'Endpoint file-path observations can reflect benign software layout, user profile naming, installer defaults, or temporary extraction paths.'
+- 'A shared path on an endpoint is context for follow-on file or process evidence, not actor attribution.'
+capability_requirements:
+  required:
+  - 'endpoint_file_inventory'
+  - 'file_path_normalization'
+  optional:
+  - 'user_profile_path_minimization'
+  - 'process_context_join'
+name: Endpoint UID -> File Paths
+category: CTI
+description: Pivot from a normalized endpoint identifier to file paths observed on that endpoint.
+source: endpoint:uid
+target: file:path
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: observed_path
+  direction: out
+  form: file:path
+constraints:
+  temporal:
+    order:
+    - endpoint.observed <= file_path.observed
+    window_days: 180
+  degree_caps:
+    endpoint:uid: 100000
+    file:path: 1000000
+  negative_nodes:
+  - form: file:path
+    list: default_os_or_program_paths
+  - form: file:path
+    list: temporary_extraction_or_cache_paths
+  - form: file:path
+    list: privacy_sensitive_user_profile_paths
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- path_depth
+- profile_scope
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- edr
+- endpoint

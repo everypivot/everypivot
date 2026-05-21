@@ -1,0 +1,81 @@
+id: ADTECH_AD_REQUEST_TO_INFECTION_HIT
+version: 0.1.0
+pattern_schema_version: 1.3
+validation_state: working_set
+precision_tier: low
+robustness_class: multi_hop_inference
+hazards:
+- 'Short temporal proximity between an ad request and a suspicious endpoint can reflect normal redirect, verification, or analytics flows unless the downstream endpoint is independently suspicious.'
+- 'Device or session identifiers may be redacted, hashed, or rotated, so identity continuity must be handled conservatively.'
+- 'Shared vendor redirects, tracking tags, and common verification pixels are false-positive sources; corroborate with endpoint risk and campaign context.'
+capability_requirements:
+  required:
+  - 'web_request_telemetry'
+  - 'browser_client_uid_normalization'
+  optional:
+  - 'web_fingerprinting'
+  - 'endpoint_risk_context'
+name: Ad Request -> Suspicious Infection Hit
+category: ADTECH
+description: Link an ad-tech delivery or qualification request to a suspicious downstream endpoint when the two events share a device/session identifier and occur within a short time window.
+source: http:request
+target: risk:incident
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: incident_level
+  subject_role: observation
+  object_role: incident
+hops:
+- via: carries_identifier
+  direction: out
+  form: adtech:identifier
+- via: seen_in
+  direction: in
+  form: http:request
+- via: reaches
+  direction: out
+  form: inet:url
+- via: associated_with
+  direction: out
+  form: risk:incident
+constraints:
+  temporal:
+    order:
+    - ad_request.seen <= downstream_request.seen
+    window_days: 1
+  sequence:
+    max_gap_seconds: 10
+    min_events: 2
+  degree_caps:
+    adtech:identifier: 500
+    inet:url: 1000
+  negative_nodes:
+  - form: inet:fqdn
+    list: commodity_ad_verification_pixels
+  - form: inet:fqdn
+    list: high_volume_ad_exchange_endpoints
+  provenance:
+    min_unique_sources: 1
+features:
+- identifier_continuity
+- seconds_between_events
+- downstream_endpoint_risk
+- publisher_context
+- user_agent_consistency
+- geo_consistency
+- path_count_capped
+- negative_pixel_penalty
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- proxy_logs
+- browser_telemetry
+- cti_reports
+- adtech_logs

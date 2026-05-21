@@ -1,0 +1,66 @@
+id: FIN_MULE_RECRUITMENT_SOCIAL_TO_PAYOUT
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'social_profile_collection'
+  optional:
+  - 'payout_account_normalization'
+  - 'recruitment_context_extraction'
+hazards:
+- Recruitment posts, handles, and payment instructions can be copied, impersonated, or reused by intermediaries.
+- Payout account data is restricted financial evidence; corroborate temporal account control and recruitment context before identifying mule networks.
+name: Recruitment Persona -> Payout Account
+category: FIN
+description: Tie mule-recruitment personas or social handles to payout accounts advertised, routed, or onboarded through recruitment channels.
+source: social:handle
+target: fin:account
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: advertises
+  direction: out
+  form: web:url|message:channel
+- via: routes_to
+  direction: out
+  form: fin:account
+constraints:
+  temporal:
+    order:
+    - persona.seen <= channel.seen <= account.firstseen
+    window_days: 730
+  degree_caps:
+    social:handle: 10000
+  negative_nodes:
+  - form: social:handle
+    list: benign_job_recruiters
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- social
+- osint_web
+- bank_txn

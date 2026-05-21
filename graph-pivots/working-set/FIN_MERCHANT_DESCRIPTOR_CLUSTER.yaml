@@ -1,0 +1,63 @@
+id: FIN_MERCHANT_DESCRIPTOR_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'Acquirer-side truncation and generic descriptors can collide across unrelated merchants.'
+- 'Descriptor reuse alone is weaker than payout, ownership, or settlement evidence and should be treated as supporting context.'
+- 'Temporal account and KYC context are needed to avoid false positives from shared or generic descriptors.'
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'descriptor_normalization'
+  optional:
+  - 'merchant_profile_context'
+  - 'acquirer_context'
+name: Merchant Descriptor -> Merchant Cluster
+category: FIN
+description: Cluster merchants or storefronts reusing the same descriptor string or canonical billing descriptor.
+source: fin:merchant:descriptor
+target: fin:merchant
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: observed_on
+  direction: out
+  form: fin:merchant
+constraints:
+  temporal:
+    order:
+    - descriptor.firstseen <= merchant.seen
+    window_days: 1825
+  degree_caps:
+    fin:merchant:descriptor: 2000
+  negative_nodes:
+  - form: fin:merchant:descriptor
+    list: common_processor_descriptors
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- payments
+- ecommerce

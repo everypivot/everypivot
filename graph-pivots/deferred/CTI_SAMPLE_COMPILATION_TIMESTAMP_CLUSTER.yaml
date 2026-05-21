@@ -1,0 +1,69 @@
+id: CTI_SAMPLE_COMPILATION_TIMESTAMP_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.3
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+hazards:
+- 'Compilation timestamps can be forged, zeroed, rounded, inherited from templates, or rewritten by packers.'
+- 'Common build pipelines can create many samples in tight time windows without shared malicious provenance.'
+- 'Timestamp clustering should remain exploratory unless combined with stronger static or infrastructure selectors.'
+capability_requirements:
+  required:
+  - 'sample_static_analysis'
+  - 'compilation_timestamp_extraction'
+  optional:
+  - 'timestamp_anomaly_detection'
+  - 'packer_detection'
+  - 'sample_prevalence_enrichment'
+name: Sample Compilation Timestamp Cluster
+category: CTI
+description: Cluster samples with matching or tightly bounded compilation timestamps after normalization and common-build suppression.
+source: file:metadata:compile_time
+target: file:hash
+assessment:
+  claim: indicates
+  basis: theoretical
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: compile_time_of
+  direction: in
+  form: file:hash
+constraints:
+  temporal:
+    order:
+    - compile_time.value <= sample.observed
+    window_days: 365
+  degree_caps:
+    file:metadata:compile_time: 100000
+    file:hash: 1000000
+  negative_nodes:
+  - form: file:metadata:compile_time
+    list: forged_or_default_compile_timestamps
+  - form: file:hash
+    list: common_benign_file_hashes
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- time_bucket
+- timestamp_plausibility
+- packer_flag
+- prevalence
+- common_timestamp_penalty
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- malware_analysis
+- file_reputation

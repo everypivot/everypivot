@@ -1,0 +1,67 @@
+id: CROSS_SOCIAL_HANDLE_TO_DOMAIN_INFRA
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: needs_fixtures
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'social_profile_collection'
+  - 'dns_public_lookup'
+  optional:
+  - 'passive_dns'
+  - 'domain_ownership_resolution'
+name: Social Handle → Website → Infra
+category: CROSS
+description: Bridge from social handles to official websites and on to infrastructure for takedown.
+hazards:
+- 'Handle reuse across platforms is common and does not guarantee the same person or organisation controls each account.'
+- 'Domains may reference fans, impersonators, or parked assets rather than infrastructure operated by the handle owner.'
+source: social:handle
+target: inet:ipv4|inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: links_to
+  direction: out
+  form: web:url
+- via: hosted_on
+  direction: out
+  form: inet:fqdn|inet:ipv4
+constraints:
+  temporal:
+    order:
+    - post.ts within window
+    window_days: 365
+  degree_caps:
+    social:handle: 10000
+  negative_nodes:
+  - form: social:handle
+    list: generic_common_usernames
+  - form: social:handle
+    list: fan_impersonator_or_brand_handles
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- osint_web
+- pdns

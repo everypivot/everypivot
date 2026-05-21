@@ -1,0 +1,30 @@
+id: OSINT_VALID_LOW_PRECISION
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- 'Demonstration fixture exercising the v1.4 `low` precision tier: noisy signal whose noise is characterized and handled.'
+- 'A second concrete hazard so the editorial principle is satisfied: validated patterns can hold `low` precision when noise is documented.'
+name: Valid Low-Precision Pattern
+category: OSINT
+description: Minimal working-set fixture exercising precision_tier `low` under the v1.4 editorial principle.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30
+  negative_nodes:
+  - form: inet:fqdn
+    list: example_noise_list

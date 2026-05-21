@@ -1,0 +1,71 @@
+id: CTI_CLOUD_APP_ID_TO_AUTH_EVENTS
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: domain_expansion
+hazards:
+- 'Application identifiers can represent legitimate multi-tenant applications, first-party services, delegated apps, or attacker-created resources.'
+- 'Auth events can reflect testing, consent, token replay, service activity, or benign automation rather than direct user action.'
+- 'An app ID to auth-event join is not proof of application ownership or compromise.'
+- 'Common first-party or shared SaaS application IDs can produce false joins; corroborate with tenant-specific consent and timing.'
+capability_requirements:
+  required:
+  - 'cloud_application_identifier_normalization'
+  - 'auth_event_telemetry'
+  optional:
+  - 'consent_event_telemetry'
+  - 'service_principal_inventory'
+  - 'first_party_app_suppression'
+name: Cloud App ID -> Auth Events
+category: CTI
+description: Pivot from a normalized cloud or OAuth application identifier to authentication, consent, or token-use events involving that application.
+source: cloud:application:uid|oauth:application:uid
+target: auth:event
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: observed_in_auth_event
+  direction: out
+  form: auth:event
+constraints:
+  temporal:
+    order:
+    - application.observed <= auth_event.observed
+    window_days: 90
+  degree_caps:
+    cloud:application:uid: 100000
+    auth:event: 1000000
+  negative_nodes:
+  - form: cloud:application:uid
+    list: common_first_party_or_managed_apps
+  - form: auth:event
+    list: expected_service_automation_events
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- tenant_diversity
+- user_diversity
+- first_party_app_penalty
+- consent_context
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- auth_logs
+- cloud_audit_logs
+- cloud_inventory

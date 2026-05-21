@@ -1,0 +1,71 @@
+id: CTI_ENDPOINT_FILE_ORIGIN_URL_TO_FILES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: domain_expansion
+hazards:
+- 'File origin metadata can be missing, copied, spoofed, inherited from referrers, or rewritten by browsers and download managers.'
+- 'Common software CDNs and update endpoints can connect unrelated files and endpoints unless provider controls are applied.'
+capability_requirements:
+  required:
+  - 'endpoint_file_origin_telemetry'
+  - 'file_hash_normalization'
+  optional:
+  - 'mark_of_the_web_parsing'
+  - 'download_referrer_extraction'
+name: Endpoint File Origin URL -> Files
+category: CTI
+description: Pivot from endpoint file-origin URL metadata to downloaded files, file paths, and endpoint identities.
+source: file:origin:url
+target: file:bytes|file:path|endpoint:uid
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: downloaded_as
+  direction: out
+  form: file:bytes
+- via: observed_at
+  direction: out
+  form: file:path|endpoint:uid
+constraints:
+  temporal:
+    order:
+    - origin_url.observed <= file.created
+    window_days: 30
+  degree_caps:
+    file:origin:url: 100000
+  negative_nodes:
+  - form: inet:fqdn
+    list: common_software_cdn_domains
+  - form: file:origin:url
+    list: browser_internal_urls
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- endpoint_spread
+- referrer_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- edr
+- endpoint
+- proxy_logs

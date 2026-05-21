@@ -1,0 +1,70 @@
+id: CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: low
+robustness_class: domain_expansion
+hazards:
+- 'Originating IP headers can be spoofed, stripped, rewritten, or unavailable depending on the mail path and privacy controls.'
+- 'VPNs, proxies, NAT, compromised hosts, and shared senders can connect unrelated messages to one IP.'
+- 'An originating IP match is delivery-path evidence, not proof of sender identity.'
+capability_requirements:
+  required:
+  - 'mailflow_header_normalization'
+  - 'originating_ip_extraction'
+  optional:
+  - 'proxy_vpn_suppression'
+  - 'sender_domain_filtering'
+  - 'asn_enrichment'
+name: Email Originating IP -> Messages
+category: CTI
+description: Pivot from an email-originating IP address to messages that expose the same originating IP in normalized mailflow telemetry.
+source: inet:ipv4
+target: email:message
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
+hops:
+- via: originating_ip_for
+  direction: in
+  form: email:message
+constraints:
+  temporal:
+    order:
+    - ip.observed <= message.received
+    window_days: 30
+  degree_caps:
+    inet:ipv4: 50000
+    email:message: 100000
+  negative_nodes:
+  - form: inet:ipv4
+    list: common_vpn_proxy_egress
+  - form: inet:ipv4
+    list: common_bulk_mail_relays
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- sender_domain_diversity
+- recipient_domain_diversity
+- vpn_proxy_penalty
+- bulk_sender_penalty
+- temporal_consistency
+- novelty_flag
+outputs:
+  top_paths: 10
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- mail_telemetry
+- asn_registry
+- proxy_reputation

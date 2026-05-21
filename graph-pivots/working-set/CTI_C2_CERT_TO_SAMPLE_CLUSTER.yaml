@@ -1,0 +1,68 @@
+id: CTI_C2_CERT_TO_SAMPLE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: working_set
+precision_tier: medium
+robustness_class: multi_hop_inference
+hazards:
+- 'Multi-tenant TLS termination, sinkholes, or shared redirectors can reuse certificates across unrelated malware.'
+- 'Sandbox-only visibility may miss the variability of live infrastructure and overstate cluster confidence.'
+capability_requirements:
+  required:
+  - 'malware_sandbox_summary'
+  - 'tls_scanning'
+  - 'certificate_normalization'
+  optional:
+  - 'sample_hash_normalization'
+  - 'ct_history'
+name: C2 TLS Certificate -> Sample Cluster
+category: CTI
+description: Link malware samples whose detonated C2 endpoints present the same TLS certificate or SPKI material.
+source: x509:cert
+target: file:bytes
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: presented_at
+  direction: out
+  form: c2:endpoint
+- via: sandbox_observed
+  direction: in
+  form: file:bytes
+constraints:
+  temporal:
+    order:
+    - cert.firstseen <= c2.firstseen
+    - sample.firstseen <= c2.firstseen
+    window_days: 1095
+  degree_caps:
+    x509:cert: 2000
+  negative_nodes:
+  - form: x509:cert
+    list: shared_cdn_certificates
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- sandbox
+- tls_scans
+- pdns

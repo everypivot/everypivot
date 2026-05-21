@@ -1,0 +1,69 @@
+id: OSINT_ACTIVE_SUBDOMAIN_ENUMERATION
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: enumeration
+hazards:
+- 'Active enumeration discovers names under a root, not proof that each hostname is live, malicious, or independently controlled.'
+- 'Wildcard DNS, default virtual hosts, resolver poisoning, and stale wordlists can produce false hostnames.'
+- 'Shared hosting, managed DNS, parking, and provider defaults can surface broad hostname sets that need suppression before expansion.'
+capability_requirements:
+  required:
+  - 'active_subdomain_enumeration'
+  - 'dns_wildcard_detection'
+  optional:
+  - 'active_resolution'
+  - 'http_probe'
+name: Active Subdomain Enumeration
+category: OSINT
+description: Discover candidate subdomains under a registrable root using active enumeration tools such as subfinder-style source aggregation and DNS confirmation.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: enumerated_subdomain
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    order:
+    - scan.started <= fqdn.confirmed
+    window_days: 30
+  degree_caps:
+    inet:fqdn: 25000
+  negative_nodes:
+  - form: inet:fqdn
+    list: wildcard_dns_roots
+  - form: inet:fqdn
+    list: generated_wordlist_artifacts
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- wildcard_penalty
+- resolver_confirmation_ratio
+- novelty_flag
+outputs:
+  top_paths: 5
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- active_dns
+- subdomain_osint
+- dns

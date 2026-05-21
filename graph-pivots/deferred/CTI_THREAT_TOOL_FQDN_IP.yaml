@@ -1,0 +1,75 @@
+id: CTI_THREAT_TOOL_FQDN_IP
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'cti_report_extraction'
+  - 'passive_dns'
+  optional:
+  - 'tool_family_normalization'
+  - 'ip_normalization'
+hazards:
+- DNS history can include sinkholes, shared hosting, CDNs, parking, and reassigned IPs unrelated to the tool operator.
+- Corroborate domain-to-IP timing with tool-family evidence; current resolutions alone are not attribution.
+name: Threat → Tool → FQDN → IP
+category: CTI
+description: Tool-family infrastructure discovery via observed domains and their current/previous IPs.
+source: risk:threat
+target: inet:ipv4
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: uses
+  direction: out
+  form: it:prod:soft
+- via: communicates|hosts|connects|c2
+  direction: out
+  form: inet:fqdn
+- via: resolves|pdns_resolves
+  direction: out
+  form: inet:ipv4
+constraints:
+  temporal:
+    order:
+    - threat.firstseen <= fqdn.created
+    - fqdn.created <= ip.seen
+    window_days: 720
+  degree_caps:
+    it:prod:soft: 300
+    inet:fqdn: 500
+  negative_nodes:
+  - form: inet:fqdn
+    list: dynamic_dns_providers
+  - form: inet:fqdn
+    list: public_resolvers
+  provenance:
+    min_unique_sources: 2
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- pdns
+- siem
+- misp
+- abuse_ch
+- cti_reports

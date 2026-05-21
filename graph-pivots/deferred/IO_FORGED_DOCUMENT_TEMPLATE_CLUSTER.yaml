@@ -1,0 +1,66 @@
+id: IO_FORGED_DOCUMENT_TEMPLATE_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: insufficient_hazards
+precision_tier: exploratory
+capability_requirements:
+  required:
+  - 'platform_abuse_records'
+  - 'content_fingerprinting'
+  optional:
+  - 'document_template_suppression'
+  - 'campaign_context_enrichment'
+hazards:
+- Public templates, copied seals, and common editing tools can produce similar documents across unrelated accounts or campaigns.
+- Corroborate template reuse with distribution timing, account behavior, and additional artifacts; template match alone is weak evidence.
+name: Forged Document Template -> Operator Cluster
+category: IO
+description: Cluster operators or campaigns reusing the same forged-document templates, seals, or layout artifacts.
+source: file:bytes
+target: inet:web:acct|risk:campaign
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: observed_in
+  direction: out
+  form: forged:document
+- via: distributed_by|attributed_to
+  direction: out
+  form: inet:web:acct|risk:campaign
+constraints:
+  temporal:
+    order:
+    - template.firstseen <= document.firstseen <= operator.seen
+    window_days: 1825
+  degree_caps:
+    file:bytes: 2000
+  negative_nodes:
+  - form: file:bytes
+    list: public_press_release_templates
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- social
+- media_monitoring
+- osint_web

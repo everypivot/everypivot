@@ -1,0 +1,69 @@
+id: HUM_WIFI_BSSID_CONTACT_CHAIN
+version: 1.0.0
+pattern_schema_version: 1.2
+validation_state: deferred
+deferred_reason: restricted_data_access
+precision_tier: exploratory
+name: Device → Wi‑Fi BSSID → Co‑Presence
+category: HUMINT_SIGINT
+description: Detect co‑presence via devices seen on the same BSSID within time windows.
+hazards:
+- 'Public hotspots and enterprise guest networks create extremely high-degree noise for shared-BSSID inference.'
+- 'MAC randomization, reused access-point identifiers, and venue churn can distort apparent contact chains.'
+- 'Lawful access, jurisdiction, and privacy controls are required; corroborate shared BSSID contact chains to avoid false positives in dense venues.'
+capability_requirements:
+  required:
+  - 'wifi_observation_data'
+  - 'spatiotemporal_correlation'
+  optional:
+  - 'venue_context'
+  - 'legal_review'
+source: device:device
+target: device:device
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: observed_on_bssid
+  direction: out
+  form: net:wifi:bssid
+- via: observed_on_bssid
+  direction: in
+  form: device:device
+constraints:
+  temporal:
+    order:
+    - obs.ts within window
+    window_days: 14
+  degree_caps:
+    net:wifi:bssid: 10000
+  negative_nodes:
+  - form: net:wifi:bssid
+    list: public_hotspot_bssids
+  - form: net:wifi:bssid
+    list: enterprise_guest_network_bssids
+  - form: net:wifi:bssid
+    list: reused_or_randomized_ap_identifiers
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- siem

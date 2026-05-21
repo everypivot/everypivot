@@ -1,0 +1,69 @@
+id: FIN_SHARED_PAYOUT_ACCOUNT_CLUSTER
+version: 1.0.0
+pattern_schema_version: 1.4
+validation_state: working_set
+precision_tier: medium
+robustness_class: ownership_signal
+hazards:
+- 'Marketplaces, payment processors, or payroll intermediaries can consolidate payouts for many legitimate recipients.'
+- 'Account reuse may reflect an upstream intermediary rather than common control by the observed merchants or people.'
+- 'Temporal KYC and account ownership evidence is needed to avoid false positives from shared payout services.'
+capability_requirements:
+  required:
+  - 'financial_records'
+  - 'payout_account_normalization'
+  optional:
+  - 'identity_records'
+  - 'settlement_account_suppression'
+review:
+  last_reviewed: '2026-05-20'
+  review_cadence_days: 90
+  next_review: '2026-08-18'
+name: Payout Account -> Merchant Cluster
+category: FIN
+description: Cluster merchants, sellers, or beneficiaries routing payouts into the same destination account.
+source: fin:account
+target: fin:merchant|person
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: behavioural_cluster
+hops:
+- via: receives_payout_for
+  direction: out
+  form: fin:merchant|person
+constraints:
+  temporal:
+    order:
+    - account.firstseen <= merchant.seen
+    window_days: 3650
+  degree_caps:
+    fin:account: 500
+  negative_nodes:
+  - form: fin:account
+    list: processor_master_settlement_accounts
+  provenance:
+    min_unique_sources: 1
+features:
+- path_length
+- rarity_idf
+- path_count_capped
+- vendor_diversity
+- multi_source_ratio
+- temporal_consistency
+- days_since_support
+- popular_tool_penalty
+- novelty_flag
+outputs:
+  top_paths: 3
+  yield:
+  - source
+  - target
+  - features
+  - evidence_paths
+  - storm_query
+datasets:
+- payments
+- bank_txn
