@@ -21,8 +21,8 @@ class BuildReleasePackTest < Minitest::Test
       output_dir = Pathname(dir).join('everypivot-pack')
       manifest = EveryPivot::BuildReleasePack.build_release_pack(
         output_dir: output_dir,
-        release: 'v0.1.0-preview',
-        published_at: '2026-04-21',
+        release: 'v0.1.1-preview',
+        published_at: '2026-05-22',
         force: false,
         artifact_mode: 'preview',
         authority_status: 'canonical_local_preview',
@@ -82,7 +82,7 @@ class BuildReleasePackTest < Minitest::Test
         output_dir.join('tools', 'build_registry_index.rb').to_s,
         '--repo-root', output_dir.to_s,
         '--release', 'rebuilt-preview',
-        '--published-at', '2026-04-21',
+        '--published-at', '2026-05-22',
         '--output', rebuilt_index.to_s,
         '--preview',
         chdir: output_dir.to_s
@@ -105,8 +105,8 @@ class BuildReleasePackTest < Minitest::Test
       output_dir = Pathname(dir).join('everypivot-pack')
       manifest = EveryPivot::BuildReleasePack.build_release_pack(
         output_dir: output_dir,
-        release: 'v0.1.0',
-        published_at: '2026-05-21',
+        release: 'v0.1.1',
+        published_at: '2026-05-22',
         force: false,
         artifact_mode: 'stable',
         authority_status: 'canonical',
@@ -132,8 +132,8 @@ class BuildReleasePackTest < Minitest::Test
         RbConfig.ruby,
         REPO_ROOT.join('tools', 'build_registry_index.rb').to_s,
         '--repo-root', REPO_ROOT.to_s,
-        '--release', 'v0.1.0',
-        '--published-at', '2026-05-21',
+        '--release', 'v0.1.1',
+        '--published-at', '2026-05-22',
         '--output', output_path.to_s
       )
       assert status.success?, [stdout, stderr].reject(&:empty?).join("\n")

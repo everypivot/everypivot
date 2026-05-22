@@ -468,6 +468,7 @@ Source: https://everypivot.io.</div>
         document.getElementById("c-working").textContent = counts.working_set || 0;
         document.getElementById("c-deferred").textContent = counts.deferred || 0;
         document.getElementById("c-total").textContent = data.patterns.length;
+        const githubRef = encodeURIComponent(data.release || "main");
 
         // Populate categories
         const cats = Array.from(new Set(data.patterns.map((p) => p.category).filter(Boolean))).sort();
@@ -545,7 +546,7 @@ Source: https://everypivot.io.</div>
           }
 
           const githubBase =
-            "https://github.com/everypivot/everypivot/blob/v0.1.0/";
+            "https://github.com/everypivot/everypivot/blob/" + githubRef + "/";
           parts.push(
             '<div class="pattern-foot">YAML: <a href="' +
               githubBase +

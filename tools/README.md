@@ -16,7 +16,7 @@ Recommended usage:
 
 ```bash
 ruby tools/check_fixture_suite.rb
-ruby tools/build_release_pack.rb --release v0.1.0 --published-at 2026-05-21 --artifact-mode stable --authority-status canonical --force
+ruby tools/build_release_pack.rb --release v0.1.1 --published-at 2026-05-22 --artifact-mode stable --authority-status canonical --force
 ruby tools/build_release_pack.rb --skip-fixtures --output-dir /tmp/everypivot-release-pack --force
 ```
 

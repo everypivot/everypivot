@@ -1,10 +1,10 @@
 {
-  "release": "v0.1.0",
+  "release": "v0.1.1",
   "channel": "stable",
-  "published_at": "2026-05-21",
+  "published_at": "2026-05-22",
   "site": {
-    "homepage": "/releases/v0.1.0/",
-    "patterns": "/releases/v0.1.0/patterns"
+    "homepage": "/releases/v0.1.1/",
+    "patterns": "/releases/v0.1.1/patterns"
   },
   "downloads": [
     {
