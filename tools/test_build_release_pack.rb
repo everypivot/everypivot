@@ -49,6 +49,7 @@ class BuildReleasePackTest < Minitest::Test
       assert output_dir.join('artifacts', 'fixtures.preview.tar.gz').file?
       assert output_dir.join('tools', 'build_release_pack.rb').file?
       assert output_dir.join('tools', 'build_registry_index.rb').file?
+      assert output_dir.join('tools', 'check_release_metadata.rb').file?
       refute output_dir.join('site').exist?
       refute output_dir.join('planning-notes').exist?
 

@@ -41,6 +41,7 @@ module EveryPivot
       tools/README.md
       tools/build_registry_index.rb
       tools/build_release_pack.rb
+      tools/check_release_metadata.rb
       tools/validate_pivots.rb
       tools/check_fixture_suite.rb
       tools/json_schema_validator.rb

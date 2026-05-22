@@ -79,6 +79,9 @@ jobs:
       - name: Run fixture suite
         run: ruby tools/check_fixture_suite.rb
 
+      - name: Check release metadata consistency
+        run: ruby tools/check_release_metadata.rb
+
       # build_registry_index.rb derives release-manifest, patterns.tar.gz, and
       # fixtures.tar.gz alongside the --output path. The .preview. infix is
       # carried through from the registry-index.preview.json filename.
@@ -139,6 +142,9 @@ jobs:
         with:
           ruby-version: '3.2'
 
+      - name: Check release metadata matches tag
+        run: ruby tools/check_release_metadata.rb --expected-release "${GITHUB_REF_NAME}"
+
       # build_registry_index.rb writes registry-index.json plus three derived
       # siblings (release-manifest.json, patterns.tar.gz, fixtures.tar.gz)
       # into the same directory as --output. All four are required for the
@@ -146,10 +152,11 @@ jobs:
       - name: Build release artifacts
         run: |
           mkdir -p "${RUNNER_TEMP}/release"
+          published_at="$(ruby tools/check_release_metadata.rb --expected-release "${GITHUB_REF_NAME}" --print-published-at)"
           ruby tools/build_registry_index.rb \
             --repo-root . \
             --release "${GITHUB_REF_NAME}" \
-            --published-at "$(date -u +%F)" \
+            --published-at "${published_at}" \
             --output "${RUNNER_TEMP}/release/registry-index.json"
 
       - name: Verify release artifacts exist
