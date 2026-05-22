@@ -415,11 +415,12 @@ Source: https://everypivot.io.</div>
       © 2026 EveryPivot Project · EveryPivot™ · code Apache-2.0 · corpus CC BY-SA 4.0.
     </footer>
 
-    <script src="./data/registry-index.js"></script>
+    <script src="./data/registry-index.js?v=20260521-1"></script>
     <script>
       (function () {
         const host = document.getElementById("list-host");
-        const data = window.__EVERYPIVOT_REGISTRY__;
+        const data =
+          window.__EVERYPIVOT_REGISTRY__ || window.__EVERYPIVOT_PREVIEW__;
 
         if (!data || !Array.isArray(data.patterns)) {
           host.innerHTML =
