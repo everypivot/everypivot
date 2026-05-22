@@ -1,20 +1,19 @@
 window.__EVERYPIVOT_SCHEMA__ = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Pivot Pattern v1.4",
-  "$comment": "EveryPivot pivot-pattern schema. © 2026 EveryPivot Project. The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. This schema file is licensed under Apache-2.0 (see LICENSE-CODE). Pattern instances that conform to this schema (i.e. the corpus under graph-pivots/) are licensed under CC BY-SA 4.0 (see LICENSE-DATA). EveryPivot is a trademark — see TRADEMARK.md.",
+  "$comment": "EveryPivot pivot-pattern schema. © 2026 EveryPivot Project. The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. This schema file is licensed under Apache-2.0 (see LICENSE-CODE). Pattern instances that conform to this schema (i.e. the corpus under graph-pivots/) are licensed under CC BY 4.0 (see LICENSE-DATA). EveryPivot is a trademark — see TRADEMARK.md.",
   "x-license": {
     "copyright": "© 2026 EveryPivot Project",
-    "copyright_holder_notice": "The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. \"EveryPivot Project\" is the designated attribution party for redistribution under CC BY-SA 4.0 §3(a)(1)(A)(ii).",
+    "copyright_holder_notice": "The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. \"EveryPivot Project\" is the designated attribution party for redistribution under CC BY 4.0 §3(a)(1)(A)(i).",
     "schema": {
       "spdx": "Apache-2.0",
       "url": "LICENSE-CODE"
     },
     "instances": {
-      "spdx": "CC-BY-SA-4.0",
-      "url": "LICENSE-DATA",
-      "share_alike": true
+      "spdx": "CC-BY-4.0",
+      "url": "LICENSE-DATA"
     },
-    "attribution_required": "Pattern definitions and tooling from EveryPivot (EveryPivot Project), used under Apache-2.0 (code) and CC BY-SA 4.0 (patterns).",
+    "attribution_required": "Pattern definitions and tooling from EveryPivot (EveryPivot Project), used under Apache-2.0 (code) and CC BY 4.0 (patterns).",
     "notice_url": "NOTICE",
     "trademark": {
       "mark": "EveryPivot",

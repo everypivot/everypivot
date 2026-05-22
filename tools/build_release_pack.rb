@@ -241,7 +241,7 @@ module EveryPivot
           'registry_builder' => 'tools/build_registry_index.rb',
           'release_pack_builder' => 'tools/build_release_pack.rb'
         },
-        'license_notice' => 'EveryPivot uses Apache-2.0 for code, schema, tooling, docs, and site assets, and CC BY-SA 4.0 for pattern corpus and fixtures. See LICENSE, LICENSE-CODE, LICENSE-DATA, NOTICE, and TRADEMARK.md.',
+        'license_notice' => 'EveryPivot uses Apache-2.0 for code, schema, tooling, docs, and site assets, and CC BY 4.0 for pattern corpus and fixtures. See LICENSE, LICENSE-CODE, LICENSE-DATA, NOTICE, and TRADEMARK.md.',
         'provenance' => provenance(authority_status),
         'quality_gates' => {
           'validator' => 'passed',

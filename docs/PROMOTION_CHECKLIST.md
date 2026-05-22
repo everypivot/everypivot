@@ -14,8 +14,11 @@ Use this checklist when considering whether a pattern should move into `graph-pi
 - [ ] The robustness class feels appropriate.
 - [ ] The pattern structure is mature and readable.
 - [ ] At least minimal fixtures or examples exist.
+- [ ] Maintainer approval is explicit.
+- [ ] There is no unresolved credible challenge against the pattern.
 - [ ] Weighted heuristics, temporal scoring, and analyst triage have been kept out of the pattern and left to downstream profile or orchestration layers.
 - [ ] Review discussion explains why promotion is warranted.
+- [ ] Review discussion states that `validated` is not attribution, maliciousness, runtime confidence, or final assessment.
 - [ ] We would be comfortable showing this pattern as part of the public validated story.
 
 ## Weak And Composite Selector Addendum

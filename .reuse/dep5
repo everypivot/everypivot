@@ -1,0 +1,44 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: EveryPivot
+Source: https://github.com/everypivot/everypivot
+
+Files: graph-pivots/**
+ fixtures/**
+ artifacts/registry-index.json
+ artifacts/patterns.tar.gz
+ artifacts/fixtures.tar.gz
+ site/data/registry-index.json
+ site/data/registry-index.js
+ site/data/pattern-sources.js
+ LICENSE-DATA
+ site/LICENSE-DATA
+Copyright: 2026 EveryPivot Project
+License: CC-BY-4.0
+
+Files: .github/**
+ docs/**
+ schemas/**
+ tools/**
+ site/index.html
+ site/_headers
+ site/data/pivot-pattern.schema.json
+ site/data/pivot-pattern.schema.js
+ artifacts/release-manifest.json
+ CODE_OF_CONDUCT.md
+ CHANGELOG.md
+ CONTRIBUTING.md
+ GOVERNANCE.md
+ LICENSE
+ LICENSE-CODE
+ LICENSE-FAQ.md
+ NOTICE
+ README.md
+ SECURITY.md
+ TRADEMARK.md
+ VALIDATION_SEMANTICS.md
+ site/LICENSE
+ site/LICENSE-CODE
+ site/NOTICE
+ site/TRADEMARK.md
+Copyright: 2026 EveryPivot Project
+License: Apache-2.0

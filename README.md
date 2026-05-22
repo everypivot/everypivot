@@ -89,6 +89,9 @@ Then open `http://localhost:4173/site/index.html`.
 ## Documentation
 
 - [Contributing and promotion](docs/CONTRIBUTING_AND_PROMOTION.md)
+- [License FAQ](LICENSE-FAQ.md)
+- [Governance](GOVERNANCE.md)
+- [Validation semantics](VALIDATION_SEMANTICS.md)
 - [Promotion checklist](docs/PROMOTION_CHECKLIST.md)
 - [Registry index contract](docs/REGISTRY_INDEX_SPEC.md)
 
@@ -97,10 +100,12 @@ Then open `http://localhost:4173/site/index.html`.
 EveryPivot uses a dual-license model:
 
 - code, schema, tooling, docs, and site assets: Apache-2.0;
-- pattern corpus and fixtures: CC BY-SA 4.0.
+- pattern corpus and fixtures: CC BY 4.0.
 
-See [LICENSE](LICENSE), [LICENSE-CODE](LICENSE-CODE),
-[LICENSE-DATA](LICENSE-DATA), [NOTICE](NOTICE), and
+Commercial, SaaS, product, internal, and proprietary downstream uses are
+allowed under those terms. See [LICENSE-FAQ](LICENSE-FAQ.md),
+[LICENSE](LICENSE), [LICENSE-CODE](LICENSE-CODE), [LICENSE-DATA](LICENSE-DATA),
+[NOTICE](NOTICE), and
 [TRADEMARK.md](TRADEMARK.md).
 
 EveryPivot&trade; is an unregistered trademark associated with the EveryPivot

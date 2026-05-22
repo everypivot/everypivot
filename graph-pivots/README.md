@@ -4,10 +4,11 @@ Seeded home for the public EveryPivot&trade; graph-pivot corpus.
 
 > The pattern corpus in this directory (every `*.yaml` file across the
 > lifecycle lanes) is licensed under
-> [Creative Commons Attribution-ShareAlike 4.0 International](../LICENSE-DATA).
+> [Creative Commons Attribution 4.0 International](../LICENSE-DATA).
 > &copy; 2026 EveryPivot Project. See [`NOTICE`](../NOTICE) for the required
 > attribution and [`TRADEMARK.md`](../TRADEMARK.md) for the EveryPivot&trade;
-> trademark notice. Derivatives must stay under CC BY-SA 4.0.
+> trademark notice. Downstream additions may use other terms, but original
+> EveryPivot material remains under CC BY 4.0.
 
 Lifecycle lanes:
 

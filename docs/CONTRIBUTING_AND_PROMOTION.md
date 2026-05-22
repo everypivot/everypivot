@@ -63,16 +63,21 @@ Maintainers review:
 - fixture quality
 - whether the contribution is still an atomic pivot rather than a composite scoring workflow
 - whether the proposed lane is justified
+- any relevant conflict, vendor, product, or proprietary-data disclosure needed
+  to evaluate the contribution fairly
 
 ### 5. Promote Intentionally
 
 Promotion from `working-set/` to `validated/` should happen through a visible PR or release milestone, not as an implicit drift.
 
+Promotion requires maintainer approval, fixture or evidence support, and no
+unresolved credible challenge against the pattern.
+
 ## Lane Expectations
 
 ### `validated/`
 
-Represents the public high-confidence story.
+Represents the curated public story.
 
 Patterns here should:
 - carry the required metadata for promoted pivots
@@ -172,6 +177,18 @@ the final lane decision.
 - promotion decisions are explained
 - maintainers curate the validated lane
 - contributors are credited through normal Git history and PR discussion
+- `validated` is an editorial lifecycle state, not a runtime confidence score,
+  attribution judgment, maliciousness finding, or final assessment
+- relevance-based vendor and conflict disclosure is required when affiliations,
+  product interests, proprietary-data dependencies, or financial interests
+  could affect review
+- schema changes before v1.0.0 require maintainer approval and migration notes;
+  substantive schema changes after v1.0.0 should have an issue or RFC before
+  merge
+- DCO enforcement follows the project governance: contributors sign off their
+  own commits where practical, maintainers may clean up good-faith
+  contributions when DCO acceptance is clear, and multi-author PRs need
+  signoff or clear confirmation from each contributor
 
 ## Recommendation
 

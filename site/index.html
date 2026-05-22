@@ -314,7 +314,7 @@
     <header class="page">
       <h1>EveryPivot<span class="tm">™</span> — Pattern Library</h1>
       <div class="meta">
-        <span id="release">release …</span> · schema pivot_pattern <span id="schema">…</span> · published <span id="published">…</span> · <span class="license-pill" id="license-code-pill">code: Apache-2.0</span> <span class="license-pill license-pill-data" id="license-corpus-pill">corpus: CC BY-SA 4.0</span> · <span id="copyright-line">© 2026 EveryPivot Project</span>
+        <span id="release">release …</span> · schema pivot_pattern <span id="schema">…</span> · published <span id="published">…</span> · <span class="license-pill" id="license-code-pill">code: Apache-2.0</span> <span class="license-pill license-pill-data" id="license-corpus-pill">corpus: CC BY 4.0</span> · <span id="copyright-line">© 2026 EveryPivot Project</span>
       </div>
       <div class="stats">
         <span><b id="c-validated">0</b> validated</span>
@@ -353,6 +353,17 @@
 
       <div id="list-host"><div class="empty">Loading…</div></div>
 
+      <section class="license" aria-labelledby="lifecycle-h">
+        <h2 id="lifecycle-h">Lifecycle boundary</h2>
+        <p style="margin:0;">
+          <strong>Validated</strong> means curated enough to feature in the
+          public registry. It does not mean a runtime match is attribution,
+          maliciousness, final assessment, or a confidence score. Downstream
+          systems own execution, scoring, corroboration, and case-specific
+          judgment.
+        </p>
+      </section>
+
       <section class="license" aria-labelledby="license-h">
         <h2 id="license-h">License &amp; attribution</h2>
         <div class="copy-line">
@@ -360,7 +371,7 @@
           tooling, schema, and site under
           <a href="./LICENSE-CODE" target="_blank" rel="noopener">Apache License 2.0</a>;
           pattern corpus and fixtures under
-          <a href="./LICENSE-DATA" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+          <a href="./LICENSE-DATA" target="_blank" rel="noopener">CC BY 4.0</a>.
           See <a href="./LICENSE" target="_blank" rel="noopener">LICENSE</a>,
           <a href="./NOTICE" target="_blank" rel="noopener">NOTICE</a>, and
           <a href="./TRADEMARK.md" target="_blank" rel="noopener">TRADEMARK</a>
@@ -378,13 +389,13 @@
             listed in <a href="./NOTICE" target="_blank" rel="noopener">NOTICE</a>.
           </li>
           <li>
-            <strong>Pattern derivatives stay open under CC BY-SA 4.0.</strong>
-            If you publish a modified version of the corpus, it must carry
-            the same license. You may not relicense the patterns.
+            <strong>Commercial and SaaS use is allowed.</strong>
+            Downstream additions, overlays, and product integrations may be
+            proprietary. Original EveryPivot material remains under CC BY 4.0.
           </li>
           <li>
             <strong>Mark your modifications</strong> (Apache-2.0 §4(b);
-            CC BY-SA §3(a)(1)(B)) so downstream users can tell your changes
+            CC BY §3(a)(1)(b)) so downstream users can tell your changes
             from the canonical EveryPivot release.
           </li>
           <li>
@@ -403,8 +414,8 @@
           </li>
         </ul>
         <p style="margin:10px 0 0;">Suggested attribution string:</p>
-        <div class="cite-block">Pattern definitions and tooling from EveryPivot™ (EveryPivot Project),
-used under Apache-2.0 (code) and CC BY-SA 4.0 (patterns).
+<div class="cite-block">Pattern definitions and tooling from EveryPivot™ (EveryPivot Project),
+used under Apache-2.0 (code) and CC BY 4.0 (patterns).
 Source: https://everypivot.io.</div>
       </section>
     </main>
@@ -412,7 +423,7 @@ Source: https://everypivot.io.</div>
     <footer class="page">
       Data: <span id="src-path">data/registry-index.js</span>. Source YAMLs in
       <code>graph-pivots/{validated,working-set,deferred}/</code>.
-      © 2026 EveryPivot Project · EveryPivot™ · code Apache-2.0 · corpus CC BY-SA 4.0.
+      © 2026 EveryPivot Project · EveryPivot™ · code Apache-2.0 · corpus CC BY 4.0.
     </footer>
 
     <script src="./data/registry-index.js?v=20260521-1"></script>
@@ -443,7 +454,7 @@ Source: https://everypivot.io.</div>
             "code: " + lic.code.spdx;
         }
         if (lic.corpus && lic.corpus.spdx) {
-          // Pretty-print the SPDX id ("CC-BY-SA-4.0" -> "CC BY-SA 4.0")
+          // Pretty-print the SPDX id ("CC-BY-4.0" -> "CC BY 4.0")
           var corpusLabel = lic.corpus.spdx.replace(/^CC-/, "CC ").replace(/-(\d)/, " $1");
           document.getElementById("license-corpus-pill").textContent =
             "corpus: " + corpusLabel;

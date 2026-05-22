@@ -22,7 +22,7 @@ pattern registry dates from the initial commit of this repository (see
 - Register **EveryPivot** (or a confusingly similar mark) as a domain name,
   social-media handle, package name, or trademark in any jurisdiction.
 
-A fork of the source code or pattern corpus under Apache-2.0 / CC BY-SA 4.0
+A fork of the source code or pattern corpus under Apache-2.0 / CC BY 4.0
 must be renamed before public distribution.
 
 ## Reporting trademark concerns

@@ -3,7 +3,7 @@
 Validation fixtures and golden examples for the public EveryPivot&trade; contract.
 
 > Fixture content in this directory is licensed under
-> [CC BY-SA 4.0](../LICENSE-DATA); the surrounding tooling is under
+> [CC BY 4.0](../LICENSE-DATA); the surrounding tooling is under
 > [Apache-2.0](../LICENSE-CODE). &copy; 2026 EveryPivot Project. See [`LICENSE`](../LICENSE),
 > [`NOTICE`](../NOTICE), and [`TRADEMARK.md`](../TRADEMARK.md).
 

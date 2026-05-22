@@ -5,7 +5,7 @@
   "channel": "stable",
   "license": {
     "copyright": "© 2026 EveryPivot Project",
-    "copyright_holder_notice": "The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. \"EveryPivot Project\" is the designated attribution party for redistribution under CC BY-SA 4.0 §3(a)(1)(A)(ii).",
+    "copyright_holder_notice": "The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. \"EveryPivot Project\" is the designated attribution party for redistribution under CC BY 4.0 §3(a)(1)(A)(i).",
     "code": {
       "spdx": "Apache-2.0",
       "url": "LICENSE-CODE",
@@ -17,15 +17,14 @@
       ]
     },
     "corpus": {
-      "spdx": "CC-BY-SA-4.0",
+      "spdx": "CC-BY-4.0",
       "url": "LICENSE-DATA",
       "applies_to": [
         "graph-pivots/",
         "fixtures/"
-      ],
-      "share_alike": true
+      ]
     },
-    "attribution_required": "Pattern definitions and tooling from EveryPivot (EveryPivot Project), used under Apache-2.0 (code) and CC BY-SA 4.0 (patterns).",
+    "attribution_required": "Pattern definitions and tooling from EveryPivot (EveryPivot Project), used under Apache-2.0 (code) and CC BY 4.0 (patterns).",
     "notice_url": "NOTICE",
     "license_summary_url": "LICENSE",
     "trademark": {

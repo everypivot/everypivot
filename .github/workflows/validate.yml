@@ -9,6 +9,53 @@ on:
       - 'v*'
 
 jobs:
+  dco:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check DCO signoff trailers
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          missing=0
+          body_confirms=0
+          if printf '%s\n' "$PR_BODY" | grep -Eiq '^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]*I signed off my contributor-authored commits, or I confirm DCO acceptance here'; then
+            body_confirms=1
+          fi
+
+          for commit in $(git rev-list --no-merges "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"); do
+            if ! git log -1 --format=%B "$commit" | grep -Eqi '^Signed-off-by: .+ <.+>$'; then
+              echo "::warning::Commit $commit is missing a Signed-off-by trailer."
+              missing=1
+            fi
+          done
+
+          if [ "$missing" -eq 0 ]; then
+            exit 0
+          fi
+
+          if [ "$body_confirms" -eq 1 ]; then
+            echo "One or more commits are missing Signed-off-by trailers, but the PR body contains explicit DCO confirmation."
+            echo "Maintainers may squash or clean up a good-faith contribution when authorship and DCO confirmation are clear."
+            echo "For multi-author PRs, maintainers must confirm DCO acceptance from each contributor before merge."
+            exit 0
+          fi
+
+          if [ "$missing" -ne 0 ]; then
+            echo "::error::One or more commits are missing Signed-off-by trailers and the PR body does not contain DCO confirmation."
+            echo "Every contributor-authored commit should be signed off where practical."
+            echo "Check the DCO box in the PR template or amend commits with Signed-off-by trailers."
+          fi
+          exit "$missing"
+
   validate:
     runs-on: ubuntu-latest
     permissions:

@@ -162,22 +162,21 @@ def license_block
     'copyright_holder_notice' =>
       'The named copyright holder and trademark owner is identified in ' \
       'LICENSE, NOTICE, and TRADEMARK.md. "EveryPivot Project" is the ' \
-      'designated attribution party for redistribution under CC BY-SA 4.0 ' \
-      '§3(a)(1)(A)(ii).',
+      'designated attribution party for redistribution under CC BY 4.0 ' \
+      '§3(a)(1)(A)(i).',
     'code' => {
       'spdx' => 'Apache-2.0',
       'url' => 'LICENSE-CODE',
       'applies_to' => %w[schemas/ tools/ site/ docs/]
     },
     'corpus' => {
-      'spdx' => 'CC-BY-SA-4.0',
+      'spdx' => 'CC-BY-4.0',
       'url' => 'LICENSE-DATA',
-      'applies_to' => %w[graph-pivots/ fixtures/],
-      'share_alike' => true
+      'applies_to' => %w[graph-pivots/ fixtures/]
     },
     'attribution_required' =>
       'Pattern definitions and tooling from EveryPivot (EveryPivot Project), ' \
-      'used under Apache-2.0 (code) and CC BY-SA 4.0 (patterns).',
+      'used under Apache-2.0 (code) and CC BY 4.0 (patterns).',
     'notice_url' => 'NOTICE',
     'license_summary_url' => 'LICENSE',
     'trademark' => {

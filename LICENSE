@@ -14,7 +14,7 @@ apply to each asset type:
   * The pattern corpus and its associated fixtures — specifically the
     contents of `graph-pivots/` and `fixtures/`, including all `.yaml` and
     fixture data files — is licensed under the Creative Commons
-    Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0). See
+    Attribution 4.0 International License (CC BY 4.0). See
     LICENSE-DATA for the full text.
 
 In both cases, attribution to EveryPivot must be preserved in any
@@ -30,6 +30,6 @@ the trademark notice.
 If you are unsure which license applies to a given file, refer to the file's
 location:
 
-  graph-pivots/**         CC BY-SA 4.0  (LICENSE-DATA)
-  fixtures/**             CC BY-SA 4.0  (LICENSE-DATA)
+  graph-pivots/**         CC BY 4.0     (LICENSE-DATA)
+  fixtures/**             CC BY 4.0     (LICENSE-DATA)
   everything else         Apache-2.0    (LICENSE-CODE)

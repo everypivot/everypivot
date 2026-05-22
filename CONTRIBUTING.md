@@ -68,11 +68,12 @@ project's existing license terms:
 - **Code, schema, tooling, validator, docs, site assets** are licensed
   inbound under [Apache License 2.0](LICENSE-CODE).
 - **Pattern YAMLs and fixtures** are licensed inbound under
-  [CC BY-SA 4.0](LICENSE-DATA).
+  [CC BY 4.0](LICENSE-DATA).
 
 We use a lightweight **Developer Certificate of Origin (DCO)** rather than a
 heavyweight CLA. To certify that you have the right to submit your
-contribution under the licenses above, sign each commit:
+contribution under the licenses above, sign your contributor-authored commits
+where practical:
 
 ```bash
 git commit -s -m "your message"
@@ -83,6 +84,20 @@ user.name` and `user.email`. By signing off you are stating you accept the
 [DCO v1.1](https://developercertificate.org/) — i.e. that you wrote the
 contribution, have the right to submit it, and understand it will be
 distributed under the project's open licenses.
+
+Maintainers may squash or clean up good-faith contributions when authorship is
+clear and the contributor confirms DCO acceptance in the pull request.
+Multi-author pull requests need signoff or clear DCO confirmation from each
+contributor.
+
+## Relevant Conflict Or Vendor Disclosure
+
+Disclose affiliations, financial interests, proprietary-data dependencies,
+product interests, or vendor relationships that could affect review,
+especially for pattern promotion, validation evidence, or defended
+conclusions. Routine neutral fixes do not require broad affiliation
+disclosure. Maintainers may ask for more context when it is needed to review a
+contribution fairly.
 
 ## Trademark
 
