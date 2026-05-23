@@ -536,8 +536,7 @@ Source: https://everypivot.io.</div>
     <script>
       (function () {
         const host = document.getElementById("list-host");
-        const data =
-          window.__EVERYPIVOT_REGISTRY__ || window.__EVERYPIVOT_PREVIEW__;
+        const data = window.__EVERYPIVOT_REGISTRY__;
 
         if (!data || !Array.isArray(data.patterns)) {
           host.innerHTML =

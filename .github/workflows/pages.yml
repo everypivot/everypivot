@@ -46,6 +46,15 @@ jobs:
       - name: Verify release metadata
         run: ruby tools/check_release_metadata.rb
 
+      - name: Check generated data freshness
+        run: ruby tools/check_generated_freshness.rb
+
+      - name: Audit static site links
+        run: ruby tools/check_site_links.rb
+
+      - name: Check homepage release snapshot agreement
+        run: ruby tools/check_site_snapshot.rb
+
       - name: Prepare site directory
         run: |
           for f in \

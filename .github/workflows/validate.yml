@@ -82,6 +82,15 @@ jobs:
       - name: Check release metadata consistency
         run: ruby tools/check_release_metadata.rb
 
+      - name: Check generated data freshness
+        run: ruby tools/check_generated_freshness.rb
+
+      - name: Audit static site links
+        run: ruby tools/check_site_links.rb
+
+      - name: Check homepage release snapshot agreement
+        run: ruby tools/check_site_snapshot.rb
+
       # build_registry_index.rb derives release-manifest, patterns.tar.gz, and
       # fixtures.tar.gz alongside the --output path. The .preview. infix is
       # carried through from the registry-index.preview.json filename.
