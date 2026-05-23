@@ -1,0 +1,77 @@
+name: Schema, docs, or governance request
+description: Request a public schema, documentation, governance, or process change.
+title: "[request] "
+labels: ["schema", "docs", "governance"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for public-safe requests only. Do not include secrets, credentials, private telemetry, exploit details, or vulnerability material. Follow SECURITY.md for sensitive reports.
+
+        EveryPivot patterns do not assert attribution, maliciousness, compromise, runtime confidence, or final assessment.
+  - type: dropdown
+    id: request_type
+    attributes:
+      label: Request type
+      options:
+        - Schema
+        - Documentation
+        - Governance
+        - Contribution process
+        - Registry artifact contract
+        - Static site
+        - Tooling
+    validations:
+      required: true
+  - type: input
+    id: affected_surface
+    attributes:
+      label: Affected public surface
+      placeholder: "schemas/pivot_pattern.schema.json, docs/REGISTRY_INDEX_SPEC.md, GOVERNANCE.md, ..."
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: Requested change
+      description: Describe the specific change you want.
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Ground the request in known mechanics, historical patterns, public documentation, or clearly stated assumptions.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility or migration notes
+      description: For schema or artifact changes, call out backward compatibility, migration impact, and downstream consumer risk.
+    validations:
+      required: false
+  - type: textarea
+    id: validation_boundary
+    attributes:
+      label: Lifecycle or validation-boundary impact
+      description: Explain whether the request changes the meaning of validated, working_set, deferred, retired, promotion, challenge, or demotion.
+    validations:
+      required: false
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Public-safety checks
+      options:
+        - label: This request does not ask EveryPivot to assert attribution, maliciousness, compromise, runtime confidence, or final assessment.
+          required: true
+        - label: I have not included secrets, credentials, private telemetry, exploit details, or vulnerability material.
+          required: true
+  - type: textarea
+    id: disclosure
+    attributes:
+      label: Relevant disclosure
+      description: Disclose any relevant affiliation, financial interest, proprietary-data dependency, product interest, or vendor relationship that could affect review. Routine neutral fixes may say not applicable.
+      placeholder: "Not applicable, or describe the relevant relationship."
+    validations:
+      required: true

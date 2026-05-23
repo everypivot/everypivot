@@ -1,0 +1,120 @@
+name: New pivot-pattern proposal
+description: Propose a public EveryPivot pattern or lane candidate.
+title: "[pattern] "
+labels: ["pattern-proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for public-safe pattern proposals. Do not include secrets, credentials, private telemetry, exploit details, or vulnerability material. Follow SECURITY.md for sensitive reports.
+
+        EveryPivot patterns describe portable pivot relationships. They do not assert attribution, maliciousness, compromise, runtime confidence, or final assessment.
+  - type: input
+    id: pattern_id
+    attributes:
+      label: Proposed pattern ID
+      description: Use the existing uppercase identifier style if possible.
+      placeholder: "CTI_EXAMPLE_SOURCE_TO_TARGET"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Pattern summary
+      description: One short public-safe explanation of the pivot.
+    validations:
+      required: true
+  - type: input
+    id: source_node
+    attributes:
+      label: Source node
+      placeholder: "inet:fqdn, file:hash, cloud:bucket, ..."
+    validations:
+      required: true
+  - type: input
+    id: target_node
+    attributes:
+      label: Target node
+      placeholder: "inet:fqdn, file:bytes, identity:account, ..."
+    validations:
+      required: true
+  - type: textarea
+    id: hop_relation
+    attributes:
+      label: Hop relation
+      description: Describe the intended hop(s), relation names, forms, and direction.
+      placeholder: |
+        source --relation/form--> target
+    validations:
+      required: true
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Suggested lifecycle lane
+      description: Validated requires maintainer review and fixture or evidence support.
+      options:
+        - working_set
+        - deferred
+        - validated
+    validations:
+      required: true
+  - type: textarea
+    id: source_basis
+    attributes:
+      label: Source basis
+      description: Explain the public source basis, observed mechanics, historical pattern, or assumption. Do not imply access to hidden live data.
+    validations:
+      required: true
+  - type: textarea
+    id: fixture_evidence
+    attributes:
+      label: Fixture or evidence notes
+      description: Include positive examples, expected traversal behavior, and fixture ideas if available.
+    validations:
+      required: true
+  - type: textarea
+    id: negative_controls
+    attributes:
+      label: Negative controls
+      description: List known false-positive controls, suppression nodes, disallowed matches, or comparison cases.
+    validations:
+      required: true
+  - type: textarea
+    id: high_cardinality
+    attributes:
+      label: High-cardinality hazards
+      description: Explain whether common infrastructure, shared services, large hubs, or reseller behavior can make this pivot noisy.
+    validations:
+      required: true
+  - type: textarea
+    id: stale_edges
+    attributes:
+      label: Stale-edge caveats
+      description: Explain time windows, ownership changes, DNS/certificate churn, or other expiry assumptions.
+    validations:
+      required: true
+  - type: textarea
+    id: forbidden_conclusions
+    attributes:
+      label: Forbidden conclusions
+      description: State what this pivot must not be used to conclude.
+      placeholder: "For example: does not prove attribution, compromise, intent, ownership, or maliciousness."
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundary checks
+      options:
+        - label: I am not using validated to mean attribution, maliciousness, runtime confidence, compromise, or final assessment.
+          required: true
+        - label: I have not included secrets, credentials, private telemetry, exploit details, or vulnerability material.
+          required: true
+  - type: textarea
+    id: disclosure
+    attributes:
+      label: Relevant disclosure
+      description: Disclose any relevant affiliation, financial interest, proprietary-data dependency, product interest, or vendor relationship that could affect review.
+      placeholder: "Not applicable, or describe the relevant relationship."
+    validations:
+      required: true

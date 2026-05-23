@@ -1,0 +1,80 @@
+name: Bug, site, or tooling report
+description: Report a problem with the public site, registry artifacts, docs, or tooling.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for public, non-sensitive reports only. Do not include secrets, credentials, private telemetry, exploit details, or vulnerability material. Follow SECURITY.md for sensitive reports.
+
+        EveryPivot patterns do not assert attribution, maliciousness, compromise, runtime confidence, or final assessment.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Static site
+        - Registry artifacts
+        - Validator or registry tooling
+        - Schema
+        - Documentation
+        - Release metadata
+        - Other public repository surface
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Affected URL, file, or command
+      placeholder: "site/index.html, tools/validate_pivots.rb, https://everypivot.io/..."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong?
+      description: State the observed problem and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include the smallest public-safe command sequence or browser path that reproduces the problem.
+      placeholder: |
+        1. Run ...
+        2. Open ...
+        3. Observe ...
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: false
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior or output
+      description: Keep logs public-safe and redact secrets before posting.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Public-safety checks
+      options:
+        - label: I have not included secrets, credentials, private telemetry, exploit details, or vulnerability material.
+          required: true
+        - label: This report does not ask EveryPivot to treat a pattern match as attribution, maliciousness, compromise, confidence, or final assessment.
+          required: true
+  - type: textarea
+    id: disclosure
+    attributes:
+      label: Relevant disclosure
+      description: Disclose any relevant affiliation, financial interest, proprietary-data dependency, product interest, or vendor relationship that could affect review. Routine neutral fixes may say not applicable.
+      placeholder: "Not applicable, or describe the relevant relationship."
+    validations:
+      required: true

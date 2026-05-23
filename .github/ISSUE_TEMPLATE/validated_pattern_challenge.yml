@@ -1,0 +1,74 @@
+name: Validated-pattern challenge or demotion request
+description: Challenge a validated pattern or request lane demotion.
+title: "[challenge] "
+labels: ["validated-pattern-challenge"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for public-safe challenges only. Do not include secrets, credentials, private telemetry, exploit details, or vulnerability material. Follow SECURITY.md for sensitive reports.
+
+        A challenge can dispute whether a pattern belongs in the validated lane. It is not a venue for asserting attribution, maliciousness, compromise, runtime confidence, or final assessment.
+  - type: input
+    id: pattern_id
+    attributes:
+      label: Challenged pattern ID
+      placeholder: "OSINT_SSH_HOSTKEY_CLUSTER"
+    validations:
+      required: true
+  - type: textarea
+    id: disputed_claim
+    attributes:
+      label: Specific claim under dispute
+      description: Identify the exact relationship, control, lifecycle statement, hazard, or documentation claim you dispute.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or counterexample
+      description: Provide public-safe evidence, counterexamples, fixture cases, or reasoning. Do not imply access to hidden live data unless you can disclose the source basis.
+    validations:
+      required: true
+  - type: dropdown
+    id: proposed_outcome
+    attributes:
+      label: Proposed outcome
+      options:
+        - keep_validated
+        - move_to_working_set
+        - move_to_deferred
+        - retire
+    validations:
+      required: true
+  - type: textarea
+    id: downstream_risk
+    attributes:
+      label: Downstream-risk notes
+      description: Explain the risk if this pattern remains validated or is demoted.
+    validations:
+      required: true
+  - type: textarea
+    id: remediation
+    attributes:
+      label: Suggested remediation
+      description: Suggest fixture additions, negative controls, caveats, schema/docs changes, or lane movement.
+    validations:
+      required: false
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundary checks
+      options:
+        - label: This challenge does not ask EveryPivot to assert attribution, maliciousness, compromise, runtime confidence, or final assessment.
+          required: true
+        - label: I have not included secrets, credentials, private telemetry, exploit details, or vulnerability material.
+          required: true
+  - type: textarea
+    id: disclosure
+    attributes:
+      label: Relevant disclosure
+      description: Disclose any relevant affiliation, financial interest, proprietary-data dependency, product interest, or vendor relationship that could affect review.
+      placeholder: "Not applicable, or describe the relevant relationship."
+    validations:
+      required: true
