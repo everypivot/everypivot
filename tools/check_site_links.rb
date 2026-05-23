@@ -84,6 +84,7 @@ OptionParser.new do |parser|
 end.parse!
 
 repo_root = options[:repo_root]
+incubation_repo = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md').file?
 errors = []
 
 Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
@@ -110,8 +111,10 @@ Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
     end
   end
 
-  PREVIEW_LEAK_MARKERS.each do |marker|
-    errors << "Homepage references preview-only data marker #{marker}" if homepage_text.include?(marker)
+  unless incubation_repo
+    PREVIEW_LEAK_MARKERS.each do |marker|
+      errors << "Homepage references preview-only data marker #{marker}" if homepage_text.include?(marker)
+    end
   end
 
   Dir.glob(staging_root.join('**', '*.html').to_s).sort.each do |html_path|

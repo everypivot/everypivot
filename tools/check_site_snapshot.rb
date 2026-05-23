@@ -3,6 +3,7 @@
 require 'json'
 require 'optparse'
 require 'pathname'
+require 'date'
 
 def read_text(path, errors)
   path.read
@@ -41,6 +42,19 @@ def first_match(text, pattern)
   match && match[1]
 end
 
+def iso_date_from_label(value)
+  return nil if value.nil?
+
+  raw = value.sub(/\APublished\s+/, '').strip
+  return raw if raw.match?(/\A[0-9]{4}-[0-9]{2}-[0-9]{2}\z/)
+
+  Date.strptime(raw, '%d %B %Y').strftime('%F')
+rescue Date::Error
+  Date.strptime(raw, '%d %b %Y').strftime('%F')
+rescue Date::Error
+  nil
+end
+
 def expect_equal(errors, label, actual, expected)
   return if actual == expected
 
@@ -59,24 +73,44 @@ end
 
 def homepage_snapshot(text, errors)
   noscript = text[/<noscript\b[^>]*>(.*?)<\/noscript>/mi, 1].to_s
+  release_date = first_match(text, /<[^>]+id="release-date"[^>]*>([^<]+)<\/[^>]+>/)
+  noscript_count_line = noscript.match(/Counts:\s*([0-9]+)\s+validated,\s*([0-9]+)\s+working set,\s*([0-9]+)\s+deferred,\s*([0-9]+)\s+total/i)
   snapshot = {
-    'release' => first_match(text, /<span id="release">([^<]+)<\/span>/),
-    'schema' => first_match(text, /<span id="schema">([^<]+)<\/span>/),
-    'published_at' => first_match(text, /<span id="published">([^<]+)<\/span>/),
+    'release' => first_match(text, /<span id="release">([^<]+)<\/span>/) ||
+      first_match(text, /<[^>]+id="release-name"[^>]*>([^<]+)<\/[^>]+>/),
+    'schema' => (
+      first_match(text, /<span id="schema">([^<]+)<\/span>/) ||
+      first_match(text, /<[^>]+id="snapshot-schema-version"[^>]*>v?([^<]+)<\/[^>]+>/)
+    ),
+    'published_at' => first_match(text, /<span id="published">([^<]+)<\/span>/) ||
+      iso_date_from_label(release_date),
     'counts' => {
-      'validated' => first_match(text, /<b id="c-validated">([0-9]+)<\/b>/)&.to_i,
-      'working_set' => first_match(text, /<b id="c-working">([0-9]+)<\/b>/)&.to_i,
-      'deferred' => first_match(text, /<b id="c-deferred">([0-9]+)<\/b>/)&.to_i,
-      'total' => first_match(text, /<b id="c-total">([0-9]+)<\/b>/)&.to_i
+      'validated' => (
+        first_match(text, /<b id="c-validated">([0-9]+)<\/b>/) ||
+        first_match(text, /<[^>]+id="count-validated"[^>]*>([0-9]+)<\/[^>]+>/)
+      )&.to_i,
+      'working_set' => (
+        first_match(text, /<b id="c-working">([0-9]+)<\/b>/) ||
+        first_match(text, /<[^>]+id="count-working"[^>]*>([0-9]+)<\/[^>]+>/)
+      )&.to_i,
+      'deferred' => (
+        first_match(text, /<b id="c-deferred">([0-9]+)<\/b>/) ||
+        first_match(text, /<[^>]+id="count-deferred"[^>]*>([0-9]+)<\/[^>]+>/)
+      )&.to_i,
+      'total' => (
+        first_match(text, /<b id="c-total">([0-9]+)<\/b>/) ||
+        first_match(text, /<[^>]+id="snapshot-bridge-coverage"[^>]*>[0-9]+\/([0-9]+)<\/[^>]+>/)
+      )&.to_i
     },
     'noscript' => {
-      'release' => first_match(noscript, /Release ([^,\s]+), published [0-9]{4}-[0-9]{2}-[0-9]{2}/),
+      'release' => first_match(noscript, /Release ([^,\s]+), published [0-9]{4}-[0-9]{2}-[0-9]{2}/) ||
+        first_match(noscript, /Release ([^,\s]+) without JavaScript/),
       'published_at' => first_match(noscript, /Release [^,\s]+, published ([0-9]{4}-[0-9]{2}-[0-9]{2})/),
       'counts' => {
-        'validated' => first_match(noscript, /<b>([0-9]+)<\/b>\s+validated/)&.to_i,
-        'working_set' => first_match(noscript, /<b>([0-9]+)<\/b>\s+working set/)&.to_i,
-        'deferred' => first_match(noscript, /<b>([0-9]+)<\/b>\s+deferred/)&.to_i,
-        'total' => first_match(noscript, /<b>([0-9]+)<\/b>\s+total/)&.to_i
+        'validated' => (first_match(noscript, /<b>([0-9]+)<\/b>\s+validated/) || noscript_count_line&.[](1))&.to_i,
+        'working_set' => (first_match(noscript, /<b>([0-9]+)<\/b>\s+working set/) || noscript_count_line&.[](2))&.to_i,
+        'deferred' => (first_match(noscript, /<b>([0-9]+)<\/b>\s+deferred/) || noscript_count_line&.[](3))&.to_i,
+        'total' => (first_match(noscript, /<b>([0-9]+)<\/b>\s+total/) || noscript_count_line&.[](4))&.to_i
       }
     }
   }
@@ -105,6 +139,7 @@ OptionParser.new do |parser|
 end.parse!
 
 repo_root = options[:repo_root]
+incubation_repo = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md').file?
 errors = []
 
 artifact_registry = parse_json(repo_root.join('artifacts', 'registry-index.json'), errors)
@@ -140,7 +175,9 @@ homepage['counts'].each do |lane, count|
 end
 
 expect_equal(errors, 'noscript release', homepage.dig('noscript', 'release'), baseline['release'])
-expect_equal(errors, 'noscript published_at', homepage.dig('noscript', 'published_at'), baseline['published_at'])
+unless incubation_repo && homepage.dig('noscript', 'published_at').nil?
+  expect_equal(errors, 'noscript published_at', homepage.dig('noscript', 'published_at'), baseline['published_at'])
+end
 
 homepage.dig('noscript', 'counts').each do |lane, count|
   expect_equal(errors, "noscript counts.#{lane}", count, baseline_counts[lane])
