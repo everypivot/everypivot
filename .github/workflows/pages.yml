@@ -1,0 +1,77 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "site/**"
+      - "artifacts/**"
+      - "schemas/**"
+      - "tools/check_release_metadata.rb"
+      - "docs/releases/**"
+      - "README.md"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.repository == 'everypivot/everypivot'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Verify release metadata
+        run: ruby tools/check_release_metadata.rb
+
+      - name: Prepare site directory
+        run: |
+          for f in \
+            artifacts/registry-index.json \
+            artifacts/release-manifest.json \
+            artifacts/patterns.tar.gz \
+            artifacts/fixtures.tar.gz \
+            site/data/registry-index.json \
+            site/data/registry-index.js \
+            site/data/pivot-pattern.schema.json \
+            site/data/pivot-pattern.schema.js; do
+            test -f "$f"
+          done
+          mkdir -p site/artifacts
+          cp artifacts/registry-index.json site/artifacts/registry-index.json
+          cp artifacts/release-manifest.json site/artifacts/release-manifest.json
+          cp artifacts/patterns.tar.gz site/artifacts/patterns.tar.gz
+          cp artifacts/fixtures.tar.gz site/artifacts/fixtures.tar.gz
+          touch site/.nojekyll
+          test -f site/CNAME
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

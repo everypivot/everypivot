@@ -308,19 +308,80 @@
         white-space: pre-wrap;
         color: var(--fg);
       }
+      .artifact-links,
+      .fallback-panel {
+        margin-bottom: 14px;
+        padding: 12px 14px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        font-size: 13px;
+      }
+      .artifact-links h2,
+      .fallback-panel h2 {
+        margin: 0 0 6px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .artifact-links p,
+      .fallback-panel p {
+        margin: 0 0 8px;
+        color: var(--muted);
+      }
+      .artifact-links .link-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .artifact-links a,
+      .fallback-panel a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .artifact-links a {
+        display: inline-block;
+        padding: 4px 8px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #f6f7f9;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .artifact-links a:hover,
+      .fallback-panel a:hover {
+        text-decoration: underline;
+      }
+      .fallback-panel {
+        border-left: 3px solid var(--accent);
+      }
+      .fallback-counts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 8px 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .fallback-counts b {
+        color: var(--fg);
+      }
+      .fallback-panel ul {
+        margin: 8px 0;
+        padding-left: 20px;
+      }
     </style>
   </head>
   <body>
     <header class="page">
       <h1>EveryPivot<span class="tm">™</span> — Pattern Library</h1>
       <div class="meta">
-        <span id="release">release …</span> · schema pivot_pattern <span id="schema">…</span> · published <span id="published">…</span> · <span class="license-pill" id="license-code-pill">code: Apache-2.0</span> <span class="license-pill license-pill-data" id="license-corpus-pill">corpus: CC BY 4.0</span> · <span id="copyright-line">© 2026 EveryPivot Project</span>
+        <span id="release">v0.1.1</span> · schema pivot_pattern <span id="schema">1.4</span> · published <span id="published">2026-05-22</span> · <span class="license-pill" id="license-code-pill">code: Apache-2.0</span> <span class="license-pill license-pill-data" id="license-corpus-pill">corpus: CC BY 4.0</span> · <span id="copyright-line">© 2026 EveryPivot Project</span>
       </div>
       <div class="stats">
-        <span><b id="c-validated">0</b> validated</span>
-        <span><b id="c-working">0</b> working set</span>
-        <span><b id="c-deferred">0</b> deferred</span>
-        <span><b id="c-total">0</b> total</span>
+        <span><b id="c-validated">19</b> validated</span>
+        <span><b id="c-working">76</b> working set</span>
+        <span><b id="c-deferred">81</b> deferred</span>
+        <span><b id="c-total">176</b> total</span>
       </div>
     </header>
 
@@ -348,8 +409,53 @@
           <label><input type="checkbox" data-lane="working_set" checked /> working set</label>
           <label><input type="checkbox" data-lane="deferred" /> deferred</label>
         </div>
-        <span class="result-count" id="result-count">0 patterns</span>
+        <span class="result-count" id="result-count">95 patterns</span>
       </div>
+
+      <section class="artifact-links" aria-labelledby="artifact-links-h">
+        <h2 id="artifact-links-h">Release artifacts</h2>
+        <p>Static links for the current public release surface.</p>
+        <div class="link-row">
+          <a href="./data/pivot-pattern.schema.json">schema</a>
+          <a href="./artifacts/registry-index.json">registry-index</a>
+          <a href="./artifacts/patterns.tar.gz">pattern-bundle</a>
+          <a href="./artifacts/fixtures.tar.gz">fixture-bundle</a>
+        </div>
+      </section>
+
+      <noscript>
+        <section class="fallback-panel" aria-labelledby="noscript-h">
+          <h2 id="noscript-h">JavaScript-free release snapshot</h2>
+          <p>
+            Release v0.1.1, published 2026-05-22. The browser UI needs
+            JavaScript for filtering and expanded pattern details, but the
+            release counts and downloadable artifacts are available here.
+          </p>
+          <div class="fallback-counts">
+            <span><b>19</b> validated</span>
+            <span><b>76</b> working set</span>
+            <span><b>81</b> deferred</span>
+            <span><b>176</b> total</span>
+          </div>
+          <ul>
+            <li><a href="./data/pivot-pattern.schema.json">Schema JSON</a></li>
+            <li><a href="./artifacts/registry-index.json">Registry index JSON</a></li>
+            <li><a href="./artifacts/patterns.tar.gz">Pattern bundle</a></li>
+            <li><a href="./artifacts/fixtures.tar.gz">Fixture bundle</a></li>
+          </ul>
+          <p>
+            Lifecycle warning: validated means curated enough to feature in
+            this registry. It does not mean attribution, maliciousness,
+            confidence, or final assessment. Working-set and deferred patterns
+            need additional review before promotion.
+          </p>
+          <p>
+            Runtime consumers must still apply negative-node suppression,
+            stale-edge windows, degree caps, corroboration, and local analytic
+            judgment.
+          </p>
+        </section>
+      </noscript>
 
       <div id="list-host"><div class="empty">Loading…</div></div>
 

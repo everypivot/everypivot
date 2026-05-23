@@ -1,5 +1,6 @@
 # EveryPivot Documentation
 
+- [Start here: SSH host key walkthrough](START_HERE.md)
 - [Contributing and promotion](CONTRIBUTING_AND_PROMOTION.md)
 - [License FAQ](../LICENSE-FAQ.md)
 - [Governance](../GOVERNANCE.md)

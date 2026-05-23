@@ -10,6 +10,7 @@ Validation fixtures and golden examples for the public EveryPivot&trade; contrac
 Current contents:
 - `validator_suite.yml` manifest for automated fixture checks
 - `cases/` library roots with pass/fail scenarios for schema, lane, and metadata validation
+- `examples/` documentation fixtures for first-use traversal examples
 
 Run the suite with:
 
@@ -25,3 +26,9 @@ The suite currently covers:
 - forbidden additional-property rejection
 - deferred-reason enforcement
 - current assessment-bridge enforcement
+
+Documentation fixtures:
+- [`examples/osint_ssh_hostkey_cluster.graph.json`](examples/osint_ssh_hostkey_cluster.graph.json)
+  supports the [`START_HERE`](../docs/START_HERE.md) walkthrough. It is a
+  synthetic graph example, not a validator suite case and not live observation
+  data.

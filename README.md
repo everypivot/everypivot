@@ -88,6 +88,7 @@ Then open `http://localhost:4173/site/index.html`.
 
 ## Documentation
 
+- [Start here: SSH host key walkthrough](docs/START_HERE.md)
 - [Contributing and promotion](docs/CONTRIBUTING_AND_PROMOTION.md)
 - [License FAQ](LICENSE-FAQ.md)
 - [Governance](GOVERNANCE.md)
