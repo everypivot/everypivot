@@ -15,7 +15,7 @@ synthetic keys. It is a mechanics example, not live intelligence.
 - Hop relation: `presented_by`
 - Hop direction: `out`
 - Temporal window: 730 days
-- Fixture graph: [`fixtures/examples/osint_ssh_hostkey_cluster.graph.json`](../fixtures/examples/osint_ssh_hostkey_cluster.graph.json)
+- Evidence pack: [`fixtures/examples/osint_ssh_hostkey_cluster.evidence.json`](../fixtures/examples/osint_ssh_hostkey_cluster.evidence.json)
 
 ## Source Node
 
@@ -29,9 +29,10 @@ The pattern asks a narrow question: which hosts or names presented this exact
 SSH host key inside the permitted window, after suppression controls are
 applied?
 
-## Fixture Graph
+## Evidence Pack
 
-The fixture contains four candidate edges from the source key:
+The fixture contains four candidate edges from the source key and one negative
+control edge for a different key:
 
 ```text
 ssh-hostkey:sha256:example-ed25519-7f3b
@@ -39,10 +40,13 @@ ssh-hostkey:sha256:example-ed25519-7f3b
   presented_by -> inet:ipv4:203.0.113.17
   presented_by -> inet:ipv4:198.51.100.44
   presented_by -> inet:ipv4:198.51.100.23
+ssh-hostkey:sha256:example-rsa-912c
+  presented_by -> inet:ipv4:203.0.113.88
 ```
 
 The first two targets are expected traversal results. The third is suppressed by
-a negative-node list. The fourth is stale.
+a negative-node list. The fourth is stale. The final edge proves the negative
+control: a host that presented a different key does not join this cluster.
 
 ## Expected Traversal
 
@@ -89,6 +93,17 @@ Stale SSH host-key observations can remain historically true while no longer
 supporting a current pivot. Keep the edge as historical evidence if your system
 stores it, but do not present it as a current match without an explicit
 historical mode.
+
+## Fixture Roles
+
+This evidence pack includes `positive`, `suppression`, and `negative` roles.
+Those roles are part of the public fixture contract:
+
+- `positive` examples show what should be returned.
+- `suppression` examples show evidence that may exist but should not be shown
+  as an ordinary current match.
+- `negative` examples show plausible-looking graph material that must not join
+  the source and candidate target.
 
 ## Forbidden Conclusions
 

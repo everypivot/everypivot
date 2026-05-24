@@ -10,7 +10,7 @@ Validation fixtures and golden examples for the public EveryPivot&trade; contrac
 Current contents:
 - `validator_suite.yml` manifest for automated fixture checks
 - `cases/` library roots with pass/fail scenarios for schema, lane, and metadata validation
-- `examples/` documentation fixtures for first-use traversal examples
+- `examples/` traversal evidence packs for first-use and promotion examples
 
 Run the suite with:
 
@@ -26,9 +26,41 @@ The suite currently covers:
 - forbidden additional-property rejection
 - deferred-reason enforcement
 - current assessment-bridge enforcement
+- traversal evidence examples with expected included, suppressed, and blocked
+  assertions
 
-Documentation fixtures:
-- [`examples/osint_ssh_hostkey_cluster.graph.json`](examples/osint_ssh_hostkey_cluster.graph.json)
-  supports the [`START_HERE`](../docs/START_HERE.md) walkthrough. It is a
-  synthetic graph example, not a validator suite case and not live observation
-  data.
+## Fixture Roles
+
+Traversal evidence packs use `fixture_roles` to make the purpose of each
+example explicit:
+
+- `positive`: a traversal that should return the documented target.
+- `weak_positive`: a candidate relation that is mechanically true but still
+  needs corroboration before a downstream system treats it as meaningful.
+- `cautionary_positive`: a true relation that is likely to be overread unless
+  caveats are shown near the result.
+- `cautionary_negative`: a near miss that looks plausible but should be blocked
+  by a documented caveat.
+- `negative`: a relation that should not join the source and candidate target.
+- `suppression`: a relation that may exist as evidence but should be withheld
+  from ordinary results because of negative-node, temporal, or local policy
+  controls.
+- `high_cardinality`: a noisy value whose main value is explaining fan-out,
+  suppression, or rarity behavior rather than making a positive cluster claim.
+
+Evidence packs must include blocked assertions. Those statements are part of
+the fixture contract: they say what a consumer must not infer from the
+traversal, even when the raw edge exists.
+
+## Traversal Evidence Examples
+
+- [`examples/osint_ssh_hostkey_cluster.evidence.json`](examples/osint_ssh_hostkey_cluster.evidence.json)
+  supports the [`START_HERE`](../docs/START_HERE.md) walkthrough. It covers
+  exact host-key reuse, stale-edge suppression, shared-hosting suppression, and
+  a different-key negative control.
+- [`examples/cti_sample_imphash_cluster.evidence.json`](examples/cti_sample_imphash_cluster.evidence.json)
+  covers import-hash clustering, weak-positive corroboration, common-packer
+  suppression, and high-cardinality handling.
+
+All examples are synthetic. They use reserved example domains or documentation
+IP ranges and are not live observation data.

@@ -44,7 +44,7 @@ A contributor opens a pull request with one or more of:
 CI checks should run automatically:
 - schema validation
 - corpus policy validation
-- fixture checks where available
+- fixture checks, including traversal evidence-pack checks where available
 - release bundle build preview
 
 ### 3. Land In The Right Lane
@@ -71,7 +71,9 @@ Maintainers review:
 Promotion from `working-set/` to `validated/` should happen through a visible PR or release milestone, not as an implicit drift.
 
 Promotion requires maintainer approval, fixture or evidence support, and no
-unresolved credible challenge against the pattern.
+unresolved credible challenge against the pattern. Evidence support should name
+the fixture role being covered: positive, weak positive, cautionary positive,
+cautionary negative, negative, suppression, or high cardinality.
 
 ## Lane Expectations
 
@@ -143,6 +145,7 @@ Before moving one of these patterns into `working-set/`, reviewers should see:
 - at least one negative example that should not cluster;
 - at least one high-cardinality or suppression example when the selector can
   fan out broadly.
+- blocked assertions that state what the traversal does not prove.
 
 Before moving one of these patterns into `validated/`, reviewers should also
 see:
@@ -150,6 +153,8 @@ see:
 - populated `negative_nodes` or an equivalent suppression story;
 - degree caps and a temporal window where the relation can fan out;
 - review metadata showing the decision was intentional;
+- fixture roles that cover the main positive, negative, suppression, and
+  weak-signal behavior expected from the pattern;
 - a promotion discussion that explicitly says runtime confidence, scoring, and
   final assessment belong to downstream execution or assessment layers, not to
   the pattern definition.

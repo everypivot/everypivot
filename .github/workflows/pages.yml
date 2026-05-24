@@ -7,8 +7,11 @@ on:
     paths:
       - "site/**"
       - "artifacts/**"
+      - "fixtures/**"
+      - "graph-pivots/**"
       - "schemas/**"
       - "tools/build_registry_index.rb"
+      - "tools/check_fixture_suite.rb"
       - "tools/check_generated_freshness.rb"
       - "tools/check_release_metadata.rb"
       - "tools/check_site_links.rb"
@@ -49,6 +52,9 @@ jobs:
 
       - name: Verify release metadata
         run: ruby tools/check_release_metadata.rb
+
+      - name: Run fixture suite
+        run: ruby tools/check_fixture_suite.rb
 
       - name: Check generated data freshness
         run: ruby tools/check_generated_freshness.rb

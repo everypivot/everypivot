@@ -1,0 +1,157 @@
+{
+  "format": "everypivot.traversal_evidence_pack",
+  "format_version": 1,
+  "fixture_id": "osint_ssh_hostkey_cluster_evidence_v1",
+  "pattern_id": "OSINT_SSH_HOSTKEY_CLUSTER",
+  "fixture_roles": [
+    "positive",
+    "suppression",
+    "negative"
+  ],
+  "purpose": "Synthetic traversal evidence for exact SSH host-key reuse. It uses reserved example domains and IP ranges only.",
+  "source_node": {
+    "id": "ssh-hostkey:sha256:example-ed25519-7f3b",
+    "form": "ssh:hostkey",
+    "label": "SHA256:example-ed25519-7f3b"
+  },
+  "nodes": [
+    {
+      "id": "ssh-hostkey:sha256:example-ed25519-7f3b",
+      "form": "ssh:hostkey",
+      "label": "SHA256:example-ed25519-7f3b"
+    },
+    {
+      "id": "ssh-hostkey:sha256:example-rsa-912c",
+      "form": "ssh:hostkey",
+      "label": "SHA256:example-rsa-912c"
+    },
+    {
+      "id": "inet:fqdn:jump-01.ops.example.net",
+      "form": "inet:fqdn",
+      "label": "jump-01.ops.example.net"
+    },
+    {
+      "id": "inet:ipv4:203.0.113.17",
+      "form": "inet:ipv4",
+      "label": "203.0.113.17"
+    },
+    {
+      "id": "inet:ipv4:198.51.100.44",
+      "form": "inet:ipv4",
+      "label": "198.51.100.44",
+      "negative_node_list": "shared_hosting_ranges"
+    },
+    {
+      "id": "inet:ipv4:198.51.100.23",
+      "form": "inet:ipv4",
+      "label": "198.51.100.23",
+      "stale": true
+    },
+    {
+      "id": "inet:ipv4:203.0.113.88",
+      "form": "inet:ipv4",
+      "label": "203.0.113.88"
+    }
+  ],
+  "edges": [
+    {
+      "from": "ssh-hostkey:sha256:example-ed25519-7f3b",
+      "to": "inet:fqdn:jump-01.ops.example.net",
+      "relation": "presented_by",
+      "seen": "2026-05-20",
+      "source": "example_scanner_a"
+    },
+    {
+      "from": "ssh-hostkey:sha256:example-ed25519-7f3b",
+      "to": "inet:ipv4:203.0.113.17",
+      "relation": "presented_by",
+      "seen": "2026-05-20",
+      "source": "example_scanner_b"
+    },
+    {
+      "from": "ssh-hostkey:sha256:example-ed25519-7f3b",
+      "to": "inet:ipv4:198.51.100.44",
+      "relation": "presented_by",
+      "seen": "2026-05-20",
+      "source": "example_scanner_a"
+    },
+    {
+      "from": "ssh-hostkey:sha256:example-ed25519-7f3b",
+      "to": "inet:ipv4:198.51.100.23",
+      "relation": "presented_by",
+      "seen": "2023-01-15",
+      "source": "example_scanner_archive"
+    },
+    {
+      "from": "ssh-hostkey:sha256:example-rsa-912c",
+      "to": "inet:ipv4:203.0.113.88",
+      "relation": "presented_by",
+      "seen": "2026-05-20",
+      "source": "example_scanner_a"
+    }
+  ],
+  "expected_traversals": [
+    {
+      "id": "current_key_reuse_returns_two_targets",
+      "role": "positive",
+      "start": "ssh-hostkey:sha256:example-ed25519-7f3b",
+      "relation": "presented_by",
+      "direction": "out",
+      "included_targets": [
+        "inet:fqdn:jump-01.ops.example.net",
+        "inet:ipv4:203.0.113.17"
+      ],
+      "allowed_assertions": [
+        "The same normalized SSH host key was observed on the included hosts inside the temporal window.",
+        "The traversal can present the returned hosts as candidate infrastructure linked by exact host-key reuse."
+      ],
+      "blocked_assertions": [
+        "Do not infer common ownership, operator identity, maliciousness, compromise, or final confidence from this traversal alone."
+      ]
+    },
+    {
+      "id": "shared_hosting_and_stale_edges_are_suppressed",
+      "role": "suppression",
+      "start": "ssh-hostkey:sha256:example-ed25519-7f3b",
+      "relation": "presented_by",
+      "direction": "out",
+      "suppressed_targets": [
+        {
+          "id": "inet:ipv4:198.51.100.44",
+          "reason": "Target is listed in the shared_hosting_ranges negative-node list."
+        },
+        {
+          "id": "inet:ipv4:198.51.100.23",
+          "reason": "Edge is outside the 730-day temporal window for this pattern."
+        }
+      ],
+      "allowed_assertions": [
+        "The suppressed observations may remain historical evidence if the downstream system keeps audit trails."
+      ],
+      "blocked_assertions": [
+        "Do not present shared-hosting or stale-edge targets as current cluster members without an explicit historical or suppression-bypass mode."
+      ]
+    },
+    {
+      "id": "different_host_key_does_not_join",
+      "role": "negative",
+      "start": "ssh-hostkey:sha256:example-ed25519-7f3b",
+      "relation": "presented_by",
+      "direction": "out",
+      "candidate_targets": [
+        "inet:ipv4:203.0.113.88"
+      ],
+      "allowed_assertions": [
+        "A different SSH host key can be recorded in the same graph without joining this cluster."
+      ],
+      "blocked_assertions": [
+        "Do not cluster a host that only presented ssh-hostkey:sha256:example-rsa-912c with the ed25519 source key."
+      ]
+    }
+  ],
+  "blocked_assertions": [
+    "Validated lifecycle state is not a runtime confidence score.",
+    "This fixture does not assert attribution, maliciousness, compromise, common ownership, or final assessment.",
+    "Suppression controls and stale-edge windows are part of the expected traversal behavior, not optional UI hints."
+  ]
+}

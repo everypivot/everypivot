@@ -1,0 +1,174 @@
+{
+  "format": "everypivot.traversal_evidence_pack",
+  "format_version": 1,
+  "fixture_id": "cti_sample_imphash_cluster_evidence_v1",
+  "pattern_id": "CTI_SAMPLE_IMPHASH_CLUSTER",
+  "fixture_roles": [
+    "positive",
+    "weak_positive",
+    "suppression",
+    "high_cardinality"
+  ],
+  "purpose": "Synthetic traversal evidence for PE import-hash clustering, including a weak selector case and a common-packer suppression case.",
+  "source_node": {
+    "id": "file:pe:imphash:11112222333344445555666677778888",
+    "form": "file:pe:imphash",
+    "label": "11112222333344445555666677778888"
+  },
+  "nodes": [
+    {
+      "id": "file:pe:imphash:11112222333344445555666677778888",
+      "form": "file:pe:imphash",
+      "label": "11112222333344445555666677778888"
+    },
+    {
+      "id": "file:pe:imphash:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "form": "file:pe:imphash",
+      "label": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "negative_node_list": "common_packer_imphashes",
+      "candidate_count": 125000
+    },
+    {
+      "id": "file:bytes:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "form": "file:bytes",
+      "label": "sample-alpha"
+    },
+    {
+      "id": "file:bytes:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "form": "file:bytes",
+      "label": "sample-bravo"
+    },
+    {
+      "id": "file:bytes:sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "form": "file:bytes",
+      "label": "sample-charlie"
+    },
+    {
+      "id": "file:bytes:sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "form": "file:bytes",
+      "label": "sample-delta"
+    },
+    {
+      "id": "file:bytes:sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "form": "file:bytes",
+      "label": "sample-echo"
+    }
+  ],
+  "edges": [
+    {
+      "from": "file:pe:imphash:11112222333344445555666677778888",
+      "to": "file:bytes:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "relation": "observed_in",
+      "firstseen": "2026-05-02",
+      "source": "example_sandbox_a"
+    },
+    {
+      "from": "file:pe:imphash:11112222333344445555666677778888",
+      "to": "file:bytes:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "relation": "observed_in",
+      "firstseen": "2026-05-03",
+      "source": "example_sandbox_b"
+    },
+    {
+      "from": "file:pe:imphash:11112222333344445555666677778888",
+      "to": "file:bytes:sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "relation": "observed_in",
+      "firstseen": "2026-05-04",
+      "source": "example_malware_corpus"
+    },
+    {
+      "from": "file:pe:imphash:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "to": "file:bytes:sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "relation": "observed_in",
+      "firstseen": "2026-05-03",
+      "source": "example_sandbox_a"
+    },
+    {
+      "from": "file:pe:imphash:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "to": "file:bytes:sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "relation": "observed_in",
+      "firstseen": "2026-05-04",
+      "source": "example_sandbox_b"
+    }
+  ],
+  "expected_traversals": [
+    {
+      "id": "rare_imphash_returns_candidate_samples",
+      "role": "positive",
+      "start": "file:pe:imphash:11112222333344445555666677778888",
+      "relation": "observed_in",
+      "direction": "out",
+      "included_targets": [
+        "file:bytes:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "file:bytes:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "allowed_assertions": [
+        "The included samples share the same normalized import hash and can be presented as a candidate sample cluster."
+      ],
+      "blocked_assertions": [
+        "Do not infer malware family, campaign, actor, maliciousness, or final confidence from import-hash reuse alone."
+      ]
+    },
+    {
+      "id": "same_imphash_is_a_weak_signal_without_support",
+      "role": "weak_positive",
+      "start": "file:pe:imphash:11112222333344445555666677778888",
+      "relation": "observed_in",
+      "direction": "out",
+      "candidate_targets": [
+        "file:bytes:sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      ],
+      "allowed_assertions": [
+        "The sample shares the same import hash and is worth retaining as a weak candidate edge."
+      ],
+      "blocked_assertions": [
+        "Do not promote this weak import-hash match without corroboration from configuration, behavior, code signing, infrastructure, or additional sample features."
+      ]
+    },
+    {
+      "id": "common_packer_imphash_is_suppressed",
+      "role": "suppression",
+      "start": "file:pe:imphash:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "relation": "observed_in",
+      "direction": "out",
+      "suppressed_targets": [
+        {
+          "id": "file:bytes:sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "reason": "The source import hash appears in the common_packer_imphashes negative-node list."
+        },
+        {
+          "id": "file:bytes:sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "reason": "The source import hash is high-cardinality and exceeds the published degree cap."
+        }
+      ],
+      "allowed_assertions": [
+        "The observations can remain available for audit, rarity calculation, or local suppression tuning."
+      ],
+      "blocked_assertions": [
+        "Do not show a common packer import hash as a meaningful sample cluster without explicit analyst override."
+      ]
+    },
+    {
+      "id": "high_cardinality_source_is_noise_characterization",
+      "role": "high_cardinality",
+      "start": "file:pe:imphash:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "relation": "observed_in",
+      "direction": "out",
+      "candidate_targets": [
+        "file:bytes:sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "file:bytes:sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      ],
+      "allowed_assertions": [
+        "The high-cardinality source can be used to explain why the selector is noisy or should be suppressed."
+      ],
+      "blocked_assertions": [
+        "Do not turn high-cardinality import-hash fan-out into a positive clustering claim."
+      ]
+    }
+  ],
+  "blocked_assertions": [
+    "Import-hash reuse is not attribution, maliciousness, compromise, or final assessment.",
+    "Weak import-hash matches require corroboration before a downstream system treats them as meaningful.",
+    "High-cardinality and common-packer values are suppression evidence, not positive cluster evidence."
+  ]
+}

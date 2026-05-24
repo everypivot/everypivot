@@ -14,6 +14,8 @@ Use this checklist when considering whether a pattern should move into `graph-pi
 - [ ] The robustness class feels appropriate.
 - [ ] The pattern structure is mature and readable.
 - [ ] At least minimal fixtures or examples exist.
+- [ ] Fixture roles are explicit where traversal evidence exists.
+- [ ] Evidence examples include blocked assertions, not just happy-path edges.
 - [ ] Maintainer approval is explicit.
 - [ ] There is no unresolved credible challenge against the pattern.
 - [ ] Weighted heuristics, temporal scoring, and analyst triage have been kept out of the pattern and left to downstream profile or orchestration layers.
@@ -27,6 +29,7 @@ For weak selectors, structural fingerprints, decoded visual payloads,
 high-cardinality values, and multi-hop composite pivots, also confirm:
 
 - [ ] Positive, weak-signal, negative, and high-cardinality or suppression examples are present or cited in the promotion discussion.
+- [ ] Weak-positive examples explain what corroboration is required before a downstream system treats the match as meaningful.
 - [ ] `negative_nodes`, degree caps, temporal windows, and hazards cover the main false-positive modes.
 - [ ] Runtime confidence, scoring, and final assessment remain outside the pattern definition.
 
