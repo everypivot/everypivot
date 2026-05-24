@@ -3,6 +3,8 @@
 - [Start here: SSH host key walkthrough](START_HERE.md)
 - [Contributing and promotion](CONTRIBUTING_AND_PROMOTION.md)
 - [Relation catalog](RELATION_CATALOG.md)
+- [Schema migration](SCHEMA_MIGRATION.md)
+- [Schema v1.5 proposal](SCHEMA_V1_5_PROPOSAL.md)
 - [License FAQ](../LICENSE-FAQ.md)
 - [Governance](../GOVERNANCE.md)
 - [Validation semantics](../VALIDATION_SEMANTICS.md)

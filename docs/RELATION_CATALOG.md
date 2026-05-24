@@ -2,12 +2,13 @@
 
 ## Scope
 
-This catalog is the v0.2.0 public inventory of EveryPivot relation and form
-vocabulary. It is guidance only.
+This catalog is the v0.2.0 baseline public inventory of EveryPivot relation
+and form vocabulary. It is guidance only.
 
-It does not add schema fields, warning lints, sidecar metadata, inheritance, or
-runtime portability scoring. Those belong to later work after the vocabulary is
-reviewed in public.
+It does not add schema fields, sidecar metadata, inheritance, or runtime
+portability scoring. v0.3 warning-only tooling may use this inventory to show
+vocabulary drift, but unknown values remain review warnings before any future
+schema or CI enforcement.
 
 Inventory date: 2026-05-24.
 
@@ -37,6 +38,21 @@ edges.
 - Values joined with `|` are current compatibility vocabulary. They usually
   mean "one of these forms" or "one of these relation shapes"; they are not an
   inheritance model.
+
+## Warning-Only Tooling
+
+`tools/check_relation_catalog.rb` compares current pattern `source`, `target`,
+`hops[].via`, and `hops[].form` values against the inventory below.
+
+The check is intentionally advisory:
+
+- unseen values are warnings, not validation errors;
+- the command exits `0` when warnings are present by design;
+- an optional first argument can point the check at another pivot library root;
+- compound values containing `|` are compared as current compatibility values;
+- semantic families are not inferred;
+- portability classes are not assigned;
+- inverse and companion candidates are not treated as parent/child relations.
 
 ## Entity Namespaces
 

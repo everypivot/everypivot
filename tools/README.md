@@ -11,6 +11,7 @@ Current tools:
 - `check_fixture_suite.rb` runs the fixture manifest under `fixtures/` and validates traversal evidence examples
 - `check_release_metadata.rb` verifies that README, release notes, builder defaults, committed artifacts, and site data agree on the current release
 - `check_generated_freshness.rb` rebuilds registry and site data into a temporary directory and compares the committed public outputs
+- `check_relation_catalog.rb` warns when pattern relation/form vocabulary is not yet listed in `docs/RELATION_CATALOG.md`
 - `check_site_links.rb` audits local `site/` links against the staged GitHub Pages publish root
 - `check_site_snapshot.rb` verifies that homepage pre-rendered counts agree with the registry data
 - `build_registry_index.rb` generates release-style registry bundles, manifests, and browser sidecars under `artifacts/`
@@ -20,6 +21,8 @@ Recommended usage:
 
 ```bash
 ruby tools/check_fixture_suite.rb
+ruby tools/check_relation_catalog.rb
+ruby tools/check_relation_catalog.rb /path/to/graph-pivots
 ruby tools/check_release_metadata.rb
 ruby tools/check_generated_freshness.rb
 ruby tools/check_site_links.rb
