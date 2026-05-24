@@ -131,7 +131,8 @@ def relative_tree_entries(repo_root, relative_path)
 
   Dir.chdir(repo_root) do
     Dir.glob("#{relative_path}/**/*", File::FNM_DOTMATCH).sort.each do |entry|
-      next if ['.', '..'].include?(File.basename(entry))
+      segments = Pathname(entry).each_filename.to_a
+      next if segments.any? { |segment| segment.start_with?('.') && segment != '.gitignore' }
 
       entries << entry
     end
