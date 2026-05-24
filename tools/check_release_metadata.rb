@@ -4,6 +4,8 @@ require 'json'
 require 'optparse'
 require 'pathname'
 
+INCUBATION_STATUS_MARKER = 'Status: incubation-only sync note; do not public-export as-is.'
+
 def read_text(path)
   path.read
 rescue Errno::ENOENT
@@ -63,6 +65,11 @@ def expect_includes(errors, label, actual, expected_values)
   errors << "#{label}: expected one of #{expected_values.inspect}, got #{actual.inspect}"
 end
 
+def incubation_repo?(repo_root)
+  status_path = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md')
+  status_path.file? && status_path.read.include?(INCUBATION_STATUS_MARKER)
+end
+
 def current_counts(repo_root)
   {
     'validated' => Dir.glob(repo_root.join('graph-pivots', 'validated', '*.yaml').to_s).length,
@@ -114,7 +121,7 @@ end.parse!
 
 repo_root = options[:repo_root]
 errors = []
-incubation_repo = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md').file?
+incubation_repo = incubation_repo?(repo_root)
 
 readme = read_text(repo_root.join('README.md'))
 readme_release = first_match(readme, /^- Release: `([^`]+)`$/)

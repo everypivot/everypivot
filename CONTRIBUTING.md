@@ -32,6 +32,10 @@ Default guidance:
 - fixture examples if possible
 - explanation of why the pivot is useful and what can go wrong
 
+Generated bundles intentionally exclude hidden files except `.gitignore`.
+Do not rely on dotfiles such as `.gitkeep`, `.gitattributes`, or `.editorconfig`
+as required pattern or fixture payload.
+
 ## Review Expectations
 
 Maintainers will review:

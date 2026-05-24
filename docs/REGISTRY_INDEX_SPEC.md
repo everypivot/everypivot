@@ -38,8 +38,8 @@ Suggested top-level fields:
 ```json
 {
   "registry": "everypivot",
-  "release": "v0.1.1",
-  "published_at": "2026-05-22",
+  "release": "v0.1.2",
+  "published_at": "2026-05-24",
   "schema_versions": {
     "pivot_pattern": "1.4"
   },

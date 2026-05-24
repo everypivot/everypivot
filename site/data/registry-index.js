@@ -1,7 +1,7 @@
 window.__EVERYPIVOT_REGISTRY__ = {
   "registry": "everypivot",
-  "release": "v0.1.1",
-  "published_at": "2026-05-22",
+  "release": "v0.1.2",
+  "published_at": "2026-05-24",
   "channel": "stable",
   "license": {
     "copyright": "© 2026 EveryPivot Project",

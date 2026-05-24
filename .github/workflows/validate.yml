@@ -186,7 +186,8 @@ jobs:
           exit "$missing"
 
       - name: Publish GitHub release assets
-        uses: softprops/action-gh-release@v2
+        # softprops/action-gh-release@v2 pinned to the upstream v2 tag commit.
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65
         with:
           files: |
             ${{ runner.temp }}/release/registry-index.json

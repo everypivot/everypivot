@@ -2,6 +2,35 @@
 
 All notable changes to EveryPivot&trade; are documented here.
 
+## v0.1.2 - 2026-05-24
+
+See [release notes](docs/releases/v0.1.2.md).
+
+### Changed
+
+- Updated the custom GitHub Pages workflow to Node.js 24-compatible official
+  action majors.
+- Added generated-data freshness, static site link-audit, and homepage
+  release-snapshot agreement checks.
+- Corrected the committed fixture bundle so it includes the current walkthrough
+  fixture example.
+- Excluded hidden filesystem metadata from generated corpus and fixture
+  bundles.
+- Pinned the GitHub release action to an immutable commit.
+
+### Added
+
+- GitHub issue forms for bug/site/tooling reports, new pattern proposals,
+  validated-pattern challenges, and schema/docs/governance requests.
+- Security-routing guidance for sensitive issue material.
+
+### Notes
+
+- No corpus expansion.
+- No schema-version change.
+- `v0.1.1` remains immutable; corrected fixture-bundle bytes are published as
+  part of `v0.1.2`.
+
 ## v0.1.1 - 2026-05-22
 
 See [release notes](docs/releases/v0.1.1.md).

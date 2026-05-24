@@ -82,6 +82,29 @@ def href_present?(text, href)
   text.match?(/(?<![\w-])href\s*=\s*(['"])#{Regexp.escape(href)}\1/i)
 end
 
+def audit_local_reference(errors, root, source_file, relative_source, attribute, raw_value)
+  return unless local_url?(raw_value)
+
+  local_path = strip_query_and_fragment(raw_value)
+  return if local_path.empty?
+
+  if local_path.split('/').include?('..')
+    errors << "#{relative_source}: #{attribute}=#{raw_value.inspect} contains a .. path segment"
+    return
+  end
+
+  target = resolve_target(root, source_file, raw_value)
+  unless target && under_root?(root, target)
+    errors << "#{relative_source}: #{attribute}=#{raw_value.inspect} escapes the Pages publish root"
+    return
+  end
+
+  return if target.file? || target.directory?
+
+  relative_target = target.relative_path_from(root).to_s
+  errors << "#{relative_source}: #{attribute}=#{raw_value.inspect} points to missing #{relative_target}"
+end
+
 options = {
   repo_root: Pathname(__dir__).join('..').expand_path
 }
@@ -134,26 +157,16 @@ Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
     text = source_file.read
 
     text.scan(/(?<![\w-])(href|src)\s*=\s*(['"])(.*?)\2/i) do |attribute, _quote, raw_value|
-      next unless local_url?(raw_value)
+      audit_local_reference(errors, staging_root, source_file, relative_source, attribute, raw_value)
+    end
 
-      local_path = strip_query_and_fragment(raw_value)
-      next if local_path.empty?
+    text.scan(/(?<![\w-])srcset\s*=\s*(['"])(.*?)\1/i) do |_quote, raw_srcset|
+      next if raw_srcset.strip.start_with?('data:')
 
-      if local_path.split('/').include?('..')
-        errors << "#{relative_source}: #{attribute}=#{raw_value.inspect} contains a .. path segment"
-        next
+      raw_srcset.split(',').each do |candidate|
+        raw_value = candidate.strip.split(/\s+/, 2).first.to_s
+        audit_local_reference(errors, staging_root, source_file, relative_source, 'srcset', raw_value)
       end
-
-      target = resolve_target(staging_root, source_file, raw_value)
-      unless target && under_root?(staging_root, target)
-        errors << "#{relative_source}: #{attribute}=#{raw_value.inspect} escapes the Pages publish root"
-        next
-      end
-
-      next if target.file? || target.directory?
-
-      relative_target = target.relative_path_from(staging_root).to_s
-      errors << "#{relative_source}: #{attribute}=#{raw_value.inspect} points to missing #{relative_target}"
     end
   end
 end
