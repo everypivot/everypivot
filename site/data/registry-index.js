@@ -1,6 +1,6 @@
 window.__EVERYPIVOT_REGISTRY__ = {
   "registry": "everypivot",
-  "release": "v0.1.2",
+  "release": "v0.2.0",
   "published_at": "2026-05-24",
   "channel": "stable",
   "license": {

@@ -2,6 +2,33 @@
 
 All notable changes to EveryPivot&trade; are documented here.
 
+## v0.2.0 - 2026-05-24
+
+See [release notes](docs/releases/v0.2.0.md).
+
+### Added
+
+- Traversal evidence-pack roles and two synthetic evidence examples covering
+  positive, weak-positive, suppression, high-cardinality, and negative
+  behavior.
+- Fixture-suite validation for traversal evidence packs.
+- Relation catalog guidance and current relation/form vocabulary inventory.
+- Docs-only portability-class guidance for future review.
+
+### Changed
+
+- Updated promotion and contribution docs to require explicit fixture roles and
+  blocked assertions when traversal evidence supports a pattern.
+- Updated the first-use SSH host-key walkthrough to use the evidence-pack
+  format.
+
+### Notes
+
+- No corpus expansion.
+- No schema-version change.
+- No relation warning lints, sidecars, schema-facing relation fields, or
+  committed portability-class records.
+
 ## v0.1.2 - 2026-05-24
 
 See [release notes](docs/releases/v0.1.2.md).

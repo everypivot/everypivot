@@ -13,7 +13,7 @@ The repository publishes:
 
 ## Current Release
 
-- Release: `v0.1.2`
+- Release: `v0.2.0`
 - Corpus: 176 patterns
 - Lanes: 19 `validated`, 76 `working_set`, 81 `deferred`
 - Schema target: `pivot-pattern` v1.4
@@ -56,7 +56,7 @@ ruby tools/check_fixture_suite.rb
 ```bash
 ruby tools/build_registry_index.rb \
   --repo-root . \
-  --release v0.1.2 \
+  --release v0.2.0 \
   --published-at 2026-05-24 \
   --output artifacts/registry-index.json \
   --site-data-root site/data
@@ -90,6 +90,7 @@ Then open `http://localhost:4173/site/index.html`.
 
 - [Start here: SSH host key walkthrough](docs/START_HERE.md)
 - [Contributing and promotion](docs/CONTRIBUTING_AND_PROMOTION.md)
+- [Relation catalog](docs/RELATION_CATALOG.md)
 - [License FAQ](LICENSE-FAQ.md)
 - [Governance](GOVERNANCE.md)
 - [Validation semantics](VALIDATION_SEMANTICS.md)
