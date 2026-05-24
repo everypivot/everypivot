@@ -5,6 +5,8 @@ require 'optparse'
 require 'pathname'
 require 'date'
 
+INCUBATION_STATUS_MARKER = 'Status: incubation-only sync note; do not public-export as-is.'
+
 def read_text(path, errors)
   path.read
 rescue Errno::ENOENT
@@ -59,6 +61,11 @@ def expect_equal(errors, label, actual, expected)
   return if actual == expected
 
   errors << "#{label}: expected #{expected.inspect}, got #{actual.inspect}"
+end
+
+def incubation_repo?(repo_root)
+  status_path = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md')
+  status_path.file? && status_path.read.include?(INCUBATION_STATUS_MARKER)
 end
 
 def count_summary(data)
@@ -139,7 +146,7 @@ OptionParser.new do |parser|
 end.parse!
 
 repo_root = options[:repo_root]
-incubation_repo = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md').file?
+incubation_repo = incubation_repo?(repo_root)
 errors = []
 
 artifact_registry = parse_json(repo_root.join('artifacts', 'registry-index.json'), errors)

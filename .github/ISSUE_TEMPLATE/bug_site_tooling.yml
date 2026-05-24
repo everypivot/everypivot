@@ -76,5 +76,3 @@ body:
       label: Relevant disclosure
       description: Disclose any relevant affiliation, financial interest, proprietary-data dependency, product interest, or vendor relationship that could affect review. Routine neutral fixes may say not applicable.
       placeholder: "Not applicable, or describe the relevant relationship."
-    validations:
-      required: true

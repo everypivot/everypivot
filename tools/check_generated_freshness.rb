@@ -4,7 +4,10 @@ require 'json'
 require 'optparse'
 require 'pathname'
 require 'rbconfig'
+require 'digest'
+require 'rubygems/package'
 require 'tmpdir'
+require 'zlib'
 
 def parse_json(path, errors)
   JSON.parse(path.read)
@@ -30,6 +33,59 @@ def compare_file(errors, label, expected, actual)
   return if expected.binread == actual.binread
 
   errors << "#{label} is stale; committed #{expected} differs from regenerated #{actual}"
+end
+
+def tar_gz_manifest(path, errors, label)
+  unless path.file?
+    errors << "Missing #{label}: #{path}"
+    return []
+  end
+
+  entries = []
+  Zlib::GzipReader.open(path.to_s) do |gzip|
+    Gem::Package::TarReader.new(gzip) do |tar|
+      tar.each do |entry|
+        item = {
+          'path' => entry.full_name,
+          'type' => entry.directory? ? 'directory' : 'file',
+          'mode' => entry.header.mode
+        }
+
+        if entry.file?
+          contents = entry.read
+          item['size'] = contents.bytesize
+          item['sha256'] = Digest::SHA256.hexdigest(contents)
+        end
+
+        entries << item
+      end
+    end
+  end
+
+  entries.sort_by { |entry| [entry['path'], entry['type']] }
+rescue Zlib::GzipFile::Error, Gem::Package::TarInvalidError, EOFError => e
+  errors << "Invalid tar.gz for #{label}: #{e.message}"
+  []
+end
+
+def compare_tar_gz_content(errors, label, expected, actual)
+  expected_manifest = tar_gz_manifest(expected, errors, "committed #{label}")
+  actual_manifest = tar_gz_manifest(actual, errors, "regenerated #{label}")
+  return if expected_manifest == actual_manifest
+
+  expected_by_key = expected_manifest.to_h { |entry| [[entry['path'], entry['type']], entry] }
+  actual_by_key = actual_manifest.to_h { |entry| [[entry['path'], entry['type']], entry] }
+  missing = expected_by_key.keys - actual_by_key.keys
+  extra = actual_by_key.keys - expected_by_key.keys
+  changed = (expected_by_key.keys & actual_by_key.keys).select do |key|
+    expected_by_key[key] != actual_by_key[key]
+  end
+
+  details = []
+  details << "missing regenerated entries: #{missing.map(&:first).sort.first(5).join(', ')}" if missing.any?
+  details << "extra regenerated entries: #{extra.map(&:first).sort.first(5).join(', ')}" if extra.any?
+  details << "changed entries: #{changed.map(&:first).sort.first(5).join(', ')}" if changed.any?
+  errors << "#{label} content is stale; #{details.join('; ')}"
 end
 
 options = {
@@ -90,6 +146,13 @@ Dir.mktmpdir('everypivot-generated-freshness') do |tmp|
     'site/data/pivot-pattern.schema.js' => site_data_root.join('pivot-pattern.schema.js')
   }.each do |relative_path, regenerated_path|
     compare_file(errors, relative_path, repo_root.join(relative_path), regenerated_path)
+  end
+
+  {
+    'artifacts/patterns.tar.gz' => tmp_root.join('patterns.tar.gz'),
+    'artifacts/fixtures.tar.gz' => tmp_root.join('fixtures.tar.gz')
+  }.each do |relative_path, regenerated_path|
+    compare_tar_gz_content(errors, relative_path, repo_root.join(relative_path), regenerated_path)
   end
 end
 

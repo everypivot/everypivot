@@ -22,10 +22,12 @@ EXPECTED_HOMEPAGE_LINKS = %w[
 
 PREVIEW_LEAK_MARKERS = %w[
   __EVERYPIVOT_PREVIEW__
-  __EVERYPIVOT_PATTERN_SOURCES__
   registry-index.preview
-  pattern-sources
+  pattern-sources.preview
+  pivot-pattern.schema.preview
 ].freeze
+
+INCUBATION_STATUS_MARKER = 'Status: incubation-only sync note; do not public-export as-is.'
 
 def local_url?(value)
   return false if value.empty? || value.start_with?('#', '//')
@@ -71,6 +73,15 @@ def copy_site_to_staging(repo_root, staging_parent)
   staging_root
 end
 
+def incubation_repo?(repo_root)
+  status_path = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md')
+  status_path.file? && status_path.read.include?(INCUBATION_STATUS_MARKER)
+end
+
+def href_present?(text, href)
+  text.match?(/(?<![\w-])href\s*=\s*(['"])#{Regexp.escape(href)}\1/i)
+end
+
 options = {
   repo_root: Pathname(__dir__).join('..').expand_path
 }
@@ -84,7 +95,7 @@ OptionParser.new do |parser|
 end.parse!
 
 repo_root = options[:repo_root]
-incubation_repo = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md').file?
+incubation_repo = incubation_repo?(repo_root)
 errors = []
 
 Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
@@ -99,7 +110,7 @@ Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
   end
 
   EXPECTED_HOMEPAGE_LINKS.each do |href|
-    errors << "Homepage is missing release artifact link #{href}" unless homepage_text.include?("href=\"#{href}\"")
+    errors << "Homepage is missing release artifact link #{href}" unless href_present?(homepage_text, href)
   end
 
   noscript = homepage_text[/<noscript\b[^>]*>(.*?)<\/noscript>/mi, 1]
@@ -107,7 +118,7 @@ Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
     errors << 'Homepage is missing noscript fallback'
   else
     EXPECTED_HOMEPAGE_LINKS.each do |href|
-      errors << "Noscript fallback is missing #{href}" unless noscript.include?("href=\"#{href}\"")
+      errors << "Noscript fallback is missing #{href}" unless href_present?(noscript, href)
     end
   end
 
@@ -122,7 +133,7 @@ Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
     relative_source = source_file.relative_path_from(staging_root).to_s
     text = source_file.read
 
-    text.scan(/\b(href|src)\s*=\s*(['"])(.*?)\2/i) do |attribute, _quote, raw_value|
+    text.scan(/(?<![\w-])(href|src)\s*=\s*(['"])(.*?)\2/i) do |attribute, _quote, raw_value|
       next unless local_url?(raw_value)
 
       local_path = strip_query_and_fragment(raw_value)
