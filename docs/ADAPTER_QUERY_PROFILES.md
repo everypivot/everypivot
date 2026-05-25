@@ -99,6 +99,40 @@ The check compares the committed query to regenerated output and verifies that
 hazards, blocked assertions, temporal controls, negative-node controls, and
 allowed result fields are preserved.
 
+## Optional Neo4j Smoke
+
+The repository does not require Neo4j for normal validation. Maintainers with a
+local Neo4j 5.x database and `cypher-shell` can run the synthetic fixtures
+against a live database:
+
+```bash
+ruby tools/smoke_neo4j_query_profiles.rb -- --address bolt://localhost:7687
+```
+
+Arguments after `--` are passed directly to `cypher-shell`, so local
+authentication, database, and address flags can be supplied without EveryPivot
+owning those runtime choices. The smoke helper loads each synthetic fixture,
+runs the committed generated query, and checks that expected targets appear
+while declared suppressed targets do not. It is a maintainer smoke path, not a
+CI gate and not proof of runtime correctness for arbitrary production graph
+models.
+
+The smoke helper deliberately stays simple. It checks target IDs in plain
+`cypher-shell` output, so fixture authors must not repeat suppressed target IDs
+inside free-text hazards or blocked assertions. It also leaves fixture-scoped
+nodes in the database after each target load; future targets must keep synthetic
+node IDs globally distinct unless a later helper adds an explicit reset mode.
+Arguments after `--` should be connection and authentication options, not
+alternate `--file` inputs.
+
+## License Boundary
+
+Adapter metadata, adapter docs, generation/checking tools, and generated demo
+queries under `adapters/` are Apache-2.0 code/tooling material. Synthetic
+fixture graphs and fixture loader files under `fixtures/` are CC BY 4.0 fixture
+material. Keeping generated queries and fixture data in separate trees makes the
+license boundary visible in both source layout and generated release metadata.
+
 ## Non-Goals
 
 This pilot does not:

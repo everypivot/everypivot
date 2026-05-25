@@ -7,8 +7,8 @@ legal advice; the controlling terms are in `LICENSE-CODE` and `LICENSE-DATA`.
 
 EveryPivot uses a split license model:
 
-- Code, schemas, tooling, docs, build scripts, and site assets are licensed
-  under Apache-2.0.
+- Code, schemas, tooling, docs, build scripts, adapters, generated adapter
+  queries, and site assets are licensed under Apache-2.0.
 - The pattern corpus in `graph-pivots/` and fixtures in `fixtures/` are
   licensed under CC BY 4.0.
 
@@ -69,4 +69,3 @@ but do not name your fork, hosted service, or competing product EveryPivot.
 ## Is alternative licensing available?
 
 No alternative licensing or commercial exception process exists at this stage.
-

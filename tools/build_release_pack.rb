@@ -46,6 +46,7 @@ module EveryPivot
       tools/validate_pivots.rb
       tools/check_fixture_suite.rb
       tools/check_query_profile_suite.rb
+      tools/smoke_neo4j_query_profiles.rb
       tools/generate_query_profile_demo.rb
       tools/json_schema_validator.rb
     ].freeze
@@ -253,7 +254,7 @@ module EveryPivot
           'registry_builder' => 'tools/build_registry_index.rb',
           'release_pack_builder' => 'tools/build_release_pack.rb'
         },
-        'license_notice' => 'EveryPivot uses Apache-2.0 for code, schema, tooling, docs, and site assets, and CC BY 4.0 for pattern corpus and fixtures. See LICENSE, LICENSE-CODE, LICENSE-DATA, NOTICE, and TRADEMARK.md.',
+        'license_notice' => 'EveryPivot uses Apache-2.0 for code, schema, tooling, docs, adapters, generated adapter queries, and site assets, and CC BY 4.0 for pattern corpus and fixtures. See LICENSE, LICENSE-CODE, LICENSE-DATA, NOTICE, and TRADEMARK.md.',
         'provenance' => provenance(authority_status),
         'quality_gates' => {
           'validator' => 'passed',

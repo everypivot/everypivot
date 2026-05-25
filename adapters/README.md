@@ -23,3 +23,10 @@ ruby tools/check_query_profile_suite.rb
 The pilot is deliberately narrow. It proves that adapter metadata can translate
 declared pattern targets into backend-specific query text while carrying hazards
 and blocked assertions forward, without adding backend fields to pattern YAML.
+
+License boundary:
+
+- adapter metadata, docs, tools, and generated queries under `adapters/` are
+  Apache-2.0 code/tooling material;
+- synthetic graph fixtures and fixture loaders under `fixtures/` are CC BY 4.0
+  fixture material.

@@ -104,7 +104,7 @@ Then open `http://localhost:4173/site/index.html`.
 
 EveryPivot uses a dual-license model:
 
-- code, schema, tooling, docs, and site assets: Apache-2.0;
+- code, schema, tooling, docs, adapters, generated adapter queries, and site assets: Apache-2.0;
 - pattern corpus and fixtures: CC BY 4.0.
 
 Commercial, SaaS, product, internal, and proprietary downstream uses are

@@ -74,6 +74,7 @@ class BuildReleasePackTest < Minitest::Test
       assert output_dir.join('tools', 'build_registry_index.rb').file?
       assert output_dir.join('tools', 'check_release_metadata.rb').file?
       assert output_dir.join('tools', 'check_query_profile_suite.rb').file?
+      assert output_dir.join('tools', 'smoke_neo4j_query_profiles.rb').file?
       assert output_dir.join('tools', 'generate_query_profile_demo.rb').file?
       refute output_dir.join('site').exist?
       refute output_dir.join('planning-notes').exist?
@@ -94,6 +95,7 @@ class BuildReleasePackTest < Minitest::Test
 
       release_manifest = JSON.parse(output_dir.join('artifacts', 'release-manifest.preview.json').read)
       assert_equal 'preview', release_manifest['channel']
+      assert_includes release_manifest.dig('license', 'code', 'applies_to'), 'adapters/'
 
       validator_stdout, validator_stderr, validator_status = Open3.capture3(
         RbConfig.ruby,
@@ -180,8 +182,10 @@ class BuildReleasePackTest < Minitest::Test
       assert_equal 'artifacts/patterns.tar.gz', registry_index.dig('artifacts', 'patterns_bundle')
       assert_equal 'artifacts/fixtures.tar.gz', registry_index.dig('artifacts', 'fixtures_bundle')
       assert_equal 'artifacts/release-manifest.json', registry_index.dig('artifacts', 'release_manifest')
+      assert_includes registry_index.dig('license', 'code', 'applies_to'), 'adapters/'
 
       release_manifest = JSON.parse(output_path.dirname.join('release-manifest.json').read)
+      assert_includes release_manifest.dig('license', 'code', 'applies_to'), 'adapters/'
       downloads = release_manifest.fetch('downloads').to_h { |item| [item.fetch('name'), item.fetch('path')] }
       assert_equal 'artifacts/registry-index.json', downloads.fetch('registry-index')
       assert_equal 'artifacts/patterns.tar.gz', downloads.fetch('patterns-bundle')

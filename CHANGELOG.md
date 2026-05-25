@@ -13,6 +13,8 @@ All notable changes to EveryPivot&trade; are documented here.
 - Added a second synthetic Neo4j/Cypher query-profile target for the
   working-set email-originating-IP pattern to exercise inbound one-hop
   traversal shape.
+- Added an optional Neo4j/cypher-shell smoke helper for maintainers who want to
+  execute synthetic query-profile fixtures locally.
 
 ### Changed
 
@@ -20,6 +22,9 @@ All notable changes to EveryPivot&trade; are documented here.
   profile targets instead of relying on hardcoded Neo4j pilot paths.
 - Moved pilot shape constraints onto target records so future targets can state
   their supported traversal shape explicitly.
+- Clarified that adapter metadata and generated adapter queries are Apache-2.0,
+  while synthetic query-profile fixtures and loaders remain CC BY 4.0 fixture
+  material.
 
 ### Notes
 

@@ -168,7 +168,7 @@ def license_block
     'code' => {
       'spdx' => 'Apache-2.0',
       'url' => 'LICENSE-CODE',
-      'applies_to' => %w[schemas/ tools/ site/ docs/]
+      'applies_to' => %w[schemas/ tools/ site/ docs/ adapters/]
     },
     'corpus' => {
       'spdx' => 'CC-BY-4.0',

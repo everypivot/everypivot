@@ -13,7 +13,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "schemas/",
         "tools/",
         "site/",
-        "docs/"
+        "docs/",
+        "adapters/"
       ]
     },
     "corpus": {

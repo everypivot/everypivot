@@ -13,7 +13,8 @@
         "schemas/",
         "tools/",
         "site/",
-        "docs/"
+        "docs/",
+        "adapters/"
       ]
     },
     "corpus": {

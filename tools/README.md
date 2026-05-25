@@ -15,6 +15,7 @@ Current tools:
 - `check_relation_catalog.rb` warns when pattern relation/form vocabulary is not yet listed in `docs/RELATION_CATALOG.md`
 - `check_site_links.rb` audits local `site/` links against the staged GitHub Pages publish root
 - `check_site_snapshot.rb` verifies that homepage pre-rendered counts agree with the registry data
+- `smoke_neo4j_query_profiles.rb` optionally runs query-profile fixtures and generated Cypher against a local Neo4j database via `cypher-shell`
 - `build_registry_index.rb` generates release-style registry bundles, manifests, and browser sidecars under `artifacts/`
 - `build_release_pack.rb` assembles a portable release pack with copied corpus assets, generated artifacts, and a provenance manifest
 - `generate_query_profile_demo.rb` renders declared Neo4j/Cypher query profile demo targets
@@ -26,6 +27,7 @@ ruby tools/check_fixture_suite.rb
 ruby tools/check_query_profile_suite.rb
 ruby tools/check_relation_catalog.rb
 ruby tools/check_relation_catalog.rb /path/to/graph-pivots
+ruby tools/smoke_neo4j_query_profiles.rb -- --address bolt://localhost:7687
 ruby tools/check_release_metadata.rb
 ruby tools/check_generated_freshness.rb
 ruby tools/check_site_links.rb

@@ -40,3 +40,14 @@ ruby tools/generate_query_profile_demo.rb \
 
 To run the demo locally, load the fixture Cypher first, then run the generated
 query. The loader deletes and recreates only nodes with its fixture id.
+
+Maintainers with Neo4j 5.x and `cypher-shell` available can run the optional
+live smoke helper:
+
+```bash
+ruby tools/smoke_neo4j_query_profiles.rb -- --address bolt://localhost:7687
+```
+
+Arguments after `--` are passed directly to `cypher-shell`. The smoke helper is
+not part of the default validation gate; it exists to catch obvious fixture/load
+or generated-query execution drift in a local disposable Neo4j database.
