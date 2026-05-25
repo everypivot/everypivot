@@ -170,6 +170,17 @@ jobs:
             --release "${GITHUB_REF_NAME}" \
             --published-at "${published_at}" \
             --output "${RUNNER_TEMP}/release/registry-index.json"
+          release_pack_dir="${RUNNER_TEMP}/release/everypivot-release-pack-${GITHUB_REF_NAME}"
+          ruby tools/build_release_pack.rb \
+            --release "${GITHUB_REF_NAME}" \
+            --published-at "${published_at}" \
+            --artifact-mode stable \
+            --authority-status canonical \
+            --output-dir "${release_pack_dir}" \
+            --force
+          tar -C "${RUNNER_TEMP}/release" \
+            -czf "${release_pack_dir}.tar.gz" \
+            "everypivot-release-pack-${GITHUB_REF_NAME}"
 
       - name: Verify release artifacts exist
         run: |
@@ -178,7 +189,8 @@ jobs:
             "${RUNNER_TEMP}/release/registry-index.json" \
             "${RUNNER_TEMP}/release/release-manifest.json" \
             "${RUNNER_TEMP}/release/patterns.tar.gz" \
-            "${RUNNER_TEMP}/release/fixtures.tar.gz"; do
+            "${RUNNER_TEMP}/release/fixtures.tar.gz" \
+            "${RUNNER_TEMP}/release/everypivot-release-pack-${GITHUB_REF_NAME}.tar.gz"; do
             if [ ! -f "$f" ]; then
               echo "::error::Missing release artifact: $f"
               missing=1
@@ -197,3 +209,4 @@ jobs:
             ${{ runner.temp }}/release/release-manifest.json
             ${{ runner.temp }}/release/patterns.tar.gz
             ${{ runner.temp }}/release/fixtures.tar.gz
+            ${{ runner.temp }}/release/everypivot-release-pack-${{ github.ref_name }}.tar.gz

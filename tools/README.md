@@ -39,4 +39,5 @@ ruby tools/build_release_pack.rb --skip-fixtures --output-dir /tmp/everypivot-re
 
 Default behavior:
 - `build_release_pack.rb` validates the copied corpus and runs the copied fixture suite before emitting artifacts
+- stable `build_release_pack.rb` output includes `site/`, regenerates `site/data/`, and reruns release metadata, generated-freshness, site-link, and homepage-snapshot checks inside the copied pack
 - use `--skip-fixtures` only when you explicitly need a pack despite a known fixture issue

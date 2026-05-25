@@ -38,17 +38,32 @@ module EveryPivot
       schemas
       fixtures
     ].freeze
+    STABLE_ONLY_DIRECTORIES = %w[
+      site
+    ].freeze
     TOOL_FILES = %w[
       tools/README.md
       tools/build_registry_index.rb
       tools/build_release_pack.rb
+      tools/check_generated_freshness.rb
+      tools/check_relation_catalog.rb
       tools/check_release_metadata.rb
+      tools/check_site_links.rb
+      tools/check_site_snapshot.rb
+      tools/test_build_release_pack.rb
       tools/validate_pivots.rb
       tools/check_fixture_suite.rb
       tools/check_query_profile_suite.rb
       tools/smoke_neo4j_query_profiles.rb
       tools/generate_query_profile_demo.rb
       tools/json_schema_validator.rb
+    ].freeze
+    STABLE_SITE_GENERATED_FILES = %w[
+      site/data/registry-index.json
+      site/data/registry-index.js
+      site/data/pattern-sources.js
+      site/data/pivot-pattern.schema.json
+      site/data/pivot-pattern.schema.js
     ].freeze
     module_function
 
@@ -172,6 +187,19 @@ module EveryPivot
       raise BuildError, "Command failed (#{status.exitstatus}): #{command.join(' ')}\n#{details}"
     end
 
+    def copied_paths_for_mode(artifact_mode)
+      paths = ROOT_FILES + ROOT_DIRECTORIES + TOOL_FILES
+      paths += STABLE_ONLY_DIRECTORIES if artifact_mode == 'stable'
+      paths
+    end
+
+    def run_pack_gate!(output_dir, relative_tool, *args)
+      run_command!(
+        [RbConfig.ruby, output_dir.join(relative_tool).to_s, *args],
+        chdir: output_dir
+      )
+    end
+
     def build_release_pack(output_dir:, release:, published_at:, force:, artifact_mode:, authority_status:, check_fixtures:)
       if output_dir.exist?
         raise BuildError, "Output directory already exists: #{output_dir}" unless force
@@ -181,32 +209,21 @@ module EveryPivot
       output_dir.mkpath
 
       copied_source_files = []
-      (ROOT_FILES + ROOT_DIRECTORIES + TOOL_FILES).each do |relative_path|
+      copied_paths_for_mode(artifact_mode).each do |relative_path|
         copied_source_files.concat(copy_relative_path(relative_path, output_dir))
       end
 
-      validator_command = [
-        RbConfig.ruby,
-        output_dir.join('tools', 'validate_pivots.rb').to_s,
-        output_dir.join('graph-pivots').to_s
-      ]
-      run_command!(validator_command, chdir: output_dir)
+      run_pack_gate!(output_dir, 'tools/validate_pivots.rb', output_dir.join('graph-pivots').to_s)
 
       fixture_status = 'not_run'
       if check_fixtures
-        fixture_command = [
-          RbConfig.ruby,
-          output_dir.join('tools', 'check_fixture_suite.rb').to_s
-        ]
-        run_command!(fixture_command, chdir: output_dir)
+        run_pack_gate!(output_dir, 'tools/check_fixture_suite.rb')
         fixture_status = 'passed'
       end
 
-      query_profile_command = [
-        RbConfig.ruby,
-        output_dir.join('tools', 'check_query_profile_suite.rb').to_s
-      ]
-      run_command!(query_profile_command, chdir: output_dir)
+      run_pack_gate!(output_dir, 'tools/check_query_profile_suite.rb')
+      relation_catalog_status = 'not_run'
+      site_gate_status = 'not_applicable'
 
       artifact_output = output_dir.join('artifacts', artifact_output_name(artifact_mode))
       registry_command = [
@@ -217,9 +234,23 @@ module EveryPivot
         '--published-at', published_at,
         '--output', artifact_output.to_s
       ]
+      if artifact_mode == 'stable'
+        registry_command.concat(['--site-data-root', output_dir.join('site', 'data').to_s])
+      end
       registry_command << '--preview' if artifact_mode == 'preview'
       registry_command << '--edge' if artifact_mode == 'edge'
       run_command!(registry_command, chdir: output_dir)
+
+      run_pack_gate!(output_dir, 'tools/check_relation_catalog.rb')
+      relation_catalog_status = 'passed'
+
+      if artifact_mode == 'stable'
+        run_pack_gate!(output_dir, 'tools/check_release_metadata.rb')
+        run_pack_gate!(output_dir, 'tools/check_generated_freshness.rb')
+        run_pack_gate!(output_dir, 'tools/check_site_links.rb')
+        run_pack_gate!(output_dir, 'tools/check_site_snapshot.rb')
+        site_gate_status = 'passed'
+      end
 
       release_manifest_path = artifact_output.dirname.join(
         derived_variant_name(artifact_output.basename.to_s, 'release-manifest', '.json')
@@ -234,8 +265,11 @@ module EveryPivot
       registry_index = JSON.parse(artifact_output.read)
       release_manifest = JSON.parse(release_manifest_path.read)
 
+      stable_site_generated_paths = STABLE_SITE_GENERATED_FILES.map { |relative_path| output_dir.join(relative_path) }
+      copied_source_files -= stable_site_generated_paths if artifact_mode == 'stable'
       source_records = copied_source_files.sort.map { |path| file_record(path, base: output_dir) }
       generated_paths = [artifact_output, release_manifest_path, patterns_bundle_path, fixtures_bundle_path]
+      generated_paths.concat(stable_site_generated_paths.select(&:file?)) if artifact_mode == 'stable'
       generated_records = generated_paths.map { |path| file_record(path, base: output_dir) }
 
       manifest = {
@@ -250,6 +284,11 @@ module EveryPivot
           'validator' => 'tools/validate_pivots.rb',
           'fixture_suite' => 'tools/check_fixture_suite.rb',
           'query_profile_suite' => 'tools/check_query_profile_suite.rb',
+          'release_metadata' => 'tools/check_release_metadata.rb',
+          'generated_freshness' => 'tools/check_generated_freshness.rb',
+          'relation_catalog' => 'tools/check_relation_catalog.rb',
+          'site_links' => 'tools/check_site_links.rb',
+          'site_snapshot' => 'tools/check_site_snapshot.rb',
           'query_profile_demo_generator' => 'tools/generate_query_profile_demo.rb',
           'registry_builder' => 'tools/build_registry_index.rb',
           'release_pack_builder' => 'tools/build_release_pack.rb'
@@ -259,7 +298,12 @@ module EveryPivot
         'quality_gates' => {
           'validator' => 'passed',
           'fixture_suite' => fixture_status,
-          'query_profile_suite' => 'passed'
+          'query_profile_suite' => 'passed',
+          'relation_catalog' => relation_catalog_status,
+          'release_metadata' => artifact_mode == 'stable' ? 'passed' : 'not_applicable',
+          'generated_freshness' => artifact_mode == 'stable' ? 'passed' : 'not_applicable',
+          'site_links' => site_gate_status,
+          'site_snapshot' => site_gate_status
         },
         'schema_versions' => registry_index['schema_versions'],
         'counts' => registry_index['counts'],

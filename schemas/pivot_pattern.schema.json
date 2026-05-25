@@ -262,7 +262,7 @@
             "attack_pattern",
             "assessment"
           ],
-          "description": "Semantic object-role hint. Legacy structural values remain accepted in v0.4 for compatibility only; prefer object_kind for concept/product/attack_pattern/assessment."
+          "description": "Semantic object-role hint. Legacy structural values remain accepted for compatibility only; prefer object_kind for concept/product/attack_pattern/assessment."
         },
         "object_kind": {
           "type": "string",

@@ -34,6 +34,11 @@ Promotion should happen through a visible pull request or release milestone.
 Anyone may challenge a pattern's lane, semantics, evidence, hazards, or
 runtime-safety framing through an issue or pull request.
 
+Demotion protects trust and is a normal maintenance action, not a failure.
+Maintainers should prefer a visible temporary demotion over preserving a
+validated pattern whose safety, evidence, suppression behavior, hazards, or
+promotion rationale is credibly disputed.
+
 - Minor editorial or narrowly scoped technical fixes may remain validated while
   reviewed.
 - Credible challenges that affect the safety, semantics, evidence basis, or

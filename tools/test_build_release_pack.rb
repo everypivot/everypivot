@@ -73,6 +73,11 @@ class BuildReleasePackTest < Minitest::Test
       assert output_dir.join('tools', 'build_release_pack.rb').file?
       assert output_dir.join('tools', 'build_registry_index.rb').file?
       assert output_dir.join('tools', 'check_release_metadata.rb').file?
+      assert output_dir.join('tools', 'check_generated_freshness.rb').file?
+      assert output_dir.join('tools', 'check_relation_catalog.rb').file?
+      assert output_dir.join('tools', 'check_site_links.rb').file?
+      assert output_dir.join('tools', 'check_site_snapshot.rb').file?
+      assert output_dir.join('tools', 'test_build_release_pack.rb').file?
       assert output_dir.join('tools', 'check_query_profile_suite.rb').file?
       assert output_dir.join('tools', 'smoke_neo4j_query_profiles.rb').file?
       assert output_dir.join('tools', 'generate_query_profile_demo.rb').file?
@@ -83,6 +88,9 @@ class BuildReleasePackTest < Minitest::Test
       assert_equal manifest['package_id'], manifest_file['package_id']
       assert_equal 'preview', manifest_file['artifact_mode']
       assert_equal 'passed', manifest_file.dig('quality_gates', 'query_profile_suite')
+      assert_equal 'passed', manifest_file.dig('quality_gates', 'relation_catalog')
+      assert_equal 'not_applicable', manifest_file.dig('quality_gates', 'release_metadata')
+      assert_equal 'not_applicable', manifest_file.dig('quality_gates', 'generated_freshness')
 
       registry_index = JSON.parse(output_dir.join('artifacts', 'registry-index.preview.json').read)
       assert_equal 'preview', registry_index['channel']
@@ -141,8 +149,8 @@ class BuildReleasePackTest < Minitest::Test
       output_dir = Pathname(dir).join('everypivot-pack')
       manifest = EveryPivot::BuildReleasePack.build_release_pack(
         output_dir: output_dir,
-        release: 'v0.1.1',
-        published_at: '2026-05-22',
+        release: 'v0.3.0',
+        published_at: '2026-05-25',
         force: false,
         artifact_mode: 'stable',
         authority_status: 'canonical',
@@ -152,16 +160,43 @@ class BuildReleasePackTest < Minitest::Test
       provenance = manifest.fetch('provenance')
       assert_equal 'canonical', provenance.fetch('authority_status')
       assert_equal 'passed', manifest.dig('quality_gates', 'query_profile_suite')
+      assert_equal 'passed', manifest.dig('quality_gates', 'relation_catalog')
+      assert_equal 'passed', manifest.dig('quality_gates', 'release_metadata')
+      assert_equal 'passed', manifest.dig('quality_gates', 'generated_freshness')
+      assert_equal 'passed', manifest.dig('quality_gates', 'site_links')
+      assert_equal 'passed', manifest.dig('quality_gates', 'site_snapshot')
       assert_includes provenance.fetch('note'), 'canonical EveryPivot repository'
       refute_includes provenance.keys, 'authority_doc'
       refute_includes provenance.keys, 'upstream_references'
       assert output_dir.join('adapters', 'query-profiles', 'neo4j_cypher_v0.yml').file?
       assert_query_profile_targets_present(output_dir)
+      assert output_dir.join('site', 'index.html').file?
+      assert output_dir.join('site', 'data', 'registry-index.json').file?
+      assert output_dir.join('site', 'data', 'registry-index.js').file?
+      assert output_dir.join('site', 'data', 'pattern-sources.js').file?
+      assert output_dir.join('site', 'data', 'pivot-pattern.schema.json').file?
+      assert output_dir.join('site', 'data', 'pivot-pattern.schema.js').file?
 
       manifest_file = JSON.parse(output_dir.join('MANIFEST.json').read)
       assert_equal 'passed', manifest_file.dig('quality_gates', 'query_profile_suite')
+      assert_equal 'passed', manifest_file.dig('quality_gates', 'release_metadata')
+      assert_equal 'passed', manifest_file.dig('quality_gates', 'generated_freshness')
       refute_includes manifest_file.fetch('provenance').keys, 'authority_doc'
       refute_includes manifest_file.fetch('provenance').keys, 'upstream_references'
+
+      release_metadata_stdout, release_metadata_stderr, release_metadata_status = Open3.capture3(
+        RbConfig.ruby,
+        output_dir.join('tools', 'check_release_metadata.rb').to_s,
+        chdir: output_dir.to_s
+      )
+      assert release_metadata_status.success?, [release_metadata_stdout, release_metadata_stderr].reject(&:empty?).join("\n")
+
+      freshness_stdout, freshness_stderr, freshness_status = Open3.capture3(
+        RbConfig.ruby,
+        output_dir.join('tools', 'check_generated_freshness.rb').to_s,
+        chdir: output_dir.to_s
+      )
+      assert freshness_status.success?, [freshness_stdout, freshness_stderr].reject(&:empty?).join("\n")
     end
   end
 
