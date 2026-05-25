@@ -6,6 +6,7 @@ require 'open3'
 require 'pathname'
 require 'rbconfig'
 require 'tmpdir'
+require 'yaml'
 
 require_relative 'build_release_pack'
 
@@ -14,6 +15,25 @@ class BuildReleasePackTest < Minitest::Test
 
   def count_lane(folder)
     Dir.glob(REPO_ROOT.join('graph-pivots', folder, '*.yaml').to_s).length
+  end
+
+  def query_profile_target_paths
+    Dir.glob(REPO_ROOT.join('adapters', 'query-profiles', '*.yml').to_s).flat_map do |path|
+      profile = YAML.safe_load(Pathname(path).read, aliases: false)
+      Array(profile['targets']).flat_map do |target|
+        [
+          target['generated_query_location'],
+          target['fixture_graph_location'],
+          target['fixture_load_location']
+        ]
+      end
+    end.compact.sort.uniq
+  end
+
+  def assert_query_profile_targets_present(output_dir)
+    query_profile_target_paths.each do |relative_path|
+      assert output_dir.join(relative_path).file?, "missing query profile target file: #{relative_path}"
+    end
   end
 
   def test_build_release_pack_writes_manifest_and_portable_tooling
@@ -42,9 +62,7 @@ class BuildReleasePackTest < Minitest::Test
 
       assert output_dir.join('MANIFEST.json').file?
       assert output_dir.join('adapters', 'query-profiles', 'neo4j_cypher_v0.yml').file?
-      assert output_dir.join('adapters', 'neo4j', 'generated', 'OSINT_SSH_HOSTKEY_CLUSTER.cypher').file?
-      assert output_dir.join('fixtures', 'query-profiles', 'neo4j', 'osint_ssh_hostkey_cluster.graph.json').file?
-      assert output_dir.join('fixtures', 'query-profiles', 'neo4j', 'osint_ssh_hostkey_cluster.load.cypher').file?
+      assert_query_profile_targets_present(output_dir)
       assert output_dir.join('graph-pivots', 'validated').directory?
       refute output_dir.join('graph-pivots', '.DS_Store').exist?
       assert output_dir.join('schemas', 'pivot_pattern.schema.json').file?
@@ -136,9 +154,7 @@ class BuildReleasePackTest < Minitest::Test
       refute_includes provenance.keys, 'authority_doc'
       refute_includes provenance.keys, 'upstream_references'
       assert output_dir.join('adapters', 'query-profiles', 'neo4j_cypher_v0.yml').file?
-      assert output_dir.join('adapters', 'neo4j', 'generated', 'OSINT_SSH_HOSTKEY_CLUSTER.cypher').file?
-      assert output_dir.join('fixtures', 'query-profiles', 'neo4j', 'osint_ssh_hostkey_cluster.graph.json').file?
-      assert output_dir.join('fixtures', 'query-profiles', 'neo4j', 'osint_ssh_hostkey_cluster.load.cypher').file?
+      assert_query_profile_targets_present(output_dir)
 
       manifest_file = JSON.parse(output_dir.join('MANIFEST.json').read)
       assert_equal 'passed', manifest_file.dig('quality_gates', 'query_profile_suite')

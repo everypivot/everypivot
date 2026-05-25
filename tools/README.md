@@ -17,7 +17,7 @@ Current tools:
 - `check_site_snapshot.rb` verifies that homepage pre-rendered counts agree with the registry data
 - `build_registry_index.rb` generates release-style registry bundles, manifests, and browser sidecars under `artifacts/`
 - `build_release_pack.rb` assembles a portable release pack with copied corpus assets, generated artifacts, and a provenance manifest
-- `generate_query_profile_demo.rb` renders the current Neo4j/Cypher query profile demo
+- `generate_query_profile_demo.rb` renders declared Neo4j/Cypher query profile demo targets
 
 Recommended usage:
 

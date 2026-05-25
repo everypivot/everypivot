@@ -1,0 +1,105 @@
+{
+  "format": "everypivot.query_profile_fixture_graph",
+  "format_version": 1,
+  "fixture_id": "neo4j_cti_email_originating_ip_to_messages_graph_v1",
+  "profile_id": "neo4j_cypher_v0",
+  "pattern_id": "CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES",
+  "purpose": "Synthetic Neo4j/Cypher fixture graph for inbound email-originating-IP traversal. It uses reserved example IP ranges and non-deliverable message identifiers only.",
+  "parameters": {
+    "source_id": "inet:ipv4:203.0.113.45",
+    "as_of": "2026-05-24"
+  },
+  "graph_model": {
+    "node_label": "EveryPivotNode",
+    "relationship_type": "ORIGINATING_IP_FOR"
+  },
+  "nodes": [
+    {
+      "id": "inet:ipv4:203.0.113.45",
+      "form": "inet:ipv4",
+      "label": "203.0.113.45"
+    },
+    {
+      "id": "inet:ipv4:198.51.100.210",
+      "form": "inet:ipv4",
+      "label": "198.51.100.210"
+    },
+    {
+      "id": "email:message:example-alpha",
+      "form": "email:message",
+      "label": "example-alpha@example.invalid"
+    },
+    {
+      "id": "email:message:example-beta",
+      "form": "email:message",
+      "label": "example-beta@example.invalid"
+    },
+    {
+      "id": "email:message:example-stale",
+      "form": "email:message",
+      "label": "example-stale@example.invalid",
+      "stale": true
+    },
+    {
+      "id": "email:message:example-other-ip",
+      "form": "email:message",
+      "label": "example-other-ip@example.invalid"
+    }
+  ],
+  "relationships": [
+    {
+      "from": "email:message:example-alpha",
+      "to": "inet:ipv4:203.0.113.45",
+      "type": "ORIGINATING_IP_FOR",
+      "properties": {
+        "seen": "2026-05-22",
+        "source": "example_mailflow_parser_a"
+      }
+    },
+    {
+      "from": "email:message:example-beta",
+      "to": "inet:ipv4:203.0.113.45",
+      "type": "ORIGINATING_IP_FOR",
+      "properties": {
+        "seen": "2026-05-21",
+        "source": "example_mailflow_parser_b"
+      }
+    },
+    {
+      "from": "email:message:example-stale",
+      "to": "inet:ipv4:203.0.113.45",
+      "type": "ORIGINATING_IP_FOR",
+      "properties": {
+        "seen": "2026-03-10",
+        "source": "example_mailflow_archive"
+      }
+    },
+    {
+      "from": "email:message:example-other-ip",
+      "to": "inet:ipv4:198.51.100.210",
+      "type": "ORIGINATING_IP_FOR",
+      "properties": {
+        "seen": "2026-05-22",
+        "source": "example_mailflow_parser_a"
+      }
+    }
+  ],
+  "expected_result_targets": [
+    "email:message:example-alpha",
+    "email:message:example-beta"
+  ],
+  "expected_suppressed_targets": [
+    {
+      "id": "email:message:example-stale",
+      "reason": "Relationship is outside the 30-day temporal window for this pattern."
+    }
+  ],
+  "blocked_assertions": [
+    "Working-set lifecycle state is not validated status or a runtime confidence score.",
+    "An originating-IP match is mailflow evidence, not proof of sender identity, operator identity, authorship, ownership, or attribution.",
+    "This fixture does not assert maliciousness, compromise, common ownership, campaign membership, or final assessment.",
+    "VPN, proxy, NAT, and bulk-relay suppression remains part of the expected traversal boundary.",
+    "Do not present stale messages outside the temporal window as current related messages.",
+    "Do not cluster a message that only points to inet:ipv4:198.51.100.210 with the 203.0.113.45 source IP."
+  ]
+}

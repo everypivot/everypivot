@@ -8,21 +8,36 @@ backend:
 scope:
   lanes:
   - validated
-  pattern_ids:
-  - OSINT_SSH_HOSTKEY_CLUSTER
-pilot_constraints:
+  - working_set
+targets:
+- pattern_id: OSINT_SSH_HOSTKEY_CLUSTER
   supported_pattern_shape:
     hop_count: 1
     hop_direction: out
     temporal_window_required: true
   graph_simplifications:
   - negative_node_list is a scalar property in this first fixture; production graph models may need list-valued negative-list membership.
-boundary:
-  pattern_yaml_remains_backend_neutral: true
-  adapter_metadata_location: adapters/query-profiles/neo4j_cypher_v0.yml
+  - temporal.order constraints are not enforced by generated Cypher; only the temporal window_days value is enforced.
+  - degree_caps and outputs.top_paths are not enforced by generated Cypher; integrators must apply caps or limits downstream before operational use.
   generated_query_location: adapters/neo4j/generated/OSINT_SSH_HOSTKEY_CLUSTER.cypher
   fixture_graph_location: fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.graph.json
   fixture_load_location: fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.load.cypher
+- pattern_id: CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES
+  supported_pattern_shape:
+    hop_count: 1
+    hop_direction: in
+    temporal_window_required: true
+  graph_simplifications:
+  - negative_node_list is a scalar property in this first fixture; production graph models may need list-valued negative-list membership.
+  - temporal.order constraints are not enforced by generated Cypher; only the temporal window_days value is enforced.
+  - degree_caps and outputs.top_paths are not enforced by generated Cypher; integrators must apply caps or limits downstream before operational use.
+  - source-side negative-node suppression for this inbound source-form target is verified by generated-clause presence only; behavioural proof is deferred to a multi-scenario fixture or promotion gate.
+  generated_query_location: adapters/neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher
+  fixture_graph_location: fixtures/query-profiles/neo4j/cti_email_originating_ip_to_messages.graph.json
+  fixture_load_location: fixtures/query-profiles/neo4j/cti_email_originating_ip_to_messages.load.cypher
+boundary:
+  pattern_yaml_remains_backend_neutral: true
+  adapter_metadata_location: adapters/query-profiles/neo4j_cypher_v0.yml
   generated_outputs_must_not_add:
   - runtime_confidence
   - actor_attribution

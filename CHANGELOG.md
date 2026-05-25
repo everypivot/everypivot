@@ -10,6 +10,16 @@ All notable changes to EveryPivot&trade; are documented here.
   validated SSH host-key pattern.
 - Added sidecar adapter metadata, a synthetic query-profile fixture graph, a
   generated demo query, and profile freshness/semantic-boundary checks.
+- Added a second synthetic Neo4j/Cypher query-profile target for the
+  working-set email-originating-IP pattern to exercise inbound one-hop
+  traversal shape.
+
+### Changed
+
+- Generalized query-profile checking and generation to discover declared
+  profile targets instead of relying on hardcoded Neo4j pilot paths.
+- Moved pilot shape constraints onto target records so future targets can state
+  their supported traversal shape explicitly.
 
 ### Notes
 
