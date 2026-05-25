@@ -50,6 +50,8 @@ The check is intentionally advisory:
 - the command exits `0` when warnings are present by design;
 - an optional first argument can point the check at another pivot library root;
 - compound values containing `|` are compared as current compatibility values;
+- default-corpus snapshot counts are checked for drift against this document;
+- deprecated vocabulary sections, when populated, produce warnings only;
 - semantic families are not inferred;
 - portability classes are not assigned;
 - inverse and companion candidates are not treated as parent/child relations.
@@ -143,9 +145,52 @@ treated as parent/child relationships.
 | `has_mx`, `mx_for`, `receives_reports_for` | Mail infrastructure relations need role-specific naming. |
 | `owned_by`, `owns`, `beneficial_owner_of`, `officer_of|director_of` | Organization and ownership relations require caution around legal meaning and jurisdiction. |
 
+## Directional Naming Residuals
+
+Some relation names remain directionally ambiguous even when the underlying
+pattern is valid. Names ending in `_for`, names ending in `_by`, and names
+starting with `has_` can be especially easy to read with the wrong subject.
+
+No warning lint is active for this in v0.2.0. Before inverse or companion
+semantics become schema-facing, review ambiguous names such as
+`originating_ip_for` and decide whether the relation name, direction, or
+documentation should carry the disambiguation.
+
 ## Deprecation Notes
 
 No relation or form value is deprecated in v0.2.0.
+
+Machine-readable deprecation sections are intentionally empty. Future
+deprecations should list one value per bullet using the same backtick form as
+the inventory sections so warning-only tooling can identify live usage.
+
+<details>
+<summary>Deprecated source forms</summary>
+
+None.
+
+</details>
+
+<details>
+<summary>Deprecated target forms</summary>
+
+None.
+
+</details>
+
+<details>
+<summary>Deprecated hop relation values</summary>
+
+None.
+
+</details>
+
+<details>
+<summary>Deprecated hop forms</summary>
+
+None.
+
+</details>
 
 Known cleanup pressure:
 
