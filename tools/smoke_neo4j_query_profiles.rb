@@ -110,6 +110,15 @@ end
 
 profile_paths = query_profile_paths(repo_root, options[:profile])
 errors << 'no query profiles found under adapters/query-profiles/' if profile_paths.empty?
+profile_paths.each do |profile_path|
+  errors << "query profile not found: #{profile_path}" unless profile_path.file?
+end
+
+if errors.any?
+  warn 'Neo4j query-profile smoke failures:'
+  errors.each { |error| warn "  - #{error}" }
+  exit 1
+end
 
 if options[:reset_fixtures]
   stdout, stderr, status = run_cypher_text(options[:cypher_shell], cypher_args, "MATCH (n:EveryPivotNode)\nDETACH DELETE n;\n")

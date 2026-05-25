@@ -16,7 +16,7 @@ All notable changes to EveryPivot&trade; are documented here.
 - Added an optional Neo4j/cypher-shell smoke helper for maintainers who want to
   execute synthetic query-profile fixtures locally.
 - Added a third synthetic Neo4j/Cypher query-profile target for the validated
-  import-hash pattern to behaviorally prove source-side full-block suppression.
+  import-hash pattern to behaviourally prove source-side full-block suppression.
 
 ### Changed
 
