@@ -4,8 +4,17 @@ All notable changes to EveryPivot&trade; are documented here.
 
 ## Unreleased
 
+No unreleased changes.
+
+## v0.3.0 - 2026-05-25
+
+See [release notes](docs/releases/v0.3.0.md).
+
 ### Added
 
+- Added public schema-migration and v1.5 doctrine proposals for semantic
+  families, typed facets, blocked-inference objects, companion/inverse
+  relationships, and justified `parent_pattern` use.
 - Started EP-WP15 with a public-safe Neo4j/Cypher query-profile pilot for the
   validated SSH host-key pattern.
 - Added sidecar adapter metadata, a synthetic query-profile fixture graph, a
@@ -20,6 +29,10 @@ All notable changes to EveryPivot&trade; are documented here.
 
 ### Changed
 
+- Hardened relation-catalog review by checking default-corpus snapshot-count
+  drift and adding warning-only deprecated-vocabulary sections.
+- Tightened fixture-manifest coverage so fixture case directories cannot drift
+  from `fixtures/validator_suite.yml`.
 - Generalized query-profile checking and generation to discover declared
   profile targets instead of relying on hardcoded Neo4j pilot paths.
 - Moved pilot shape constraints onto target records so future targets can state
@@ -34,7 +47,8 @@ All notable changes to EveryPivot&trade; are documented here.
 
 - No corpus expansion.
 - No schema-version change.
-- No release tag or v0.4 release-ready claim.
+- No public real-case corpus or validated promotion from case-bound sidecar
+  work.
 
 ## v0.2.0 - 2026-05-24
 
