@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -128,7 +128,7 @@ jobs:
           exit "$missing"
 
       - name: Upload preview artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: everypivot-preview-bundle
           path: |
@@ -147,7 +147,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -189,8 +189,8 @@ jobs:
           exit "$missing"
 
       - name: Publish GitHub release assets
-        # softprops/action-gh-release@v2 pinned to the upstream v2 tag commit.
-        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65
+        # softprops/action-gh-release@v3 pinned to the upstream v3 tag commit.
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
         with:
           files: |
             ${{ runner.temp }}/release/registry-index.json

@@ -29,6 +29,74 @@ def evidence_target_ids(values)
   Array(values).map { |value| value.is_a?(Hash) ? value['id'] : value }.compact
 end
 
+def fixture_case_roots(repo_root)
+  Dir.glob(repo_root.join('fixtures', 'cases', '*').to_s, File::FNM_DOTMATCH)
+     .reject { |path| %w[. ..].include?(Pathname(path).basename.to_s) }
+     .select { |path| File.directory?(path) }
+     .map { |path| Pathname(path).relative_path_from(repo_root).to_s }
+     .sort
+end
+
+def validate_manifest_case_coverage(repo_root, cases)
+  failures = []
+  declared_roots = []
+  id_counts = Hash.new(0)
+
+  cases.each do |fixture_case|
+    unless fixture_case.is_a?(Hash)
+      failures << 'case entry must be an object'
+      next
+    end
+
+    case_id = fixture_case['id'].to_s
+    if case_id.empty?
+      failures << 'case id is required'
+    else
+      id_counts[case_id] += 1
+    end
+
+    root = fixture_case['root'].to_s
+    if root.empty?
+      failures << 'case root is required'
+      next
+    end
+
+    declared_roots << root
+  end
+
+  duplicate_ids = id_counts.select { |_id, count| count > 1 }.keys.sort
+  failures << "duplicate case ids: #{duplicate_ids.join(', ')}" if duplicate_ids.any?
+
+  actual_roots = fixture_case_roots(repo_root)
+  unique_declared_roots = declared_roots.uniq.sort
+  missing_from_manifest = actual_roots - unique_declared_roots
+  missing_from_tree = unique_declared_roots - actual_roots
+
+  if missing_from_manifest.any?
+    failures << "fixtures/cases directories missing from validator_suite.yml: #{missing_from_manifest.join(', ')}"
+  end
+
+  if missing_from_tree.any?
+    failures << "validator_suite.yml roots missing from fixtures/cases: #{missing_from_tree.join(', ')}"
+  end
+
+  return [] if failures.empty?
+
+  [
+    {
+      id: 'fixture_manifest_case_coverage',
+      failures: failures,
+      output: "declared=#{unique_declared_roots.inspect}\nactual=#{actual_roots.inspect}"
+    }
+  ]
+end
+
+def same_path?(left, right)
+  left.realpath == right.realpath
+rescue Errno::ENOENT
+  left.expand_path == right.expand_path
+end
+
 def validate_evidence_examples(repo_root)
   failures = []
   examples = Dir.glob(repo_root.join('fixtures', 'examples', '*.evidence.json').to_s).sort
@@ -200,16 +268,39 @@ manifest = YAML.safe_load(File.read(manifest_path), aliases: false)
 cases = Array(manifest['cases'])
 
 failures = []
+if same_path?(manifest_path, repo_root.join('fixtures', 'validator_suite.yml'))
+  failures.concat(validate_manifest_case_coverage(repo_root, cases))
+end
 
-cases.each do |fixture_case|
-  case_id = fixture_case.fetch('id')
-  root = repo_root.join(fixture_case.fetch('root'))
+cases.each_with_index do |fixture_case, index|
+  unless fixture_case.is_a?(Hash)
+    label = "manifest_case_#{index + 1}"
+    failures << { id: label, failures: ['case entry must be an object'], output: fixture_case.inspect }
+    puts "FAIL #{label}"
+    next
+  end
+
+  case_id = fixture_case['id'].to_s
+  root_value = fixture_case['root'].to_s
+  manifest_errors = []
+  manifest_errors << 'id is required' if case_id.empty?
+  manifest_errors << 'root is required' if root_value.empty?
+  manifest_errors << 'expect_exit is required' unless fixture_case.key?('expect_exit')
+
+  if manifest_errors.any?
+    label = case_id.empty? ? "manifest_case_#{index + 1}" : case_id
+    failures << { id: label, failures: manifest_errors, output: fixture_case.inspect }
+    puts "FAIL #{label}"
+    next
+  end
+
+  root = repo_root.join(root_value)
   command = [RbConfig.ruby, validator_path.to_s, root.to_s]
   command << '--strict-metadata' if fixture_case['strict_metadata']
 
   stdout, stderr, status = Open3.capture3(*command, chdir: repo_root.to_s)
   combined = [stdout, stderr].reject(&:empty?).join("\n")
-  expected_exit = fixture_case.fetch('expect_exit')
+  expected_exit = fixture_case['expect_exit']
 
   case_failures = []
   if status.exitstatus != expected_exit

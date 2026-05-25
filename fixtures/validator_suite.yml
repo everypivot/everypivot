@@ -63,6 +63,12 @@ cases:
     expect_exit: 1
     expect_output:
       - "deferred_reason is required"
+  - id: invalid_v12_no_assessment
+    root: fixtures/cases/invalid_v12_no_assessment
+    expect_exit: 1
+    expect_output:
+      - "assessment is required"
+      - "deferred_reason is required"
   - id: invalid_v13_no_assessment
     root: fixtures/cases/invalid_v13_no_assessment
     expect_exit: 1
