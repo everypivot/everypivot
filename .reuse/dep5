@@ -16,6 +16,7 @@ Copyright: 2026 EveryPivot Project
 License: CC-BY-4.0
 
 Files: .github/**
+ adapters/**
  docs/**
  schemas/**
  tools/**

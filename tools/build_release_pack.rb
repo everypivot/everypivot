@@ -32,6 +32,7 @@ module EveryPivot
       TRADEMARK.md
     ].freeze
     ROOT_DIRECTORIES = %w[
+      adapters
       docs
       graph-pivots
       schemas
@@ -44,6 +45,8 @@ module EveryPivot
       tools/check_release_metadata.rb
       tools/validate_pivots.rb
       tools/check_fixture_suite.rb
+      tools/check_query_profile_suite.rb
+      tools/generate_query_profile_demo.rb
       tools/json_schema_validator.rb
     ].freeze
     module_function
@@ -198,6 +201,12 @@ module EveryPivot
         fixture_status = 'passed'
       end
 
+      query_profile_command = [
+        RbConfig.ruby,
+        output_dir.join('tools', 'check_query_profile_suite.rb').to_s
+      ]
+      run_command!(query_profile_command, chdir: output_dir)
+
       artifact_output = output_dir.join('artifacts', artifact_output_name(artifact_mode))
       registry_command = [
         RbConfig.ruby,
@@ -239,6 +248,8 @@ module EveryPivot
         'tool_entrypoints' => {
           'validator' => 'tools/validate_pivots.rb',
           'fixture_suite' => 'tools/check_fixture_suite.rb',
+          'query_profile_suite' => 'tools/check_query_profile_suite.rb',
+          'query_profile_demo_generator' => 'tools/generate_query_profile_demo.rb',
           'registry_builder' => 'tools/build_registry_index.rb',
           'release_pack_builder' => 'tools/build_release_pack.rb'
         },
@@ -246,7 +257,8 @@ module EveryPivot
         'provenance' => provenance(authority_status),
         'quality_gates' => {
           'validator' => 'passed',
-          'fixture_suite' => fixture_status
+          'fixture_suite' => fixture_status,
+          'query_profile_suite' => 'passed'
         },
         'schema_versions' => registry_index['schema_versions'],
         'counts' => registry_index['counts'],

@@ -11,11 +11,13 @@ Current contents:
 - `validator_suite.yml` manifest for automated fixture checks
 - `cases/` library roots with pass/fail scenarios for schema, lane, and metadata validation
 - `examples/` traversal evidence packs for first-use and promotion examples
+- `query-profiles/` synthetic fixture graphs for adapter/query profile demos
 
 Run the suite with:
 
 ```bash
 ruby tools/check_fixture_suite.rb
+ruby tools/check_query_profile_suite.rb
 ```
 
 The suite currently covers:
@@ -64,3 +66,15 @@ traversal, even when the raw edge exists.
 
 All examples are synthetic. They use reserved example domains or documentation
 IP ranges and are not live observation data.
+
+## Query Profile Fixtures
+
+- [`query-profiles/neo4j/osint_ssh_hostkey_cluster.graph.json`](query-profiles/neo4j/osint_ssh_hostkey_cluster.graph.json)
+  supports the Neo4j/Cypher adapter pilot for
+  [`OSINT_SSH_HOSTKEY_CLUSTER`](../graph-pivots/validated/OSINT_SSH_HOSTKEY_CLUSTER.yaml).
+- [`query-profiles/neo4j/osint_ssh_hostkey_cluster.load.cypher`](query-profiles/neo4j/osint_ssh_hostkey_cluster.load.cypher)
+  loads the same synthetic graph into Neo4j for local demo execution.
+
+Query profile fixtures are synthetic graph fixtures. They are used to prove
+generated adapter output preserves caveats and blocked assertions without adding
+backend-specific fields to pattern YAML.

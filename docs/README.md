@@ -1,6 +1,7 @@
 # EveryPivot Documentation
 
 - [Start here: SSH host key walkthrough](START_HERE.md)
+- [Adapter and query profiles](ADAPTER_QUERY_PROFILES.md)
 - [Contributing and promotion](CONTRIBUTING_AND_PROMOTION.md)
 - [Relation catalog](RELATION_CATALOG.md)
 - [Schema migration](SCHEMA_MIGRATION.md)

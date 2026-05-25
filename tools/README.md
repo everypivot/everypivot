@@ -9,6 +9,7 @@ Lightweight registry tooling for the public EveryPivot&trade; repo shape.
 Current tools:
 - `validate_pivots.rb` validates the `graph-pivots/` corpus against the published schema plus lane-policy rules
 - `check_fixture_suite.rb` runs the fixture manifest under `fixtures/` and validates traversal evidence examples
+- `check_query_profile_suite.rb` validates adapter/query profile sidecars, fixture graphs, and generated query freshness
 - `check_release_metadata.rb` verifies that README, release notes, builder defaults, committed artifacts, and site data agree on the current release
 - `check_generated_freshness.rb` rebuilds registry and site data into a temporary directory and compares the committed public outputs
 - `check_relation_catalog.rb` warns when pattern relation/form vocabulary is not yet listed in `docs/RELATION_CATALOG.md`
@@ -16,11 +17,13 @@ Current tools:
 - `check_site_snapshot.rb` verifies that homepage pre-rendered counts agree with the registry data
 - `build_registry_index.rb` generates release-style registry bundles, manifests, and browser sidecars under `artifacts/`
 - `build_release_pack.rb` assembles a portable release pack with copied corpus assets, generated artifacts, and a provenance manifest
+- `generate_query_profile_demo.rb` renders the current Neo4j/Cypher query profile demo
 
 Recommended usage:
 
 ```bash
 ruby tools/check_fixture_suite.rb
+ruby tools/check_query_profile_suite.rb
 ruby tools/check_relation_catalog.rb
 ruby tools/check_relation_catalog.rb /path/to/graph-pivots
 ruby tools/check_release_metadata.rb

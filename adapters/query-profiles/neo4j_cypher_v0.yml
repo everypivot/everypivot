@@ -1,0 +1,67 @@
+profile_id: neo4j_cypher_v0
+version: 0.1.0
+status: pilot
+backend:
+  name: neo4j
+  query_language: cypher
+  minimum_version: '5.x'
+scope:
+  lanes:
+  - validated
+  pattern_ids:
+  - OSINT_SSH_HOSTKEY_CLUSTER
+pilot_constraints:
+  supported_pattern_shape:
+    hop_count: 1
+    hop_direction: out
+    temporal_window_required: true
+  graph_simplifications:
+  - negative_node_list is a scalar property in this first fixture; production graph models may need list-valued negative-list membership.
+boundary:
+  pattern_yaml_remains_backend_neutral: true
+  adapter_metadata_location: adapters/query-profiles/neo4j_cypher_v0.yml
+  generated_query_location: adapters/neo4j/generated/OSINT_SSH_HOSTKEY_CLUSTER.cypher
+  fixture_graph_location: fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.graph.json
+  fixture_load_location: fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.load.cypher
+  generated_outputs_must_not_add:
+  - runtime_confidence
+  - actor_attribution
+  - maliciousness
+  - compromise
+  - final_assessment
+  - ownership
+graph_model:
+  node_label: EveryPivotNode
+  id_property: id
+  form_property: form
+  label_property: label
+  negative_node_list_property: negative_node_list
+  negative_node_list_cardinality: scalar_pilot_simplification
+  relationship_type_strategy: uppercase_relation
+  relationship_seen_property: seen
+  relationship_source_property: source
+outputs:
+  result_alias: everypivot_traversal
+  allowed_top_level_fields:
+  - pattern_id
+  - query_profile_id
+  - source
+  - target
+  - relation
+  - evidence_paths
+  - features
+  - caveats
+  - blocked_assertions
+  forbidden_top_level_fields:
+  - confidence
+  - confidence_score
+  - attribution
+  - actor
+  - sponsor
+  - victim
+  - mission
+  - authorship
+  - ownership
+  - maliciousness
+  - compromise
+  - final_assessment

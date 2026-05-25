@@ -16,6 +16,7 @@ synthetic keys. It is a mechanics example, not live intelligence.
 - Hop direction: `out`
 - Temporal window: 730 days
 - Evidence pack: [`fixtures/examples/osint_ssh_hostkey_cluster.evidence.json`](../fixtures/examples/osint_ssh_hostkey_cluster.evidence.json)
+- Query profile demo: [`adapters/neo4j/generated/OSINT_SSH_HOSTKEY_CLUSTER.cypher`](../adapters/neo4j/generated/OSINT_SSH_HOSTKEY_CLUSTER.cypher)
 
 ## Source Node
 
@@ -61,6 +62,17 @@ Expected included targets:
 The traversal result should carry evidence paths and feature material, not a
 final analytic judgment. In the pattern YAML, the configured output includes
 `source`, `target`, `features`, `evidence_paths`, and `storm_query`.
+
+## Query Profile Demo
+
+The Neo4j/Cypher adapter pilot translates this same traversal into a generated
+query without changing the pattern YAML. Backend-specific labels, properties,
+and generated output constraints live under [`adapters/`](../adapters/), while
+the pattern remains backend-neutral.
+
+The generated query returns traversal evidence, pattern hazards, and blocked
+assertions. It does not add confidence, attribution, maliciousness, compromise,
+ownership, or final-assessment fields.
 
 ## Negative-Node Suppression
 

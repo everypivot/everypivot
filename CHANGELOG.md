@@ -2,6 +2,21 @@
 
 All notable changes to EveryPivot&trade; are documented here.
 
+## Unreleased
+
+### Added
+
+- Started EP-WP15 with a public-safe Neo4j/Cypher query-profile pilot for the
+  validated SSH host-key pattern.
+- Added sidecar adapter metadata, a synthetic query-profile fixture graph, a
+  generated demo query, and profile freshness/semantic-boundary checks.
+
+### Notes
+
+- No corpus expansion.
+- No schema-version change.
+- No release tag or v0.4 release-ready claim.
+
 ## v0.2.0 - 2026-05-24
 
 See [release notes](docs/releases/v0.2.0.md).

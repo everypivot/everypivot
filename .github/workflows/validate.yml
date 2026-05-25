@@ -79,6 +79,9 @@ jobs:
       - name: Run fixture suite
         run: ruby tools/check_fixture_suite.rb
 
+      - name: Run query profile suite
+        run: ruby tools/check_query_profile_suite.rb
+
       - name: Check release metadata consistency
         run: ruby tools/check_release_metadata.rb
 

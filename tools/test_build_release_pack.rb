@@ -35,11 +35,16 @@ class BuildReleasePackTest < Minitest::Test
       assert_includes manifest.dig('provenance', 'note'), 'Canonical local preview'
       assert_equal 'passed', manifest.dig('quality_gates', 'validator')
       assert_equal 'passed', manifest.dig('quality_gates', 'fixture_suite')
+      assert_equal 'passed', manifest.dig('quality_gates', 'query_profile_suite')
       assert_equal count_lane('validated'), manifest.dig('counts', 'validated')
       assert_equal count_lane('working-set'), manifest.dig('counts', 'working_set')
       assert_equal count_lane('deferred'), manifest.dig('counts', 'deferred')
 
       assert output_dir.join('MANIFEST.json').file?
+      assert output_dir.join('adapters', 'query-profiles', 'neo4j_cypher_v0.yml').file?
+      assert output_dir.join('adapters', 'neo4j', 'generated', 'OSINT_SSH_HOSTKEY_CLUSTER.cypher').file?
+      assert output_dir.join('fixtures', 'query-profiles', 'neo4j', 'osint_ssh_hostkey_cluster.graph.json').file?
+      assert output_dir.join('fixtures', 'query-profiles', 'neo4j', 'osint_ssh_hostkey_cluster.load.cypher').file?
       assert output_dir.join('graph-pivots', 'validated').directory?
       refute output_dir.join('graph-pivots', '.DS_Store').exist?
       assert output_dir.join('schemas', 'pivot_pattern.schema.json').file?
@@ -50,12 +55,15 @@ class BuildReleasePackTest < Minitest::Test
       assert output_dir.join('tools', 'build_release_pack.rb').file?
       assert output_dir.join('tools', 'build_registry_index.rb').file?
       assert output_dir.join('tools', 'check_release_metadata.rb').file?
+      assert output_dir.join('tools', 'check_query_profile_suite.rb').file?
+      assert output_dir.join('tools', 'generate_query_profile_demo.rb').file?
       refute output_dir.join('site').exist?
       refute output_dir.join('planning-notes').exist?
 
       manifest_file = JSON.parse(output_dir.join('MANIFEST.json').read)
       assert_equal manifest['package_id'], manifest_file['package_id']
       assert_equal 'preview', manifest_file['artifact_mode']
+      assert_equal 'passed', manifest_file.dig('quality_gates', 'query_profile_suite')
 
       registry_index = JSON.parse(output_dir.join('artifacts', 'registry-index.preview.json').read)
       assert_equal 'preview', registry_index['channel']
@@ -98,6 +106,13 @@ class BuildReleasePackTest < Minitest::Test
         chdir: output_dir.to_s
       )
       assert fixture_status.success?, [fixture_stdout, fixture_stderr].reject(&:empty?).join("\n")
+
+      query_profile_stdout, query_profile_stderr, query_profile_status = Open3.capture3(
+        RbConfig.ruby,
+        output_dir.join('tools', 'check_query_profile_suite.rb').to_s,
+        chdir: output_dir.to_s
+      )
+      assert query_profile_status.success?, [query_profile_stdout, query_profile_stderr].reject(&:empty?).join("\n")
     end
   end
 
@@ -116,11 +131,17 @@ class BuildReleasePackTest < Minitest::Test
 
       provenance = manifest.fetch('provenance')
       assert_equal 'canonical', provenance.fetch('authority_status')
+      assert_equal 'passed', manifest.dig('quality_gates', 'query_profile_suite')
       assert_includes provenance.fetch('note'), 'canonical EveryPivot repository'
       refute_includes provenance.keys, 'authority_doc'
       refute_includes provenance.keys, 'upstream_references'
+      assert output_dir.join('adapters', 'query-profiles', 'neo4j_cypher_v0.yml').file?
+      assert output_dir.join('adapters', 'neo4j', 'generated', 'OSINT_SSH_HOSTKEY_CLUSTER.cypher').file?
+      assert output_dir.join('fixtures', 'query-profiles', 'neo4j', 'osint_ssh_hostkey_cluster.graph.json').file?
+      assert output_dir.join('fixtures', 'query-profiles', 'neo4j', 'osint_ssh_hostkey_cluster.load.cypher').file?
 
       manifest_file = JSON.parse(output_dir.join('MANIFEST.json').read)
+      assert_equal 'passed', manifest_file.dig('quality_gates', 'query_profile_suite')
       refute_includes manifest_file.fetch('provenance').keys, 'authority_doc'
       refute_includes manifest_file.fetch('provenance').keys, 'upstream_references'
     end

@@ -27,6 +27,7 @@ graph-pivots/
   deferred/
 schemas/
 fixtures/
+adapters/
 tools/
 artifacts/
 site/
@@ -49,6 +50,7 @@ systems own execution, corroboration, scoring, and case-specific judgment.
 ```bash
 ruby tools/validate_pivots.rb --strict-metadata
 ruby tools/check_fixture_suite.rb
+ruby tools/check_query_profile_suite.rb
 ```
 
 ## Build Registry Artifacts
@@ -89,6 +91,7 @@ Then open `http://localhost:4173/site/index.html`.
 ## Documentation
 
 - [Start here: SSH host key walkthrough](docs/START_HERE.md)
+- [Adapter and query profiles](docs/ADAPTER_QUERY_PROFILES.md)
 - [Contributing and promotion](docs/CONTRIBUTING_AND_PROMOTION.md)
 - [Relation catalog](docs/RELATION_CATALOG.md)
 - [License FAQ](LICENSE-FAQ.md)
