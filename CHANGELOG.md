@@ -15,6 +15,8 @@ All notable changes to EveryPivot&trade; are documented here.
   traversal shape.
 - Added an optional Neo4j/cypher-shell smoke helper for maintainers who want to
   execute synthetic query-profile fixtures locally.
+- Added a third synthetic Neo4j/Cypher query-profile target for the validated
+  import-hash pattern to behaviorally prove source-side full-block suppression.
 
 ### Changed
 
@@ -25,6 +27,8 @@ All notable changes to EveryPivot&trade; are documented here.
 - Clarified that adapter metadata and generated adapter queries are Apache-2.0,
   while synthetic query-profile fixtures and loaders remain CC BY 4.0 fixture
   material.
+- Hardened optional Neo4j smoke behaviour by rejecting passthrough `--file`
+  arguments and adding an explicit disposable-database reset option.
 
 ### Notes
 

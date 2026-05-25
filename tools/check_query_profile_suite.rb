@@ -237,7 +237,7 @@ def check_target(repo_root, generator_path, profile_path, profile, target, error
   errors << "#{target_label}: fixture profile_id mismatch" unless fixture['profile_id'] == profile['profile_id']
   errors << "#{target_label}: fixture pattern_id mismatch" unless fixture['pattern_id'] == pattern['id']
   errors << "#{target_label}: fixture must include blocked assertions" if Array(fixture['blocked_assertions']).empty?
-  errors << "#{target_label}: fixture must include expected result targets" if Array(fixture['expected_result_targets']).empty?
+  errors << "#{target_label}: fixture must declare expected_result_targets" unless fixture.key?('expected_result_targets')
   errors << "#{target_label}: fixture must include expected suppressed targets" if Array(fixture['expected_suppressed_targets']).empty?
 
   hop = Array(pattern['hops']).first || {}
@@ -260,6 +260,24 @@ def check_target(repo_root, generator_path, profile_path, profile, target, error
   included_targets, suppressed_targets = fixture_targets(pattern, profile, fixture, errors)
   expected_result_targets = Array(fixture['expected_result_targets']).sort
   expected_suppressed_targets = Array(fixture['expected_suppressed_targets']).map { |entry| entry.is_a?(Hash) ? entry['id'] : entry }.compact.sort
+  expected_source_forms = form_list(pattern['source'])
+  expected_target_forms = form_list(hop['form'].to_s.empty? ? pattern['target'] : hop['form'])
+  expected_source_negative_lists = negative_lists_for_forms(pattern.dig('constraints', 'negative_nodes'), expected_source_forms)
+  expected_target_negative_lists = negative_lists_for_forms(pattern.dig('constraints', 'negative_nodes'), expected_target_forms)
+  full_source_suppression_fixture =
+    expected_result_targets.empty? &&
+    expected_suppressed_targets.any? &&
+    expected_source_negative_lists.any? &&
+    expected_target_negative_lists.empty?
+  if expected_result_targets.empty? && !full_source_suppression_fixture
+    errors << "#{target_label}: expected_result_targets may be empty only for a source-side full-block suppression fixture"
+  end
+  free_text = Array(pattern['hazards']) + Array(fixture['blocked_assertions'])
+  expected_suppressed_targets.each do |suppressed_id|
+    if free_text.any? { |text| text.to_s.include?(suppressed_id) }
+      errors << "#{target_label}: suppressed target id #{suppressed_id} appears in hazards or blocked_assertions, which can mask smoke-test leaks"
+    end
+  end
   if included_targets != expected_result_targets
     errors << "#{target_label}: fixture traversal returned #{included_targets.inspect}; expected #{expected_result_targets.inspect}"
   end
@@ -324,7 +342,11 @@ def check_target(repo_root, generator_path, profile_path, profile, target, error
   negative_lists = (source_negative_lists + target_negative_lists).uniq
   relationship = relation_type(hop['via'], profile.dig('graph_model', 'relationship_type_strategy'))
   if source_negative_lists.any? && target_negative_lists.empty?
-    unless simplifications.any? { |note| note.include?('source-side negative-node suppression') && note.include?('clause presence only') }
+    if expected_result_targets.empty? && expected_suppressed_targets.any?
+      unless simplifications.any? { |note| note.include?('source-side negative-node suppression') && note.include?('behaviourally exercised') }
+        errors << "#{target_label}: target must document source-side negative-list behavioural proof"
+      end
+    elsif !simplifications.any? { |note| note.include?('source-side negative-node suppression') && note.include?('clause presence only') }
       errors << "#{target_label}: target must document source-side negative-list behavioural proof limitation"
     end
   end

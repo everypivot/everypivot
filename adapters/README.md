@@ -13,6 +13,9 @@ Current pilot:
 - [`neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher`](neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher)
   is a generated inbound demo query for a working-set email-originating-IP
   pattern.
+- [`neo4j/generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher`](neo4j/generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher)
+  is a generated demo query for a validated import-hash pattern with a
+  source-side full-block suppression fixture.
 
 Run the profile checks with:
 

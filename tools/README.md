@@ -28,6 +28,7 @@ ruby tools/check_query_profile_suite.rb
 ruby tools/check_relation_catalog.rb
 ruby tools/check_relation_catalog.rb /path/to/graph-pivots
 ruby tools/smoke_neo4j_query_profiles.rb -- --address bolt://localhost:7687
+ruby tools/smoke_neo4j_query_profiles.rb --reset-fixtures -- --address bolt://localhost:7687
 ruby tools/check_release_metadata.rb
 ruby tools/check_generated_freshness.rb
 ruby tools/check_site_links.rb

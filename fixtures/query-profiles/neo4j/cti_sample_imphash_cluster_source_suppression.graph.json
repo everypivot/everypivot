@@ -1,0 +1,91 @@
+{
+  "format": "everypivot.query_profile_fixture_graph",
+  "format_version": 1,
+  "fixture_id": "neo4j_cti_sample_imphash_cluster_source_suppression_graph_v1",
+  "profile_id": "neo4j_cypher_v0",
+  "pattern_id": "CTI_SAMPLE_IMPHASH_CLUSTER",
+  "purpose": "Synthetic Neo4j/Cypher fixture graph proving source-side negative-node suppression for a common PE import hash. It uses example hash strings only.",
+  "parameters": {
+    "source_id": "file:pe:imphash:example-common-packer-7b3f",
+    "as_of": "2026-05-24"
+  },
+  "graph_model": {
+    "node_label": "EveryPivotNode",
+    "relationship_type": "OBSERVED_IN"
+  },
+  "nodes": [
+    {
+      "id": "file:pe:imphash:example-common-packer-7b3f",
+      "form": "file:pe:imphash",
+      "label": "example-common-packer-7b3f",
+      "negative_node_list": "common_packer_imphashes"
+    },
+    {
+      "id": "file:bytes:sha256:example-alpha",
+      "form": "file:bytes",
+      "label": "sha256:example-alpha"
+    },
+    {
+      "id": "file:bytes:sha256:example-beta",
+      "form": "file:bytes",
+      "label": "sha256:example-beta"
+    },
+    {
+      "id": "file:bytes:sha256:example-other-imphash",
+      "form": "file:bytes",
+      "label": "sha256:example-other-imphash"
+    },
+    {
+      "id": "file:pe:imphash:example-other-91ac",
+      "form": "file:pe:imphash",
+      "label": "example-other-91ac"
+    }
+  ],
+  "relationships": [
+    {
+      "from": "file:pe:imphash:example-common-packer-7b3f",
+      "to": "file:bytes:sha256:example-alpha",
+      "type": "OBSERVED_IN",
+      "properties": {
+        "seen": "2026-05-20",
+        "source": "example_static_parser_a"
+      }
+    },
+    {
+      "from": "file:pe:imphash:example-common-packer-7b3f",
+      "to": "file:bytes:sha256:example-beta",
+      "type": "OBSERVED_IN",
+      "properties": {
+        "seen": "2026-05-21",
+        "source": "example_static_parser_b"
+      }
+    },
+    {
+      "from": "file:pe:imphash:example-other-91ac",
+      "to": "file:bytes:sha256:example-other-imphash",
+      "type": "OBSERVED_IN",
+      "properties": {
+        "seen": "2026-05-20",
+        "source": "example_static_parser_a"
+      }
+    }
+  ],
+  "expected_result_targets": [],
+  "expected_suppressed_targets": [
+    {
+      "id": "file:bytes:sha256:example-alpha",
+      "reason": "The source import hash is listed in the common_packer_imphashes negative-node list."
+    },
+    {
+      "id": "file:bytes:sha256:example-beta",
+      "reason": "The source import hash is listed in the common_packer_imphashes negative-node list."
+    }
+  ],
+  "blocked_assertions": [
+    "Validated lifecycle state is not a runtime confidence score.",
+    "A shared import hash is feature evidence, not proof of common operator identity, authorship, ownership, or attribution.",
+    "This fixture proves source-side suppression for common packer import hashes; it does not assert maliciousness, compromise, family membership, or final assessment.",
+    "Do not present samples connected only through a common packer import hash as ordinary cluster members.",
+    "Do not cluster a sample that only points to file:pe:imphash:example-other-91ac with the suppressed source import hash."
+  ]
+}

@@ -12,6 +12,9 @@ Files:
 - [`generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher`](generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher)
   is generated from the working-set email-originating-IP pattern plus the
   synthetic inbound query-profile fixture graph.
+- [`generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher`](generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher)
+  is generated from the validated import-hash pattern plus the synthetic
+  source-side suppression fixture graph.
 - [`../../fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.graph.json`](../../fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.graph.json)
   provides the tiny synthetic graph fixture used by the SSH host-key demo.
 - [`../../fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.load.cypher`](../../fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.load.cypher)
@@ -20,6 +23,11 @@ Files:
   provides the tiny synthetic graph fixture used by the email-originating-IP
   demo.
 - [`../../fixtures/query-profiles/neo4j/cti_email_originating_ip_to_messages.load.cypher`](../../fixtures/query-profiles/neo4j/cti_email_originating_ip_to_messages.load.cypher)
+  loads the same fixture graph into a Neo4j database for local testing.
+- [`../../fixtures/query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.graph.json`](../../fixtures/query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.graph.json)
+  provides the tiny synthetic graph fixture used by the import-hash source
+  suppression demo.
+- [`../../fixtures/query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.load.cypher`](../../fixtures/query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.load.cypher)
   loads the same fixture graph into a Neo4j database for local testing.
 
 The generated query returns traversal evidence, caveats, and blocked
@@ -36,6 +44,10 @@ ruby tools/generate_query_profile_demo.rb \
 ruby tools/generate_query_profile_demo.rb \
   --pattern-id CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES \
   --output adapters/neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher
+
+ruby tools/generate_query_profile_demo.rb \
+  --pattern-id CTI_SAMPLE_IMPHASH_CLUSTER \
+  --output adapters/neo4j/generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher
 ```
 
 To run the demo locally, load the fixture Cypher first, then run the generated
@@ -46,8 +58,11 @@ live smoke helper:
 
 ```bash
 ruby tools/smoke_neo4j_query_profiles.rb -- --address bolt://localhost:7687
+ruby tools/smoke_neo4j_query_profiles.rb --reset-fixtures -- --address bolt://localhost:7687
 ```
 
 Arguments after `--` are passed directly to `cypher-shell`. The smoke helper is
 not part of the default validation gate; it exists to catch obvious fixture/load
 or generated-query execution drift in a local disposable Neo4j database.
+`--reset-fixtures` deletes all `EveryPivotNode` nodes before loading fixtures,
+so use it only against disposable demo data.

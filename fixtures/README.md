@@ -79,6 +79,11 @@ IP ranges and are not live observation data.
   [`CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES`](../graph-pivots/working-set/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.yaml).
 - [`query-profiles/neo4j/cti_email_originating_ip_to_messages.load.cypher`](query-profiles/neo4j/cti_email_originating_ip_to_messages.load.cypher)
   loads the same synthetic graph into Neo4j for local demo execution.
+- [`query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.graph.json`](query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.graph.json)
+  supports the Neo4j/Cypher adapter pilot for
+  [`CTI_SAMPLE_IMPHASH_CLUSTER`](../graph-pivots/validated/CTI_SAMPLE_IMPHASH_CLUSTER.yaml).
+- [`query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.load.cypher`](query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.load.cypher)
+  loads the same synthetic graph into Neo4j for local demo execution.
 
 Query profile fixtures are synthetic graph fixtures. They are used to prove
 generated adapter output preserves caveats and blocked assertions without adding

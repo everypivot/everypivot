@@ -28,6 +28,11 @@ demo. It currently declares two synthetic targets:
   [`generated query`](../adapters/neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher),
   [`fixture graph`](../fixtures/query-profiles/neo4j/cti_email_originating_ip_to_messages.graph.json),
   [`fixture loader`](../fixtures/query-profiles/neo4j/cti_email_originating_ip_to_messages.load.cypher)
+- source-suppression validated target:
+  [`CTI_SAMPLE_IMPHASH_CLUSTER`](../graph-pivots/validated/CTI_SAMPLE_IMPHASH_CLUSTER.yaml),
+  [`generated query`](../adapters/neo4j/generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher),
+  [`fixture graph`](../fixtures/query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.graph.json),
+  [`fixture loader`](../fixtures/query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.load.cypher)
 
 The pilot uses only synthetic fixture material based on reserved example values.
 It is not live intelligence and it is not an OpenCTI, Neo4j, or vendor-specific
@@ -62,7 +67,10 @@ treated as complete operational semantics.
 The SSH host-key fixture behaviourally exercises target-side negative-list
 suppression. The email-originating-IP target has source-form negative nodes; its
 positive fixture verifies the generated source-side suppression clause but does
-not prove the all-results-blocked case yet.
+not prove the all-results-blocked case. The import-hash target behaviourally
+exercises that source-side full-block case: the source node is negative-listed,
+expected results are empty, and every connected candidate is listed as
+suppressed.
 
 The profile may not redefine:
 
@@ -87,6 +95,10 @@ ruby tools/generate_query_profile_demo.rb \
 ruby tools/generate_query_profile_demo.rb \
   --pattern-id CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES \
   --output adapters/neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher
+
+ruby tools/generate_query_profile_demo.rb \
+  --pattern-id CTI_SAMPLE_IMPHASH_CLUSTER \
+  --output adapters/neo4j/generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher
 ```
 
 Validate the profile, fixture graph, fixture loader, and generated query:
@@ -107,6 +119,7 @@ against a live database:
 
 ```bash
 ruby tools/smoke_neo4j_query_profiles.rb -- --address bolt://localhost:7687
+ruby tools/smoke_neo4j_query_profiles.rb --reset-fixtures -- --address bolt://localhost:7687
 ```
 
 Arguments after `--` are passed directly to `cypher-shell`, so local
@@ -119,11 +132,12 @@ models.
 
 The smoke helper deliberately stays simple. It checks target IDs in plain
 `cypher-shell` output, so fixture authors must not repeat suppressed target IDs
-inside free-text hazards or blocked assertions. It also leaves fixture-scoped
-nodes in the database after each target load; future targets must keep synthetic
-node IDs globally distinct unless a later helper adds an explicit reset mode.
-Arguments after `--` should be connection and authentication options, not
-alternate `--file` inputs.
+inside free-text hazards or blocked assertions; the query-profile suite enforces
+that guard. By default, target loaders delete only their own fixture-scoped
+nodes. Use `--reset-fixtures` only with a disposable database when all
+`EveryPivotNode` nodes should be deleted before the smoke run. Arguments after
+`--` must be connection and authentication options, not alternate `--file`
+inputs; the helper owns fixture and query file selection.
 
 ## License Boundary
 

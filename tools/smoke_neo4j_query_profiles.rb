@@ -4,6 +4,7 @@ require 'json'
 require 'open3'
 require 'optparse'
 require 'pathname'
+require 'tempfile'
 require 'yaml'
 
 def load_yaml(path)
@@ -29,9 +30,12 @@ end
 
 def command_has_format?(args)
   args.each_with_index.any? do |arg, index|
-    arg == '--format' || arg.start_with?('--format=') || arg == '-format' ||
-      (arg == '-f' && args[index + 1].to_s !~ /\.cypher\z/)
+    arg == '--format' || arg.start_with?('--format=') || arg == '-format'
   end
+end
+
+def command_has_file_argument?(args)
+  args.any? { |arg| arg == '--file' || arg.start_with?('--file=') || arg == '-f' }
 end
 
 def run_cypher_file(cypher_shell, cypher_args, path, force_plain: false)
@@ -42,6 +46,14 @@ rescue Errno::ENOENT
   ['cypher-shell executable not found', '', nil]
 end
 
+def run_cypher_text(cypher_shell, cypher_args, text)
+  Tempfile.create(['everypivot-neo4j-smoke', '.cypher']) do |file|
+    file.write(text)
+    file.flush
+    return run_cypher_file(cypher_shell, cypher_args, Pathname(file.path))
+  end
+end
+
 def target_ids(entries)
   Array(entries).map { |entry| entry.is_a?(Hash) ? entry['id'] : entry }.compact
 end
@@ -50,7 +62,8 @@ options = {
   repo_root: Pathname(__dir__).join('..').expand_path,
   cypher_shell: ENV.fetch('CYPHER_SHELL', 'cypher-shell'),
   profile: nil,
-  pattern_ids: []
+  pattern_ids: [],
+  reset_fixtures: false
 }
 
 parser = OptionParser.new do |opts|
@@ -72,6 +85,10 @@ parser = OptionParser.new do |opts|
     options[:cypher_shell] = value
   end
 
+  opts.on('--reset-fixtures', 'Delete all EveryPivotNode nodes before loading fixtures') do
+    options[:reset_fixtures] = true
+  end
+
   opts.on('-h', '--help', 'Print help') do
     puts opts
     exit 0
@@ -85,8 +102,24 @@ repo_root = options[:repo_root]
 errors = []
 checked = []
 
+if command_has_file_argument?(cypher_args)
+  warn 'Neo4j query-profile smoke failures:'
+  warn '  - pass connection/authentication options after --, not --file/-f; this helper owns fixture and query files'
+  exit 2
+end
+
 profile_paths = query_profile_paths(repo_root, options[:profile])
 errors << 'no query profiles found under adapters/query-profiles/' if profile_paths.empty?
+
+if options[:reset_fixtures]
+  stdout, stderr, status = run_cypher_text(options[:cypher_shell], cypher_args, "MATCH (n:EveryPivotNode)\nDETACH DELETE n;\n")
+  unless status&.success?
+    details = [stdout, stderr].reject(&:empty?).join("\n")
+    warn 'Neo4j query-profile smoke failures:'
+    warn "  - fixture reset failed: #{details}"
+    exit 1
+  end
+end
 
 profile_paths.each do |profile_path|
   profile = load_yaml(profile_path)
