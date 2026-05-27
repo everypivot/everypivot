@@ -9,6 +9,7 @@ require 'yaml'
 
 repo_root = Pathname(__dir__).join('..').expand_path
 generator_path = repo_root.join('tools', 'generate_query_profile_demo.rb')
+stix_generator_path = repo_root.join('tools', 'generate_stix_mapping_profile_demo.rb')
 
 def load_yaml(path, errors)
   YAML.safe_load(path.read, aliases: false)
@@ -400,6 +401,292 @@ def check_target(repo_root, generator_path, profile_path, profile, target, error
   target_label
 end
 
+def nested_keys(value)
+  case value
+  when Hash
+    value.flat_map { |key, nested_value| [key.to_s] + nested_keys(nested_value) }
+  when Array
+    value.flat_map { |nested_value| nested_keys(nested_value) }
+  else
+    []
+  end
+end
+
+def stix_target_ids(entries, included:)
+  Array(entries).select { |entry| entry.is_a?(Hash) && entry['include'] == included }.map { |entry| entry['id'] }.compact.sort
+end
+
+def expected_ids(values)
+  Array(values).map { |entry| entry.is_a?(Hash) ? entry['id'] : entry }.compact.sort
+end
+
+def stix_id_version?(id, version)
+  uuid = id.to_s.split('--', 2)[1]
+  return false unless uuid
+
+  uuid.match?(/\A[0-9a-f]{8}-[0-9a-f]{4}-#{version}[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/i)
+end
+
+def check_stix_target(repo_root, generator_path, profile_path, profile, target, errors)
+  target_label = "#{profile['profile_id']}/#{target['pattern_id']}"
+  pattern_path = find_pattern(repo_root, target['pattern_id'].to_s)
+  unless pattern_path
+    errors << "#{target_label}: pattern not found"
+    return nil
+  end
+
+  fixture_location = target['fixture_mapping_location']
+  generated_location = target['generated_bundle_location']
+  if [fixture_location, generated_location].any? { |location| location.to_s.empty? }
+    errors << "#{target_label}: target must declare generated_bundle_location and fixture_mapping_location"
+    return nil
+  end
+
+  pattern = load_yaml(pattern_path, errors)
+  fixture_path = repo_path(repo_root, fixture_location)
+  generated_path = repo_path(repo_root, generated_location)
+  fixture = load_json(fixture_path, errors)
+
+  adapterish_root_fields = %w[adapter adapters backend query_profile query_profiles generated_query neo4j cypher opencti stix]
+  present_adapterish_root_fields = adapterish_root_fields.select { |field| pattern.key?(field) }
+  if present_adapterish_root_fields.any?
+    errors << "#{target_label}: pattern YAML contains adapter/query profile root fields: #{present_adapterish_root_fields.join(', ')}"
+  end
+
+  errors << "#{target_label}: pattern id mismatch" unless pattern['id'] == target['pattern_id']
+  errors << "#{target_label}: pattern lane must be in profile scope" unless Array(profile.dig('scope', 'lanes')).include?(pattern['validation_state'])
+  errors << "#{target_label}: backend.name must be opencti" unless profile.dig('backend', 'name') == 'opencti'
+  errors << "#{target_label}: backend.object_model must be stix_2_1" unless profile.dig('backend', 'object_model') == 'stix_2_1'
+  errors << "#{target_label}: backend.artifact_type must be stix_bundle" unless profile.dig('backend', 'artifact_type') == 'stix_bundle'
+  errors << "#{target_label}: backend.integration_kind must be none" unless profile.dig('backend', 'integration_kind') == 'none'
+  errors << "#{target_label}: live OpenCTI connector boundary must be false" unless profile.dig('boundary', 'live_opencti_connector') == false
+  extension_config = profile.dig('stix_model', 'extension_definition').is_a?(Hash) ? profile.dig('stix_model', 'extension_definition') : {}
+  %w[name description schema_url].each do |field|
+    errors << "#{target_label}: stix_model.extension_definition.#{field} is required" if extension_config[field].to_s.empty?
+  end
+
+  shape = target['supported_mapping_shape'].is_a?(Hash) ? target['supported_mapping_shape'] : {}
+  errors << "#{target_label}: target must declare supported_mapping_shape.hop_count" unless shape['hop_count'].is_a?(Integer)
+  errors << "#{target_label}: target must declare supported_mapping_shape.hop_direction" if shape['hop_direction'].to_s.empty?
+  errors << "#{target_label}: target must declare supported_mapping_shape.temporal_window_required" unless [true, false].include?(shape['temporal_window_required'])
+  errors << "#{target_label}: current STIX mapper supports exactly one hop" unless shape['hop_count'] == 1
+  errors << "#{target_label}: current STIX mapper supports only inbound or outbound hops" unless %w[out in].include?(shape['hop_direction'])
+  errors << "#{target_label}: current STIX mapper requires temporal windows" unless shape['temporal_window_required'] == true
+  errors << "#{target_label}: pattern hop count does not match target shape" unless Array(pattern['hops']).length == shape['hop_count']
+  errors << "#{target_label}: pattern hop direction does not match target shape" unless Array(pattern['hops']).first&.fetch('direction', nil) == shape['hop_direction']
+  if shape['temporal_window_required']
+    errors << "#{target_label}: target requires temporal window_days" unless pattern.dig('constraints', 'temporal', 'window_days').is_a?(Integer)
+  end
+
+  hop = Array(pattern['hops']).first || {}
+  source_forms = form_list(pattern['source'])
+  target_forms = form_list(hop['form'].to_s.empty? ? pattern['target'] : hop['form'])
+  errors << "#{target_label}: supported source_form does not match pattern source" unless source_forms.include?(shape['source_form'])
+  errors << "#{target_label}: supported target_form does not match pattern target form" unless target_forms.include?(shape['target_form'])
+
+  simplifications = Array(target['mapping_simplifications']).map(&:to_s)
+  errors << "#{target_label}: target must document x_imphash custom hash-key mapping" unless simplifications.any? { |note| note.include?('x_imphash') && note.include?('custom hash key') }
+  errors << "#{target_label}: target must document EveryPivot relation handling" unless simplifications.any? { |note| note.include?('x_everypivot_relation') && note.include?('related-to') }
+  errors << "#{target_label}: target must document suppressed-target relationship omission" unless simplifications.any? { |note| note.include?('Suppressed targets') && note.include?('not emitted as STIX relationship objects') }
+  errors << "#{target_label}: target must document no live OpenCTI integration" unless simplifications.any? { |note| note.include?('not a live OpenCTI connector') }
+  errors << "#{target_label}: target must document STIX UUIDv5 custom-hash exclusion" unless simplifications.any? { |note| note.include?('UUIDv5') && note.include?('x_imphash') && note.include?('not used as UUID inputs') }
+  errors << "#{target_label}: target must document File SCO custom-property boundary" unless simplifications.any? { |note| note.include?('custom properties') && note.include?('observed-data') && note.include?('relationship') && note.include?('note') }
+  errors << "#{target_label}: target must document observed-data source/target bundling simplification" unless simplifications.any? { |note| note.include?('source and target file SCOs') && note.include?('observed-data') }
+  errors << "#{target_label}: target must document degree cap/top path limitation" unless simplifications.any? { |note| note.include?('degree_caps') && note.include?('outputs.top_paths') && note.include?('not enforced') }
+
+  errors << "#{target_label}: fixture format must be everypivot.stix_mapping_fixture" unless fixture['format'] == 'everypivot.stix_mapping_fixture'
+  errors << "#{target_label}: fixture format_version must be 1" unless fixture['format_version'] == 1
+  errors << "#{target_label}: fixture profile_id mismatch" unless fixture['profile_id'] == profile['profile_id']
+  errors << "#{target_label}: fixture pattern_id mismatch" unless fixture['pattern_id'] == pattern['id']
+  errors << "#{target_label}: fixture must include blocked assertions" if Array(fixture['blocked_assertions']).empty?
+  errors << "#{target_label}: fixture must declare expected_relationship_targets" unless fixture.key?('expected_relationship_targets')
+  errors << "#{target_label}: fixture must include expected suppressed targets" if Array(fixture['expected_suppressed_targets']).empty?
+
+  source = fixture['source'].is_a?(Hash) ? fixture['source'] : {}
+  targets = Array(fixture['targets'])
+  extension_ref = fixture.dig('stix', 'extension_definition_ref')
+  errors << "#{target_label}: fixture stix.extension_definition_ref is required" if extension_ref.to_s.empty?
+  errors << "#{target_label}: fixture source id must match parameters.source_id" unless source['id'] == fixture.dig('parameters', 'source_id')
+  errors << "#{target_label}: fixture source form does not match pattern source" unless source_forms.include?(source['form'])
+  errors << "#{target_label}: fixture source stix_ref is required" if source['stix_ref'].to_s.empty?
+  errors << "#{target_label}: fixture source stix_ref must be a UUIDv5 file SCO id" unless stix_id_version?(source['stix_ref'], 5)
+  errors << "#{target_label}: fixture must include at least one target" if targets.empty?
+
+  targets.each_with_index do |entry, index|
+    unless entry.is_a?(Hash)
+      errors << "#{target_label}: fixture targets[#{index}] must be an object"
+      next
+    end
+
+    errors << "#{target_label}: fixture targets[#{index}].id is required" if entry['id'].to_s.empty?
+    errors << "#{target_label}: fixture targets[#{index}].stix_ref is required" if entry['stix_ref'].to_s.empty?
+    errors << "#{target_label}: fixture targets[#{index}].stix_ref must be a UUIDv5 file SCO id" unless stix_id_version?(entry['stix_ref'], 5)
+    errors << "#{target_label}: fixture targets[#{index}].form does not match pattern target form" unless target_forms.include?(entry['form'])
+    errors << "#{target_label}: fixture targets[#{index}].include must be boolean" unless [true, false].include?(entry['include'])
+    errors << "#{target_label}: fixture targets[#{index}].seen is required" if entry['seen'].to_s.empty?
+    if entry['include'] == true
+      errors << "#{target_label}: included fixture targets[#{index}] must declare observed_data_ref" if entry['observed_data_ref'].to_s.empty?
+      errors << "#{target_label}: included fixture targets[#{index}] must declare relationship_ref" if entry['relationship_ref'].to_s.empty?
+    else
+      errors << "#{target_label}: suppressed fixture targets[#{index}] must declare suppression_reason" if entry['suppression_reason'].to_s.empty?
+    end
+  end
+
+  expected_relationship_targets = Array(fixture['expected_relationship_targets']).sort
+  expected_suppressed_targets = expected_ids(fixture['expected_suppressed_targets'])
+  included_targets = stix_target_ids(targets, included: true)
+  suppressed_targets = stix_target_ids(targets, included: false)
+  errors << "#{target_label}: fixture included targets #{included_targets.inspect}; expected #{expected_relationship_targets.inspect}" unless included_targets == expected_relationship_targets
+  errors << "#{target_label}: fixture suppressed targets #{suppressed_targets.inspect}; expected #{expected_suppressed_targets.inspect}" unless suppressed_targets == expected_suppressed_targets
+  errors << "#{target_label}: STIX mapping fixture must emit at least one relationship target" if expected_relationship_targets.empty?
+
+  begin
+    as_of = Date.iso8601(fixture.dig('parameters', 'as_of').to_s)
+    window_days = pattern.dig('constraints', 'temporal', 'window_days')
+    earliest_seen = as_of - window_days
+    targets.each_with_index do |entry, index|
+      seen = Date.iso8601(entry['seen'].to_s)
+      stale = seen < earliest_seen
+      if entry['include'] == true && stale
+        errors << "#{target_label}: fixture targets[#{index}] is included despite being outside the temporal window"
+      end
+      if entry['include'] == false && !stale && entry['suppression_reason'].to_s.empty?
+        errors << "#{target_label}: fixture targets[#{index}] is suppressed without a declared reason"
+      end
+    end
+  rescue Date::Error => e
+    errors << "#{target_label}: fixture date parse failed: #{e.message}"
+  end
+
+  stdout, stderr, status = Open3.capture3(
+    RbConfig.ruby,
+    generator_path.to_s,
+    '--repo-root', repo_root.to_s,
+    '--profile', profile_path.to_s,
+    '--fixture-mapping', fixture_path.to_s,
+    '--pattern-id', pattern['id']
+  )
+  unless status.success?
+    errors << "#{target_label}: STIX mapping generator failed: #{[stdout, stderr].reject(&:empty?).join("\n")}"
+  end
+
+  generated = generated_path.file? ? generated_path.read : ''
+  errors << "#{target_label}: missing generated STIX bundle: #{generated_path}" if generated.empty?
+  errors << "#{target_label}: generated STIX bundle is stale; regenerate with tools/generate_stix_mapping_profile_demo.rb" if status.success? && stdout != generated
+
+  bundle = generated.empty? ? {} : load_json(generated_path, errors)
+  errors << "#{target_label}: generated bundle type must be bundle" unless bundle['type'] == 'bundle'
+  errors << "#{target_label}: generated bundle id mismatch" unless bundle['id'] == fixture.dig('stix', 'bundle_id')
+  objects = Array(bundle['objects'])
+  errors << "#{target_label}: generated bundle must contain objects" if objects.empty?
+
+  allowed_types = Array(profile.dig('outputs', 'allowed_object_types'))
+  object_types = objects.map { |object| object['type'] if object.is_a?(Hash) }.compact
+  unexpected_types = object_types.uniq - allowed_types
+  errors << "#{target_label}: generated bundle has unexpected object types: #{unexpected_types.join(', ')}" if unexpected_types.any?
+  object_ids = objects.map { |object| object['id'] if object.is_a?(Hash) }.compact
+  id_counts = Hash.new(0)
+  object_ids.each { |id| id_counts[id] += 1 }
+  duplicate_ids = id_counts.select { |_id, count| count > 1 }.keys
+  errors << "#{target_label}: generated bundle has duplicate object ids: #{duplicate_ids.join(', ')}" if duplicate_ids.any?
+
+  forbidden_properties = Array(profile.dig('outputs', 'forbidden_properties'))
+  forbidden_present = nested_keys(bundle) & forbidden_properties
+  errors << "#{target_label}: generated bundle contains forbidden properties: #{forbidden_present.uniq.sort.join(', ')}" if forbidden_present.any?
+
+  required_custom_properties = Array(profile.dig('outputs', 'required_custom_properties'))
+  required_custom_properties.each do |property|
+    unless objects.any? { |object| object.is_a?(Hash) && object.key?(property) }
+      errors << "#{target_label}: generated bundle missing required custom property #{property}"
+    end
+  end
+
+  files = objects.select { |object| object.is_a?(Hash) && object['type'] == 'file' }
+  relationships = objects.select { |object| object.is_a?(Hash) && object['type'] == 'relationship' }
+  observed = objects.select { |object| object.is_a?(Hash) && object['type'] == 'observed-data' }
+  notes = objects.select { |object| object.is_a?(Hash) && object['type'] == 'note' }
+  extension_definitions = objects.select { |object| object.is_a?(Hash) && object['type'] == 'extension-definition' }
+  extension_definition_ids = extension_definitions.map { |object| object['id'] }
+  errors << "#{target_label}: generated bundle missing extension-definition #{extension_ref}" unless extension_definition_ids.include?(extension_ref)
+
+  toplevel_extension = extension_definitions.find { |object| object['id'] == extension_ref } || {}
+  unless Array(toplevel_extension['extension_types']).include?('toplevel-property-extension')
+    errors << "#{target_label}: EveryPivot extension-definition must declare toplevel-property-extension"
+  end
+  errors << "#{target_label}: EveryPivot extension-definition name mismatch" unless toplevel_extension['name'] == extension_config['name']
+  errors << "#{target_label}: EveryPivot extension-definition description mismatch" unless toplevel_extension['description'] == extension_config['description']
+  errors << "#{target_label}: EveryPivot extension-definition schema URL mismatch" unless toplevel_extension['schema'] == extension_config['schema_url']
+
+  custom_properties = objects.flat_map do |object|
+    object.is_a?(Hash) ? object.keys.select { |key| key.start_with?('x_everypivot_') } : []
+  end.uniq.sort
+  missing_extension_properties = custom_properties - Array(toplevel_extension['extension_properties'])
+  if missing_extension_properties.any?
+    errors << "#{target_label}: EveryPivot extension-definition missing properties: #{missing_extension_properties.join(', ')}"
+  end
+  extension_schema_path = repo_root.join('adapters', 'opencti', 'schemas', 'x_everypivot_toplevel_extension.schema.json')
+  extension_schema = load_json(extension_schema_path, errors)
+  schema_properties = extension_schema['properties'].is_a?(Hash) ? extension_schema['properties'].keys.sort : []
+  extension_properties = Array(toplevel_extension['extension_properties']).sort
+  errors << "#{target_label}: EveryPivot extension schema $id mismatch" unless extension_schema['$id'] == toplevel_extension['schema']
+  unless schema_properties == extension_properties
+    errors << "#{target_label}: EveryPivot extension schema properties #{schema_properties.inspect}; expected #{extension_properties.inspect}"
+  end
+
+  expected_file_refs = ([source['stix_ref']] + targets.select { |entry| entry.is_a?(Hash) && entry['include'] == true }.map { |entry| entry['stix_ref'] }).sort
+  file_refs = files.map { |object| object['id'] }.compact.sort
+  errors << "#{target_label}: generated file SCO refs #{file_refs.inspect}; expected #{expected_file_refs.inspect}" unless file_refs == expected_file_refs
+  files.each_with_index do |file, index|
+    errors << "#{target_label}: generated file[#{index}].id must be a UUIDv5 SCO id" unless stix_id_version?(file['id'], 5)
+    custom_file_properties = file.keys.select { |key| key.start_with?('x_everypivot_') }
+    errors << "#{target_label}: generated file[#{index}] must not carry EveryPivot custom properties: #{custom_file_properties.join(', ')}" if custom_file_properties.any?
+    errors << "#{target_label}: generated file[#{index}] must not carry EveryPivot extension markers" if file.key?('extensions')
+  end
+
+  (objects - extension_definitions - files).each_with_index do |object, index|
+    next unless object.is_a?(Hash) && object.keys.any? { |key| key.start_with?('x_everypivot_') }
+
+    extensions = object['extensions'].is_a?(Hash) ? object['extensions'] : {}
+    unless extensions.dig(extension_ref, 'extension_type') == 'toplevel-property-extension'
+      errors << "#{target_label}: generated #{object['type']}[#{index}] missing EveryPivot toplevel-property-extension marker"
+    end
+  end
+
+  relationship_target_ids = relationships.map { |object| object['x_everypivot_target_id'] }.compact.sort
+  observed_target_ids = observed.map { |object| object['x_everypivot_target_id'] }.compact.sort
+  errors << "#{target_label}: generated relationship targets #{relationship_target_ids.inspect}; expected #{expected_relationship_targets.inspect}" unless relationship_target_ids == expected_relationship_targets
+  errors << "#{target_label}: generated observed-data targets #{observed_target_ids.inspect}; expected #{expected_relationship_targets.inspect}" unless observed_target_ids == expected_relationship_targets
+  suppressed_stix_refs = targets.select { |entry| entry.is_a?(Hash) && entry['include'] == false }.map { |entry| entry['stix_ref'] }.compact.sort
+  leaked_suppressed_refs = file_refs & suppressed_stix_refs
+  leaked_suppressed_ids = (relationship_target_ids + observed_target_ids) & expected_suppressed_targets
+  leaked_suppressed = (leaked_suppressed_refs + leaked_suppressed_ids).uniq
+  errors << "#{target_label}: suppressed targets emitted as STIX objects or relationships: #{leaked_suppressed.join(', ')}" if leaked_suppressed.any?
+
+  relationships.each_with_index do |relationship, index|
+    errors << "#{target_label}: relationship[#{index}].relationship_type must be #{profile.dig('stix_model', 'relationship_type')}" unless relationship['relationship_type'] == profile.dig('stix_model', 'relationship_type')
+    errors << "#{target_label}: relationship[#{index}] missing EveryPivot relation #{hop['via']}" unless relationship['x_everypivot_relation'] == hop['via']
+    errors << "#{target_label}: relationship[#{index}] source_ref mismatch" unless relationship['source_ref'] == source['stix_ref']
+  end
+
+  note = notes.first || {}
+  errors << "#{target_label}: generated bundle must contain exactly one note object" unless notes.length == 1
+  Array(pattern['hazards']).each do |hazard|
+    unless Array(note['x_everypivot_hazards']).include?(hazard) && note['content'].to_s.include?(hazard)
+      errors << "#{target_label}: generated note missing pattern hazard: #{hazard}"
+    end
+  end
+  Array(fixture['blocked_assertions']).each do |assertion|
+    unless Array(note['x_everypivot_blocked_assertions']).include?(assertion) && note['content'].to_s.include?(assertion)
+      errors << "#{target_label}: generated note missing blocked assertion: #{assertion}"
+    end
+  end
+  note_suppressed_targets = expected_ids(note['x_everypivot_suppressed_targets'])
+  errors << "#{target_label}: generated note suppressed targets #{note_suppressed_targets.inspect}; expected #{expected_suppressed_targets.inspect}" unless note_suppressed_targets == expected_suppressed_targets
+  errors << "#{target_label}: generated note must state live OpenCTI connector boundary" unless note['content'].to_s.include?('no live OpenCTI connector')
+
+  target_label
+end
+
 errors = []
 checked_targets = []
 profile_paths = query_profile_paths(repo_root)
@@ -413,11 +700,21 @@ profile_paths.each do |path|
   profile = load_yaml(path, errors)
   profile_id = profile['profile_id'].to_s
   errors << "#{path}: profile_id is required" if profile_id.empty?
-  errors << "#{profile_id}: backend.name must be neo4j" unless profile.dig('backend', 'name') == 'neo4j'
-  errors << "#{profile_id}: backend.query_language must be cypher" unless profile.dig('backend', 'query_language') == 'cypher'
   errors << "#{profile_id}: profile must be marked as a pilot" unless profile['status'] == 'pilot'
-  errors << "#{profile_id}: profile must document scalar negative-node-list simplification" unless profile.dig('graph_model', 'negative_node_list_cardinality') == 'scalar_pilot_simplification'
   errors << "#{profile_id}: pattern YAML neutrality flag must be true" unless profile.dig('boundary', 'pattern_yaml_remains_backend_neutral') == true
+
+  backend_name = profile.dig('backend', 'name')
+  case backend_name
+  when 'neo4j'
+    errors << "#{profile_id}: backend.query_language must be cypher" unless profile.dig('backend', 'query_language') == 'cypher'
+    errors << "#{profile_id}: profile must document scalar negative-node-list simplification" unless profile.dig('graph_model', 'negative_node_list_cardinality') == 'scalar_pilot_simplification'
+  when 'opencti'
+    errors << "#{profile_id}: backend.object_model must be stix_2_1" unless profile.dig('backend', 'object_model') == 'stix_2_1'
+    errors << "#{profile_id}: backend.artifact_type must be stix_bundle" unless profile.dig('backend', 'artifact_type') == 'stix_bundle'
+    errors << "#{profile_id}: backend.integration_kind must be none" unless profile.dig('backend', 'integration_kind') == 'none'
+  else
+    errors << "#{profile_id}: unsupported backend.name #{backend_name.inspect}"
+  end
 
   targets = Array(profile['targets'])
   errors << "#{profile_id}: profile must declare at least one target" if targets.empty?
@@ -427,14 +724,19 @@ profile_paths.each do |path|
       next
     end
 
-    checked = check_target(repo_root, generator_path, path, profile, target, errors)
+    checked = case backend_name
+              when 'neo4j'
+                check_target(repo_root, generator_path, path, profile, target, errors)
+              when 'opencti'
+                check_stix_target(repo_root, stix_generator_path, path, profile, target, errors)
+              end
     checked_targets << checked if checked
   end
 end
 
 if errors.empty?
-  puts "PASS discovered #{profile_paths.length} query profile(s)"
-  checked_targets.each { |target| puts "PASS #{target} fixture graph, loader, generated query, and semantic boundary checks" }
+  puts "PASS discovered #{profile_paths.length} adapter/query profile(s)"
+  checked_targets.each { |target| puts "PASS #{target} fixture, generated artifact, and semantic boundary checks" }
   exit 0
 end
 

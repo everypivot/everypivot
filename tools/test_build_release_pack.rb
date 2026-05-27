@@ -24,7 +24,9 @@ class BuildReleasePackTest < Minitest::Test
         [
           target['generated_query_location'],
           target['fixture_graph_location'],
-          target['fixture_load_location']
+          target['fixture_load_location'],
+          target['generated_bundle_location'],
+          target['fixture_mapping_location']
         ]
       end
     end.compact.sort.uniq
@@ -62,6 +64,8 @@ class BuildReleasePackTest < Minitest::Test
 
       assert output_dir.join('MANIFEST.json').file?
       assert output_dir.join('adapters', 'query-profiles', 'neo4j_cypher_v0.yml').file?
+      assert output_dir.join('adapters', 'query-profiles', 'opencti_stix_v0.yml').file?
+      assert output_dir.join('adapters', 'opencti', 'schemas', 'x_everypivot_toplevel_extension.schema.json').file?
       assert_query_profile_targets_present(output_dir)
       assert output_dir.join('graph-pivots', 'validated').directory?
       refute output_dir.join('graph-pivots', '.DS_Store').exist?
@@ -81,6 +85,7 @@ class BuildReleasePackTest < Minitest::Test
       assert output_dir.join('tools', 'check_query_profile_suite.rb').file?
       assert output_dir.join('tools', 'smoke_neo4j_query_profiles.rb').file?
       assert output_dir.join('tools', 'generate_query_profile_demo.rb').file?
+      assert output_dir.join('tools', 'generate_stix_mapping_profile_demo.rb').file?
       refute output_dir.join('site').exist?
       refute output_dir.join('planning-notes').exist?
 
@@ -169,6 +174,8 @@ class BuildReleasePackTest < Minitest::Test
       refute_includes provenance.keys, 'authority_doc'
       refute_includes provenance.keys, 'upstream_references'
       assert output_dir.join('adapters', 'query-profiles', 'neo4j_cypher_v0.yml').file?
+      assert output_dir.join('adapters', 'query-profiles', 'opencti_stix_v0.yml').file?
+      assert output_dir.join('adapters', 'opencti', 'schemas', 'x_everypivot_toplevel_extension.schema.json').file?
       assert_query_profile_targets_present(output_dir)
       assert output_dir.join('site', 'index.html').file?
       assert output_dir.join('site', 'data', 'registry-index.json').file?

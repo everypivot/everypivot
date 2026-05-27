@@ -4,7 +4,16 @@ All notable changes to EveryPivot&trade; are documented here.
 
 ## Unreleased
 
-No unreleased changes.
+### Added
+
+- Began bounded EP-WP15 OpenCTI/STIX-side mapping coverage with an
+  `opencti_stix_v0` profile, synthetic import-hash fixture slice, generated
+  STIX 2.1 bundle, and profile-suite checks that prevent suppressed traversal
+  candidates from becoming ordinary STIX relationship objects.
+- Documented the incubator `stix2-validator` path for generated STIX bundles
+  and hardened the first OpenCTI/STIX bundle with spec-conformant UUIDv5
+  file-SCO IDs, a checked top-level `x_everypivot_*` extension definition, and
+  a schema document for those mapping properties.
 
 ## v0.3.0 - 2026-05-25
 

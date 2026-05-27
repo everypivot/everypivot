@@ -1,0 +1,91 @@
+profile_id: opencti_stix_v0
+version: 0.1.0
+status: pilot
+backend:
+  name: opencti
+  object_model: stix_2_1
+  artifact_type: stix_bundle
+  integration_kind: none
+scope:
+  lanes:
+  - validated
+targets:
+- pattern_id: CTI_SAMPLE_IMPHASH_CLUSTER
+  supported_mapping_shape:
+    hop_count: 1
+    hop_direction: out
+    temporal_window_required: true
+    source_form: file:pe:imphash
+    target_form: file:bytes
+  mapping_simplifications:
+  - STIX file SCOs use x_imphash as a custom hash key for the EveryPivot file:pe:imphash form; this keeps the generated bundle aligned with STIX custom hash-key naming rules.
+  - EveryPivot observed_in is carried in x_everypivot_relation while the STIX relationship_type remains related-to; this profile does not declare a canonical STIX relationship vocabulary for EveryPivot relations.
+  - Suppressed targets are recorded only as EveryPivot fixture metadata and are not emitted as STIX relationship objects.
+  - This is a generated STIX bundle pressure test, not a live OpenCTI connector, importer, synchronizer, or server integration.
+  - STIX cyber-observable file IDs are UUIDv5-derived from STIX 2.1 ID-contributing file properties; custom x_imphash hash keys are not used as UUID inputs.
+  - EveryPivot custom properties are carried only on observed-data, relationship, and note objects and are declared through a generated toplevel-property-extension definition.
+  - The source and target file SCOs are bundled in one observed-data object for this bounded mapping fixture; this does not assert that the import hash is an independently observed file.
+  - temporal.order constraints are not independently evaluated by the mapping generator; the fixture slice declares only the bounded traversal output being mapped.
+  - degree_caps and outputs.top_paths are not enforced by the mapping generator; upstream traversal code must apply caps before mapping.
+  generated_bundle_location: adapters/opencti/generated/CTI_SAMPLE_IMPHASH_CLUSTER.bundle.json
+  fixture_mapping_location: fixtures/query-profiles/opencti/cti_sample_imphash_cluster.stix_mapping.json
+boundary:
+  pattern_yaml_remains_backend_neutral: true
+  adapter_metadata_location: adapters/query-profiles/opencti_stix_v0.yml
+  generated_outputs_must_not_add:
+  - runtime_confidence
+  - actor_attribution
+  - maliciousness
+  - compromise
+  - final_assessment
+  - ownership
+  - workflow_state
+  - opencti_score
+  - marking
+  - connector_metadata
+  live_opencti_connector: false
+stix_model:
+  spec_version: '2.1'
+  bundle_type: bundle
+  observable_object_type: file
+  observation_object_type: observed-data
+  relation_object_type: relationship
+  caveat_object_type: note
+  relationship_type: related-to
+  extension_definition:
+    name: EveryPivot OpenCTI/STIX mapping properties
+    description: Defines the x_everypivot_* top-level custom properties used by generated EveryPivot OpenCTI/STIX mapping bundles to preserve profile, fixture, relation, hazard, and suppression metadata without adding runtime assessment semantics.
+    schema_url: https://raw.githubusercontent.com/everypivot/everypivot/v0.4.0/adapters/opencti/schemas/x_everypivot_toplevel_extension.schema.json
+outputs:
+  allowed_object_types:
+  - file
+  - observed-data
+  - relationship
+  - note
+  - extension-definition
+  required_custom_properties:
+  - x_everypivot_profile_id
+  - x_everypivot_pattern_id
+  - x_everypivot_fixture_id
+  - x_everypivot_relation
+  - x_everypivot_hazards
+  - x_everypivot_blocked_assertions
+  - x_everypivot_suppressed_targets
+  forbidden_properties:
+  - confidence
+  - confidence_score
+  - attribution
+  - actor
+  - sponsor
+  - victim
+  - mission
+  - authorship
+  - ownership
+  - maliciousness
+  - compromise
+  - final_assessment
+  - x_opencti_score
+  - x_opencti_workflow_id
+  - x_opencti_created_by_ref
+  - x_opencti_connector_id
+  - labels

@@ -132,6 +132,8 @@ end
 
 profile_paths.each do |profile_path|
   profile = load_yaml(profile_path)
+  next unless profile.dig('backend', 'name') == 'neo4j' && profile.dig('backend', 'query_language') == 'cypher'
+
   profile_id = profile['profile_id']
 
   Array(profile['targets']).each do |target|

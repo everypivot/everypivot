@@ -56,6 +56,7 @@ module EveryPivot
       tools/check_query_profile_suite.rb
       tools/smoke_neo4j_query_profiles.rb
       tools/generate_query_profile_demo.rb
+      tools/generate_stix_mapping_profile_demo.rb
       tools/json_schema_validator.rb
     ].freeze
     STABLE_SITE_GENERATED_FILES = %w[
@@ -290,6 +291,7 @@ module EveryPivot
           'site_links' => 'tools/check_site_links.rb',
           'site_snapshot' => 'tools/check_site_snapshot.rb',
           'query_profile_demo_generator' => 'tools/generate_query_profile_demo.rb',
+          'stix_mapping_profile_demo_generator' => 'tools/generate_stix_mapping_profile_demo.rb',
           'registry_builder' => 'tools/build_registry_index.rb',
           'release_pack_builder' => 'tools/build_release_pack.rb'
         },

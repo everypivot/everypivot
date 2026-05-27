@@ -92,13 +92,15 @@ def find_profile_target(repo_root, pattern_id, requested_profile_path)
 
   profile_paths.each do |profile_path|
     profile = YAML.safe_load(profile_path.read, aliases: false)
+    next unless profile.dig('backend', 'name') == 'neo4j' && profile.dig('backend', 'query_language') == 'cypher'
+
     profile_targets(profile).each do |target|
       matches << [profile_path, profile, target] if target['pattern_id'] == pattern_id
     end
   end
 
   if matches.empty?
-    warn "No query profile target found for pattern #{pattern_id}"
+    warn "No Neo4j/Cypher query profile target found for pattern #{pattern_id}"
     exit 2
   end
 

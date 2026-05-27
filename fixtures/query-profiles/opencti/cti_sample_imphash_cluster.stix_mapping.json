@@ -1,0 +1,72 @@
+{
+  "format": "everypivot.stix_mapping_fixture",
+  "format_version": 1,
+  "fixture_id": "opencti_stix_cti_sample_imphash_cluster_v1",
+  "profile_id": "opencti_stix_v0",
+  "pattern_id": "CTI_SAMPLE_IMPHASH_CLUSTER",
+  "purpose": "Synthetic STIX/OpenCTI-side mapping fixture for a bounded import-hash traversal slice. It uses example-only hash values and does not model live OpenCTI ingestion.",
+  "created": "2026-05-27T00:00:00.000Z",
+  "parameters": {
+    "source_id": "file:pe:imphash:7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f",
+    "as_of": "2026-05-24"
+  },
+  "stix": {
+    "bundle_id": "bundle--4a46f77c-9d2a-4d4c-8ac8-2f8c9062f7fd",
+    "extension_definition_ref": "extension-definition--3f6d5a22-c719-4f53-a07b-1e88f44bb5a1",
+    "note_ref": "note--97b560a0-4926-43f8-bd78-945a2c2a6f6c"
+  },
+  "source": {
+    "id": "file:pe:imphash:7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f",
+    "form": "file:pe:imphash",
+    "stix_ref": "file--253b8c62-bbe6-56c7-9236-b0cbbc1b29d1",
+    "name": "example-imphash-7b3f",
+    "hashes": {
+      "x_imphash": "7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f"
+    }
+  },
+  "targets": [
+    {
+      "id": "file:bytes:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "form": "file:bytes",
+      "stix_ref": "file--3adec29d-f054-5953-9e06-9222be534a46",
+      "observed_data_ref": "observed-data--e1a494a3-7e8d-4b18-92a8-57ba1a333333",
+      "relationship_ref": "relationship--79e91051-d28d-46ce-9f32-1d6512444444",
+      "name": "example-alpha.bin",
+      "hashes": {
+        "SHA-256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "seen": "2026-05-20",
+      "source": "example_static_parser_a",
+      "include": true
+    },
+    {
+      "id": "file:bytes:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "form": "file:bytes",
+      "stix_ref": "file--b880c797-3554-5e21-897e-f6a720c7f63d",
+      "name": "example-stale.bin",
+      "hashes": {
+        "SHA-256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "seen": "2014-05-20",
+      "source": "example_static_parser_b",
+      "include": false,
+      "suppression_reason": "The observation is outside the CTI_SAMPLE_IMPHASH_CLUSTER temporal window for the fixture as_of date."
+    }
+  ],
+  "expected_relationship_targets": [
+    "file:bytes:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  ],
+  "expected_suppressed_targets": [
+    {
+      "id": "file:bytes:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "reason": "The observation is outside the CTI_SAMPLE_IMPHASH_CLUSTER temporal window for the fixture as_of date."
+    }
+  ],
+  "blocked_assertions": [
+    "Validated lifecycle state is not a runtime confidence score.",
+    "A shared import hash is feature evidence, not proof of common operator identity, authorship, ownership, or attribution.",
+    "The generated STIX bundle is a mapping artifact only; it does not assert maliciousness, compromise, malware-family membership, or final assessment.",
+    "Suppressed traversal candidates must not be emitted as ordinary STIX relationship objects.",
+    "OpenCTI ingestion, synchronization, marking, scoring, and workflow state are outside this fixture."
+  ]
+}

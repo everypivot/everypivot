@@ -8,6 +8,9 @@ Current pilot:
 
 - [`query-profiles/neo4j_cypher_v0.yml`](query-profiles/neo4j_cypher_v0.yml)
   defines the first Neo4j/Cypher profile and its declared demo targets.
+- [`query-profiles/opencti_stix_v0.yml`](query-profiles/opencti_stix_v0.yml)
+  defines the first bounded OpenCTI/STIX-side mapping profile. It emits a
+  generated STIX bundle only; it is not a live connector or importer.
 - [`neo4j/generated/OSINT_SSH_HOSTKEY_CLUSTER.cypher`](neo4j/generated/OSINT_SSH_HOSTKEY_CLUSTER.cypher)
   is a generated outbound demo query for the validated SSH host-key pattern.
 - [`neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher`](neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher)
@@ -16,6 +19,9 @@ Current pilot:
 - [`neo4j/generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher`](neo4j/generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher)
   is a generated demo query for a validated import-hash pattern with a
   source-side full-block suppression fixture.
+- [`opencti/generated/CTI_SAMPLE_IMPHASH_CLUSTER.bundle.json`](opencti/generated/CTI_SAMPLE_IMPHASH_CLUSTER.bundle.json)
+  is a generated STIX 2.1 mapping bundle for a bounded import-hash fixture
+  slice.
 
 Run the profile checks with:
 
@@ -24,12 +30,15 @@ ruby tools/check_query_profile_suite.rb
 ```
 
 The pilot is deliberately narrow. It proves that adapter metadata can translate
-declared pattern targets into backend-specific query text while carrying hazards
-and blocked assertions forward, without adding backend fields to pattern YAML.
+declared pattern targets into backend-specific query text or mapping artifacts
+while carrying hazards and blocked assertions forward, without adding backend
+fields to pattern YAML.
 
 License boundary:
 
 - adapter metadata, docs, tools, and generated queries under `adapters/` are
   Apache-2.0 code/tooling material;
-- synthetic graph fixtures and fixture loaders under `fixtures/` are CC BY 4.0
-  fixture material.
+- generated mapping artifacts under `adapters/` are Apache-2.0 code/tooling
+  material;
+- synthetic graph fixtures, fixture loaders, and mapping fixtures under
+  `fixtures/` are CC BY 4.0 fixture material.

@@ -38,14 +38,17 @@ Regenerate the demo query with:
 
 ```bash
 ruby tools/generate_query_profile_demo.rb \
+  --profile adapters/query-profiles/neo4j_cypher_v0.yml \
   --pattern-id OSINT_SSH_HOSTKEY_CLUSTER \
   --output adapters/neo4j/generated/OSINT_SSH_HOSTKEY_CLUSTER.cypher
 
 ruby tools/generate_query_profile_demo.rb \
+  --profile adapters/query-profiles/neo4j_cypher_v0.yml \
   --pattern-id CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES \
   --output adapters/neo4j/generated/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.cypher
 
 ruby tools/generate_query_profile_demo.rb \
+  --profile adapters/query-profiles/neo4j_cypher_v0.yml \
   --pattern-id CTI_SAMPLE_IMPHASH_CLUSTER \
   --output adapters/neo4j/generated/CTI_SAMPLE_IMPHASH_CLUSTER.cypher
 ```

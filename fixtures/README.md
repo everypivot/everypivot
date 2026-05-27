@@ -84,7 +84,10 @@ IP ranges and are not live observation data.
   [`CTI_SAMPLE_IMPHASH_CLUSTER`](../graph-pivots/validated/CTI_SAMPLE_IMPHASH_CLUSTER.yaml).
 - [`query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.load.cypher`](query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.load.cypher)
   loads the same synthetic graph into Neo4j for local demo execution.
+- [`query-profiles/opencti/cti_sample_imphash_cluster.stix_mapping.json`](query-profiles/opencti/cti_sample_imphash_cluster.stix_mapping.json)
+  supports the OpenCTI/STIX mapping pilot for
+  [`CTI_SAMPLE_IMPHASH_CLUSTER`](../graph-pivots/validated/CTI_SAMPLE_IMPHASH_CLUSTER.yaml).
 
-Query profile fixtures are synthetic graph fixtures. They are used to prove
-generated adapter output preserves caveats and blocked assertions without adding
-backend-specific fields to pattern YAML.
+Query profile fixtures are synthetic graph and mapping fixtures. They are used
+to prove generated adapter output preserves caveats and blocked assertions
+without adding backend-specific fields to pattern YAML.

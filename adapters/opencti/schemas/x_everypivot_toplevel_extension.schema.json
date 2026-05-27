@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/everypivot/everypivot/v0.4.0/adapters/opencti/schemas/x_everypivot_toplevel_extension.schema.json",
+  "title": "EveryPivot OpenCTI/STIX mapping top-level extension properties",
+  "type": "object",
+  "properties": {
+    "x_everypivot_profile_id": {
+      "type": "string"
+    },
+    "x_everypivot_pattern_id": {
+      "type": "string"
+    },
+    "x_everypivot_fixture_id": {
+      "type": "string"
+    },
+    "x_everypivot_source_id": {
+      "type": "string"
+    },
+    "x_everypivot_target_id": {
+      "type": "string"
+    },
+    "x_everypivot_relation": {
+      "type": "string"
+    },
+    "x_everypivot_evidence_path": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "x_everypivot_features": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "x_everypivot_hazards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "x_everypivot_blocked_assertions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "x_everypivot_suppressed_targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "x_everypivot_boundary": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}
