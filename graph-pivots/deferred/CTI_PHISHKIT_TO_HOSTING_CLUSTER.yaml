@@ -2,7 +2,7 @@ id: CTI_PHISHKIT_TO_HOSTING_CLUSTER
 version: 1.0.0
 pattern_schema_version: 1.2
 validation_state: deferred
-deferred_reason: insufficient_hazards
+deferred_reason: needs_fixtures
 precision_tier: exploratory
 capability_requirements:
   required:

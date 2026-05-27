@@ -126,7 +126,7 @@
         "needs_downstream_capability_mapping",
         "out_of_v1_editorial_scope"
       ],
-      "description": "Primary backlog reason a deferred pattern remains outside the working-set and validated lanes. This is backlog metadata, not runtime confidence, execution capability, or release state. When multiple blockers apply, choose the primary blocker; validation and review tooling can continue to surface secondary hazards, controls, capability, and review gaps."
+      "description": "Primary backlog reason a deferred pattern remains outside the working-set and validated lanes. This is backlog metadata, not runtime confidence, execution capability, or release state. When multiple blockers apply, choose the primary blocker; validation and review tooling can continue to surface secondary hazards, controls, capability, and review gaps. Use insufficient_hazards only when hazards are missing or materially inadequate; once hazards are repaired, update deferred_reason to the current live blocker."
     },
     "validation_state": {
       "type": "string",

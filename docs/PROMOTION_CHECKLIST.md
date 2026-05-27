@@ -33,6 +33,17 @@ high-cardinality values, and multi-hop composite pivots, also confirm:
 - [ ] `negative_nodes`, degree caps, temporal windows, and hazards cover the main false-positive modes.
 - [ ] Runtime confidence, scoring, and final assessment remain outside the pattern definition.
 
+## Deferred Lane Move Addendum
+
+For any pattern moving out of `deferred/`, also confirm:
+
+- [ ] The old `deferred_reason` has been resolved or replaced with a more accurate live blocker before the lane move.
+- [ ] Hazards cover the dominant false-positive modes for this pattern family.
+- [ ] Positive, weak-positive, negative, suppression, and high-cardinality examples are present or explicitly not applicable.
+- [ ] Blocked claims are documented, including attribution, authorship, ownership, maliciousness, compromise, runtime confidence, and final assessment boundaries.
+- [ ] Restricted-data, privacy, consent, or public-safety limits were reviewed where applicable.
+- [ ] The assessment note or PR records explicit maintainer approval for the deferred lane move.
+
 ## Promotion Rule Of Thumb
 
 If a pattern is useful but still awkward, caveat-heavy, or under-tested, it probably belongs in `working-set/`, not `validated/`.

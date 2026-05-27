@@ -105,6 +105,28 @@ Patterns here should:
 - preserve provenance and future value
 - not dilute the editorial promise of the validated lane
 
+## Deferred Lane Move Gate
+
+Do not move a deferred pattern into `working-set/` or `validated/` merely
+because its backlog metadata was cleaned up.
+
+Before any deferred pattern moves lanes, maintainers should record a
+pattern-specific review covering:
+
+- dominant false-positive modes and hazard adequacy;
+- negative controls and suppression behavior;
+- positive, weak-positive, negative, suppression, and high-cardinality examples
+  where applicable;
+- blocked claims, especially attribution, authorship, ownership, maliciousness,
+  compromise, runtime confidence, and final assessment;
+- restricted-data, privacy, consent, or public-safety limits where applicable;
+- the reason the old `deferred_reason` no longer blocks the proposed lane.
+
+`deferred_reason: insufficient_hazards` should be used only when hazards are
+missing or materially inadequate. Once hazards are repaired, update the reason
+to the live blocker instead of preserving `insufficient_hazards` as a
+historical label.
+
 ## Promotion Questions Maintainers Should Ask
 
 - Is the pivot materially useful and reusable?
