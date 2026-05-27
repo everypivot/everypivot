@@ -15,6 +15,10 @@ capability_requirements:
   - 'dns_public_lookup'
   - 'passive_dns'
   - 'cloud_audit_log_access'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 90
+  next_review: '2026-08-24'
 name: Cloud Account -> Domain or Infra
 category: CROSS
 description: Expand from a parent cloud account or project to the domains and infrastructure it operates through owned services and assets.

@@ -16,6 +16,10 @@ capability_requirements:
   - 'relay_chain_parsing'
   - 'bulk_sender_suppression'
   - 'asn_enrichment'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 90
+  next_review: '2026-08-24'
 name: Email Message -> First-Hop MTA
 category: CTI
 description: Pivot from a normalized email message to the first-hop mail transfer agent IP or host observed for that message.

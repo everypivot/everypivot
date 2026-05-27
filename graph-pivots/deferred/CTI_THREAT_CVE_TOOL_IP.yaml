@@ -17,7 +17,7 @@ hazards:
 - Corroborate IP links with observation time, tool telemetry, and independent reporting; the chain does not prove threat attribution.
 name: Threat → CVE → Tool → IP
 category: CTI
-description: Attribution/support chain from a named threat to IP infrastructure through exploited CVE and tool family.
+description: Pivot from a report-derived named-threat, CVE, and tool-family co-mention to contextual IP infrastructure observations.
 source: risk:threat
 target: inet:ipv4
 assessment:

@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'service_principal_classification'
   - 'delegated_access_context'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 90
+  next_review: '2026-08-24'
 name: Auth Session -> Identities
 category: CTI
 description: Pivot from a bounded authentication session to normalized user or principal identities associated with that session.

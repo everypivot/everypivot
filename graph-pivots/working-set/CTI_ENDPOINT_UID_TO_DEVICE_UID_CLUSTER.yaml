@@ -16,6 +16,10 @@ capability_requirements:
   - 'asset_inventory_join'
   - 'edr_device_identity_resolution'
   - 'image_clone_detection'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 90
+  next_review: '2026-08-24'
 name: Endpoint UID -> Device UID Cluster
 category: CTI
 description: Pivot from a normalized endpoint identifier to device-level identifiers that may group endpoint telemetry across identity namespaces.

@@ -2045,6 +2045,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "cloud_audit_log_access"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 90,
+        "next_review": "2026-08-24"
+      },
       "controls": {
         "temporal_window_days": 1825,
         "degree_caps": {
@@ -2067,7 +2072,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 3
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": false,
           "state": "not_flagged",
@@ -2450,6 +2455,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "delegated_access_context"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 90,
+        "next_review": "2026-08-24"
+      },
       "controls": {
         "temporal_window_days": 1,
         "degree_caps": {
@@ -2481,7 +2491,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": true,
           "state": "controls_published",
@@ -2613,6 +2623,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "first_party_app_suppression"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 90,
+        "next_review": "2026-08-24"
+      },
       "controls": {
         "temporal_window_days": 90,
         "degree_caps": {
@@ -2640,7 +2655,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 3
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": true,
           "state": "controls_published",
@@ -2695,6 +2710,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "detonation_artifact_suppression"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 90,
+        "next_review": "2026-08-24"
+      },
       "controls": {
         "temporal_window_days": 365,
         "degree_caps": {
@@ -2726,7 +2746,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": true,
           "state": "controls_published",
@@ -3022,6 +3042,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "protected_url_decoding"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 90,
+        "next_review": "2026-08-24"
+      },
       "controls": {
         "temporal_window_days": 7,
         "degree_caps": {
@@ -3048,7 +3073,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": false,
           "state": "not_flagged",
@@ -3104,6 +3129,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "asn_enrichment"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 90,
+        "next_review": "2026-08-24"
+      },
       "controls": {
         "temporal_window_days": 7,
         "degree_caps": {
@@ -3131,7 +3161,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 3
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": true,
           "state": "controls_published",
@@ -3510,6 +3540,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "image_clone_detection"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 90,
+        "next_review": "2026-08-24"
+      },
       "controls": {
         "temporal_window_days": 365,
         "degree_caps": {
@@ -3541,7 +3576,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 3
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": true,
           "state": "controls_published",
@@ -3930,6 +3965,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "sandbox_artifact_suppression"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 90,
+        "next_review": "2026-08-24"
+      },
       "controls": {
         "temporal_window_days": 365,
         "degree_caps": {
@@ -3961,7 +4001,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": true,
           "state": "controls_published",
@@ -11432,12 +11472,12 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "category": "CTI",
       "version": "1.0.0",
       "path": "graph-pivots/deferred/CTI_THREAT_CVE_TOOL_IP.yaml",
-      "summary": "Attribution/support chain from a named threat to IP infrastructure through exploited CVE and tool family.",
+      "summary": "Pivot from a report-derived named-threat, CVE, and tool-family co-mention to contextual IP infrastructure observations.",
       "pattern_schema_version": 1.2,
       "precision_tier": "exploratory",
       "deferred_reason": "insufficient_hazards",
       "name": "Threat → CVE → Tool → IP",
-      "description": "Attribution/support chain from a named threat to IP infrastructure through exploited CVE and tool family.",
+      "description": "Pivot from a report-derived named-threat, CVE, and tool-family co-mention to contextual IP infrastructure observations.",
       "source": "risk:threat",
       "target": "inet:ipv4",
       "datasets": [
@@ -13818,6 +13858,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Public templates, copied seals, and common editing tools can produce similar documents across unrelated accounts or campaigns.",
+        "Defender, analyst, or researcher reproduction and replay of forged-document templates can create benign matches unless testing and training artifacts are suppressed.",
         "Corroborate template reuse with distribution timing, account behavior, and additional artifacts; template match alone is weak evidence."
       ],
       "capability_requirements": {
@@ -13847,7 +13888,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2

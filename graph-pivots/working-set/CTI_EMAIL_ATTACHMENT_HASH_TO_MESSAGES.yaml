@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'message_trace_join'
   - 'detonation_artifact_suppression'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 90
+  next_review: '2026-08-24'
 name: Email Attachment Hash -> Messages
 category: CTI
 description: Pivot from a normalized attachment file hash to email messages where that attachment was observed.

@@ -17,6 +17,10 @@ capability_requirements:
   - 'consent_event_telemetry'
   - 'service_principal_inventory'
   - 'first_party_app_suppression'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 90
+  next_review: '2026-08-24'
 name: Cloud App ID -> Auth Events
 category: CTI
 description: Pivot from a normalized cloud or OAuth application identifier to authentication, consent, or token-use events involving that application.

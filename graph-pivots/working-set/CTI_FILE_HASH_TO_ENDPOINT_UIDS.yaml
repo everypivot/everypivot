@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'software_prevalence_enrichment'
   - 'sandbox_artifact_suppression'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 90
+  next_review: '2026-08-24'
 name: File Hash -> Endpoint UIDs
 category: CTI
 description: Pivot from a normalized file hash to endpoint identifiers where the file was observed.

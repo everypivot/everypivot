@@ -13,6 +13,7 @@ capability_requirements:
   - 'campaign_context_enrichment'
 hazards:
 - Public templates, copied seals, and common editing tools can produce similar documents across unrelated accounts or campaigns.
+- Defender, analyst, or researcher reproduction and replay of forged-document templates can create benign matches unless testing and training artifacts are suppressed.
 - Corroborate template reuse with distribution timing, account behavior, and additional artifacts; template match alone is weak evidence.
 name: Forged Document Template -> Operator Cluster
 category: IO

@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'message_body_parsing'
   - 'protected_url_decoding'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 90
+  next_review: '2026-08-24'
 name: Email Message -> Embedded URLs
 category: CTI
 description: Pivot from a normalized email message identifier to URLs embedded in its body, headers, attachments, or rendered content.
