@@ -13,7 +13,7 @@ The repository publishes:
 
 ## Current Release
 
-- Release: `v0.3.0`
+- Release: `v0.4.0`
 - Corpus: 176 patterns
 - Lanes: 19 `validated`, 76 `working_set`, 81 `deferred`
 - Schema target: `pivot-pattern` v1.4
@@ -58,8 +58,8 @@ ruby tools/check_query_profile_suite.rb
 ```bash
 ruby tools/build_registry_index.rb \
   --repo-root . \
-  --release v0.3.0 \
-  --published-at 2026-05-25 \
+  --release v0.4.0 \
+  --published-at 2026-05-27 \
   --output artifacts/registry-index.json \
   --site-data-root site/data
 ```

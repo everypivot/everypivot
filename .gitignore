@@ -1,4 +1,16 @@
 .DS_Store
+
+# Common local clutter
+node_modules/
 dist/
+.cache/
+.vercel/
+
+# Local working files
 tmp/
+.tmp/
+.claude/
 *.log
+
+# Site deployment bundle
+site/deployed/

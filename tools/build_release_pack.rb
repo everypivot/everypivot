@@ -15,7 +15,7 @@ module EveryPivot
 
     REPO_ROOT = Pathname(__dir__).join('..').expand_path
     PACK_NAME = 'everypivot-release-pack'
-    DEFAULT_RELEASE = 'v0.3.0'
+    DEFAULT_RELEASE = 'v0.4.0'
     DEFAULT_PUBLISHED_AT = Time.now.utc.strftime('%F')
     DEFAULT_ARTIFACT_MODE = 'stable'
     DEFAULT_AUTHORITY_STATUS = 'canonical'

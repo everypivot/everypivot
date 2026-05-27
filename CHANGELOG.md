@@ -4,9 +4,15 @@ All notable changes to EveryPivot&trade; are documented here.
 
 ## Unreleased
 
+No changes yet.
+
+## v0.4.0 - 2026-05-27
+
+See [release notes](docs/releases/v0.4.0.md).
+
 ### Added
 
-- Began bounded EP-WP15 OpenCTI/STIX-side mapping coverage with an
+- Added bounded EP-WP15 OpenCTI/STIX-side mapping coverage with an
   `opencti_stix_v0` profile, synthetic import-hash fixture slice, generated
   STIX 2.1 bundle, and profile-suite checks that prevent suppressed traversal
   candidates from becoming ordinary STIX relationship objects.
@@ -14,6 +20,22 @@ All notable changes to EveryPivot&trade; are documented here.
   and hardened the first OpenCTI/STIX bundle with spec-conformant UUIDv5
   file-SCO IDs, a checked top-level `x_everypivot_*` extension definition, and
   a schema document for those mapping properties.
+- Added public release-pack coverage for OpenCTI/STIX profile assets,
+  generated bundles, mapping fixtures, and schema files.
+- Added repository publishing/versioning guidance for public source,
+  tagged-release ordering, and stable-release ordering.
+
+### Changed
+
+- Advanced the public promotion-cadence metadata through rounds 3 and 4 while
+  preserving current corpus counts.
+- Added deferred-lane hazard consistency metadata and reconciled deferred
+  reason vocabulary across public patterns.
+- Clarified `deferred_reason: insufficient_hazards` schema guidance so repaired
+  deferred patterns move to their current live blocker.
+- Strengthened validation CI with the relation-catalog check and clarified the
+  DCO checkbox/workflow regex sync point.
+- Expanded local-clutter ignores for maintainer-only working files.
 
 ## v0.3.0 - 2026-05-25
 

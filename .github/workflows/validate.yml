@@ -27,6 +27,7 @@ jobs:
         run: |
           missing=0
           body_confirms=0
+          # Keep this regex in sync with the DCO checkbox text in .github/pull_request_template.md.
           if printf '%s\n' "$PR_BODY" | grep -Eiq '^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]*I signed off my contributor-authored commits, or I confirm DCO acceptance here'; then
             body_confirms=1
           fi
@@ -81,6 +82,9 @@ jobs:
 
       - name: Run query profile suite
         run: ruby tools/check_query_profile_suite.rb
+
+      - name: Check relation catalog vocabulary
+        run: ruby tools/check_relation_catalog.rb
 
       - name: Check release metadata consistency
         run: ruby tools/check_release_metadata.rb

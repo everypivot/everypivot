@@ -11,6 +11,8 @@
 - [Validation semantics](../VALIDATION_SEMANTICS.md)
 - [Promotion checklist](PROMOTION_CHECKLIST.md)
 - [Registry index contract](REGISTRY_INDEX_SPEC.md)
+- [Repository publishing and versioning](REPO_PUBLISHING_AND_VERSIONING.md)
+- [v0.4.0 release notes](releases/v0.4.0.md)
 - [v0.3.0 release notes](releases/v0.3.0.md)
 - [v0.2.0 release notes](releases/v0.2.0.md)
 - [v0.1.2 release notes](releases/v0.1.2.md)
