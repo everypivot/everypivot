@@ -139,6 +139,36 @@ nodes. Use `--reset-fixtures` only with a disposable database when all
 `--` must be connection and authentication options, not alternate `--file`
 inputs; the helper owns fixture and query file selection.
 
+## Contract Review Status
+
+The Neo4j/Cypher contract is accepted for EP-WP15 second-adapter planning as of
+2026-05-26. The acceptance record is
+[`docs/assessments/2026-05-26/neo4j_cypher_contract_review.md`](assessments/2026-05-26/neo4j_cypher_contract_review.md).
+
+Acceptance is based on repository-local verification of the query-profile
+contract, fixture suite, and strict corpus validation. It is not a claim that
+generated Cypher is production-correct for every Neo4j graph model, and it does
+not imply that the optional live `cypher-shell` smoke path was run.
+
+## Second Adapter Decision
+
+The second adapter target is OpenCTI/STIX-side mapping coverage.
+
+Initial scope:
+
+- define a mapping/profile shape outside pattern YAML;
+- start with a narrow synthetic fixture slice for
+  `CTI_SAMPLE_IMPHASH_CLUSTER`;
+- map EveryPivot forms and bounded traversal output into STIX/OpenCTI-side
+  observable or relationship records without adding attribution, maliciousness,
+  compromise, ownership, runtime-confidence, or final-assessment semantics;
+- preserve hazards, caveats, blocked assertions, and source fixture boundaries;
+- do not build a live OpenCTI connector, importer, or server integration in the
+  first slice.
+
+This choice gives the adapter track a CTI object-model pressure test after the
+Neo4j graph-query pilot, without making STIX/OpenCTI canonical for the corpus.
+
 ## License Boundary
 
 Adapter metadata, adapter docs, generation/checking tools, and generated demo
