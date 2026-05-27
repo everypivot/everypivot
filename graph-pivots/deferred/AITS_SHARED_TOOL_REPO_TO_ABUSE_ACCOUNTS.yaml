@@ -15,6 +15,7 @@ capability_requirements:
 hazards:
 - Public tool repositories, forks, mirrors, and tutorial code can be shared across benign and abusive accounts.
 - Corroborate repository reuse with account behavior and artifact execution; tool adoption alone can create false common-control claims.
+- Abuse-account linkage and enforcement evidence may be restricted; repository interest alone must not imply account control.
 name: Abuse Tool Repo -> Account Cluster
 category: AITS
 description: Connect shared abuse tooling or prompt-library repositories to model accounts reusing the resulting tools or artifacts.

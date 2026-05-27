@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Trade counterparties, shared intermediaries, ownership chains, and sanctions lists change over time and vary by jurisdiction.
 - Corroborate shipment date, beneficial ownership, and account or payment context; avoid false positives from same-name or intermediary partners.
+- Trade, shipment, payment, and counterparty records may be commercially sensitive or restricted and need explicit governance before use.
 name: Importer/Exporter → Trade Partner → Sanctions
 category: FIN
 description: Cross‑border trade partners screened against sanctions lists.

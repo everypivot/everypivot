@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Provider default PTR names, recycled hostnames, and cloud templates can create common reverse-DNS values across unrelated hosts.
 - Corroborate PTR reuse with DNS timing, service banners, certificates, and hosting context; reverse DNS alone is weak.
+- Provider-managed naming schemes need negative controls; do not infer tenant identity or control from PTR text alone.
 name: Reverse DNS Hostname -> Host Cluster
 category: OSINT
 description: Cluster hosts reusing uncommon PTR or reverse-DNS hostnames while filtering commodity provider naming patterns.

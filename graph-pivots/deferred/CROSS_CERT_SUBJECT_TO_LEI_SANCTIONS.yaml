@@ -15,6 +15,7 @@ capability_requirements:
 hazards:
 - Certificate subject organization fields are free-form, CA-normalized, common, or attacker-controlled and can collide with same-name legal entities.
 - Sanctions and LEI joins are temporal and entity-resolution sensitive; corroborate current legal records and certificate ownership before risk scoring.
+- Suppress generic, same-name, and CA-normalized certificate subjects before treating a certificate subject as a sanctioned legal entity.
 name: Cert Subject Org → LEI → Sanctions
 category: CROSS
 description: Extract certificate subject/organization, map to LEI, and screen against sanctions.

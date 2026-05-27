@@ -15,6 +15,7 @@ capability_requirements:
 hazards:
 - Named threat, CVE, and tool reports can be broad, stale, or based on public exploit adoption by unrelated actors.
 - Corroborate IP links with observation time, tool telemetry, and independent reporting; the chain does not prove threat attribution.
+- Named-threat labels are report context; do not infer actor ownership or operational control of infrastructure from co-mentions.
 name: Threat → CVE → Tool → IP
 category: CTI
 description: Pivot from a report-derived named-threat, CVE, and tool-family co-mention to contextual IP infrastructure observations.

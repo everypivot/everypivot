@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Common transitive dependencies, vendored packages, and version-range drift can make SBOM links overstate actual exposure.
 - Corroborate dependency reachability with product version, build metadata, and exploitability context; dependency presence alone is not compromise.
+- Promotion needs examples for reachable runtime dependency, dev or test dependency, transitive-only dependency, and vendor-bundled package suppression.
 name: Dependency -> Downstream Product Exposure
 category: SUPPLY
 description: Enumerate downstream products inheriting exposure through an SBOM-declared dependency relationship.

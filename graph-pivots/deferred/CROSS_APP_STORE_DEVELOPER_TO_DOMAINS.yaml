@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Shared SDKs, analytics, ad networks, and support vendors can make unrelated developer apps reference common domains.
 - Developer-account or store metadata can be stale, transferred, or reseller-managed; corroborate with app package content and current domain control.
+- Store developer links can reflect acquired accounts, white-label apps, or outsourced support; do not infer operator control without package and domain evidence.
 name: App Store Developer -> Domains
 category: CROSS
 description: Connect app-store developer accounts to websites, APIs, and support domains referenced by their published applications.

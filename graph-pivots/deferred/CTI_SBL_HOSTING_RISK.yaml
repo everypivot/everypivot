@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Abuse blocklists, SBL entries, and hosting ASN reputation can lag cleanup or reflect one customer inside shared infrastructure.
 - Corroborate listing history with current observations; risk scoring should not label all tenants of a provider as malicious.
+- Provider-level reputation is hosting-risk context only and must not be treated as tenant-specific maliciousness, ownership, or control.
 name: IP → ASN with SBL/Abuse Reputation
 category: CTI
 description: Score IPs by ASN and presence in Spamhaus/abuse.ch datasets to prioritize likely bad infra.

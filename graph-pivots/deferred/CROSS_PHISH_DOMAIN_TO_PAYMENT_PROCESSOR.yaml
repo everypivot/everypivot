@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Large payment processors and checkout providers are shared by many unrelated merchants and create high false-positive risk.
 - Merchant IDs and processor artifacts are sensitive financial data; corroborate with page content, account-level evidence, and transaction timing.
+- Promotion needs negative controls for hosted checkout pages, shared processor domains, test merchant IDs, and reseller payment flows.
 name: Phish Domain → Payment Processor → Merchant Network
 category: CROSS
 description: Trace phishing pages to their payment processors and connected merchant IDs.

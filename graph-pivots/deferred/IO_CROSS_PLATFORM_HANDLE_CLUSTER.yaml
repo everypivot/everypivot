@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Common usernames, fan accounts, impersonators, and namespace collisions can create false cross-platform links.
 - Corroborate handle reuse with profile metadata, timing, and behavioral evidence before clustering accounts.
+- Human or brand handle matches can create reputational harm; block person identity, authorship, ownership, or attribution conclusions.
 name: Cross-Platform Handle -> Account Cluster
 category: IO
 description: Link common handle strings or aliases reused across platforms by coordinated or inauthentic personas.

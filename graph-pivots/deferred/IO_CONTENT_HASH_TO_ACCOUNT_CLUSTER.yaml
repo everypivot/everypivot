@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Stock media, memes, templates, and reposted documents can be common across unrelated accounts.
 - Corroborate exact content-hash reuse with timing, behavior, and campaign context; identical media alone is not common control.
+- Public datasets, moderation queues, analyst uploads, and training artifacts can reproduce hashes and must remain suppressible.
 name: Content Hash -> Account Cluster
 category: IO
 description: Cluster coordinated accounts reusing identical media assets, documents, or attachments across posts and campaigns.

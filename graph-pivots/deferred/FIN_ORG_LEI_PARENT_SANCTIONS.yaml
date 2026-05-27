@@ -15,6 +15,7 @@ capability_requirements:
 hazards:
 - LEI parent relationships, shared holding structures, and sanctions lists can lag restructures, ownership changes, or jurisdiction-specific legal interpretations.
 - Corroborate temporal ownership, control, and sanctions effective dates; do not treat a parent link as automatic prohibited activity.
+- LEI ownership chains, beneficial-ownership disclosures, and sanctions-list access may be jurisdiction-restricted or commercially sensitive and require governance review before risk scoring.
 name: Org → LEI → Parent → Sanctions
 category: FIN
 description: Screen organizations via LEI ‘who owns whom’ up the chain and check against sanctions.

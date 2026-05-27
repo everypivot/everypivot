@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Public shorteners, campaign platforms, and tracking vendors are shared across many unrelated accounts and domains.
 - Corroborate redirect and tracking reuse with landing content, timing, and operator-controlled artifacts; expect false positives.
+- Shared vendor IDs, link shorteners, and hosted tracking platforms need suppression before any campaign or operator-control claim.
 name: Shortener or Tracking Domain -> IO Property Cluster
 category: IO
 description: Cluster IO properties reusing the same shortener, redirector, or campaign-tracking domain across accounts or sites.

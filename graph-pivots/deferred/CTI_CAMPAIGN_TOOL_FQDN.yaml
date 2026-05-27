@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Commodity tools and shared hosting can put unrelated campaigns on common domains or infrastructure.
 - Corroborate tool-family evidence with temporal observations and independent indicators; this pivot is not attribution by itself.
+- Campaign labels are report context, not actor ownership or control; tool and domain co-occurrence must not be converted into attribution.
 name: Campaign ↔ Tool → FQDN
 category: CTI
 description: Campaign-to-domain linkage via shared tool family evidence across sources.

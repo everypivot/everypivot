@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Public repositories, forks, vendor mirrors, and employment changes can misstate who controls or uses a tool.
 - Corroborate maintainer and organization links with signed commits, release ownership, and current affiliation before inferring relationship.
+- Repository or organization metadata alone must not be treated as authorship, ownership, employment, or current operational control.
 name: Toolcode Repo → Author → Organization
 category: CROSS
 description: Map tool repositories to maintainers/authors and then to their organizations (OSINT).

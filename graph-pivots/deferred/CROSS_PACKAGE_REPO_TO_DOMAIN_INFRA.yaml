@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Package registries, mirrors, CDNs, and abandoned repositories can link unrelated projects to shared distribution infrastructure.
 - Corroborate repository ownership with signed releases, maintainer history, and current DNS or hosting control before clustering.
+- Promotion requires negative controls for registry, CDN, provider-owned infrastructure, abandoned repositories, and fork or mirror relationships.
 name: Repo -> Package -> Domain or Infra
 category: CROSS
 description: Bridge repository identity through published packages or release endpoints to the domains or infrastructure serving them.

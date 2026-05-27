@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Commodity tools and public malware builders can create common infrastructure features across unrelated threats.
 - Corroborate shared infrastructure with campaign timing and multiple evidence paths; do not infer actor relationship from tool overlap alone.
+- Threat labels and tool overlap must remain reported context and must not imply shared operator identity, sponsorship, or common control.
 name: Threat ↔ Threat via Shared Tool/Infra
 category: CTI
 description: Suggest related threats when their tool families lead to overlapping infrastructure.

@@ -15,6 +15,7 @@ capability_requirements:
 hazards:
 - Blockchain heuristics can over-attribute flows through mixers, exchanges, bridges, or shared custody accounts.
 - Sanctions lists and address clusters are temporal; corroborate transaction timing and ownership before drawing compliance conclusions.
+- Compliance, exchange, and customer-identification evidence may be regulated or restricted and must be governed before use.
 name: Crypto Address → On‑Chain Tx → Sanctioned Address/Entity
 category: FIN
 description: Trace on‑chain flows to sanctioned addresses/entities.

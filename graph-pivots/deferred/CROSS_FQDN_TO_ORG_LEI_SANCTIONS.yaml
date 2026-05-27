@@ -15,6 +15,7 @@ capability_requirements:
 hazards:
 - RDAP registrants may be privacy-proxied, stale, reseller-owned, common service providers, or same-name collisions rather than the domain controller.
 - LEI and sanctions joins are temporal; corroborate current registration evidence and avoid treating intermediary links as direct control.
+- Suppress privacy proxies, registrars, resellers, service providers, and same-name organization collisions before sanctions propagation.
 name: FQDN → RDAP Org → LEI → Sanctions
 category: CROSS
 description: Bridge a domain to its org via RDAP, map to LEI, and screen against sanctions.

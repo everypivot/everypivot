@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Popular phishkits, copied path structures, and hosting panels can be shared across unrelated actors.
 - Corroborate kit or path matches with deployment timing, config values, and infrastructure ownership; hosting reuse is not attribution.
+- Promotion needs suppression for public kit distributions, shared hosting panels, default paths, and sinkhole or research deployments.
 name: Phish Kit → Hosting Domain/IP Cluster
 category: CTI
 description: Cluster infrastructure hosting the same phishing kit hash or path structure.

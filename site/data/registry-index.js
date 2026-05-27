@@ -8341,7 +8341,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Public tool repositories, forks, mirrors, and tutorial code can be shared across benign and abusive accounts.",
-        "Corroborate repository reuse with account behavior and artifact execution; tool adoption alone can create false common-control claims."
+        "Corroborate repository reuse with account behavior and artifact execution; tool adoption alone can create false common-control claims.",
+        "Abuse-account linkage and enforcement evidence may be restricted; repository interest alone must not imply account control."
       ],
       "capability_requirements": {
         "required": [
@@ -8371,7 +8372,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 3,
           "optional": 2
@@ -8416,7 +8417,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Shared SDKs, analytics, ad networks, and support vendors can make unrelated developer apps reference common domains.",
-        "Developer-account or store metadata can be stale, transferred, or reseller-managed; corroborate with app package content and current domain control."
+        "Developer-account or store metadata can be stale, transferred, or reseller-managed; corroborate with app package content and current domain control.",
+        "Store developer links can reflect acquired accounts, white-label apps, or outsourced support; do not infer operator control without package and domain evidence."
       ],
       "capability_requirements": {
         "required": [
@@ -8445,7 +8447,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -8489,7 +8491,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Shared cloud, hosting, reseller, and transit ASNs can map many unrelated customers to the same organization or sanction-adjacent entity.",
-        "Sanctions and ASN organization data change over time; corroborate allocation dates and customer-level evidence to avoid false positives."
+        "Sanctions and ASN organization data change over time; corroborate allocation dates and customer-level evidence to avoid false positives.",
+        "Promotion needs negative controls for cloud, transit, reseller, and customer-assigned ASNs before any sanctions propagation."
       ],
       "capability_requirements": {
         "required": [
@@ -8522,7 +8525,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -8567,7 +8570,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Certificate subject organization fields are free-form, CA-normalized, common, or attacker-controlled and can collide with same-name legal entities.",
-        "Sanctions and LEI joins are temporal and entity-resolution sensitive; corroborate current legal records and certificate ownership before risk scoring."
+        "Sanctions and LEI joins are temporal and entity-resolution sensitive; corroborate current legal records and certificate ownership before risk scoring.",
+        "Suppress generic, same-name, and CA-normalized certificate subjects before treating a certificate subject as a sanctioned legal entity."
       ],
       "capability_requirements": {
         "required": [
@@ -8601,7 +8605,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 3,
           "optional": 2
@@ -8646,7 +8650,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "RDAP registrants may be privacy-proxied, stale, reseller-owned, common service providers, or same-name collisions rather than the domain controller.",
-        "LEI and sanctions joins are temporal; corroborate current registration evidence and avoid treating intermediary links as direct control."
+        "LEI and sanctions joins are temporal; corroborate current registration evidence and avoid treating intermediary links as direct control.",
+        "Suppress privacy proxies, registrars, resellers, service providers, and same-name organization collisions before sanctions propagation."
       ],
       "capability_requirements": {
         "required": [
@@ -8676,7 +8681,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 3,
           "optional": 2
@@ -8721,7 +8726,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Package registries, mirrors, CDNs, and abandoned repositories can link unrelated projects to shared distribution infrastructure.",
-        "Corroborate repository ownership with signed releases, maintainer history, and current DNS or hosting control before clustering."
+        "Corroborate repository ownership with signed releases, maintainer history, and current DNS or hosting control before clustering.",
+        "Promotion requires negative controls for registry, CDN, provider-owned infrastructure, abandoned repositories, and fork or mirror relationships."
       ],
       "capability_requirements": {
         "required": [
@@ -8750,7 +8756,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -8794,7 +8800,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Large payment processors and checkout providers are shared by many unrelated merchants and create high false-positive risk.",
-        "Merchant IDs and processor artifacts are sensitive financial data; corroborate with page content, account-level evidence, and transaction timing."
+        "Merchant IDs and processor artifacts are sensitive financial data; corroborate with page content, account-level evidence, and transaction timing.",
+        "Promotion needs negative controls for hosted checkout pages, shared processor domains, test merchant IDs, and reseller payment flows."
       ],
       "capability_requirements": {
         "required": [
@@ -8831,7 +8838,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -8951,7 +8958,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Public repositories, forks, vendor mirrors, and employment changes can misstate who controls or uses a tool.",
-        "Corroborate maintainer and organization links with signed commits, release ownership, and current affiliation before inferring relationship."
+        "Corroborate maintainer and organization links with signed commits, release ownership, and current affiliation before inferring relationship.",
+        "Repository or organization metadata alone must not be treated as authorship, ownership, employment, or current operational control."
       ],
       "capability_requirements": {
         "required": [
@@ -8984,7 +8992,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -9116,7 +9124,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Commodity tools and shared hosting can put unrelated campaigns on common domains or infrastructure.",
-        "Corroborate tool-family evidence with temporal observations and independent indicators; this pivot is not attribution by itself."
+        "Corroborate tool-family evidence with temporal observations and independent indicators; this pivot is not attribution by itself.",
+        "Campaign labels are report context, not actor ownership or control; tool and domain co-occurrence must not be converted into attribution."
       ],
       "capability_requirements": {
         "required": [
@@ -9145,7 +9154,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -9612,7 +9621,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Public exploit reporting, opportunistic scanning, and copycat exploitation can make a CVE appear across unrelated campaigns.",
-        "Corroborate campaign linkage with toolmarks, timing, and victimology; CVE use alone does not prove attribution or common control."
+        "Corroborate campaign linkage with toolmarks, timing, and victimology; CVE use alone does not prove attribution or common control.",
+        "Promotion needs examples that separate mass or opportunistic exploitation from campaign-specific exploitation evidence."
       ],
       "capability_requirements": {
         "required": [
@@ -9645,7 +9655,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -10200,7 +10210,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Common templates, stock images, and phishing-kit boilerplate can be shared by unrelated operators or reused by defenders in tests.",
-        "Corroborate asset reuse with delivery infrastructure, sender context, and timing before clustering campaigns."
+        "Corroborate asset reuse with delivery infrastructure, sender context, and timing before clustering campaigns.",
+        "Public training material, vendor simulations, and analyst reproduction can replay the same template or asset and must remain suppressible."
       ],
       "capability_requirements": {
         "required": [
@@ -10229,7 +10240,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -10880,7 +10891,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Popular phishkits, copied path structures, and hosting panels can be shared across unrelated actors.",
-        "Corroborate kit or path matches with deployment timing, config values, and infrastructure ownership; hosting reuse is not attribution."
+        "Corroborate kit or path matches with deployment timing, config values, and infrastructure ownership; hosting reuse is not attribution.",
+        "Promotion needs suppression for public kit distributions, shared hosting panels, default paths, and sinkhole or research deployments."
       ],
       "capability_requirements": {
         "required": [
@@ -10909,7 +10921,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -11377,7 +11389,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Abuse blocklists, SBL entries, and hosting ASN reputation can lag cleanup or reflect one customer inside shared infrastructure.",
-        "Corroborate listing history with current observations; risk scoring should not label all tenants of a provider as malicious."
+        "Corroborate listing history with current observations; risk scoring should not label all tenants of a provider as malicious.",
+        "Provider-level reputation is hosting-risk context only and must not be treated as tenant-specific maliciousness, ownership, or control."
       ],
       "capability_requirements": {
         "required": [
@@ -11410,7 +11423,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -11534,7 +11547,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Named threat, CVE, and tool reports can be broad, stale, or based on public exploit adoption by unrelated actors.",
-        "Corroborate IP links with observation time, tool telemetry, and independent reporting; the chain does not prove threat attribution."
+        "Corroborate IP links with observation time, tool telemetry, and independent reporting; the chain does not prove threat attribution.",
+        "Named-threat labels are report context; do not infer actor ownership or operational control of infrastructure from co-mentions."
       ],
       "capability_requirements": {
         "required": [
@@ -11568,7 +11582,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 3,
           "optional": 2
@@ -11613,7 +11627,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Commodity tools and public malware builders can create common infrastructure features across unrelated threats.",
-        "Corroborate shared infrastructure with campaign timing and multiple evidence paths; do not infer actor relationship from tool overlap alone."
+        "Corroborate shared infrastructure with campaign timing and multiple evidence paths; do not infer actor relationship from tool overlap alone.",
+        "Threat labels and tool overlap must remain reported context and must not imply shared operator identity, sponsorship, or common control."
       ],
       "capability_requirements": {
         "required": [
@@ -11642,7 +11657,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -11689,7 +11704,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "DNS history can include sinkholes, shared hosting, CDNs, parking, and reassigned IPs unrelated to the tool operator.",
-        "Corroborate domain-to-IP timing with tool-family evidence; current resolutions alone are not attribution."
+        "Corroborate domain-to-IP timing with tool-family evidence; current resolutions alone are not attribution.",
+        "Named-threat and tool labels are report context; do not infer actor ownership or control of FQDNs or IPs from the chain."
       ],
       "capability_requirements": {
         "required": [
@@ -11723,7 +11739,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -11852,7 +11868,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Relay infrastructure may use shared VPNs, proxies, cloud providers, or commodity tooling reused by unrelated operators.",
-        "Corroborate ASN and PDNS co-location with temporal overlap and tool-specific evidence; common hosting is a false-positive source."
+        "Corroborate ASN and PDNS co-location with temporal overlap and tool-specific evidence; common hosting is a false-positive source.",
+        "Relay co-location should be suppressed for provider VPN, proxy, and cloud infrastructure and is not proof of operator ownership."
       ],
       "capability_requirements": {
         "required": [
@@ -11885,7 +11902,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -12507,7 +12524,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Blockchain heuristics can over-attribute flows through mixers, exchanges, bridges, or shared custody accounts.",
-        "Sanctions lists and address clusters are temporal; corroborate transaction timing and ownership before drawing compliance conclusions."
+        "Sanctions lists and address clusters are temporal; corroborate transaction timing and ownership before drawing compliance conclusions.",
+        "Compliance, exchange, and customer-identification evidence may be regulated or restricted and must be governed before use."
       ],
       "capability_requirements": {
         "required": [
@@ -12545,7 +12563,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 3,
           "optional": 2
@@ -12737,7 +12755,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "LEI parent relationships, shared holding structures, and sanctions lists can lag restructures, ownership changes, or jurisdiction-specific legal interpretations.",
-        "Corroborate temporal ownership, control, and sanctions effective dates; do not treat a parent link as automatic prohibited activity."
+        "Corroborate temporal ownership, control, and sanctions effective dates; do not treat a parent link as automatic prohibited activity.",
+        "LEI ownership chains, beneficial-ownership disclosures, and sanctions-list access may be jurisdiction-restricted or commercially sensitive and require governance review before risk scoring."
       ],
       "capability_requirements": {
         "required": [
@@ -12771,7 +12790,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 3,
           "optional": 2
@@ -13195,7 +13214,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Trade counterparties, shared intermediaries, ownership chains, and sanctions lists change over time and vary by jurisdiction.",
-        "Corroborate shipment date, beneficial ownership, and account or payment context; avoid false positives from same-name or intermediary partners."
+        "Corroborate shipment date, beneficial ownership, and account or payment context; avoid false positives from same-name or intermediary partners.",
+        "Trade, shipment, payment, and counterparty records may be commercially sensitive or restricted and need explicit governance before use."
       ],
       "capability_requirements": {
         "required": [
@@ -13232,7 +13252,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -13752,7 +13772,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Stock media, memes, templates, and reposted documents can be common across unrelated accounts.",
-        "Corroborate exact content-hash reuse with timing, behavior, and campaign context; identical media alone is not common control."
+        "Corroborate exact content-hash reuse with timing, behavior, and campaign context; identical media alone is not common control.",
+        "Public datasets, moderation queues, analyst uploads, and training artifacts can reproduce hashes and must remain suppressible."
       ],
       "capability_requirements": {
         "required": [
@@ -13781,7 +13802,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -13824,7 +13845,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Common usernames, fan accounts, impersonators, and namespace collisions can create false cross-platform links.",
-        "Corroborate handle reuse with profile metadata, timing, and behavioral evidence before clustering accounts."
+        "Corroborate handle reuse with profile metadata, timing, and behavioral evidence before clustering accounts.",
+        "Human or brand handle matches can create reputational harm; block person identity, authorship, ownership, or attribution conclusions."
       ],
       "capability_requirements": {
         "required": [
@@ -13853,7 +13875,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -13972,7 +13994,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Public shorteners, campaign platforms, and tracking vendors are shared across many unrelated accounts and domains.",
-        "Corroborate redirect and tracking reuse with landing content, timing, and operator-controlled artifacts; expect false positives."
+        "Corroborate redirect and tracking reuse with landing content, timing, and operator-controlled artifacts; expect false positives.",
+        "Shared vendor IDs, link shorteners, and hosted tracking platforms need suppression before any campaign or operator-control claim."
       ],
       "capability_requirements": {
         "required": [
@@ -14001,7 +14024,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -14045,7 +14068,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Provider default PTR names, recycled hostnames, and cloud templates can create common reverse-DNS values across unrelated hosts.",
-        "Corroborate PTR reuse with DNS timing, service banners, certificates, and hosting context; reverse DNS alone is weak."
+        "Corroborate PTR reuse with DNS timing, service banners, certificates, and hosting context; reverse DNS alone is weak.",
+        "Provider-managed naming schemes need negative controls; do not infer tenant identity or control from PTR text alone."
       ],
       "capability_requirements": {
         "required": [
@@ -14074,7 +14098,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2
@@ -14292,7 +14316,8 @@ window.__EVERYPIVOT_REGISTRY__ = {
       },
       "hazards": [
         "Common transitive dependencies, vendored packages, and version-range drift can make SBOM links overstate actual exposure.",
-        "Corroborate dependency reachability with product version, build metadata, and exploitability context; dependency presence alone is not compromise."
+        "Corroborate dependency reachability with product version, build metadata, and exploitability context; dependency presence alone is not compromise.",
+        "Promotion needs examples for reachable runtime dependency, dev or test dependency, transitive-only dependency, and vendor-bundled package suppression."
       ],
       "capability_requirements": {
         "required": [
@@ -14321,7 +14346,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
         }
       },
       "presentation": {
-        "hazard_count": 2,
+        "hazard_count": 3,
         "capability_counts": {
           "required": 2,
           "optional": 2

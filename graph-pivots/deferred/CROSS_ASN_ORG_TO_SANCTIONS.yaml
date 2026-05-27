@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Shared cloud, hosting, reseller, and transit ASNs can map many unrelated customers to the same organization or sanction-adjacent entity.
 - Sanctions and ASN organization data change over time; corroborate allocation dates and customer-level evidence to avoid false positives.
+- Promotion needs negative controls for cloud, transit, reseller, and customer-assigned ASNs before any sanctions propagation.
 name: ASN Org → Sanctions
 category: CROSS
 description: Check the organization owning an ASN against sanctions (useful in risk screening).

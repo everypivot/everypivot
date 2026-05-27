@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - DNS history can include sinkholes, shared hosting, CDNs, parking, and reassigned IPs unrelated to the tool operator.
 - Corroborate domain-to-IP timing with tool-family evidence; current resolutions alone are not attribution.
+- Named-threat and tool labels are report context; do not infer actor ownership or control of FQDNs or IPs from the chain.
 name: Threat → Tool → FQDN → IP
 category: CTI
 description: Tool-family infrastructure discovery via observed domains and their current/previous IPs.

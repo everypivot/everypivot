@@ -14,6 +14,7 @@ capability_requirements:
 hazards:
 - Relay infrastructure may use shared VPNs, proxies, cloud providers, or commodity tooling reused by unrelated operators.
 - Corroborate ASN and PDNS co-location with temporal overlap and tool-specific evidence; common hosting is a false-positive source.
+- Relay co-location should be suppressed for provider VPN, proxy, and cloud infrastructure and is not proof of operator ownership.
 name: Tool Family → Relay/Proxy Infra Cluster
 category: CTI
 description: Find relay infrastructure linked to a tool family via shared hosting, ASN, and pdns co-location.
