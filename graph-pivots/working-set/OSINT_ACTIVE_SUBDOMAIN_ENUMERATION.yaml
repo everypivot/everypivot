@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'active_resolution'
   - 'http_probe'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 92
+  next_review: '2026-08-26'
 name: Active Subdomain Enumeration
 category: OSINT
 description: Discover candidate subdomains under a registrable root using active enumeration tools such as subfinder-style source aggregation and DNS confirmation.

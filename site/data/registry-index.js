@@ -1963,6 +1963,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "route_recovery"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 96,
+        "next_review": "2026-08-30"
+      },
       "controls": {
         "temporal_window_days": 30,
         "degree_caps": {
@@ -1990,7 +1995,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": false,
           "state": "not_flagged",
@@ -2126,6 +2131,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "privacy_service_suppression"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 97,
+        "next_review": "2026-08-31"
+      },
       "controls": {
         "temporal_window_days": 3650,
         "degree_caps": {
@@ -2148,7 +2158,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": false,
           "state": "not_flagged",
@@ -2370,6 +2380,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "identity_provider_domain_suppression"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 98,
+        "next_review": "2026-09-01"
+      },
       "controls": {
         "temporal_window_days": 1,
         "degree_caps": {
@@ -2401,7 +2416,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": true,
           "state": "controls_published",
@@ -4965,6 +4980,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "service_principal_classification"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 91,
+        "next_review": "2026-08-25"
+      },
       "controls": {
         "temporal_window_days": 30,
         "degree_caps": {
@@ -4996,7 +5016,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": true,
           "state": "controls_published",
@@ -6431,6 +6451,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "http_probe"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 92,
+        "next_review": "2026-08-26"
+      },
       "controls": {
         "temporal_window_days": 30,
         "degree_caps": {
@@ -6457,7 +6482,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": false,
           "state": "not_flagged",
@@ -6591,6 +6616,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "active_resolution"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 93,
+        "next_review": "2026-08-27"
+      },
       "controls": {
         "temporal_window_days": 1825,
         "degree_caps": {
@@ -6617,7 +6647,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": false,
           "state": "not_flagged",
@@ -6914,6 +6944,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "certificate_normalization"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 94,
+        "next_review": "2026-08-28"
+      },
       "controls": {
         "temporal_window_days": 365,
         "degree_caps": {
@@ -6940,7 +6975,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 1,
           "optional": 1
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": false,
           "state": "not_flagged",
@@ -7290,6 +7325,11 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "active_resolution"
         ]
       },
+      "review": {
+        "last_reviewed": "2026-05-26",
+        "review_cadence_days": 95,
+        "next_review": "2026-08-29"
+      },
       "controls": {
         "temporal_window_days": 1825,
         "degree_caps": {
@@ -7316,7 +7356,7 @@ window.__EVERYPIVOT_REGISTRY__ = {
           "required": 2,
           "optional": 2
         },
-        "review_status": "not_reviewed",
+        "review_status": "reviewed",
         "high_cardinality": {
           "applies": false,
           "state": "not_flagged",

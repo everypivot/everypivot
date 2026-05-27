@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'registrar_reseller_context'
   - 'privacy_service_suppression'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 97
+  next_review: '2026-08-31'
 name: FQDN -> Org -> LEI
 category: CROSS
 description: Resolve a domain to an identified legal entity record without requiring a sanctions overlay.

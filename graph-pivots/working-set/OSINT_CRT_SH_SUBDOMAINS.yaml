@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'dns_wildcard_detection'
   - 'active_resolution'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 93
+  next_review: '2026-08-27'
 name: CT Logs → Subdomain Enumeration
 category: OSINT
 description: Discover subdomains via Certificate Transparency entries for a registrable domain.

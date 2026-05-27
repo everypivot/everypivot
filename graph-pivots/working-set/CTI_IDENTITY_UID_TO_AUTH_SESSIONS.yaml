@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'mfa_context_join'
   - 'service_principal_classification'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 91
+  next_review: '2026-08-25'
 name: Identity UID -> Auth Sessions
 category: CTI
 description: Pivot from a normalized user identity identifier to authentication sessions observed for that identity.

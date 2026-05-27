@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'dynamic_rendering'
   - 'route_recovery'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 96
+  next_review: '2026-08-30'
 name: Webapp Source Map -> Admin Surface
 category: ADTECH
 description: Pivot from exposed JavaScript bundles or source maps to recovered application routes, panel strings, and administration surfaces.

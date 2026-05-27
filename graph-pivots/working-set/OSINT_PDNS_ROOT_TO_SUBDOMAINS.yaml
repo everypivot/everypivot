@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'dns_wildcard_detection'
   - 'active_resolution'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 95
+  next_review: '2026-08-29'
 name: Passive DNS Root -> Subdomains
 category: OSINT
 description: Enumerate FQDNs observed under a registrable root or apex domain using passive DNS observations.

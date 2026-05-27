@@ -12,6 +12,10 @@ capability_requirements:
   - 'rdp_scanning'
   optional:
   - 'certificate_normalization'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 94
+  next_review: '2026-08-28'
 name: IP -> Exposed RDP Service
 category: OSINT
 description: Determine whether an IP exposes RDP and enumerate the observed RDP service surface.

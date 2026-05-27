@@ -15,6 +15,10 @@ capability_requirements:
   optional:
   - 'redirect_chain_extraction'
   - 'identity_provider_domain_suppression'
+review:
+  last_reviewed: '2026-05-26'
+  review_cadence_days: 98
+  next_review: '2026-09-01'
 name: Auth Session -> Domains
 category: CTI
 description: Pivot from a bounded authentication session to domains observed during that session.
