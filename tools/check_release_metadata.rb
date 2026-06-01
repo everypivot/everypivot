@@ -211,13 +211,13 @@ expect_equal(
   errors,
   'artifacts/release-manifest.json site.homepage',
   stable_manifest.dig('site', 'homepage'),
-  "/releases/#{release}/"
+  '/'
 )
 expect_equal(
   errors,
   'artifacts/release-manifest.json site.patterns',
   stable_manifest.dig('site', 'patterns'),
-  "/releases/#{release}/patterns"
+  '/'
 )
 
 actual_counts = current_counts(repo_root)

@@ -56,6 +56,7 @@ class BuildReleasePackTest < Minitest::Test
       assert_equal 'canonical_local_preview', manifest.dig('provenance', 'authority_status')
       assert_includes manifest.dig('provenance', 'note'), 'Canonical local preview'
       assert_equal 'passed', manifest.dig('quality_gates', 'validator')
+      assert_equal 'passed', manifest.dig('quality_gates', 'cti_promotion_lint')
       assert_equal 'passed', manifest.dig('quality_gates', 'fixture_suite')
       assert_equal 'passed', manifest.dig('quality_gates', 'query_profile_suite')
       assert_equal count_lane('validated'), manifest.dig('counts', 'validated')
@@ -82,6 +83,8 @@ class BuildReleasePackTest < Minitest::Test
       assert output_dir.join('tools', 'check_site_links.rb').file?
       assert output_dir.join('tools', 'check_site_snapshot.rb').file?
       assert output_dir.join('tools', 'test_build_release_pack.rb').file?
+      assert output_dir.join('tools', 'check_cti_promotion_lint.rb').file?
+      assert output_dir.join('tools', 'test_cti_promotion_lint.rb').file?
       assert output_dir.join('tools', 'check_query_profile_suite.rb').file?
       assert output_dir.join('tools', 'smoke_neo4j_query_profiles.rb').file?
       assert output_dir.join('tools', 'generate_query_profile_demo.rb').file?
@@ -92,6 +95,7 @@ class BuildReleasePackTest < Minitest::Test
       manifest_file = JSON.parse(output_dir.join('MANIFEST.json').read)
       assert_equal manifest['package_id'], manifest_file['package_id']
       assert_equal 'preview', manifest_file['artifact_mode']
+      assert_equal 'passed', manifest_file.dig('quality_gates', 'cti_promotion_lint')
       assert_equal 'passed', manifest_file.dig('quality_gates', 'query_profile_suite')
       assert_equal 'passed', manifest_file.dig('quality_gates', 'relation_catalog')
       assert_equal 'not_applicable', manifest_file.dig('quality_gates', 'release_metadata')
@@ -140,6 +144,13 @@ class BuildReleasePackTest < Minitest::Test
       )
       assert fixture_status.success?, [fixture_stdout, fixture_stderr].reject(&:empty?).join("\n")
 
+      cti_lint_stdout, cti_lint_stderr, cti_lint_status = Open3.capture3(
+        RbConfig.ruby,
+        output_dir.join('tools', 'check_cti_promotion_lint.rb').to_s,
+        chdir: output_dir.to_s
+      )
+      assert cti_lint_status.success?, [cti_lint_stdout, cti_lint_stderr].reject(&:empty?).join("\n")
+
       query_profile_stdout, query_profile_stderr, query_profile_status = Open3.capture3(
         RbConfig.ruby,
         output_dir.join('tools', 'check_query_profile_suite.rb').to_s,
@@ -154,8 +165,8 @@ class BuildReleasePackTest < Minitest::Test
       output_dir = Pathname(dir).join('everypivot-pack')
       manifest = EveryPivot::BuildReleasePack.build_release_pack(
         output_dir: output_dir,
-        release: 'v0.4.0',
-        published_at: '2026-05-27',
+        release: 'v0.4.1',
+        published_at: '2026-06-01',
         force: false,
         artifact_mode: 'stable',
         authority_status: 'canonical',
@@ -164,6 +175,7 @@ class BuildReleasePackTest < Minitest::Test
 
       provenance = manifest.fetch('provenance')
       assert_equal 'canonical', provenance.fetch('authority_status')
+      assert_equal 'passed', manifest.dig('quality_gates', 'cti_promotion_lint')
       assert_equal 'passed', manifest.dig('quality_gates', 'query_profile_suite')
       assert_equal 'passed', manifest.dig('quality_gates', 'relation_catalog')
       assert_equal 'passed', manifest.dig('quality_gates', 'release_metadata')
@@ -185,6 +197,7 @@ class BuildReleasePackTest < Minitest::Test
       assert output_dir.join('site', 'data', 'pivot-pattern.schema.js').file?
 
       manifest_file = JSON.parse(output_dir.join('MANIFEST.json').read)
+      assert_equal 'passed', manifest_file.dig('quality_gates', 'cti_promotion_lint')
       assert_equal 'passed', manifest_file.dig('quality_gates', 'query_profile_suite')
       assert_equal 'passed', manifest_file.dig('quality_gates', 'release_metadata')
       assert_equal 'passed', manifest_file.dig('quality_gates', 'generated_freshness')

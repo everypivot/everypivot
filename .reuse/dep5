@@ -21,10 +21,12 @@ Files: .github/**
  schemas/**
  tools/**
  site/index.html
- site/_headers
  site/data/pivot-pattern.schema.json
  site/data/pivot-pattern.schema.js
+ site/CNAME
  artifacts/release-manifest.json
+ .gitignore
+ .reuse/dep5
  CODE_OF_CONDUCT.md
  CHANGELOG.md
  CONTRIBUTING.md

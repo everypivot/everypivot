@@ -6,6 +6,37 @@ All notable changes to EveryPivot&trade; are documented here.
 
 No changes yet.
 
+## v0.4.1 - 2026-06-01
+
+See [release notes](docs/releases/v0.4.1.md).
+
+### Added
+
+- Added public CTI promotion-boundary doctrine for keeping assessment,
+  attribution, confidence, operational effect, and private review state out of
+  graph relations.
+- Added a promotion-blocking CTI lint gate and regression tests for
+  public-safe CTI pattern and fixture checks.
+- Added synthetic traversal evidence packs for the SBOM dependency and
+  cloud-tenant-to-auth-event CTI pilots.
+
+### Changed
+
+- Promoted the SBOM dependency and cloud-tenant-to-auth-event CTI pilots from
+  `deferred` to `validated` after synthetic fixture coverage, blocked
+  assertions, relation-catalog review, CTI lint, and independent sign-off.
+- Trimmed the cloud/SaaS pilot to the accepted single-hop
+  `contains_auth_event` relationship; the `associated_session` expansion
+  remains deferred pending separate review.
+
+### Notes
+
+- Corpus count remains 176.
+- Validated lane increases to 21 patterns; deferred lane decreases to 79.
+- No schema-version change.
+- No real indicators, commands, exploit details, victim/customer context,
+  raw telemetry, or live/current external telemetry claims are introduced.
+
 ## v0.4.0 - 2026-05-27
 
 See [release notes](docs/releases/v0.4.0.md).

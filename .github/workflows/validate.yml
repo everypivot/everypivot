@@ -80,6 +80,12 @@ jobs:
       - name: Run fixture suite
         run: ruby tools/check_fixture_suite.rb
 
+      - name: Run CTI promotion lint
+        run: ruby tools/check_cti_promotion_lint.rb
+
+      - name: Run CTI promotion lint tests
+        run: ruby tools/test_cti_promotion_lint.rb
+
       - name: Run query profile suite
         run: ruby tools/check_query_profile_suite.rb
 

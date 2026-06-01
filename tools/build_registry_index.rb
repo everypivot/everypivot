@@ -232,7 +232,7 @@ end
 
 options = {
   repo_root: Pathname(__dir__).join('..').expand_path,
-  release: 'v0.4.0',
+  release: 'v0.4.1',
   published_at: Time.now.utc.strftime('%F'),
   output: nil,
   site_data_root: nil,
@@ -372,10 +372,13 @@ release_manifest = {
       'patterns' => '/edge/patterns'
     }
   else
-    release_prefix = "/releases/#{options[:release]}"
+    # Stable releases deploy the site at the root of everypivot.io. The single
+    # static index.html loads the registry-index client-side, so there is no
+    # separate /releases/<tag>/ or /patterns subtree. Keep both keys pointed at
+    # "/" so the manifest matches the live deploy surface.
     {
-      'homepage' => "#{release_prefix}/",
-      'patterns' => "#{release_prefix}/patterns"
+      'homepage' => '/',
+      'patterns' => '/'
     }
   end,
   'downloads' => [

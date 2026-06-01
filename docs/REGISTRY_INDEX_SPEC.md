@@ -38,15 +38,15 @@ Suggested top-level fields:
 ```json
 {
   "registry": "everypivot",
-  "release": "v0.4.0",
-  "published_at": "2026-05-27",
+  "release": "v0.4.1",
+  "published_at": "2026-06-01",
   "schema_versions": {
     "pivot_pattern": "1.4"
   },
   "counts": {
-    "validated": 19,
+    "validated": 21,
     "working_set": 76,
-    "deferred": 81
+    "deferred": 79
   },
   "patterns": [
     {

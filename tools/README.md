@@ -10,6 +10,7 @@ Current tools:
 - `validate_pivots.rb` validates the `graph-pivots/` corpus against the published schema plus lane-policy rules
 - `check_fixture_suite.rb` runs the fixture manifest under `fixtures/` and validates traversal evidence examples
 - `check_query_profile_suite.rb` validates adapter/query profile sidecars, fixture graphs, and generated query freshness
+- `check_cti_promotion_lint.rb` blocks CTI promotion artifacts that encode assessment/review vocabulary, uncataloged tuples, or unsafe fixture content
 - `check_release_metadata.rb` verifies that README, release notes, builder defaults, committed artifacts, and site data agree on the current release
 - `check_generated_freshness.rb` rebuilds registry and site data into a temporary directory and compares the committed public outputs
 - `check_relation_catalog.rb` warns when pattern relation/form vocabulary is not yet listed in `docs/RELATION_CATALOG.md`
@@ -26,6 +27,8 @@ Recommended usage:
 ```bash
 ruby tools/check_fixture_suite.rb
 ruby tools/check_query_profile_suite.rb
+ruby tools/check_cti_promotion_lint.rb
+ruby tools/test_cti_promotion_lint.rb
 ruby tools/check_relation_catalog.rb
 ruby tools/check_relation_catalog.rb /path/to/graph-pivots
 ruby tools/smoke_neo4j_query_profiles.rb -- --address bolt://localhost:7687
@@ -35,11 +38,16 @@ ruby tools/check_release_metadata.rb
 ruby tools/check_generated_freshness.rb
 ruby tools/check_site_links.rb
 ruby tools/check_site_snapshot.rb
-ruby tools/build_release_pack.rb --release v0.4.0 --published-at 2026-05-27 --artifact-mode stable --authority-status canonical --force
+ruby tools/build_release_pack.rb --release v0.4.1 --published-at 2026-06-01 --artifact-mode stable --authority-status canonical --force
 ruby tools/build_release_pack.rb --skip-fixtures --output-dir /tmp/everypivot-release-pack --force
 ```
 
+Gate split:
+- `validate_pivots.rb` enforces schema and lane-policy correctness
+- `check_cti_promotion_lint.rb` is the promotion-blocking CTI safety gate for public CTI pattern and fixture material
+- `check_relation_catalog.rb` remains the warning-only relation/form inventory check used by reviewers and tooling
+
 Default behavior:
-- `build_release_pack.rb` validates the copied corpus and runs the copied fixture suite before emitting artifacts
+- `build_release_pack.rb` validates the copied corpus and runs the copied CTI lint, fixture suite, and query-profile suite before emitting artifacts
 - stable `build_release_pack.rb` output includes `site/`, regenerates `site/data/`, and reruns release metadata, generated-freshness, site-link, and homepage-snapshot checks inside the copied pack
 - use `--skip-fixtures` only when you explicitly need a pack despite a known fixture issue

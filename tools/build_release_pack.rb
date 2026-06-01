@@ -15,8 +15,21 @@ module EveryPivot
 
     REPO_ROOT = Pathname(__dir__).join('..').expand_path
     PACK_NAME = 'everypivot-release-pack'
-    DEFAULT_RELEASE = 'v0.4.0'
-    DEFAULT_PUBLISHED_AT = Time.now.utc.strftime('%F')
+    DEFAULT_RELEASE = 'v0.4.1'
+    # Default to the published_at pinned in the committed release manifest so
+    # ad-hoc developer builds match the canonical release date. Falls back to
+    # today's UTC date only when the manifest is unavailable (fresh clone,
+    # pre-release-prep state). CI release jobs pass --published-at explicitly.
+    DEFAULT_PUBLISHED_AT = begin
+      manifest_path = REPO_ROOT.join('artifacts', 'release-manifest.json')
+      if manifest_path.file?
+        JSON.parse(manifest_path.read).fetch('published_at') { Time.now.utc.strftime('%F') }
+      else
+        Time.now.utc.strftime('%F')
+      end
+    rescue StandardError
+      Time.now.utc.strftime('%F')
+    end
     DEFAULT_ARTIFACT_MODE = 'stable'
     DEFAULT_AUTHORITY_STATUS = 'canonical'
     ROOT_FILES = %w[
@@ -53,6 +66,8 @@ module EveryPivot
       tools/test_build_release_pack.rb
       tools/validate_pivots.rb
       tools/check_fixture_suite.rb
+      tools/check_cti_promotion_lint.rb
+      tools/test_cti_promotion_lint.rb
       tools/check_query_profile_suite.rb
       tools/smoke_neo4j_query_profiles.rb
       tools/generate_query_profile_demo.rb
@@ -215,6 +230,7 @@ module EveryPivot
       end
 
       run_pack_gate!(output_dir, 'tools/validate_pivots.rb', output_dir.join('graph-pivots').to_s)
+      run_pack_gate!(output_dir, 'tools/check_cti_promotion_lint.rb')
 
       fixture_status = 'not_run'
       if check_fixtures
@@ -284,6 +300,7 @@ module EveryPivot
         'tool_entrypoints' => {
           'validator' => 'tools/validate_pivots.rb',
           'fixture_suite' => 'tools/check_fixture_suite.rb',
+          'cti_promotion_lint' => 'tools/check_cti_promotion_lint.rb',
           'query_profile_suite' => 'tools/check_query_profile_suite.rb',
           'release_metadata' => 'tools/check_release_metadata.rb',
           'generated_freshness' => 'tools/check_generated_freshness.rb',
@@ -299,6 +316,7 @@ module EveryPivot
         'provenance' => provenance(authority_status),
         'quality_gates' => {
           'validator' => 'passed',
+          'cti_promotion_lint' => 'passed',
           'fixture_suite' => fixture_status,
           'query_profile_suite' => 'passed',
           'relation_catalog' => relation_catalog_status,

@@ -13,9 +13,9 @@ The repository publishes:
 
 ## Current Release
 
-- Release: `v0.4.0`
+- Release: `v0.4.1`
 - Corpus: 176 patterns
-- Lanes: 19 `validated`, 76 `working_set`, 81 `deferred`
+- Lanes: 21 `validated`, 76 `working_set`, 79 `deferred`
 - Schema target: `pivot-pattern` v1.4
 
 ## Repository Layout
@@ -51,6 +51,7 @@ systems own execution, corroboration, scoring, and case-specific judgment.
 ruby tools/validate_pivots.rb --strict-metadata
 ruby tools/check_fixture_suite.rb
 ruby tools/check_query_profile_suite.rb
+ruby tools/check_cti_promotion_lint.rb
 ```
 
 ## Build Registry Artifacts
@@ -58,8 +59,8 @@ ruby tools/check_query_profile_suite.rb
 ```bash
 ruby tools/build_registry_index.rb \
   --repo-root . \
-  --release v0.4.0 \
-  --published-at 2026-05-27 \
+  --release v0.4.1 \
+  --published-at 2026-06-01 \
   --output artifacts/registry-index.json \
   --site-data-root site/data
 ```
@@ -94,6 +95,7 @@ Then open `http://localhost:4173/site/index.html`.
 - [Adapter and query profiles](docs/ADAPTER_QUERY_PROFILES.md)
 - [Contributing and promotion](docs/CONTRIBUTING_AND_PROMOTION.md)
 - [Relation catalog](docs/RELATION_CATALOG.md)
+- [CTI promotion boundaries](docs/CTI_PROMOTION_BOUNDARIES.md)
 - [License FAQ](LICENSE-FAQ.md)
 - [Governance](GOVERNANCE.md)
 - [Validation semantics](VALIDATION_SEMANTICS.md)

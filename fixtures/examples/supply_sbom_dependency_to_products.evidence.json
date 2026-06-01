@@ -1,0 +1,226 @@
+{
+  "format": "everypivot.traversal_evidence_pack",
+  "format_version": 1,
+  "fixture_id": "supply_sbom_dependency_to_products_evidence_v1",
+  "pattern_id": "SUPPLY_SBOM_DEPENDENCY_TO_PRODUCTS",
+  "fixture_roles": [
+    "positive",
+    "weak_positive",
+    "cautionary_negative",
+    "suppression",
+    "high_cardinality"
+  ],
+  "purpose": "Synthetic traversal evidence for SBOM dependency lineage. Covers direct dependency, transitive or dev-only weak corroboration, similar-name fork near-miss, stale historical dependency suppression, ubiquitous-base-library suppression, and high-cardinality fan-out. All identifiers, sources, and timestamps are synthetic.",
+  "source_node": {
+    "id": "it:prod:softver:synthetic-libalpha-1.0.0",
+    "form": "it:prod:softver",
+    "label": "synthetic-libalpha-1.0.0"
+  },
+  "nodes": [
+    {
+      "id": "it:prod:softver:synthetic-libalpha-1.0.0",
+      "form": "it:prod:softver",
+      "label": "synthetic-libalpha-1.0.0"
+    },
+    {
+      "id": "it:prod:softver:synthetic-app-direct-2.0.0",
+      "form": "it:prod:softver",
+      "label": "synthetic-app-direct-2.0.0"
+    },
+    {
+      "id": "it:prod:softver:synthetic-app-transitive-1.5.0",
+      "form": "it:prod:softver",
+      "label": "synthetic-app-transitive-1.5.0"
+    },
+    {
+      "id": "it:prod:softver:synthetic-libalpha-fork-1.0.0",
+      "form": "it:prod:softver",
+      "label": "synthetic-libalpha-fork-1.0.0"
+    },
+    {
+      "id": "it:prod:softver:synthetic-app-historical-4.0.0",
+      "form": "it:prod:softver",
+      "label": "synthetic-app-historical-4.0.0",
+      "stale": true
+    },
+    {
+      "id": "it:prod:softver:synthetic-baselib-ubiquitous-1.0.0",
+      "form": "it:prod:softver",
+      "label": "synthetic-baselib-ubiquitous-1.0.0",
+      "negative_node_list": "ubiquitous_base_libraries",
+      "candidate_count": 75000
+    },
+    {
+      "id": "it:prod:softver:synthetic-app-baseuser-alpha-1.0.0",
+      "form": "it:prod:softver",
+      "label": "synthetic-app-baseuser-alpha-1.0.0"
+    },
+    {
+      "id": "it:prod:softver:synthetic-app-baseuser-beta-1.0.0",
+      "form": "it:prod:softver",
+      "label": "synthetic-app-baseuser-beta-1.0.0"
+    }
+  ],
+  "edges": [
+    {
+      "from": "it:prod:softver:synthetic-libalpha-1.0.0",
+      "to": "it:prod:softver:synthetic-app-direct-2.0.0",
+      "relation": "depended_on_by",
+      "firstseen": "2026-05-02",
+      "source": "example_sbom_parser_a"
+    },
+    {
+      "from": "it:prod:softver:synthetic-libalpha-1.0.0",
+      "to": "it:prod:softver:synthetic-app-transitive-1.5.0",
+      "relation": "depended_on_by",
+      "firstseen": "2026-05-03",
+      "source": "example_sbom_parser_b",
+      "transitive": true,
+      "dev_only": true
+    },
+    {
+      "from": "it:prod:softver:synthetic-libalpha-1.0.0",
+      "to": "it:prod:softver:synthetic-app-historical-4.0.0",
+      "relation": "depended_on_by",
+      "firstseen": "2018-01-12",
+      "lastseen": "2018-06-30",
+      "source": "example_sbom_parser_a"
+    },
+    {
+      "from": "it:prod:softver:synthetic-baselib-ubiquitous-1.0.0",
+      "to": "it:prod:softver:synthetic-app-baseuser-alpha-1.0.0",
+      "relation": "depended_on_by",
+      "firstseen": "2026-05-04",
+      "source": "example_sbom_parser_a"
+    },
+    {
+      "from": "it:prod:softver:synthetic-baselib-ubiquitous-1.0.0",
+      "to": "it:prod:softver:synthetic-app-baseuser-beta-1.0.0",
+      "relation": "depended_on_by",
+      "firstseen": "2026-05-04",
+      "source": "example_sbom_parser_b"
+    }
+  ],
+  "expected_traversals": [
+    {
+      "id": "direct_dependency_returns_consumer",
+      "role": "positive",
+      "start": "it:prod:softver:synthetic-libalpha-1.0.0",
+      "relation": "depended_on_by",
+      "direction": "out",
+      "included_targets": [
+        "it:prod:softver:synthetic-app-direct-2.0.0"
+      ],
+      "allowed_assertions": [
+        "A direct synthetic dependency edge can be presented as a candidate downstream consumer of the synthetic library."
+      ],
+      "blocked_assertions": [
+        "Do not infer compromise, exploitability, remediation priority, authorship, ownership, sponsorship, or actor attribution from a dependency edge alone.",
+        "Dependency presence is candidate context, not runtime reachability or final assessment."
+      ]
+    },
+    {
+      "id": "transitive_dev_only_dependency_is_weak",
+      "role": "weak_positive",
+      "start": "it:prod:softver:synthetic-libalpha-1.0.0",
+      "relation": "depended_on_by",
+      "direction": "out",
+      "candidate_targets": [
+        "it:prod:softver:synthetic-app-transitive-1.5.0"
+      ],
+      "allowed_assertions": [
+        "A transitive-only or dev/test dependency edge can be retained as a weak candidate that still needs corroboration."
+      ],
+      "blocked_assertions": [
+        "Do not promote a transitive or dev-only dependency to runtime reachability, exposure, exploitability, or remediation priority without corroboration from build manifests, runtime evidence, or product version analysis.",
+        "Do not infer authorship, ownership, sponsorship, or actor attribution from a transitive or dev/test edge."
+      ]
+    },
+    {
+      "id": "similar_name_fork_is_not_a_dependency",
+      "role": "cautionary_negative",
+      "start": "it:prod:softver:synthetic-libalpha-1.0.0",
+      "relation": "depended_on_by",
+      "direction": "out",
+      "candidate_targets": [
+        "it:prod:softver:synthetic-libalpha-fork-1.0.0"
+      ],
+      "allowed_assertions": [
+        "A similarly named fork or same-name component can co-exist in the graph without being a downstream consumer of the source library."
+      ],
+      "blocked_assertions": [
+        "Do not treat name similarity, repository-like labels, or shared version strings as a dependency edge.",
+        "Do not infer compromise, exploitability, remediation priority, authorship, ownership, sponsorship, or actor attribution from name overlap."
+      ]
+    },
+    {
+      "id": "stale_historical_dependency_is_suppressed",
+      "role": "suppression",
+      "start": "it:prod:softver:synthetic-libalpha-1.0.0",
+      "relation": "depended_on_by",
+      "direction": "out",
+      "suppressed_targets": [
+        {
+          "id": "it:prod:softver:synthetic-app-historical-4.0.0",
+          "reason": "Recorded dependency is historical only (firstseen 2018-01-12, lastseen 2018-06-30); the consumer is end-of-lifed in the synthetic fixture and the metadata must not be presented as current exposure."
+        }
+      ],
+      "allowed_assertions": [
+        "The historical edge can remain available for audit, lifecycle analysis, or rarity calculation if the downstream system keeps an explicit historical or suppression-bypass mode."
+      ],
+      "blocked_assertions": [
+        "Stale or historical dependency metadata is not current exposure, current compromise, current exploitability, or current remediation priority.",
+        "Do not infer authorship, ownership, sponsorship, or actor attribution from a stale dependency edge."
+      ]
+    },
+    {
+      "id": "ubiquitous_base_library_is_suppressed",
+      "role": "suppression",
+      "start": "it:prod:softver:synthetic-baselib-ubiquitous-1.0.0",
+      "relation": "depended_on_by",
+      "direction": "out",
+      "suppressed_targets": [
+        {
+          "id": "it:prod:softver:synthetic-app-baseuser-alpha-1.0.0",
+          "reason": "Source component is listed in the ubiquitous_base_libraries negative-node list; the downstream-consumer edge should be suppressed in ordinary output."
+        },
+        {
+          "id": "it:prod:softver:synthetic-app-baseuser-beta-1.0.0",
+          "reason": "Same suppression: the source component is a ubiquitous base library and its accumulated fan-out exceeds the published degree cap for ordinary downstream-product reporting."
+        }
+      ],
+      "allowed_assertions": [
+        "The base-library evidence can remain available for audit, rarity calculation, or local suppression tuning."
+      ],
+      "blocked_assertions": [
+        "Do not present a ubiquitous base library as a meaningful downstream-product cluster without explicit analyst override.",
+        "Do not infer compromise, exploitability, remediation priority, authorship, ownership, sponsorship, or actor attribution from base-library dependency edges."
+      ]
+    },
+    {
+      "id": "ubiquitous_base_library_fan_out_is_high_cardinality_noise",
+      "role": "high_cardinality",
+      "start": "it:prod:softver:synthetic-baselib-ubiquitous-1.0.0",
+      "relation": "depended_on_by",
+      "direction": "out",
+      "candidate_targets": [
+        "it:prod:softver:synthetic-app-baseuser-alpha-1.0.0",
+        "it:prod:softver:synthetic-app-baseuser-beta-1.0.0"
+      ],
+      "allowed_assertions": [
+        "The high-cardinality source can be used to explain why a base library is noisy or should be suppressed in normal downstream-product traversals."
+      ],
+      "blocked_assertions": [
+        "Do not turn high-cardinality base-library fan-out into a positive downstream-product clustering claim.",
+        "Do not infer compromise, exploitability, remediation priority, authorship, ownership, sponsorship, or actor attribution from high-cardinality fan-out."
+      ]
+    }
+  ],
+  "blocked_assertions": [
+    "A synthetic dependency edge is not compromise, exploitability, remediation priority, authorship, ownership, sponsorship, or actor attribution.",
+    "Transitive-only or dev/test dependencies require corroboration before downstream systems treat them as exposure.",
+    "Stale or historical dependency metadata is not current exposure.",
+    "Ubiquitous base libraries are suppression and rarity evidence, not positive downstream-product clusters.",
+    "Validated lifecycle state is not a runtime confidence score, an attribution claim, or a final assessment."
+  ]
+}

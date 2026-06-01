@@ -1,9 +1,14 @@
 id: SUPPLY_SBOM_DEPENDENCY_TO_PRODUCTS
-version: 1.0.0
-pattern_schema_version: 1.2
-validation_state: deferred
-deferred_reason: needs_fixtures
-precision_tier: exploratory
+version: 1.1.0
+pattern_schema_version: 1.4
+validation_state: validated
+precision_tier: low
+robustness_class: enumeration
+hazards:
+- Common transitive dependencies, vendored packages, and version-range drift can make SBOM links overstate actual exposure.
+- Corroborate dependency reachability with product version, build metadata, and exploitability context; dependency presence alone is not compromise.
+- Ubiquitous base libraries inflate downstream-consumer fan-out and must be suppressed via the ubiquitous_base_libraries negative-node list rather than presented as positive clusters.
+- Stale or historical SBOM-declared dependencies are not current exposure; downstream systems must treat them as audit or lifecycle context, not runtime confidence.
 capability_requirements:
   required:
   - 'sbom_ingestion'
@@ -11,10 +16,10 @@ capability_requirements:
   optional:
   - 'package_metadata_collection'
   - 'version_range_resolution'
-hazards:
-- Common transitive dependencies, vendored packages, and version-range drift can make SBOM links overstate actual exposure.
-- Corroborate dependency reachability with product version, build metadata, and exploitability context; dependency presence alone is not compromise.
-- Promotion needs examples for reachable runtime dependency, dev or test dependency, transitive-only dependency, and vendor-bundled package suppression.
+review:
+  last_reviewed: '2026-06-01'
+  review_cadence_days: 90
+  next_review: '2026-08-30'
 name: Dependency -> Downstream Product Exposure
 category: SUPPLY
 description: Enumerate downstream products inheriting exposure through an SBOM-declared dependency relationship.
@@ -24,6 +29,8 @@ assessment:
   claim: indicates
   basis: assessed
   scope: entity_level
+  subject_role: behavioural_cluster
+  object_role: observation
 hops:
 - via: depended_on_by
   direction: out

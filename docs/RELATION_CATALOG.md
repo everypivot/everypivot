@@ -10,14 +10,14 @@ portability scoring. v0.3 warning-only tooling may use this inventory to show
 vocabulary drift, but unknown values remain review warnings before any future
 schema or CI enforcement.
 
-Inventory date: 2026-05-24.
+Inventory date: 2026-06-01.
 
 Current corpus snapshot:
 
 - 176 patterns.
 - 112 distinct `source` values.
-- 66 distinct `target` values.
-- 204 distinct `hops[].via` values.
+- 65 distinct `target` values.
+- 203 distinct `hops[].via` values.
 - 94 distinct `hops[].form` values.
 
 ## Naming Rules
@@ -333,7 +333,6 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 <summary>Target forms</summary>
 
 - `auth:event` (1)
-- `auth:event|auth:session` (1)
 - `auth:session` (1)
 - `cloud:subscription:uid` (1)
 - `cloud:tenant:uid` (1)
@@ -413,7 +412,6 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `appears_in_message_id` (1)
 - `associated_identity` (1)
 - `associated_message` (2)
-- `associated_session` (1)
 - `associated_with` (2)
 - `attached_to` (3)
 - `attachment_cluster_hash` (1)

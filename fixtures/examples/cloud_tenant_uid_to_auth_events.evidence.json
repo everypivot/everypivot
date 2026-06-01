@@ -1,0 +1,274 @@
+{
+  "format": "everypivot.traversal_evidence_pack",
+  "format_version": 1,
+  "fixture_id": "cloud_tenant_uid_to_auth_events_evidence_v1",
+  "pattern_id": "CTI_CLOUD_TENANT_UID_TO_AUTH_EVENTS",
+  "fixture_roles": [
+    "positive",
+    "weak_positive",
+    "cautionary_negative",
+    "suppression",
+    "high_cardinality"
+  ],
+  "purpose": "Synthetic traversal evidence for tenant-to-auth-event context. Covers bounded tenant event context, delegated or shared-service weak context, similar-label near miss, stale historical event suppression, provider or health-check suppression, and high-cardinality fan-out. All identifiers, sources, and timestamps are synthetic.",
+  "source_node": {
+    "id": "cloud:tenant:uid:synthetic-tenant-alpha",
+    "form": "cloud:tenant:uid",
+    "label": "synthetic-tenant-alpha"
+  },
+  "nodes": [
+    {
+      "id": "cloud:tenant:uid:synthetic-tenant-alpha",
+      "form": "cloud:tenant:uid",
+      "label": "synthetic-tenant-alpha"
+    },
+    {
+      "id": "cloud:tenant:uid:synthetic-tenant-bravo",
+      "form": "cloud:tenant:uid",
+      "label": "synthetic-tenant-bravo"
+    },
+    {
+      "id": "cloud:tenant:uid:synthetic-provider-demo-tenant",
+      "form": "cloud:tenant:uid",
+      "label": "synthetic-provider-demo-tenant",
+      "negative_node_list": "multi_tenant_provider_or_demo_tenants",
+      "candidate_count": 150000
+    },
+    {
+      "id": "auth:event:synthetic-auth-event-direct-001",
+      "form": "auth:event",
+      "label": "synthetic-auth-event-direct-001"
+    },
+    {
+      "id": "auth:event:synthetic-auth-event-delegated-001",
+      "form": "auth:event",
+      "label": "synthetic-auth-event-delegated-001"
+    },
+    {
+      "id": "auth:event:synthetic-auth-event-similar-label-001",
+      "form": "auth:event",
+      "label": "synthetic-auth-event-similar-label-001"
+    },
+    {
+      "id": "auth:event:synthetic-auth-event-historical-001",
+      "form": "auth:event",
+      "label": "synthetic-auth-event-historical-001",
+      "stale": true
+    },
+    {
+      "id": "auth:event:synthetic-auth-event-healthcheck-001",
+      "form": "auth:event",
+      "label": "synthetic-auth-event-healthcheck-001",
+      "negative_node_list": "synthetic_or_healthcheck_auth_events"
+    },
+    {
+      "id": "auth:event:synthetic-auth-event-healthcheck-002",
+      "form": "auth:event",
+      "label": "synthetic-auth-event-healthcheck-002",
+      "negative_node_list": "synthetic_or_healthcheck_auth_events"
+    },
+    {
+      "id": "auth:event:synthetic-auth-event-healthcheck-003",
+      "form": "auth:event",
+      "label": "synthetic-auth-event-healthcheck-003",
+      "negative_node_list": "synthetic_or_healthcheck_auth_events"
+    },
+    {
+      "id": "auth:event:synthetic-auth-event-healthcheck-004",
+      "form": "auth:event",
+      "label": "synthetic-auth-event-healthcheck-004",
+      "negative_node_list": "synthetic_or_healthcheck_auth_events"
+    }
+  ],
+  "edges": [
+    {
+      "from": "cloud:tenant:uid:synthetic-tenant-alpha",
+      "to": "auth:event:synthetic-auth-event-direct-001",
+      "relation": "contains_auth_event",
+      "firstseen": "2026-05-02",
+      "source": "example_auth_fixture_a"
+    },
+    {
+      "from": "cloud:tenant:uid:synthetic-tenant-alpha",
+      "to": "auth:event:synthetic-auth-event-delegated-001",
+      "relation": "contains_auth_event",
+      "firstseen": "2026-05-03",
+      "source": "example_auth_fixture_b"
+    },
+    {
+      "from": "cloud:tenant:uid:synthetic-tenant-alpha",
+      "to": "auth:event:synthetic-auth-event-historical-001",
+      "relation": "contains_auth_event",
+      "firstseen": "2018-02-10",
+      "lastseen": "2018-02-10",
+      "source": "example_auth_fixture_a"
+    },
+    {
+      "from": "cloud:tenant:uid:synthetic-tenant-bravo",
+      "to": "auth:event:synthetic-auth-event-similar-label-001",
+      "relation": "contains_auth_event",
+      "firstseen": "2026-05-02",
+      "source": "example_auth_fixture_a"
+    },
+    {
+      "from": "cloud:tenant:uid:synthetic-provider-demo-tenant",
+      "to": "auth:event:synthetic-auth-event-healthcheck-001",
+      "relation": "contains_auth_event",
+      "firstseen": "2026-05-04",
+      "source": "example_auth_fixture_a"
+    },
+    {
+      "from": "cloud:tenant:uid:synthetic-provider-demo-tenant",
+      "to": "auth:event:synthetic-auth-event-healthcheck-002",
+      "relation": "contains_auth_event",
+      "firstseen": "2026-05-04",
+      "source": "example_auth_fixture_b"
+    },
+    {
+      "from": "cloud:tenant:uid:synthetic-provider-demo-tenant",
+      "to": "auth:event:synthetic-auth-event-healthcheck-003",
+      "relation": "contains_auth_event",
+      "firstseen": "2026-05-04",
+      "source": "example_auth_fixture_a"
+    },
+    {
+      "from": "cloud:tenant:uid:synthetic-provider-demo-tenant",
+      "to": "auth:event:synthetic-auth-event-healthcheck-004",
+      "relation": "contains_auth_event",
+      "firstseen": "2026-05-04",
+      "source": "example_auth_fixture_b"
+    }
+  ],
+  "expected_traversals": [
+    {
+      "id": "tenant_returns_bounded_auth_event",
+      "role": "positive",
+      "start": "cloud:tenant:uid:synthetic-tenant-alpha",
+      "relation": "contains_auth_event",
+      "direction": "out",
+      "included_targets": [
+        "auth:event:synthetic-auth-event-direct-001"
+      ],
+      "allowed_assertions": [
+        "A bounded synthetic tenant-to-auth-event edge can be presented as tenant-scoped auth-event context."
+      ],
+      "blocked_assertions": [
+        "Do not infer tenant ownership, compromise, actor control, maliciousness, operational effect, direct user intent, current access, or final assessment from a tenant-event edge alone.",
+        "Tenant-event context is a scoped observation, not an identity validation or trust-boundary conclusion."
+      ]
+    },
+    {
+      "id": "delegated_shared_service_event_is_weak",
+      "role": "weak_positive",
+      "start": "cloud:tenant:uid:synthetic-tenant-alpha",
+      "relation": "contains_auth_event",
+      "direction": "out",
+      "candidate_targets": [
+        "auth:event:synthetic-auth-event-delegated-001"
+      ],
+      "allowed_assertions": [
+        "A delegated or shared-service synthetic event can be retained as weak access-path context that still needs corroboration."
+      ],
+      "blocked_assertions": [
+        "Do not promote a delegated or shared-service event to tenant ownership, compromise, direct user action, actor control, current access, or final assessment without corroboration from tenant-scoped administrative evidence and role context.",
+        "Do not treat shared-service context as a normal user traversal."
+      ]
+    },
+    {
+      "id": "similar_tenant_label_does_not_join_event",
+      "role": "cautionary_negative",
+      "start": "cloud:tenant:uid:synthetic-tenant-alpha",
+      "relation": "contains_auth_event",
+      "direction": "out",
+      "candidate_targets": [
+        "auth:event:synthetic-auth-event-similar-label-001"
+      ],
+      "allowed_assertions": [
+        "A similarly named synthetic auth event connected to another synthetic tenant can co-exist in the graph without being tenant-scoped evidence for this source tenant."
+      ],
+      "blocked_assertions": [
+        "Do not join the source tenant to auth-event nodes based on similar labels, naming conventions, or shared fixture prefixes.",
+        "Do not infer tenant ownership, compromise, actor control, direct user intent, or final assessment from label overlap."
+      ]
+    },
+    {
+      "id": "stale_historical_auth_event_is_suppressed",
+      "role": "suppression",
+      "start": "cloud:tenant:uid:synthetic-tenant-alpha",
+      "relation": "contains_auth_event",
+      "direction": "out",
+      "suppressed_targets": [
+        {
+          "id": "auth:event:synthetic-auth-event-historical-001",
+          "reason": "Recorded auth event is historical only (firstseen 2018-02-10, lastseen 2018-02-10) and outside the pattern's 30-day temporal window; the stale marker remains to make behavior visible even if temporal handling differs across implementations. It must not be presented as current access, active authentication context, compromise, or actor control."
+        }
+      ],
+      "allowed_assertions": [
+        "The historical edge can remain available for audit, lifecycle analysis, or stale-context review if the downstream system keeps an explicit historical or suppression-bypass mode."
+      ],
+      "blocked_assertions": [
+        "Stale or historical auth-event context is not current access, active session context, compromise, actor control, direct user intent, or final assessment.",
+        "Do not infer tenant ownership or operational effect from a stale auth event."
+      ]
+    },
+    {
+      "id": "provider_demo_healthcheck_events_are_suppressed",
+      "role": "suppression",
+      "start": "cloud:tenant:uid:synthetic-provider-demo-tenant",
+      "relation": "contains_auth_event",
+      "direction": "out",
+      "suppressed_targets": [
+        {
+          "id": "auth:event:synthetic-auth-event-healthcheck-001",
+          "reason": "Source tenant is listed in the multi_tenant_provider_or_demo_tenants negative-node list and target event is listed as synthetic_or_healthcheck_auth_events; ordinary output should suppress this service context."
+        },
+        {
+          "id": "auth:event:synthetic-auth-event-healthcheck-002",
+          "reason": "Same suppression: provider/demo tenant and health-check event context can exist as audit evidence but should not be shown as a normal tenant access path."
+        },
+        {
+          "id": "auth:event:synthetic-auth-event-healthcheck-003",
+          "reason": "Same suppression: provider/demo tenant fan-out is service or health-check context, not a normal user traversal."
+        },
+        {
+          "id": "auth:event:synthetic-auth-event-healthcheck-004",
+          "reason": "Same suppression: provider/demo tenant fan-out exceeds the ordinary traversal intent and should remain suppression evidence."
+        }
+      ],
+      "allowed_assertions": [
+        "The provider/demo and health-check evidence can remain available for audit, rarity calculation, or local suppression tuning."
+      ],
+      "blocked_assertions": [
+        "Do not present provider, demo, service, automation, or health-check context as a normal user traversal.",
+        "Do not infer tenant ownership, compromise, actor control, direct user intent, operational effect, or final assessment from provider/demo health-check edges."
+      ]
+    },
+    {
+      "id": "provider_demo_tenant_fan_out_is_high_cardinality_noise",
+      "role": "high_cardinality",
+      "start": "cloud:tenant:uid:synthetic-provider-demo-tenant",
+      "relation": "contains_auth_event",
+      "direction": "out",
+      "candidate_targets": [
+        "auth:event:synthetic-auth-event-healthcheck-001",
+        "auth:event:synthetic-auth-event-healthcheck-002",
+        "auth:event:synthetic-auth-event-healthcheck-003",
+        "auth:event:synthetic-auth-event-healthcheck-004"
+      ],
+      "allowed_assertions": [
+        "The high-cardinality source can be used to explain why provider/demo tenant fan-out is noisy or should be suppressed in normal tenant-to-event traversals."
+      ],
+      "blocked_assertions": [
+        "Do not turn high-cardinality provider/demo tenant fan-out into a positive access-path cluster.",
+        "Do not infer tenant ownership, compromise, actor control, direct user intent, operational effect, current access, or final assessment from high-cardinality fan-out."
+      ]
+    }
+  ],
+  "blocked_assertions": [
+    "A synthetic tenant-to-auth-event edge is not tenant ownership, compromise, actor control, direct user intent, operational effect, maliciousness, or final assessment.",
+    "Delegated, shared-service, provider, demo, automation, and health-check contexts require corroboration and suppression review before downstream systems treat them as meaningful access-path evidence.",
+    "Stale or historical auth-event metadata is not current access or active session context.",
+    "High-cardinality provider/demo tenant fan-out is suppression and rarity evidence, not a positive access-path cluster.",
+    "Validated lifecycle state is not a runtime confidence score, an attribution claim, or a live telemetry claim."
+  ]
+}
