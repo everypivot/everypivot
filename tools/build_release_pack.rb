@@ -15,7 +15,7 @@ module EveryPivot
 
     REPO_ROOT = Pathname(__dir__).join('..').expand_path
     PACK_NAME = 'everypivot-release-pack'
-    DEFAULT_RELEASE = 'v0.4.1'
+    DEFAULT_RELEASE = 'v0.4.2'
     # Default to the published_at pinned in the committed release manifest so
     # ad-hoc developer builds match the canonical release date. Falls back to
     # today's UTC date only when the manifest is unavailable (fresh clone,
@@ -43,6 +43,17 @@ module EveryPivot
       LICENSE-DATA
       NOTICE
       TRADEMARK.md
+      .reachable-history-allowlist
+    ].freeze
+    # Dotfiles that survive the should_include_file? filter when discovered
+    # via directory walks (and that we want listed in the pack manifest's
+    # source_files inventory). The reachable-history scanner's allow-list
+    # ships so the scanner can be re-run inside an unpacked pack after the
+    # consumer initialises a git repo, without false-positive self-matches
+    # against its own pattern definitions.
+    INCLUDED_DOTFILES = %w[
+      .gitignore
+      .reachable-history-allowlist
     ].freeze
     ROOT_DIRECTORIES = %w[
       adapters
@@ -59,11 +70,13 @@ module EveryPivot
       tools/build_registry_index.rb
       tools/build_release_pack.rb
       tools/check_generated_freshness.rb
+      tools/check_reachable_history.rb
       tools/check_relation_catalog.rb
       tools/check_release_metadata.rb
       tools/check_site_links.rb
       tools/check_site_snapshot.rb
       tools/test_build_release_pack.rb
+      tools/test_check_reachable_history.rb
       tools/validate_pivots.rb
       tools/check_fixture_suite.rb
       tools/check_cti_promotion_lint.rb
@@ -99,16 +112,8 @@ module EveryPivot
 
     def authority_note(authority_status)
       case authority_status
-      when 'preview_mirror_with_local_extensions'
-        'Preview distribution surface with local extensions. Provenance must stay explicit.'
-      when 'preview_mirror'
-        'Preview distribution surface built before canonical publication.'
-      when 'canonical_local_preview'
-        'Canonical local preview distribution for validating release contents before emitting stable artifacts.'
-      when 'canonical'
-        'Authoritative public registry pack emitted from the canonical EveryPivot repository.'
-      when 'authoritative'
-        'Authoritative public registry pack emitted after the canonical ownership handoff.'
+      when 'canonical', 'authoritative'
+        'Authoritative public registry pack.'
       else
         "Authority status declared as `#{authority_status}`."
       end
@@ -141,7 +146,8 @@ module EveryPivot
     end
 
     def should_include_file?(path)
-      !path.basename.to_s.start_with?('.') || path.basename.to_s == '.gitignore'
+      name = path.basename.to_s
+      !name.start_with?('.') || INCLUDED_DOTFILES.include?(name)
     end
 
     def walk_files(path)

@@ -1,0 +1,19 @@
+# Allow-list for tools/check_reachable_history.rb.
+#
+# Each entry is `<short_sha-or-*>:<path>:<pattern_name>` and matches the
+# `finding_signature` the scanner emits. Use `*` for the commit position
+# when the match is expected to persist across releases.
+#
+# Comments and blank lines are ignored.
+
+# The scanner's own pattern definitions necessarily contain the literal
+# PEM block headers it is looking for. The scanner is the detector, not
+# a key store.
+*:tools/check_reachable_history.rb:private_key_rsa
+*:tools/check_reachable_history.rb:private_key_openssh
+*:tools/check_reachable_history.rb:private_key_pem
+*:tools/check_reachable_history.rb:private_key_pgp
+
+# The reachable-history test fixture plants a known PEM header to verify
+# the scanner detects it; the file ships with the tests, not the corpus.
+*:tools/test_check_reachable_history.rb:private_key_rsa

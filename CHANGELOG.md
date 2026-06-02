@@ -6,6 +6,53 @@ All notable changes to EveryPivot&trade; are documented here.
 
 No changes yet.
 
+## v0.4.2 - 2026-06-02
+
+See [release notes](docs/releases/v0.4.2.md).
+
+### Added
+
+- `tools/check_reachable_history.rb`: ref-scoped scanner that iterates
+  every commit reachable from a given ref and reports findings against
+  a configurable pattern list (default patterns cover AWS access keys,
+  GitHub personal access tokens, OpenAI and Anthropic API keys, Slack
+  tokens, and PEM/PGP private-key headers). Ships with test suite and
+  allow-list.
+- `--probe-live BASE_URL` extension to `tools/check_release_metadata.rb`
+  that asserts the manifest's declared site paths resolve on the live
+  deploy.
+- `docs/RELEASE_PLAYBOOK.md` documenting the four release stages and
+  the per-stage checklist.
+- Release-commit-message convention in `docs/PROMOTION_CHECKLIST.md`.
+- REUSE lint CI gate (`pipx install reuse; reuse lint`) plus the
+  reachable-history scan as a CI gate in `validate.yml`. The validate
+  workflow now checks out with `fetch-depth: 0`.
+
+### Changed
+
+- `tools/build_release_pack.rb` `authority_note` is simplified to two
+  canonical values; the longer environment-conditioned strings used by
+  non-canonical release modes have been removed from the public copy
+  of the tool. The MANIFEST.json `provenance.note` string in any newly-
+  built stable release pack now reads "Authoritative public registry
+  pack."
+- `tools/check_release_metadata.rb`, `tools/check_site_links.rb`, and
+  `tools/check_site_snapshot.rb` were simplified: single mode, no
+  dual-mode toggle. Previously-relaxed assertions are now applied
+  unconditionally.
+- `tools/test_build_release_pack.rb` was trimmed to cover only
+  canonical-stable behaviour.
+- Minor doc sanitization in `docs/releases/v0.3.0.md` and
+  `docs/SCHEMA_V1_5_PROPOSAL.md`.
+
+### Notes
+
+- Corpus count remains 176. Lane counts unchanged at 21 / 76 / 79.
+- No `pivot-pattern` schema-version change.
+- No new public real-case material.
+- The new CI gates are additive: they fail the build only on new drift
+  introduced after this release.
+
 ## v0.4.1 - 2026-06-01
 
 See [release notes](docs/releases/v0.4.1.md).

@@ -65,11 +65,28 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          # Full history is required by check_reachable_history.rb so it can
+          # inspect every commit reachable from the current ref, not just
+          # the working tree.
+          fetch-depth: 0
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
+
+      - name: Install REUSE lint
+        run: pipx install reuse
+
+      - name: Run REUSE lint
+        run: reuse lint
+
+      - name: Scan reachable history for secret-shaped literals
+        run: ruby tools/check_reachable_history.rb
+
+      - name: Test reachable-history scanner
+        run: ruby tools/test_check_reachable_history.rb
 
       - name: Validate corpus
         run: ruby tools/validate_pivots.rb

@@ -47,3 +47,19 @@ For any pattern moving out of `deferred/`, also confirm:
 ## Promotion Rule Of Thumb
 
 If a pattern is useful but still awkward, caveat-heavy, or under-tested, it probably belongs in `working-set/`, not `validated/`.
+
+## Release Commit Message Convention
+
+When the promotion lands in a release-prep commit, the commit message body should describe the work. A one-line subject is appropriate only for metadata-only bumps (version string, release-date pin, regenerated artifacts).
+
+A descriptive body is required when the release commit includes any of:
+
+- new or removed doctrine documents;
+- new or significantly changed tooling, validators, or CI gates;
+- pattern promotions, demotions, or schema-version changes;
+- changes to public claims (licensing, governance, validation semantics);
+- public-readiness fixes (REUSE coverage, manifest contract, secret-pattern scope).
+
+Body structure uses labelled sections. See `docs/RELEASE_PLAYBOOK.md` for a worked example and the full per-stage guidance.
+
+The convention of one-line subjects observed in earlier release commits is fine for releases whose body genuinely is "we bumped the version and regenerated the artifacts". It is not fine for releases that change what the public can do with the project. Match the convention to the release, not the release to the convention.

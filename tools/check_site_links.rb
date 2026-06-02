@@ -27,8 +27,6 @@ PREVIEW_LEAK_MARKERS = %w[
   pivot-pattern.schema.preview
 ].freeze
 
-INCUBATION_STATUS_MARKER = 'Status: incubation-only sync note; do not public-export as-is.'
-
 def local_url?(value)
   return false if value.empty? || value.start_with?('#', '//')
 
@@ -73,10 +71,6 @@ def copy_site_to_staging(repo_root, staging_parent)
   staging_root
 end
 
-def incubation_repo?(repo_root)
-  status_path = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md')
-  status_path.file? && status_path.read.include?(INCUBATION_STATUS_MARKER)
-end
 
 def href_present?(text, href)
   text.match?(/(?<![\w-])href\s*=\s*(['"])#{Regexp.escape(href)}\1/i)
@@ -118,7 +112,6 @@ OptionParser.new do |parser|
 end.parse!
 
 repo_root = options[:repo_root]
-incubation_repo = incubation_repo?(repo_root)
 errors = []
 
 Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
@@ -145,10 +138,8 @@ Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
     end
   end
 
-  unless incubation_repo
-    PREVIEW_LEAK_MARKERS.each do |marker|
-      errors << "Homepage references preview-only data marker #{marker}" if homepage_text.include?(marker)
-    end
+  PREVIEW_LEAK_MARKERS.each do |marker|
+    errors << "Homepage references preview-only data marker #{marker}" if homepage_text.include?(marker)
   end
 
   Dir.glob(staging_root.join('**', '*.html').to_s).sort.each do |html_path|

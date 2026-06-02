@@ -5,8 +5,6 @@ require 'optparse'
 require 'pathname'
 require 'date'
 
-INCUBATION_STATUS_MARKER = 'Status: incubation-only sync note; do not public-export as-is.'
-
 def read_text(path, errors)
   path.read
 rescue Errno::ENOENT
@@ -61,11 +59,6 @@ def expect_equal(errors, label, actual, expected)
   return if actual == expected
 
   errors << "#{label}: expected #{expected.inspect}, got #{actual.inspect}"
-end
-
-def incubation_repo?(repo_root)
-  status_path = repo_root.join('incubation', 'PUBLIC_SYNC_STATUS.md')
-  status_path.file? && status_path.read.include?(INCUBATION_STATUS_MARKER)
 end
 
 def count_summary(data)
@@ -146,7 +139,6 @@ OptionParser.new do |parser|
 end.parse!
 
 repo_root = options[:repo_root]
-incubation_repo = incubation_repo?(repo_root)
 errors = []
 
 artifact_registry = parse_json(repo_root.join('artifacts', 'registry-index.json'), errors)
@@ -182,9 +174,7 @@ homepage['counts'].each do |lane, count|
 end
 
 expect_equal(errors, 'noscript release', homepage.dig('noscript', 'release'), baseline['release'])
-unless incubation_repo && homepage.dig('noscript', 'published_at').nil?
-  expect_equal(errors, 'noscript published_at', homepage.dig('noscript', 'published_at'), baseline['published_at'])
-end
+expect_equal(errors, 'noscript published_at', homepage.dig('noscript', 'published_at'), baseline['published_at'])
 
 homepage.dig('noscript', 'counts').each do |lane, count|
   expect_equal(errors, "noscript counts.#{lane}", count, baseline_counts[lane])

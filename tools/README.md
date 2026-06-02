@@ -38,7 +38,7 @@ ruby tools/check_release_metadata.rb
 ruby tools/check_generated_freshness.rb
 ruby tools/check_site_links.rb
 ruby tools/check_site_snapshot.rb
-ruby tools/build_release_pack.rb --release v0.4.1 --published-at 2026-06-01 --artifact-mode stable --authority-status canonical --force
+ruby tools/build_release_pack.rb --release v0.4.2 --published-at 2026-06-02 --artifact-mode stable --authority-status canonical --force
 ruby tools/build_release_pack.rb --skip-fixtures --output-dir /tmp/everypivot-release-pack --force
 ```
 

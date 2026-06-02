@@ -13,7 +13,7 @@ The repository publishes:
 
 ## Current Release
 
-- Release: `v0.4.1`
+- Release: `v0.4.2`
 - Corpus: 176 patterns
 - Lanes: 21 `validated`, 76 `working_set`, 79 `deferred`
 - Schema target: `pivot-pattern` v1.4
@@ -59,8 +59,8 @@ ruby tools/check_cti_promotion_lint.rb
 ```bash
 ruby tools/build_registry_index.rb \
   --repo-root . \
-  --release v0.4.1 \
-  --published-at 2026-06-01 \
+  --release v0.4.2 \
+  --published-at 2026-06-02 \
   --output artifacts/registry-index.json \
   --site-data-root site/data
 ```

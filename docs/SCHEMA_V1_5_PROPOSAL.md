@@ -46,9 +46,9 @@ Schema v1.5 should model:
 Identifiers in examples below are proposal examples unless they name an
 existing v0.2.0 corpus pattern. Future pattern IDs such as
 `CTI_OBSERVER_SELECTOR_TO_SOFTWARE_ARTIFACT_CANDIDATE` are not present in the
-current corpus. Incubation-only synthetic sidecars may use `EXAMPLE_...`
-stand-ins for these future IDs so doctrine tests cannot be mistaken for public
-pattern proposals.
+current corpus. Synthetic design sidecars may use `EXAMPLE_...` stand-ins
+for these future IDs so doctrine tests cannot be mistaken for public pattern
+proposals.
 
 ## Core Fields
 
