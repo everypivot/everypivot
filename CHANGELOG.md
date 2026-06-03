@@ -6,6 +6,34 @@ All notable changes to EveryPivot&trade; are documented here.
 
 No changes yet.
 
+## v0.4.3 - 2026-06-03
+
+See [release notes](docs/releases/v0.4.3.md).
+
+### Added
+
+- `LICENSES/Apache-2.0.txt` and `LICENSES/CC-BY-4.0.txt`: canonical
+  SPDX-named copies of the project's license texts, required by
+  REUSE 3.3.
+
+### Changed
+
+- `.reuse/dep5`: added `.reachable-history-allowlist` to the
+  Apache-2.0 stanza. The file was introduced in v0.4.2 but
+  inadvertently left uncovered by REUSE metadata, causing the v0.4.2
+  CI validate workflow to fail and skipping the release-asset job.
+
+### Notes
+
+- Hotfix release. The pattern corpus, schema, fixtures, and
+  release-pack composition are unchanged from v0.4.2. Counts remain
+  21 / 76 / 79 (176 total). Schema remains at `pivot-pattern` v1.4.
+- v0.4.2 has no downloadable release pack on GitHub Releases because
+  its release-asset job was skipped after the REUSE lint failure.
+  Consumers should use v0.4.3.
+- REUSE lint passes locally and is expected to pass in CI for the
+  first time at this release.
+
 ## v0.4.2 - 2026-06-02
 
 See [release notes](docs/releases/v0.4.2.md).

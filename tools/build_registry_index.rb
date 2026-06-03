@@ -232,7 +232,7 @@ end
 
 options = {
   repo_root: Pathname(__dir__).join('..').expand_path,
-  release: 'v0.4.2',
+  release: 'v0.4.3',
   published_at: Time.now.utc.strftime('%F'),
   output: nil,
   site_data_root: nil,

@@ -27,6 +27,7 @@ Files: .github/**
  artifacts/release-manifest.json
  .gitignore
  .reuse/dep5
+ .reachable-history-allowlist
  CODE_OF_CONDUCT.md
  CHANGELOG.md
  CONTRIBUTING.md

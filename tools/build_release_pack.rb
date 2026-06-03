@@ -15,7 +15,7 @@ module EveryPivot
 
     REPO_ROOT = Pathname(__dir__).join('..').expand_path
     PACK_NAME = 'everypivot-release-pack'
-    DEFAULT_RELEASE = 'v0.4.2'
+    DEFAULT_RELEASE = 'v0.4.3'
     # Default to the published_at pinned in the committed release manifest so
     # ad-hoc developer builds match the canonical release date. Falls back to
     # today's UTC date only when the manifest is unavailable (fresh clone,
