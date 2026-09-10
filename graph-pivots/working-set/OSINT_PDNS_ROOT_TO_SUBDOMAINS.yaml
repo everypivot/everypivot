@@ -1,6 +1,6 @@
 id: OSINT_PDNS_ROOT_TO_SUBDOMAINS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -24,12 +24,7 @@ category: OSINT
 description: Enumerate FQDNs observed under a registrable root or apex domain using passive DNS observations.
 source: inet:fqdn
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: passive_dns_subdomain
   direction: out

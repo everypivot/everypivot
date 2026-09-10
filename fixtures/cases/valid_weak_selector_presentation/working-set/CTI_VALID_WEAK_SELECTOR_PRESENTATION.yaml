@@ -21,9 +21,9 @@ target: file:bytes
 assessment:
   claim: indicates
   basis: assessed
-  scope: entity_level
+  scope: incident_level
   subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+  object_role: incident
 hops:
 - via: observed_in
   direction: out

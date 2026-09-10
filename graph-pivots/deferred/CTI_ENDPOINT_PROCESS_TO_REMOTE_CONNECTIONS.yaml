@@ -1,6 +1,6 @@
 id: CTI_ENDPOINT_PROCESS_TO_REMOTE_CONNECTIONS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -21,12 +21,7 @@ category: CTI
 description: Pivot from an endpoint process observation to remote network destinations connected by that process.
 source: endpoint:process
 target: inet:ipv4|inet:fqdn|network:connection
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: opened_connection
   direction: out

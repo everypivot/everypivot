@@ -1,6 +1,6 @@
 id: CTI_EMAIL_WEBMAIL_ATTACHMENT_SENDER_DOMAIN_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,12 +20,7 @@ category: CTI
 description: Pivot from a sender domain seen in webmail attachment telemetry to attachment file hashes and endpoint observations.
 source: email:sender:domain
 target: file:bytes|endpoint:uid
-assessment:
-  claim: indicates
-  basis: suspected
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: sent_attachment
   direction: out

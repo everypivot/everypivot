@@ -1,0 +1,13 @@
+SAIL - Structured Analytical Intelligence Layer™
+
+Copyright 2026 Mark Graham and contributors.
+
+Structured Analytical Intelligence Layer™ is an unregistered trademark claimed by
+Mark Graham. SAIL is used as the shorthand project name.
+
+This repository uses a split license model:
+
+- Apache License 2.0 for implementable artifacts.
+- Creative Commons Attribution 4.0 International for documentation and prose.
+
+See LICENSE, LICENSE-docs.md, LICENSE-AND-GOVERNANCE.md, and TRADEMARKS.md.

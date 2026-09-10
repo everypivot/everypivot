@@ -1,0 +1,247 @@
+{
+  "contract": "sail.predicate_type_matrix",
+  "version": "0.4-draft",
+  "semantic_role_contract": "semantic_roles.v0.4.json",
+  "structural_object_kind_contract": "structural_object_kinds.v0.4.json",
+  "layer1_rollup": {
+    "eligible_subject_roles": [
+      "threat_actor"
+    ],
+    "qualifying_filters": {
+      "minimum_confidence": "moderate",
+      "allowed_basis": [
+        "demonstrated",
+        "assessed"
+      ],
+      "required_validity": "current",
+      "required_scope": "entity_level"
+    }
+  },
+  "predicates": [
+    {
+      "id": "targets",
+      "allowed_subject_roles": [
+        "threat_actor",
+        "campaign",
+        "incident"
+      ],
+      "allowed_object_roles": [
+        "target"
+      ],
+      "allowed_object_kinds": [
+        "concept",
+        "product"
+      ],
+      "default_scope": "campaign_level",
+      "allowed_scope_by_subject_role": {
+        "threat_actor": [
+          "entity_level",
+          "campaign_level",
+          "incident_level"
+        ],
+        "campaign": [
+          "campaign_level",
+          "incident_level"
+        ],
+        "incident": [
+          "incident_level"
+        ]
+      }
+    },
+    {
+      "id": "uses",
+      "allowed_subject_roles": [
+        "threat_actor",
+        "campaign",
+        "incident",
+        "tool"
+      ],
+      "allowed_object_roles": [
+        "technique",
+        "tool"
+      ],
+      "allowed_object_kinds": [
+        "concept"
+      ],
+      "default_scope": "campaign_level",
+      "allowed_scope_by_subject_role": {
+        "threat_actor": [
+          "entity_level",
+          "campaign_level",
+          "incident_level"
+        ],
+        "campaign": [
+          "campaign_level",
+          "incident_level"
+        ],
+        "incident": [
+          "incident_level"
+        ],
+        "tool": [
+          "entity_level",
+          "incident_level"
+        ]
+      }
+    },
+    {
+      "id": "achieves",
+      "allowed_subject_roles": [
+        "threat_actor",
+        "campaign",
+        "incident"
+      ],
+      "allowed_object_roles": [],
+      "allowed_object_kinds": [
+        "concept"
+      ],
+      "default_scope": "campaign_level",
+      "allowed_scope_by_subject_role": {
+        "threat_actor": [
+          "entity_level",
+          "campaign_level",
+          "incident_level"
+        ],
+        "campaign": [
+          "campaign_level",
+          "incident_level"
+        ],
+        "incident": [
+          "incident_level"
+        ]
+      }
+    },
+    {
+      "id": "exploits",
+      "allowed_subject_roles": [
+        "threat_actor",
+        "tool",
+        "campaign",
+        "incident"
+      ],
+      "allowed_object_roles": [
+        "vulnerability"
+      ],
+      "allowed_object_kinds": [],
+      "default_scope": "campaign_level",
+      "allowed_scope_by_subject_role": {
+        "threat_actor": [
+          "entity_level",
+          "campaign_level",
+          "incident_level"
+        ],
+        "tool": [
+          "entity_level",
+          "incident_level"
+        ],
+        "campaign": [
+          "campaign_level",
+          "incident_level"
+        ],
+        "incident": [
+          "incident_level"
+        ]
+      }
+    },
+    {
+      "id": "attributed_to",
+      "allowed_subject_roles": [
+        "threat_actor",
+        "campaign"
+      ],
+      "allowed_object_roles": [
+        "attribution_target"
+      ],
+      "allowed_object_kinds": [],
+      "default_scope": "entity_level",
+      "allowed_scope_by_subject_role": {
+        "threat_actor": [
+          "entity_level",
+          "campaign_level"
+        ],
+        "campaign": [
+          "campaign_level"
+        ]
+      }
+    },
+    {
+      "id": "developing",
+      "allowed_subject_roles": [
+        "threat_actor"
+      ],
+      "allowed_object_roles": [
+        "tool",
+        "technique"
+      ],
+      "allowed_object_kinds": [
+        "attack_pattern"
+      ],
+      "default_scope": "entity_level",
+      "allowed_scope_by_subject_role": {
+        "threat_actor": [
+          "entity_level",
+          "campaign_level"
+        ]
+      }
+    },
+    {
+      "id": "indicates",
+      "allowed_subject_roles": [
+        "observation",
+        "behavioural_cluster"
+      ],
+      "allowed_object_roles": [
+        "threat_actor",
+        "campaign",
+        "incident"
+      ],
+      "allowed_object_kinds": [],
+      "default_scope": "incident_level",
+      "allowed_scope_by_subject_role": {
+        "observation": [
+          "incident_level"
+        ],
+        "behavioural_cluster": [
+          "incident_level",
+          "campaign_level"
+        ]
+      }
+    },
+    {
+      "id": "mitigation_assessed",
+      "allowed_subject_roles": [
+        "mitigation"
+      ],
+      "allowed_object_roles": [
+        "vulnerability",
+        "technique"
+      ],
+      "allowed_object_kinds": [
+        "product",
+        "attack_pattern"
+      ],
+      "default_scope": "entity_level",
+      "allowed_scope_by_subject_role": {
+        "mitigation": [
+          "entity_level",
+          "incident_level"
+        ]
+      }
+    },
+    {
+      "id": "detection_coverage_assessed",
+      "allowed_subject_roles": [
+        "detection_rule"
+      ],
+      "allowed_object_roles": [],
+      "allowed_object_kinds": [
+        "assessment"
+      ],
+      "default_scope": "incident_level",
+      "allowed_scope_by_subject_role": {
+        "detection_rule": [
+          "incident_level"
+        ]
+      }
+    }
+  ]
+}

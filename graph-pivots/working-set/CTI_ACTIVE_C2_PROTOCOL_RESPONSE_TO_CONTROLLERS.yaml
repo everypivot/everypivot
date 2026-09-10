@@ -1,6 +1,6 @@
 id: CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_CONTROLLERS
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: multi_hop_inference
@@ -22,12 +22,7 @@ category: CTI
 description: Pivot from a normalized active protocol probe response to controller endpoints that emitted the same distinctive response or handshake.
 source: network:service:probe_response
 target: inet:ipv4|inet:fqdn|inet:url
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: emitted_by
   direction: out

@@ -1,6 +1,6 @@
 id: CTI_ENDPOINT_UID_TO_DEVICE_UID_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: ownership_signal
@@ -25,12 +25,7 @@ category: CTI
 description: Pivot from a normalized endpoint identifier to device-level identifiers that may group endpoint telemetry across identity namespaces.
 source: endpoint:uid
 target: device:uid
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: maps_to_device_uid
   direction: out

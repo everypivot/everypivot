@@ -1,6 +1,6 @@
 id: CTI_ENDPOINT_FILE_ORIGIN_URL_TO_FILES
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: domain_expansion
@@ -19,12 +19,7 @@ category: CTI
 description: Pivot from endpoint file-origin URL metadata to downloaded files, file paths, and endpoint identities.
 source: file:origin:url
 target: file:bytes|file:path|endpoint:uid
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: downloaded_as
   direction: out

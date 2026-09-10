@@ -1,6 +1,6 @@
 id: SUPPLY_SBOM_DEPENDENCY_TO_PRODUCTS
-version: 1.1.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: low
 robustness_class: enumeration
@@ -25,12 +25,7 @@ category: SUPPLY
 description: Enumerate downstream products inheriting exposure through an SBOM-declared dependency relationship.
 source: it:prod:softver
 target: it:prod:softver
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: depended_on_by
   direction: out

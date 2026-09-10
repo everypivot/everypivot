@@ -1,6 +1,6 @@
 id: SUPPLY_CODESIGN_CERT_TO_PACKAGES
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
@@ -23,12 +23,7 @@ category: SUPPLY
 description: Cluster packages or update artifacts signed by the same code-signing certificate or signer material.
 source: x509:cert
 target: it:prod:softver
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: signs
   direction: out

@@ -13,10 +13,23 @@ The repository publishes:
 
 ## Current Release
 
-- Release: `v0.4.3`
+- Release: `v0.5.0`
+- Release date: `2026-09-10`
 - Corpus: 176 patterns
 - Lanes: 21 `validated`, 76 `working_set`, 79 `deferred`
-- Schema target: `pivot-pattern` v1.4
+- Schema target: `pivot-pattern` v1.5
+
+## Assessment Contract
+
+Schema v1.5 requires an explicit evidence-only or conditional candidate mode.
+All 176 patterns have reviewed defaults: 175 provide evidence without an
+assessment hint; one retains a conditional hint with qualifying-evidence
+requirements. Traversals, hazards, controls and lifecycle lanes are preserved.
+
+Validation checks the pinned SAIL v0.4 DRAFT contracts. A compatible hint does
+not establish runtime truth or an accepted conclusion. Consumers must update
+before adopting this distribution. See [evidence and assessment hints](docs/ASSESSMENT_BRIDGE.md)
+and [schema migration](docs/SCHEMA_MIGRATION.md).
 
 ## Repository Layout
 
@@ -48,7 +61,8 @@ systems own execution, corroboration, scoring, and case-specific judgment.
 ## Validate The Corpus
 
 ```bash
-ruby tools/validate_pivots.rb --strict-metadata
+ruby tools/validate_pivots.rb --strict-metadata --strict-bridge
+ruby tools/check_sail_bridge.rb --strict-incomplete
 ruby tools/check_fixture_suite.rb
 ruby tools/check_query_profile_suite.rb
 ruby tools/check_cti_promotion_lint.rb
@@ -59,8 +73,8 @@ ruby tools/check_cti_promotion_lint.rb
 ```bash
 ruby tools/build_registry_index.rb \
   --repo-root . \
-  --release v0.4.3 \
-  --published-at 2026-06-03 \
+  --release v0.5.0 \
+  --published-at 2026-09-10 \
   --output artifacts/registry-index.json \
   --site-data-root site/data
 ```

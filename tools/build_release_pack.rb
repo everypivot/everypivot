@@ -15,7 +15,7 @@ module EveryPivot
 
     REPO_ROOT = Pathname(__dir__).join('..').expand_path
     PACK_NAME = 'everypivot-release-pack'
-    DEFAULT_RELEASE = 'v0.4.3'
+    DEFAULT_RELEASE = 'v0.5.0'
     # Default to the published_at pinned in the committed release manifest so
     # ad-hoc developer builds match the canonical release date. Falls back to
     # today's UTC date only when the manifest is unavailable (fresh clone,
@@ -86,6 +86,11 @@ module EveryPivot
       tools/generate_query_profile_demo.rb
       tools/generate_stix_mapping_profile_demo.rb
       tools/json_schema_validator.rb
+      tools/sail_bridge.rb
+      tools/check_sail_bridge.rb
+      tools/test_sail_bridge.rb
+      tools/test_registry_assessment.rb
+      tools/test_site_assessment.js
     ].freeze
     STABLE_SITE_GENERATED_FILES = %w[
       site/data/registry-index.json
@@ -236,6 +241,7 @@ module EveryPivot
       end
 
       run_pack_gate!(output_dir, 'tools/validate_pivots.rb', output_dir.join('graph-pivots').to_s)
+      run_pack_gate!(output_dir, 'tools/check_sail_bridge.rb', '--strict-incomplete')
       run_pack_gate!(output_dir, 'tools/check_cti_promotion_lint.rb')
 
       fixture_status = 'not_run'
@@ -305,6 +311,7 @@ module EveryPivot
         'source_root' => '.',
         'tool_entrypoints' => {
           'validator' => 'tools/validate_pivots.rb',
+          'assessment_bridge' => 'tools/check_sail_bridge.rb',
           'fixture_suite' => 'tools/check_fixture_suite.rb',
           'cti_promotion_lint' => 'tools/check_cti_promotion_lint.rb',
           'query_profile_suite' => 'tools/check_query_profile_suite.rb',
@@ -322,6 +329,7 @@ module EveryPivot
         'provenance' => provenance(authority_status),
         'quality_gates' => {
           'validator' => 'passed',
+          'assessment_bridge' => 'passed',
           'cti_promotion_lint' => 'passed',
           'fixture_suite' => fixture_status,
           'query_profile_suite' => 'passed',

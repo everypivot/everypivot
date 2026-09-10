@@ -1,0 +1,23 @@
+{
+  "contract": "sail.structural_object_kinds",
+  "version": "0.4-draft",
+  "type": "structural_object_kind_vocabulary",
+  "object_kinds": [
+    {
+      "id": "concept",
+      "description": "Abstract concept or dimension anchor represented by an object node such as ou:concept."
+    },
+    {
+      "id": "product",
+      "description": "Product, software, hardware, or versioned asset used as an analytical object outside the semantic target role."
+    },
+    {
+      "id": "attack_pattern",
+      "description": "Structural STIX attack-pattern object kind. Analytical technique-role claims still use the semantic technique role."
+    },
+    {
+      "id": "assessment",
+      "description": "Assessment node referenced as an analytical object, for example detection coverage against an assessment."
+    }
+  ]
+}

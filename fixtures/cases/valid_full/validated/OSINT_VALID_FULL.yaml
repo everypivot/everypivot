@@ -28,7 +28,7 @@ assessment:
   basis: assessed
   scope: incident_level
   subject_role: observation
-  object_role: observation
+  object_role: incident
 hops:
 - via: related_to
   direction: out

@@ -1,6 +1,6 @@
 id: CTI_PE_SECTION_HASH_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -21,12 +21,7 @@ category: CTI
 description: Cluster PE files by normalized section hashes while retaining section name, entropy, and file-hash context.
 source: file:pe:section:hash
 target: file:hash
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: section_observed_in
   direction: out

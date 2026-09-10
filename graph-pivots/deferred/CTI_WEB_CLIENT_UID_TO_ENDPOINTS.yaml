@@ -1,6 +1,6 @@
 id: CTI_WEB_CLIENT_UID_TO_ENDPOINTS
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -22,12 +22,7 @@ category: CTI
 description: Pivot from a normalized browser or web client identifier to endpoint identities only when telemetry provides an explicit client-to-endpoint binding.
 source: web:client:uid
 target: endpoint:uid
-assessment:
-  claim: indicates
-  basis: suspected
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: observed_in_request
   direction: out

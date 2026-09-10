@@ -1,6 +1,6 @@
 id: CTI_WEB_SEARCH_QUERY_TO_CLIENT_UIDS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
@@ -21,12 +21,7 @@ category: CTI
 description: Pivot from a minimized web search query observation to browser or web client identifiers seen with that query.
 source: web:search:query
 target: web:client:uid
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: observed_with_client
   direction: out

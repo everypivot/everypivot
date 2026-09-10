@@ -8,6 +8,8 @@ require 'stringio'
 require 'time'
 require 'yaml'
 require 'zlib'
+require_relative 'sail_bridge'
+require_relative 'json_schema_validator'
 
 def compact_text(value)
   return nil if value.nil?
@@ -232,7 +234,7 @@ end
 
 options = {
   repo_root: Pathname(__dir__).join('..').expand_path,
-  release: 'v0.4.3',
+  release: 'v0.5.0',
   published_at: Time.now.utc.strftime('%F'),
   output: nil,
   site_data_root: nil,
@@ -293,6 +295,26 @@ lane_dirs = {
 }
 
 patterns = []
+begin
+  schema = JSON.parse(schema_path.read)
+  unless schema.is_a?(Hash) && schema['type'] == 'object' &&
+         schema['properties'].is_a?(Hash) && schema['required'].is_a?(Array) &&
+         schema['required'].any? && schema['additionalProperties'] == false
+    raise ArgumentError, 'pattern schema must declare its object properties, required fields, and additionalProperties: false'
+  end
+  schema_validator = EveryPivot::JsonSchemaValidator.new(schema)
+rescue SystemCallError, JSON::ParserError, ArgumentError => e
+  warn "Pattern schema unavailable: #{e.message}"
+  exit 2
+end
+begin
+  bridge_validator = EveryPivot::SailBridge.new(repo_root: repo_root)
+rescue EveryPivot::SailBridge::ContractError => e
+  warn "Assessment contract unavailable: #{e.message}"
+  exit 2
+end
+validation_errors = []
+bridge_counts = Hash.new(0)
 pattern_sources = {}
 counts = {
   'validated' => 0,
@@ -300,17 +322,45 @@ counts = {
   'deferred' => 0
 }
 
+all_pattern_paths = Dir.glob(graph_root.join('**', '*.yaml').to_s).sort
+validation_errors << 'graph-pivots contains no pattern YAML files' if all_pattern_paths.empty?
+all_pattern_paths.each do |path|
+  file = Pathname(path)
+  unless file.parent.parent == graph_root && lane_dirs.key?(file.parent.basename.to_s)
+    validation_errors << "#{file.relative_path_from(repo_root)}: pattern is outside a supported lane directory"
+  end
+end
+
 lane_dirs.each do |folder, lane_name|
   lane_path = graph_root.join(folder)
   next unless lane_path.directory?
 
   Dir.glob(lane_path.join('*.yaml').to_s).sort.each do |path|
-    raw_yaml = File.read(path)
-    data = YAML.safe_load(raw_yaml, aliases: false)
-    next unless data.is_a?(Hash)
+    rel_path = Pathname(path).relative_path_from(repo_root).to_s
+    begin
+      raw_yaml = File.read(path)
+      data = YAML.safe_load(raw_yaml, aliases: false)
+    rescue Psych::Exception, SystemCallError => e
+      validation_errors << "#{rel_path}: YAML read/parse failed: #{e.message}"
+      next
+    end
+    unless data.is_a?(Hash)
+      validation_errors << "#{rel_path}: top-level pattern must be a mapping"
+      next
+    end
+    schema_errors = schema_validator.validate(data)
+    unless schema_errors.empty?
+      validation_errors.concat(schema_errors.map { |error| "#{rel_path}: #{error}" })
+      next
+    end
 
     counts[lane_name] += 1
-    rel_path = Pathname(path).relative_path_from(repo_root).to_s
+    bridge = bridge_validator.check(data, path: rel_path)
+    bridge_counts[bridge['status']] += 1
+    unless %w[evidence_only candidate_compatible].include?(bridge['status'])
+      validation_errors << "#{rel_path}: #{bridge['status']} assessment bridge"
+      next
+    end
     summary = compact_text(data['description'])
 
     entry = {
@@ -333,6 +383,14 @@ lane_dirs.each do |folder, lane_name|
     entry['datasets'] = data['datasets'] if data['datasets'].is_a?(Array)
     entry['hop_count'] = data['hops'].length if data['hops'].is_a?(Array)
     entry['assessment'] = data['assessment'] if data['assessment'].is_a?(Hash)
+    entry['assessment_mode'] = data['assessment_mode'] if data['assessment_mode']
+    entry['assessment_requirements'] = data['assessment_requirements'] if data['assessment_requirements']
+    entry['assessment_compatibility'] = {
+      'status' => bridge['status'],
+      'contract_version' => bridge_validator.contract_info['version'],
+      'coverage' => bridge['coverage'],
+      'warnings' => bridge['warnings']
+    }
     entry['hazards'] = data['hazards'] if data['hazards'].is_a?(Array) && !data['hazards'].empty?
     entry['capability_requirements'] = data['capability_requirements'] if data['capability_requirements'].is_a?(Hash) && !data['capability_requirements'].empty?
     entry['review'] = data['review'] if data['review'].is_a?(Hash) && !data['review'].empty?
@@ -344,12 +402,19 @@ lane_dirs.each do |folder, lane_name|
   end
 end
 
+validation_errors << 'No valid patterns are available for registry generation' if patterns.empty?
+unless validation_errors.empty?
+  warn 'Registry generation refused invalid patterns or unresolved/incompatible assessment metadata:'
+  validation_errors.each { |error| warn "  - #{error}" }
+  exit 1
+end
+
 legal_files_present = LEGAL_BUNDLE_FILES.select { |name| repo_root.join(name).file? }
 
 write_tar_gz(
   patterns_bundle_path,
   repo_root,
-  legal_files_present + relative_tree_entries(repo_root, 'graph-pivots')
+  legal_files_present + relative_tree_entries(repo_root, 'graph-pivots') + relative_tree_entries(repo_root, 'schemas')
 )
 write_tar_gz(
   fixtures_bundle_path,
@@ -364,18 +429,14 @@ release_manifest = {
   'site' => if preview_paths || options[:channel] == 'preview'
     {
       'homepage' => '/site/index.html',
-      'patterns' => '/site/patterns.html'
+      'patterns' => '/site/index.html'
     }
   elsif options[:channel] == 'edge'
     {
       'homepage' => '/edge/',
-      'patterns' => '/edge/patterns'
+      'patterns' => '/edge/'
     }
   else
-    # Stable releases deploy the site at the root of everypivot.io. The single
-    # static index.html loads the registry-index client-side, so there is no
-    # separate /releases/<tag>/ or /patterns subtree. Keep both keys pointed at
-    # "/" so the manifest matches the live deploy surface.
     {
       'homepage' => '/',
       'patterns' => '/'
@@ -409,15 +470,7 @@ release_manifest = {
 
 release_manifest_path.write(JSON.pretty_generate(release_manifest) + "\n")
 
-schema_versions = {}
-if schema_path.file?
-  begin
-    schema = JSON.parse(File.read(schema_path))
-    schema_versions['pivot_pattern'] = schema['title']&.split&.last&.sub(/^v/i, '') || 'unknown'
-  rescue JSON::ParserError
-    schema_versions['pivot_pattern'] = 'unreadable'
-  end
-end
+schema_versions = {'pivot_pattern' => schema['title']&.split&.last&.sub(/^v/i, '') || 'unknown'}
 
 index = {
   'registry' => 'everypivot',
@@ -426,6 +479,8 @@ index = {
   'channel' => options[:channel],
   'license' => license_block,
   'schema_versions' => schema_versions,
+  'assessment_contract' => bridge_validator.contract_info,
+  'assessment_coverage' => bridge_counts,
   'counts' => counts,
   'patterns' => patterns,
   'artifacts' => {

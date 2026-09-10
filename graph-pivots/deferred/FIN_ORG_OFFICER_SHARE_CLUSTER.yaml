@@ -1,6 +1,6 @@
 id: FIN_ORG_OFFICER_SHARE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
@@ -19,10 +19,7 @@ category: FIN
 description: Cluster companies by shared officers/directors to identify shell networks.
 source: person
 target: org:org
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: officer_of|director_of
   direction: out

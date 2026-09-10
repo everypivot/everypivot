@@ -1,7 +1,7 @@
 window.__EVERYPIVOT_REGISTRY__ = {
   "registry": "everypivot",
-  "release": "v0.4.3",
-  "published_at": "2026-06-03",
+  "release": "v0.5.0",
+  "published_at": "2026-09-10",
   "channel": "stable",
   "license": {
     "copyright": "© 2026 EveryPivot Project",
@@ -37,7 +37,26 @@ window.__EVERYPIVOT_REGISTRY__ = {
     }
   },
   "schema_versions": {
-    "pivot_pattern": "1.4"
+    "pivot_pattern": "1.5"
+  },
+  "assessment_contract": {
+    "status": "verified",
+    "version": "0.4-draft",
+    "manifest_sha256": "5416bf429a34afccb4e6657807c26b83491a39bdcbd6c9a313530cadbf032881",
+    "source_repository": "https://github.com/sailspec/sail",
+    "source_revision": "3b23012b1ec78cc2a65e093c14d06b6318675c16",
+    "predicate_count": 9,
+    "sha256": {
+      "predicate_type_matrix.v0.4.json": "8a494fbaef2d4aef82b0d5115c9336d53174b558b24aea6ebf5120e62c2dd3f7",
+      "semantic_roles.v0.4.json": "3693813b95b98abd9eb56c37fbcdc9b9c1397a3097a3f475b4abb3e5d96725e0",
+      "structural_object_kinds.v0.4.json": "5601a444b81d3ab03fcf3a00a74e077fca6110ce6b81abbb47bd3352868b3e50",
+      "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "NOTICE": "55cf68c84f9ccfca43b5907770cd16a9e67b6c091f11347684b74bb3c3c32568"
+    }
+  },
+  "assessment_coverage": {
+    "evidence_only": 175,
+    "candidate_compatible": 1
   },
   "counts": {
     "validated": 21,
@@ -49,10 +68,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_CLOUD_BUCKET_TO_DOMAINS",
       "lane": "validated",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CROSS_CLOUD_BUCKET_TO_DOMAINS.yaml",
       "summary": "Cluster domains/CNAMEs pointing to the same object storage bucket (S3/GCS/Azure).",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "ownership_signal",
       "name": "Cloud Object Bucket → Domains",
@@ -64,12 +83,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared agency, reseller, or CDN-managed buckets can legitimately host unrelated domains.",
@@ -128,10 +155,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_APK_SIGNING_CERT_CLUSTER",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_APK_SIGNING_CERT_CLUSTER.yaml",
       "summary": "Cluster APKs signed with the same Android signing certificate (issuer+serial or SPKI).",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "Android APK Signing Certificate → Apps/Samples",
@@ -143,12 +170,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared OEM, test, or repackaging certificates can cluster APKs that do not belong to the same malware family.",
@@ -207,10 +242,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CERT_REUSE_FQDN_CLUSTER",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_CERT_REUSE_FQDN_CLUSTER.yaml",
       "summary": "Cluster domains by identical certificate (SPKI or cert SHA256) observed in CT logs or scanners.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "Cert Reuse → FQDN Cluster",
@@ -223,12 +258,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Managed certificates, CDNs, and shared hosts can create benign domain clusters.",
@@ -288,10 +331,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CLOUD_SUBSCRIPTION_TO_TENANT",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_CLOUD_SUBSCRIPTION_TO_TENANT.yaml",
       "summary": "Pivot from a normalized cloud subscription identifier to the tenant observed as owning or administering that subscription.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "ownership_signal",
       "name": "Cloud Subscription -> Tenant",
@@ -303,12 +346,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cloud_audit_logs"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Subscriptions can move between tenants, be delegated, or be managed by service providers, so observation time must be preserved.",
@@ -371,10 +422,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CLOUD_TENANT_UID_TO_AUTH_EVENTS",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_CLOUD_TENANT_UID_TO_AUTH_EVENTS.yaml",
       "summary": "Pivot from a normalized cloud tenant identifier to authentication events observed within that tenant context. First-hop single-step scope; associated-session multi-hop expansion remains deferred for a separate review.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "Cloud Tenant UID -> Auth Events",
@@ -387,12 +438,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "identity"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Cloud tenant pivots can cross administrative, customer, service-principal, guest-user, shared-service, and multi-tenant application boundaries.",
@@ -464,10 +523,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CLOUD_WEBAPP_TO_SUBSCRIPTION",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_CLOUD_WEBAPP_TO_SUBSCRIPTION.yaml",
       "summary": "Pivot from a normalized cloud web app hostname or resource identifier to the cloud subscription that contains it.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "ownership_signal",
       "name": "Cloud Web App -> Subscription",
@@ -480,12 +539,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "dns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Cloud web app hostnames can be reassigned, disabled, recycled, or fronted by shared platform infrastructure.",
@@ -547,10 +614,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CODESIGN_CERT_SERIAL_ISSUER_CLUSTER_STRICT",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_CODESIGN_CERT_SERIAL_ISSUER_CLUSTER_STRICT.yaml",
       "summary": "Cluster samples by exact code-signing certificate issuer+serial; strict filters exclude multi-tenant/signing services.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "Code-sign Cert (Issuer+Serial) → Samples (Strict)",
@@ -562,12 +629,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Stolen or enterprise signing certificates can span multiple unrelated tool families or distribution channels.",
@@ -631,10 +706,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_PROTECTED_URL_TO_ORIGINAL_URL",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_EMAIL_PROTECTED_URL_TO_ORIGINAL_URL.yaml",
       "summary": "Decode a protected or rewritten email URL into the original embedded destination URL while preserving provider and adapter provenance.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "domain_expansion",
       "name": "Email Protected URL -> Original URL",
@@ -646,12 +721,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "demonstrated",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Protected URL decoders can fail or produce partial output when providers change encodings, nest wrappers, or omit destination parameters.",
@@ -712,10 +795,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_CODESIGN_CERT_CLUSTER",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_SAMPLE_CODESIGN_CERT_CLUSTER.yaml",
       "summary": "Cluster samples signed with the same code-signing certificate (issuer+serial or SPKI).",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "Code-signing Certificate → Signed Samples",
@@ -727,12 +810,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared signing infrastructure can reflect outsourced build or release services rather than common operator ownership.",
@@ -791,10 +882,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_CONFIG_KEY_CLUSTER",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_SAMPLE_CONFIG_KEY_CLUSTER.yaml",
       "summary": "Cluster malware sharing exact C2 crypto keys, campaign IDs, or license/public keys from config.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "Malware Config Key/ID → Sample Cluster",
@@ -805,12 +896,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sandbox"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Default builder keys, campaign IDs, or templated config material can overcluster adjacent operations.",
@@ -874,10 +973,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_IMPHASH_CLUSTER",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_SAMPLE_IMPHASH_CLUSTER.yaml",
       "summary": "Cluster Windows PE samples that share the same import hash, preserving file hashes and collection provenance.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "PE ImpHash -> Sample Cluster",
@@ -890,12 +989,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "edr"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common packers, frameworks, malware builders, and benign software families can share import hashes without shared operation.",
@@ -959,10 +1066,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_PDB_PATH_CLUSTER",
       "lane": "validated",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/CTI_SAMPLE_PDB_PATH_CLUSTER.yaml",
       "summary": "Cluster malware samples reusing the same embedded PDB path or canonicalized build-path string.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "PDB Path -> Sample Cluster",
@@ -974,12 +1081,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "malware_corpus"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Leaked builders, copied projects, and generic folder names can produce weak build-path overlaps.",
@@ -1039,10 +1154,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_CERT_SHA_TO_DOMAINS",
       "lane": "validated",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/OSINT_CERT_SHA_TO_DOMAINS.yaml",
       "summary": "Pivot by identical certificate hash/SPKI to enumerate domains presenting the same cert.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "Cert SHA/SPKI → Domains",
@@ -1054,12 +1169,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "tls"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Managed certificates and shared web hosts can create benign overlap between unrelated domains.",
@@ -1118,10 +1241,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_CERT_TO_SERVERS",
       "lane": "validated",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/OSINT_CERT_TO_SERVERS.yaml",
       "summary": "Enumerate servers that present an identical certificate or SPKI (public key).",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "X.509 SPKI/Cert → Servers (IP/FQDN)",
@@ -1133,12 +1256,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "tls"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Managed certificates and shared load balancers can join unrelated hosts behind the same delivery surface.",
@@ -1201,10 +1332,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_DKIM_KEY_CLUSTER",
       "lane": "validated",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/OSINT_DKIM_KEY_CLUSTER.yaml",
       "summary": "Cluster sending domains sharing the exact same DKIM public key (selector/keypair).",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "DKIM Public Key → Domain Cluster",
@@ -1216,12 +1347,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Bulk mail providers can legitimately host many customer domains behind the same DKIM selector or key material.",
@@ -1281,10 +1420,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_DMARC_RUA_TO_DOMAINS",
       "lane": "validated",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/OSINT_DMARC_RUA_TO_DOMAINS.yaml",
       "summary": "Cluster domains that send aggregate DMARC reports to the same reporting mailbox, filtering provider-managed collection endpoints.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "DMARC RUA Mailbox -> Domains",
@@ -1296,12 +1435,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Managed reporting providers legitimately aggregate DMARC traffic for many unrelated domains.",
@@ -1362,10 +1509,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_PRIVATE_NS_TO_DOMAINS",
       "lane": "validated",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/OSINT_PRIVATE_NS_TO_DOMAINS.yaml",
       "summary": "Enumerate domains delegated to a non‑provider (private) authoritative nameserver.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "ownership_signal",
       "name": "Private Authoritative NS → Domains",
@@ -1376,12 +1523,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "White-label DNS resellers and managed hosting can create shared private nameservers for unrelated customers.",
@@ -1440,10 +1595,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_RDP_CERT_THUMBPRINT_CLUSTER",
       "lane": "validated",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/OSINT_RDP_CERT_THUMBPRINT_CLUSTER.yaml",
       "summary": "Cluster RDP endpoints presenting the same TLS certificate thumbprint.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "RDP TLS Certificate → Host Cluster",
@@ -1455,12 +1610,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "tls"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Default appliance images or cloned deployments can reuse RDP certificates across otherwise unrelated systems.",
@@ -1519,10 +1682,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_SSH_HOSTKEY_CLUSTER",
       "lane": "validated",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/OSINT_SSH_HOSTKEY_CLUSTER.yaml",
       "summary": "Cluster servers that present the exact same SSH host key (e.g., ed25519/rsa SHA256).",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "SSH Host Key Fingerprint → Host Cluster",
@@ -1533,12 +1696,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "shodan_censys"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Golden images and failed key rotation can legitimately duplicate SSH host keys across unrelated environments.",
@@ -1601,10 +1772,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "SUPPLY_CODESIGN_CERT_TO_PACKAGES",
       "lane": "validated",
       "category": "SUPPLY",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/SUPPLY_CODESIGN_CERT_TO_PACKAGES.yaml",
       "summary": "Cluster packages or update artifacts signed by the same code-signing certificate or signer material.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "high",
       "robustness_class": "exact_cryptographic",
       "name": "Code-Signing Certificate -> Packages",
@@ -1616,12 +1787,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "binary_metadata"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Enterprise signing services and shared release pipelines can sign multiple unrelated products.",
@@ -1681,10 +1860,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "SUPPLY_SBOM_DEPENDENCY_TO_PRODUCTS",
       "lane": "validated",
       "category": "SUPPLY",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "path": "graph-pivots/validated/SUPPLY_SBOM_DEPENDENCY_TO_PRODUCTS.yaml",
       "summary": "Enumerate downstream products inheriting exposure through an SBOM-declared dependency relationship.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "Dependency -> Downstream Product Exposure",
@@ -1697,12 +1876,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "vuln_db"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common transitive dependencies, vendored packages, and version-range drift can make SBOM links overstate actual exposure.",
@@ -1764,10 +1951,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "ADTECH_AD_REQUEST_TO_INFECTION_HIT",
       "lane": "working_set",
       "category": "ADTECH",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "path": "graph-pivots/working-set/ADTECH_AD_REQUEST_TO_INFECTION_HIT.yaml",
       "summary": "Link an ad-tech delivery or qualification request to a suspicious downstream endpoint when the two events share a device/session identifier and occur within a short time window.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "multi_hop_inference",
       "name": "Ad Request -> Suspicious Infection Hit",
@@ -1787,6 +1974,34 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "scope": "incident_level",
         "subject_role": "observation",
         "object_role": "incident"
+      },
+      "assessment_mode": "candidate_assessment",
+      "assessment_requirements": [
+        "Bind the observation subject to the recorded ad request; retain the downstream request chain as supporting evidence, including request times, source-scoped identifiers, collection provenance, and evidence paths.",
+        "Bind the incident object to an independently identified incident, and verify that the downstream endpoint is associated with that incident during the observation window; do not invent an incident from the match.",
+        "Verify device or session continuity and the bounded event sequence using source-specific identifier semantics; address identifier rotation, collisions, shared devices, replay, and clock uncertainty.",
+        "Require independent endpoint, file, or browser evidence corroborating the connection from the observed request chain to malicious delivery or execution in that incident; address normal redirects, ad verification, analytics, tracking pixels, and shared vendor infrastructure as alternative explanations.",
+        "Use the compatible hint only as a candidate assessment shape after these requirements are evaluated; downstream evidence review, contradictions, confidence, and acceptance policy remain separate, and the match alone establishes neither infection nor actor attribution."
+      ],
+      "assessment_compatibility": {
+        "status": "candidate_compatible",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode",
+            "hint_fields",
+            "predicate",
+            "subject_role",
+            "object_role_or_kind",
+            "scope",
+            "basis"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Short temporal proximity between an ad request and a suspicious endpoint can reflect normal redirect, verification, or analytics flows unless the downstream endpoint is independently suspicious.",
@@ -1847,10 +2062,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "ADTECH_IMPRESSION_ID_REUSE_CLUSTER",
       "lane": "working_set",
       "category": "ADTECH",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "path": "graph-pivots/working-set/ADTECH_IMPRESSION_ID_REUSE_CLUSTER.yaml",
       "summary": "Cluster domains, analytics endpoints, and campaign surfaces that carry the same ad impression or auction identifier.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "ownership_signal",
       "name": "Impression ID Reuse -> Ad-Tech Domain Cluster",
@@ -1864,12 +2079,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cti_reports"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "campaign_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Impression IDs can be propagated through legitimate verification, billing, or analytics partners without implying operator control.",
@@ -1935,10 +2158,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "ADTECH_PIPELINE_PHASE_MISMATCH",
       "lane": "working_set",
       "category": "ADTECH",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "path": "graph-pivots/working-set/ADTECH_PIPELINE_PHASE_MISMATCH.yaml",
       "summary": "Flag ad-tech URLs whose observed request phase conflicts with the domain, path, or declared role suggested by the endpoint.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "multi_hop_inference",
       "name": "Ad Pipeline Phase Mismatch",
@@ -1952,12 +2175,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "incident_level",
-        "subject_role": "observation",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Domain names often reflect legacy product names rather than current ad-pipeline function.",
@@ -2017,10 +2248,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "ADTECH_RTB_URL_PARAMS_TO_CAMPAIGN_CLUSTER",
       "lane": "working_set",
       "category": "ADTECH",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "path": "graph-pivots/working-set/ADTECH_RTB_URL_PARAMS_TO_CAMPAIGN_CLUSTER.yaml",
       "summary": "Cluster ad-tech requests into candidate campaigns using recurring RTB query parameters such as campaign IDs, DSP IDs, impression IDs, device IDs, location, OS, browser, and auction fields.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "multi_hop_inference",
       "name": "RTB URL Parameters -> Campaign Cluster",
@@ -2034,12 +2265,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "campaign_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "campaign"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Campaign, DSP, auction, and device parameters can be opaque vendor-local IDs that collide across platforms.",
@@ -2100,10 +2339,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE",
       "lane": "working_set",
       "category": "ADTECH",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "path": "graph-pivots/working-set/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.yaml",
       "summary": "Pivot from exposed JavaScript bundles or source maps to recovered application routes, panel strings, and administration surfaces.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "Webapp Source Map -> Admin Surface",
@@ -2117,12 +2356,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cti_reports"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_kind": "concept"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Exposed JavaScript bundles and source maps can identify benign SaaS administration surfaces.",
@@ -2188,10 +2435,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_CLOUD_ACCOUNT_TO_DOMAIN_INFRA",
       "lane": "working_set",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CROSS_CLOUD_ACCOUNT_TO_DOMAIN_INFRA.yaml",
       "summary": "Expand from a parent cloud account or project to the domains and infrastructure it operates through owned services and assets.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "Cloud Account -> Domain or Infra",
@@ -2204,12 +2451,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared reseller, MSP, or umbrella cloud accounts can host assets for unrelated tenants.",
@@ -2270,10 +2525,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_FQDN_TO_ORG_LEI",
       "lane": "working_set",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CROSS_FQDN_TO_ORG_LEI.yaml",
       "summary": "Resolve a domain to an identified legal entity record without requiring a sanctions overlay.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "FQDN -> Org -> LEI",
@@ -2285,12 +2540,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "lei"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "RDAP and corporate registry data can be stale, privacy-filtered, or registrar-noisy.",
@@ -2351,10 +2614,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_CONTROLLERS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_CONTROLLERS.yaml",
       "summary": "Pivot from a normalized active protocol probe response to controller endpoints that emitted the same distinctive response or handshake.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "multi_hop_inference",
       "name": "Active C2 Protocol Response -> Controllers",
@@ -2367,12 +2630,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "malware_analysis"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Active protocol probes require authorization, scope control, and careful rate limiting; the pattern only models the observed relationship.",
@@ -2435,10 +2706,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.yaml",
       "summary": "Pivot from a normalized active protocol response to decoded payloads, loaders, or configuration blobs recovered from that response.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "multi_hop_inference",
       "name": "Active C2 Protocol Response -> Payloads",
@@ -2451,12 +2722,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "file_reputation"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Decoded payloads can be generated by sandboxes, decoys, replay services, or defensive research infrastructure.",
@@ -2518,10 +2797,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_AUTH_SESSION_TO_DOMAINS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_AUTH_SESSION_TO_DOMAINS.yaml",
       "summary": "Pivot from a bounded authentication session to domains observed during that session.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Auth Session -> Domains",
@@ -2534,12 +2813,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "dns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Authentication-session pivots must stay time-bounded; a domain touched during auth is not proof of account ownership or actor control.",
@@ -2609,10 +2896,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_AUTH_SESSION_TO_IDENTITIES",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_AUTH_SESSION_TO_IDENTITIES.yaml",
       "summary": "Pivot from a bounded authentication session to normalized user or principal identities associated with that session.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "Auth Session -> Identities",
@@ -2624,12 +2911,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "identity"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Authentication sessions can be reused, merged, replayed, or associated with multiple identities through shared accounts, delegated access, and service principals.",
@@ -2699,10 +2994,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_C2_CERT_TO_SAMPLE_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_C2_CERT_TO_SAMPLE_CLUSTER.yaml",
       "summary": "Link malware samples whose detonated C2 endpoints present the same TLS certificate or SPKI material.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "multi_hop_inference",
       "name": "C2 TLS Certificate -> Sample Cluster",
@@ -2715,10 +3010,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Multi-tenant TLS termination, sinkholes, or shared redirectors can reuse certificates across unrelated malware.",
@@ -2774,10 +3079,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CLOUD_APP_ID_TO_AUTH_EVENTS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_CLOUD_APP_ID_TO_AUTH_EVENTS.yaml",
       "summary": "Pivot from a normalized cloud or OAuth application identifier to authentication, consent, or token-use events involving that application.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "Cloud App ID -> Auth Events",
@@ -2790,12 +3095,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cloud_inventory"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Application identifiers can represent legitimate multi-tenant applications, first-party services, delegated apps, or attacker-created resources.",
@@ -2863,10 +3176,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_ATTACHMENT_HASH_TO_MESSAGES",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_ATTACHMENT_HASH_TO_MESSAGES.yaml",
       "summary": "Pivot from a normalized attachment file hash to email messages where that attachment was observed.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "Email Attachment Hash -> Messages",
@@ -2879,12 +3192,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sandbox"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Mail attachment pivots can be inflated by forwarding, detonation, bulk mail, shared mailboxes, and rewritten attachment metadata.",
@@ -2954,10 +3275,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_EMBEDDED_URL_TO_MESSAGES",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_EMBEDDED_URL_TO_MESSAGES.yaml",
       "summary": "Pivot from an embedded URL to email messages that contained it, retaining normalized and raw URL forms.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Embedded URL -> Email Messages",
@@ -2969,12 +3290,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common embedded URLs such as unsubscribe endpoints, social links, image CDNs, and sender infrastructure can appear in unrelated messages.",
@@ -3033,10 +3362,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_FINAL_URL_TO_MESSAGES",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_FINAL_URL_TO_MESSAGES.yaml",
       "summary": "Pivot from a click-time or detonation-resolved final URL to email messages and original embedded URLs that reached it.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Email Final URL -> Messages",
@@ -3049,12 +3378,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Final URLs can vary by time, geography, user agent, authentication state, or security-sandbox handling.",
@@ -3113,10 +3450,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_FIRST_HOP_MTA_TO_MESSAGES",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_FIRST_HOP_MTA_TO_MESSAGES.yaml",
       "summary": "Pivot from a first-hop mail transfer agent IP or host to email messages observed using that relay within a bounded window.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "First-Hop MTA -> Email Messages",
@@ -3129,12 +3466,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "asn_registry"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared mail relays, cloud mail platforms, mailing lists, and security gateways can connect many unrelated messages.",
@@ -3196,10 +3541,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.yaml",
       "summary": "Pivot from a normalized email message identifier to URLs embedded in its body, headers, attachments, or rendered content.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "Email Message -> Embedded URLs",
@@ -3211,12 +3556,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Marketing, notification, and newsletter emails can contain many benign tracking, unsubscribe, image, and CDN URLs.",
@@ -3281,10 +3634,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_MESSAGE_TO_FIRST_HOP_MTA",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_MESSAGE_TO_FIRST_HOP_MTA.yaml",
       "summary": "Pivot from a normalized email message to the first-hop mail transfer agent IP or host observed for that message.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "Email Message -> First-Hop MTA",
@@ -3297,12 +3650,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "asn_registry"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "First-hop MTA fields can be absent, rewritten, spoofed, relayed, or hidden by mail gateways and privacy controls.",
@@ -3369,10 +3730,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.yaml",
       "summary": "Pivot from an email-originating IP address to messages that expose the same originating IP in normalized mailflow telemetry.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Email Originating IP -> Messages",
@@ -3385,12 +3746,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "proxy_reputation"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Originating IP headers can be spoofed, stripped, rewritten, or unavailable depending on the mail path and privacy controls.",
@@ -3452,10 +3821,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_PROTECTED_URL_CLICK_TO_USERS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_PROTECTED_URL_CLICK_TO_USERS.yaml",
       "summary": "Pivot from a protected email URL click event to the user identity and message context associated with the click.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "Protected URL Click -> Users",
@@ -3468,12 +3837,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "mail_telemetry"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Security scanners, link detonation systems, prefetchers, and mailbox protection services can generate click telemetry that does not represent user action.",
@@ -3533,10 +3910,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_URL_COMPONENT_HASH_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_EMAIL_URL_COMPONENT_HASH_CLUSTER.yaml",
       "summary": "Cluster embedded or final email URLs by normalized component hashes such as canonical URL, host, path, query, or final URL hash.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "Email URL Component Hash -> URL Cluster",
@@ -3548,12 +3925,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "URL component hashes can overcluster benign services when generic paths, empty queries, tracking parameters, or CDN paths dominate.",
@@ -3612,10 +3997,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_ENDPOINT_FILE_ORIGIN_URL_TO_FILES",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_ENDPOINT_FILE_ORIGIN_URL_TO_FILES.yaml",
       "summary": "Pivot from endpoint file-origin URL metadata to downloaded files, file paths, and endpoint identities.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "Endpoint File Origin URL -> Files",
@@ -3628,12 +4013,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "proxy_logs"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "File origin metadata can be missing, copied, spoofed, inherited from referrers, or rewritten by browsers and download managers.",
@@ -3692,10 +4085,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_ENDPOINT_UID_TO_DEVICE_UID_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_ENDPOINT_UID_TO_DEVICE_UID_CLUSTER.yaml",
       "summary": "Pivot from a normalized endpoint identifier to device-level identifiers that may group endpoint telemetry across identity namespaces.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "ownership_signal",
       "name": "Endpoint UID -> Device UID Cluster",
@@ -3708,12 +4101,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "asset_inventory"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Endpoint and device identifiers can reset, collide, be scrubbed, be cloned across images, or represent different identity layers in different sources.",
@@ -3784,10 +4185,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_ENDPOINT_UID_TO_DNS_CACHE_NAMES",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_ENDPOINT_UID_TO_DNS_CACHE_NAMES.yaml",
       "summary": "Pivot from a normalized endpoint identifier to DNS names observed in endpoint DNS cache or recent-resolution telemetry.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Endpoint UID -> DNS Cache Names",
@@ -3800,12 +4201,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "dns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Endpoint DNS cache and recent-resolution data can include prefetches, retries, stale cache entries, captive portals, sinkholes, and benign shared services.",
@@ -3870,10 +4279,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_ENDPOINT_UID_TO_EGRESS_IPS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_ENDPOINT_UID_TO_EGRESS_IPS.yaml",
       "summary": "Pivot from a normalized endpoint identifier to public IP addresses observed as endpoint egress or source IP context.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Endpoint UID -> Egress IPs",
@@ -3887,12 +4296,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "netflow"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Endpoint egress IPs are weak ownership evidence because NAT, VPN, proxy, corporate or shared egress, DHCP churn, and cloud-hosted workloads can overjoin unrelated endpoints without corroboration.",
@@ -3958,10 +4375,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_ENDPOINT_UID_TO_FILE_PATHS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_ENDPOINT_UID_TO_FILE_PATHS.yaml",
       "summary": "Pivot from a normalized endpoint identifier to file paths observed on that endpoint.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Endpoint UID -> File Paths",
@@ -3973,12 +4390,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "endpoint"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "File paths, directories, process names, and command-line fragments can be generic, localized, user-specific, copied, or privacy-sensitive.",
@@ -4043,10 +4468,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_FAVICON_HASH_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_FAVICON_HASH_CLUSTER.yaml",
       "summary": "Pivot by identical HTTP favicon hash to discover co-hosted panels or cloned kits.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "HTTP Favicon Hash → FQDN Cluster",
@@ -4060,10 +4485,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "shodan_censys"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common frameworks, panel kits, and copied web templates reuse favicons widely across unrelated sites.",
@@ -4118,10 +4553,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_FILE_HASH_TO_ENDPOINT_UIDS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_FILE_HASH_TO_ENDPOINT_UIDS.yaml",
       "summary": "Pivot from a normalized file hash to endpoint identifiers where the file was observed.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "File Hash -> Endpoint UIDs",
@@ -4134,12 +4569,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "malware_corpus"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "File-hash-to-endpoint pivots can reflect common benign software, shared installers, test files, or malware-sandbox artifacts.",
@@ -4209,10 +4652,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_FILE_REALPATH_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_FILE_REALPATH_CLUSTER.yaml",
       "summary": "Cluster file hashes or endpoint file observations that share the same normalized runtime or real filesystem path.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "multi_hop_inference",
       "name": "File Real Path Cluster",
@@ -4225,12 +4668,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "file_reputation"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Runtime paths can be generic, installer-created, user-specific, localized, or inherited from shared tooling.",
@@ -4293,10 +4744,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_FILE_SOURCE_PATH_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_FILE_SOURCE_PATH_CLUSTER.yaml",
       "summary": "Cluster files that expose the same normalized source, build, or project path in metadata, debug records, strings, or extracted configuration.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "File Source Path Cluster",
@@ -4309,12 +4760,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "endpoint_telemetry"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Source paths can be copied, templated, localized, redacted, or produced by common build systems.",
@@ -4376,10 +4835,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HASSH_FINGERPRINT_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HASSH_FINGERPRINT_CLUSTER.yaml",
       "summary": "Cluster hosts or services observed with the same SSH HASSH client/server fingerprint while filtering common tools and scanners.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "HASSH Fingerprint -> Host Cluster",
@@ -4392,12 +4851,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "shodan_censys"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common SSH clients, libraries, automation frameworks, and scanning tools can reuse HASSH fingerprints across unrelated activity.",
@@ -4456,10 +4923,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_BODY_HASH_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HTTP_BODY_HASH_CLUSTER.yaml",
       "summary": "Cluster URLs, hosts, or HTTP observations by a normalized hash of the HTTP response body.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "HTTP Body Hash Cluster",
@@ -4472,12 +4939,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "HTTP body hashes are weak fingerprints when default pages, parked domains, error pages, CDN responses, WAF blocks, and scanner artifacts dominate.",
@@ -4542,10 +5017,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_HREF_TO_LINKED_DOMAIN",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HTTP_HREF_TO_LINKED_DOMAIN.yaml",
       "summary": "Pivot from a crawled web page to external FQDNs referenced in href, script, image, form, or embedded resource links.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "HTTP Href -> Linked Domain",
@@ -4558,12 +5033,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "suspected",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Most web pages link to common benign services such as analytics, social media, CDNs, payment processors, and consent platforms.",
@@ -4631,10 +5114,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_REDIRECT_FINGERPRINT_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HTTP_REDIRECT_FINGERPRINT_CLUSTER.yaml",
       "summary": "Cluster infrastructure exposing the same HTTP redirect fingerprint, including status, redirect headers, and adjacent banner traits.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "multi_hop_inference",
       "name": "HTTP Redirect Fingerprint -> Infra Cluster",
@@ -4647,10 +5130,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "tls"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Generic redirect frameworks, WAFs, captive portals, and SaaS front doors can share the same HTTP redirect fingerprint across unrelated infrastructure.",
@@ -4709,10 +5202,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_REDIRECT_TARGET_TO_FQDN",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HTTP_REDIRECT_TARGET_TO_FQDN.yaml",
       "summary": "Pivot from a URL or host to FQDNs observed as redirect targets in HTTP, meta-refresh, or JavaScript redirect chains.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "multi_hop_inference",
       "name": "HTTP Redirect Target -> FQDN",
@@ -4725,12 +5218,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "proxy_logs"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Redirect chains often traverse benign SaaS, WAF, link-shortener, tracking, payment, consent, and CDN infrastructure.",
@@ -4795,10 +5296,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_SERVER_BANNER_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HTTP_SERVER_BANNER_CLUSTER.yaml",
       "summary": "Cluster hosts or URLs that expose the same distinctive HTTP server banner or platform header value.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "HTTP Server Banner Cluster",
@@ -4810,12 +5311,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "internet_scan_archives"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Server banners are often default, forged, normalized by proxies, or shared by common hosting stacks.",
@@ -4877,10 +5386,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_STATUS_LINE_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HTTP_STATUS_LINE_CLUSTER.yaml",
       "summary": "Cluster HTTP observations by normalized response status line while preserving request context.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "HTTP Status Line Cluster",
@@ -4893,12 +5402,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "HTTP status lines are very weak fingerprints; default servers, middleware, scanners, redirects, CDNs, and WAFs can reuse the same status behavior.",
@@ -4963,10 +5480,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_TITLE_TEMPLATE_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HTTP_TITLE_TEMPLATE_CLUSTER.yaml",
       "summary": "Cluster websites and hosted domains that expose the same distinctive HTTP title or placeholder template marker.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "HTTP Title Template -> FQDN Cluster",
@@ -4979,10 +5496,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Generic placeholder titles, CMS defaults, and reused web themes create obvious false positives unless paired with stronger infra evidence.",
@@ -5036,10 +5563,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_URI_PATH_PATTERN_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_HTTP_URI_PATH_PATTERN_CLUSTER.yaml",
       "summary": "Cluster URLs or hosts that expose the same distinctive HTTP URI path pattern across telemetry or scan observations.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "HTTP URI Path Pattern Cluster",
@@ -5052,12 +5579,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "internet_scan_archives"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "URI paths are often default framework routes, CMS files, static resources, or copied phishing-kit paths.",
@@ -5119,10 +5654,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_IDENTITY_UID_TO_AUTH_SESSIONS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_IDENTITY_UID_TO_AUTH_SESSIONS.yaml",
       "summary": "Pivot from a normalized user identity identifier to authentication sessions observed for that identity.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "Identity UID -> Auth Sessions",
@@ -5134,12 +5669,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "auth_logs"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Authentication-session pivots must stay time-bounded; stale or merged sessions can connect unrelated identity activity.",
@@ -5209,10 +5752,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_IDENTITY_UID_TO_USER_AGENTS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_IDENTITY_UID_TO_USER_AGENTS.yaml",
       "summary": "Pivot from a normalized user identity identifier to User-Agent strings observed in authentication or web telemetry.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Identity UID -> User-Agents",
@@ -5225,12 +5768,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "proxy_logs"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "User-Agent strings are weak identifiers and can be common, spoofed, normalized, truncated, or generated by security products.",
@@ -5295,10 +5846,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_INTEL_OBSERVABLE_TO_TELEMETRY_SIGHTINGS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_INTEL_OBSERVABLE_TO_TELEMETRY_SIGHTINGS.yaml",
       "summary": "Pivot from a normalized intelligence observable to matching sightings across endpoint, mail, network, DNS, or proxy telemetry.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Intel Observable -> Telemetry Sightings",
@@ -5314,12 +5865,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "dns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Broad, stale, low-confidence, or commodity observables can match large amounts of unrelated telemetry.",
@@ -5379,10 +5938,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_LOGIN_PAGE_SCRIPT_FINGERPRINT_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_LOGIN_PAGE_SCRIPT_FINGERPRINT_CLUSTER.yaml",
       "summary": "Cluster login pages or hosts that expose the same distinctive JavaScript fingerprint or conditional-rendering script marker.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "multi_hop_inference",
       "name": "Login Page Script Fingerprint Cluster",
@@ -5395,12 +5954,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "internet_scan_archives"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Login-page scripts can be copied from templates, frameworks, phishing kits, legitimate portals, or security products.",
@@ -5463,10 +6030,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_MARKETPLACE_SOLD_DOMAIN_CERT_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_MARKETPLACE_SOLD_DOMAIN_CERT_CLUSTER.yaml",
       "summary": "Expand recently sold domains into certificate-linked infrastructure by following post-sale TLS issuance and presentation.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "multi_hop_inference",
       "name": "Marketplace Sold Domain -> TLS Cert -> Infra Cluster",
@@ -5480,10 +6047,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Sold domains can be reactivated for benign projects, parking, or speculative holding, so post-sale certificate issuance is not inherently malicious.",
@@ -5543,10 +6120,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_OPEN_REDIRECT_URL_TO_FINAL_HOSTS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_OPEN_REDIRECT_URL_TO_FINAL_HOSTS.yaml",
       "summary": "Pivot from a URL with open-redirect behavior to final destination hosts observed in redirect chains.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Open Redirect URL -> Final Hosts",
@@ -5559,12 +6136,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Open redirect chains often traverse benign websites, SaaS platforms, tracking systems, and security products.",
@@ -5631,10 +6216,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_C2_INFRA",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_SAMPLE_C2_INFRA.yaml",
       "summary": "Detonation-derived C2 infrastructure from file:bytes samples.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "multi_hop_inference",
       "name": "Malware Sample → Sandbox C2 → Infra (IP/FQDN)",
@@ -5648,10 +6233,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "abuse_ch"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Detonation output can include sinkholes, researcher infrastructure, or dead configs that never represented live operator control.",
@@ -5706,10 +6301,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_MUTEX_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_SAMPLE_MUTEX_CLUSTER.yaml",
       "summary": "Cluster samples reusing mutex names or mutex families while filtering common installer and commodity-software values.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "Mutex Name -> Sample Cluster",
@@ -5721,10 +6316,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "malware_corpus"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Generic mutex names and framework defaults can cluster unrelated malware or even benign software.",
@@ -5779,10 +6384,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_RICHPE_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_SAMPLE_RICHPE_CLUSTER.yaml",
       "summary": "Cluster Windows samples sharing the same Rich header fingerprint or canonicalized RichPE hash.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "RichPE Fingerprint -> Sample Cluster",
@@ -5794,10 +6399,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "malware_corpus"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common toolchains, packers, or vendor build environments can legitimately share RichPE fingerprints.",
@@ -5852,10 +6467,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_WEB_CLIENT_UID_TO_IPS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_WEB_CLIENT_UID_TO_IPS.yaml",
       "summary": "Pivot from a normalized browser or web client identifier to source IP addresses observed with that identifier.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Web Client UID -> IPs",
@@ -5867,12 +6482,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "browser_telemetry"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Browser/client identifiers can be reset, synced, shared, replayed, truncated, hashed, or scoped to one vendor telemetry source.",
@@ -5938,10 +6561,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_WEB_CLIENT_UID_TO_URLS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_WEB_CLIENT_UID_TO_URLS.yaml",
       "summary": "Pivot from a normalized browser or web client identifier to URLs and HTTP requests observed with that identifier.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Web Client UID -> URLs",
@@ -5954,12 +6577,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Browser/client identifiers can be reset, synced, shared, replayed, truncated, hashed, or scoped to one vendor telemetry source.",
@@ -6025,10 +6656,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_WEB_CLIENT_UID_TO_USER_AGENTS",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_WEB_CLIENT_UID_TO_USER_AGENTS.yaml",
       "summary": "Pivot from a normalized browser or web client identifier to User-Agent strings observed with that identifier.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "Web Client UID -> User-Agents",
@@ -6040,12 +6671,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "browser_telemetry"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Browser/client identifiers can represent a browser profile, account, cookie jar, device, or product telemetry identity depending on source.",
@@ -6106,10 +6745,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER",
       "lane": "working_set",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.yaml",
       "summary": "Cluster URLs or hosted pages that expose the same distinctive embedded configuration string, comment token, or protocol marker.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "multi_hop_inference",
       "name": "Web Content Embedded Config String Cluster",
@@ -6122,12 +6761,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Embedded web strings can be comments, templates, copied code, analytics markers, or benign application configuration.",
@@ -6189,10 +6836,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_DEVICE_FINGERPRINT_TO_ACCOUNT_CLUSTER",
       "lane": "working_set",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/FIN_DEVICE_FINGERPRINT_TO_ACCOUNT_CLUSTER.yaml",
       "summary": "Cluster fraud-linked accounts or identities reusing the same device fingerprint or canonical device profile.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "Device Fingerprint -> Account Cluster",
@@ -6205,12 +6852,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "kyc"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared devices, emulators, and device-farm infrastructure can connect unrelated users.",
@@ -6271,10 +6926,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_DROP_ADDRESS_CLUSTER",
       "lane": "working_set",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/FIN_DROP_ADDRESS_CLUSTER.yaml",
       "summary": "Cluster accounts, sellers, or identities sharing the same shipping, forwarding, or drop address.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "Drop Address -> Entity Cluster",
@@ -6287,12 +6942,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "kyc"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Apartments, forwarding centres, and commercial mail drops can create benign many-to-one reuse.",
@@ -6353,10 +7016,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_ENTITY_SHARED_ACCOUNT_CLUSTER",
       "lane": "working_set",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/FIN_ENTITY_SHARED_ACCOUNT_CLUSTER.yaml",
       "summary": "Cluster people or organisations sharing the same bank, payout, or beneficiary account after filtering processor settlement noise.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "Financial Account -> Shared Entity Cluster",
@@ -6368,12 +7031,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "kyc"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Processor settlement accounts, treasury sweeps, or shared finance operations can reflect legitimate pooling.",
@@ -6434,10 +7105,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_MERCHANT_DESCRIPTOR_CLUSTER",
       "lane": "working_set",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/FIN_MERCHANT_DESCRIPTOR_CLUSTER.yaml",
       "summary": "Cluster merchants or storefronts reusing the same descriptor string or canonical billing descriptor.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "Merchant Descriptor -> Merchant Cluster",
@@ -6449,10 +7120,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "ecommerce"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Acquirer-side truncation and generic descriptors can collide across unrelated merchants.",
@@ -6508,10 +7189,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_SHARED_PAYOUT_ACCOUNT_CLUSTER",
       "lane": "working_set",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/FIN_SHARED_PAYOUT_ACCOUNT_CLUSTER.yaml",
       "summary": "Cluster merchants, sellers, or beneficiaries routing payouts into the same destination account.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "Payout Account -> Merchant Cluster",
@@ -6523,12 +7204,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "bank_txn"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Marketplaces, payment processors, or payroll intermediaries can consolidate payouts for many legitimate recipients.",
@@ -6589,10 +7278,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_ACTIVE_SUBDOMAIN_ENUMERATION",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_ACTIVE_SUBDOMAIN_ENUMERATION.yaml",
       "summary": "Discover candidate subdomains under a registrable root using active enumeration tools such as subfinder-style source aggregation and DNS confirmation.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "Active Subdomain Enumeration",
@@ -6605,12 +7294,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "dns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Active enumeration discovers names under a root, not proof that each hostname is live, malicious, or independently controlled.",
@@ -6675,10 +7372,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_ASN_TO_IP_BLOCKS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_ASN_TO_IP_BLOCKS.yaml",
       "summary": "Enumerate prefixes and live IPs announced by an ASN.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "ASN → IP Blocks",
@@ -6689,10 +7386,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "bgp"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Transit ASNs and cloud or CDN aggregators announce IP space on behalf of many unrelated customers; a shared ASN is not a shared operator.",
@@ -6756,10 +7463,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_CRT_SH_SUBDOMAINS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_CRT_SH_SUBDOMAINS.yaml",
       "summary": "Discover subdomains via Certificate Transparency entries for a registrable domain.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "CT Logs → Subdomain Enumeration",
@@ -6770,12 +7477,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "ct"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Certificate Transparency reveals requested names, not necessarily currently live or controlled subdomains.",
@@ -6840,10 +7555,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_DOMAIN_TO_MX_HOSTS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_DOMAIN_TO_MX_HOSTS.yaml",
       "summary": "Enumerate MX hosts configured for a domain using current or historical DNS observations while preserving observation time.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "Domain -> MX Hosts",
@@ -6856,12 +7571,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "rdap"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "demonstrated",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "MX records can be delegated to managed mail providers and usually do not imply domain ownership beyond DNS configuration.",
@@ -6923,10 +7646,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_FQDN_TO_DNS_A_HISTORY",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_FQDN_TO_DNS_A_HISTORY.yaml",
       "summary": "Pivot from an FQDN to IPv4 addresses observed in passive or current DNS A records, preserving observation windows.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "domain_expansion",
       "name": "FQDN -> DNS A History",
@@ -6939,12 +7662,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "asn"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "DNS A records can be transient, CDN-backed, sinkholed, parked, or reassigned long before later investigation.",
@@ -7009,10 +7740,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_IP_TO_ASN_ORG",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_IP_TO_ASN_ORG.yaml",
       "summary": "Pivot from an IP address to its observed origin ASN and owning or operating organization, preserving observation time.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "IP -> ASN Organization",
@@ -7025,12 +7756,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "rdap"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "BGP origin, RIR allocation, hosting reseller, and customer assignment can point to different organizations for the same IP.",
@@ -7087,10 +7826,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_IP_TO_EXPOSED_RDP",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_IP_TO_EXPOSED_RDP.yaml",
       "summary": "Determine whether an IP exposes RDP and enumerate the observed RDP service surface.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "IP -> Exposed RDP Service",
@@ -7101,12 +7840,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "shodan_censys"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Scanner snapshots can miss ephemeral services or record stale exposure after an endpoint changed state.",
@@ -7168,10 +7915,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_MARKETPLACE_LISTING_TO_DOMAINS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_MARKETPLACE_LISTING_TO_DOMAINS.yaml",
       "summary": "Enumerate domains observed on reseller or auction marketplace listing feeds.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "Marketplace Listing -> Domains",
@@ -7182,10 +7929,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "marketplace"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Reseller and auction platforms are broad inventory sources, not threat-only collections, so most listed domains are benign.",
@@ -7243,10 +8000,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_MARKETPLACE_SALE_TO_DOMAINS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_MARKETPLACE_SALE_TO_DOMAINS.yaml",
       "summary": "Enumerate domains observed as sold or transacted on reseller or auction marketplaces.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "Marketplace Sale -> Domains",
@@ -7257,10 +8014,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "marketplace"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "A sold marker indicates a marketplace transaction, not who acquired the domain or whether the transfer actually completed.",
@@ -7318,10 +8085,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_MX_TO_DOMAINS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_MX_TO_DOMAINS.yaml",
       "summary": "Find domains pointing to a specific MX; helps detect mass-hosted kits or throwaway mail setups.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "Mail Exchanger → Domains",
@@ -7332,10 +8099,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Managed mail providers serve millions of unrelated tenants; a shared MX is not a shared operator.",
@@ -7391,10 +8168,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_NS_TO_DOMAINS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_NS_TO_DOMAINS.yaml",
       "summary": "Find domains delegated to a given NS; useful for clustering adversary-managed zones.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "Nameserver → Domains",
@@ -7405,10 +8182,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Provider and reseller nameservers can host large numbers of unrelated zones.",
@@ -7464,10 +8251,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_PDNS_ROOT_TO_SUBDOMAINS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_PDNS_ROOT_TO_SUBDOMAINS.yaml",
       "summary": "Enumerate FQDNs observed under a registrable root or apex domain using passive DNS observations.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "enumeration",
       "name": "Passive DNS Root -> Subdomains",
@@ -7479,12 +8266,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "dns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Passive DNS coverage is uneven across resolvers, geographies, and time windows, so absence of a subdomain is not evidence that it never existed.",
@@ -7549,10 +8344,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_RDAP_EMAIL_TO_DOMAINS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_RDAP_EMAIL_TO_DOMAINS.yaml",
       "summary": "Pivot by registrant email (where disclosed) to enumerate domains; filter privacy/proxy.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "RDAP Registrant Email → Domains",
@@ -7563,12 +8358,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "rdap"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Privacy services, forwarding aliases, and shared admin mailboxes can overcluster unrelated domains.",
@@ -7628,10 +8431,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_RDAP_REGISTRANT_TO_DOMAINS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_RDAP_REGISTRANT_TO_DOMAINS.yaml",
       "summary": "Pivot by disclosed RDAP registrant entity to enumerate domains while filtering privacy and registrar-noise cases.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "RDAP Registrant -> Domains",
@@ -7642,12 +8445,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "rdap"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Corporate service providers and privacy layers can appear as registrants for unrelated customers.",
@@ -7708,10 +8519,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_TLS_JA3_TO_FQDNS",
       "lane": "working_set",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/OSINT_TLS_JA3_TO_FQDNS.yaml",
       "summary": "Cluster servers or panels that present identical JA3/JA3S fingerprints.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "enumeration",
       "name": "TLS JA3 → FQDNs",
@@ -7723,10 +8534,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "shodan_censys"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common TLS client libraries share JA3 fingerprints across large benign populations, so this pivot is inherently noisy.",
@@ -7785,10 +8606,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "SUPPLY_MAINTAINER_EMAIL_TO_PACKAGES",
       "lane": "working_set",
       "category": "SUPPLY",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/SUPPLY_MAINTAINER_EMAIL_TO_PACKAGES.yaml",
       "summary": "Cluster packages maintained or published by the same maintainer email while filtering privacy and relay addresses.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "robustness_class": "ownership_signal",
       "name": "Maintainer Email -> Packages",
@@ -7800,12 +8621,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Role accounts, relays, and marketplace-managed aliases can span unrelated packages.",
@@ -7865,10 +8694,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA",
       "lane": "working_set",
       "category": "SUPPLY",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA.yaml",
       "summary": "Bridge software packages to their source repositories and the domains or infrastructure that distribute or operate them.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "domain_expansion",
       "name": "Package -> Repo -> Domain or Infra",
@@ -7881,10 +8710,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Package-to-repository attribution can break across forks, mirrors, or vendored source releases.",
@@ -7941,10 +8780,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "SUPPLY_RELEASE_BUCKET_TO_PACKAGES",
       "lane": "working_set",
       "category": "SUPPLY",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/working-set/SUPPLY_RELEASE_BUCKET_TO_PACKAGES.yaml",
       "summary": "Cluster packages or release artifacts distributed from the same object-storage release bucket or release endpoint.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "medium",
       "robustness_class": "ownership_signal",
       "name": "Release Bucket -> Packages",
@@ -7956,12 +8795,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cloud_asset_inventory"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared release buckets and CDN edges can distribute artifacts for many unrelated publishers behind the same bucket reference.",
@@ -8021,10 +8868,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "ADTECH_CREATIVE_SCRIPT_TO_DELIVERY_ENDPOINT",
       "lane": "deferred",
       "category": "ADTECH",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "path": "graph-pivots/deferred/ADTECH_CREATIVE_SCRIPT_TO_DELIVERY_ENDPOINT.yaml",
       "summary": "Pivot from ad creative HTML, script tags, iframe insertion, or tracking pixel markup to advertiser-controlled delivery, click-log, impression, NOAS, or dynamic CDN endpoints.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -8039,12 +8886,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "adtech_logs"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "campaign_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "tool"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Third-party creative scripts, verification pixels, and measurement tags are normal in programmatic advertising.",
@@ -8105,10 +8960,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "ADTECH_DSP_ID_TO_VENDOR_BUNDLE",
       "lane": "deferred",
       "category": "ADTECH",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "path": "graph-pivots/deferred/ADTECH_DSP_ID_TO_VENDOR_BUNDLE.yaml",
       "summary": "Pivot from DSP IDs, advertiser IDs, worker domains, bolt domains, benign CDN URLs, and dynamic CDN URLs to a candidate ad-tech vendor or customer bundle.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "ownership_signal",
@@ -8123,12 +8978,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "DSP IDs can be local to a platform and may not resolve to globally stable vendors.",
@@ -8189,10 +9052,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "ADTECH_GEO_TARGETING_HEATMAP_TO_CAMPAIGN",
       "lane": "deferred",
       "category": "ADTECH",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "path": "graph-pivots/deferred/ADTECH_GEO_TARGETING_HEATMAP_TO_CAMPAIGN.yaml",
       "summary": "Link recurring geographic concentration in ad-tech observations to candidate campaign targeting hypotheses when supported by campaign, publisher, or DSP identifiers.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -8207,12 +9070,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cti_reports"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "targets",
-        "basis": "assessed",
-        "scope": "campaign_level",
-        "subject_role": "campaign",
-        "object_role": "target"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Ad traffic volume by country can reflect publisher audience composition rather than deliberate targeting.",
@@ -8273,10 +9144,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "AITS_ABUSE_LANDING_DOMAIN_CLUSTER",
       "lane": "deferred",
       "category": "AITS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/AITS_ABUSE_LANDING_DOMAIN_CLUSTER.yaml",
       "summary": "Link external landing, monetization, or staging domains reused by abusive account clusters.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Abuse Landing Domain -> Account Cluster",
@@ -8288,10 +9159,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared affiliate, linkhub, or staging domains can connect unrelated abuse accounts and create false positives.",
@@ -8347,10 +9228,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "AITS_PHONE_OR_PAYMENT_INSTRUMENT_TO_ACCOUNT_CLUSTER",
       "lane": "deferred",
       "category": "AITS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/AITS_PHONE_OR_PAYMENT_INSTRUMENT_TO_ACCOUNT_CLUSTER.yaml",
       "summary": "Cluster abusive model accounts sharing recovery phone numbers or billing instruments across nominally distinct identities.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Phone or Payment Instrument -> Account Cluster",
@@ -8362,10 +9243,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "billing"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Family plans, prepaid phones, VoIP pools, shared corporate billing, and payment intermediaries can tie unrelated accounts to the same phone or instrument.",
@@ -8421,10 +9312,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "AITS_SHARED_PROMPT_ASSET_CLUSTER",
       "lane": "deferred",
       "category": "AITS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/AITS_SHARED_PROMPT_ASSET_CLUSTER.yaml",
       "summary": "Cluster accounts reusing identical prompt assets, jailbreak snippets, or packaged instruction sets.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Prompt Asset -> Account Cluster",
@@ -8436,10 +9327,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "trust_safety"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Public jailbreak corpora, copied prompt libraries, and common templates can be reused by unrelated accounts and create false positives.",
@@ -8495,10 +9396,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "AITS_SHARED_TOOL_REPO_TO_ABUSE_ACCOUNTS",
       "lane": "deferred",
       "category": "AITS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/AITS_SHARED_TOOL_REPO_TO_ABUSE_ACCOUNTS.yaml",
       "summary": "Connect shared abuse tooling or prompt-library repositories to model accounts reusing the resulting tools or artifacts.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Abuse Tool Repo -> Account Cluster",
@@ -8510,10 +9411,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Public tool repositories, forks, mirrors, and tutorial code can be shared across benign and abusive accounts.",
@@ -8570,10 +9481,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_APP_STORE_DEVELOPER_TO_DOMAINS",
       "lane": "deferred",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CROSS_APP_STORE_DEVELOPER_TO_DOMAINS.yaml",
       "summary": "Connect app-store developer accounts to websites, APIs, and support domains referenced by their published applications.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "App Store Developer -> Domains",
@@ -8586,10 +9497,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared SDKs, analytics, ad networks, and support vendors can make unrelated developer apps reference common domains.",
@@ -8645,10 +9566,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_ASN_ORG_TO_SANCTIONS",
       "lane": "deferred",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CROSS_ASN_ORG_TO_SANCTIONS.yaml",
       "summary": "Check the organization owning an ASN against sanctions (useful in risk screening).",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "missing_negative_controls",
       "name": "ASN Org → Sanctions",
@@ -8660,10 +9581,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sanctions"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared cloud, hosting, reseller, and transit ASNs can map many unrelated customers to the same organization or sanction-adjacent entity.",
@@ -8723,10 +9654,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_CERT_SUBJECT_TO_LEI_SANCTIONS",
       "lane": "deferred",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CROSS_CERT_SUBJECT_TO_LEI_SANCTIONS.yaml",
       "summary": "Extract certificate subject/organization, map to LEI, and screen against sanctions.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "missing_negative_controls",
       "name": "Cert Subject Org → LEI → Sanctions",
@@ -8739,10 +9670,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sanctions"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Certificate subject organization fields are free-form, CA-normalized, common, or attacker-controlled and can collide with same-name legal entities.",
@@ -8803,10 +9744,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_FQDN_TO_ORG_LEI_SANCTIONS",
       "lane": "deferred",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CROSS_FQDN_TO_ORG_LEI_SANCTIONS.yaml",
       "summary": "Bridge a domain to its org via RDAP, map to LEI, and screen against sanctions.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "missing_negative_controls",
       "name": "FQDN → RDAP Org → LEI → Sanctions",
@@ -8819,10 +9760,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sanctions"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "RDAP registrants may be privacy-proxied, stale, reseller-owned, common service providers, or same-name collisions rather than the domain controller.",
@@ -8879,10 +9830,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA",
       "lane": "deferred",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA.yaml",
       "summary": "Bridge repository identity through published packages or release endpoints to the domains or infrastructure serving them.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Repo -> Package -> Domain or Infra",
@@ -8895,10 +9846,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Package registries, mirrors, CDNs, and abandoned repositories can link unrelated projects to shared distribution infrastructure.",
@@ -8954,10 +9915,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_PHISH_DOMAIN_TO_PAYMENT_PROCESSOR",
       "lane": "deferred",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CROSS_PHISH_DOMAIN_TO_PAYMENT_PROCESSOR.yaml",
       "summary": "Trace phishing pages to their payment processors and connected merchant IDs.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "missing_negative_controls",
       "name": "Phish Domain → Payment Processor → Merchant Network",
@@ -8969,10 +9930,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "bank_txn"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Large payment processors and checkout providers are shared by many unrelated merchants and create high false-positive risk.",
@@ -9036,10 +10007,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_SOCIAL_HANDLE_TO_DOMAIN_INFRA",
       "lane": "deferred",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CROSS_SOCIAL_HANDLE_TO_DOMAIN_INFRA.yaml",
       "summary": "Bridge from social handles to official websites and on to infrastructure for takedown.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Social Handle → Website → Infra",
@@ -9051,10 +10022,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Handle reuse across platforms is common and does not guarantee the same person or organisation controls each account.",
@@ -9113,10 +10094,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CROSS_TOOL_REPO_TO_ORG",
       "lane": "deferred",
       "category": "CROSS",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CROSS_TOOL_REPO_TO_ORG.yaml",
       "summary": "Map tool repositories to maintainers/authors and then to their organizations (OSINT).",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Toolcode Repo → Author → Organization",
@@ -9127,10 +10108,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Public repositories, forks, vendor mirrors, and employment changes can misstate who controls or uses a tool.",
@@ -9190,10 +10181,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_AUTHENTICODE_HASH_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_AUTHENTICODE_HASH_CLUSTER.yaml",
       "summary": "Cluster signed files by normalized Authenticode or signature-derived hash material while preserving certificate and file-hash context.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -9207,12 +10198,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "code_signing_metadata"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Authenticode, signer, issuer, and certificate-derived hashes can mix certificate identity, signature metadata, timestamping, and file lineage if adapters normalize them inconsistently.",
@@ -9277,10 +10276,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CAMPAIGN_TOOL_FQDN",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_CAMPAIGN_TOOL_FQDN.yaml",
       "summary": "Campaign-to-domain linkage via shared tool family evidence across sources.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Campaign ↔ Tool → FQDN",
@@ -9293,10 +10292,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "siem"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Commodity tools and shared hosting can put unrelated campaigns on common domains or infrastructure.",
@@ -9352,10 +10361,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CERT_ISSUER_VALIDITY_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_CERT_ISSUER_VALIDITY_CLUSTER.yaml",
       "summary": "Expand infrastructure presenting certificates that share the same issuer and validity-duration profile.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "low",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -9368,10 +10377,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "ct"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Large commercial issuers, enterprise intermediates, and managed certificate programs can generate broad benign overlap for the same issuer and validity profile.",
@@ -9430,10 +10449,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CLOUD_TENANT_UID_TO_EMAIL_URLS",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_CLOUD_TENANT_UID_TO_EMAIL_URLS.yaml",
       "summary": "Pivot from a normalized cloud tenant identifier to URLs observed in email telemetry associated with that tenant context.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -9447,12 +10466,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Cloud tenant to email URL pivots can cross administrative, customer, guest-user, service-principal, and multi-tenant application boundaries.",
@@ -9518,10 +10545,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CLUSTER_GRAPH_EDGE_EXPLAINED",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_CLUSTER_GRAPH_EDGE_EXPLAINED.yaml",
       "summary": "Represent a proprietary cluster-graph edge only when the contributing lower-level pivot evidence, feature values, cap status, and negative-node decisions are emitted.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -9537,12 +10564,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "A proprietary cluster edge can hide high-degree nodes, weak features, or filtered evidence unless all contributing paths are exposed.",
@@ -9598,10 +10633,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_COOKIE_NAME_REUSE_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_COOKIE_NAME_REUSE_CLUSTER.yaml",
       "summary": "Cluster webpages or hostnames that reuse distinctive normalized cookie names or cookie-name namespaces.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -9614,12 +10649,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "web_crawl"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common frameworks, consent managers, analytics SDKs, tag managers, A/B testing platforms, and security products create common cookie names across unrelated sites.",
@@ -9687,10 +10730,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_CVE_EXPLOIT_CAMPAIGN",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_CVE_EXPLOIT_CAMPAIGN.yaml",
       "summary": "Link a CVE to campaigns reported to exploit it, to support attribution and remediation priority.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "CVE → Exploit Usage → Campaign",
@@ -9703,10 +10746,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "misp"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Public exploit reporting, opportunistic scanning, and copycat exploitation can make a CVE appear across unrelated campaigns.",
@@ -9766,10 +10819,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_DOMAIN_REGISTRATION_PROFILE_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_DOMAIN_REGISTRATION_PROFILE_CLUSTER.yaml",
       "summary": "Cluster domains that share a narrow, normalized registration profile across registrar, registrant, nameserver, timing, and hosting features.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -9784,12 +10837,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "dns"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Registration profiles are composite, often privacy-protected, and can reflect registrar defaults or reseller workflows rather than operator behavior.",
@@ -9855,10 +10916,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_DOM_STRUCTURE_HASH_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_DOM_STRUCTURE_HASH_CLUSTER.yaml",
       "summary": "Cluster webpages or hostnames that share a normalized DOM structure hash after crawler and rendering settings are recorded.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -9872,12 +10933,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "web_archive"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common CMS themes, landing-page builders, parked-domain templates, consent banners, and cloned starter kits can produce unrelated DOM-structure matches.",
@@ -9945,10 +11014,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_ATTACHMENT_AV_CLUSTER_HASH_TO_MESSAGES",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_EMAIL_ATTACHMENT_AV_CLUSTER_HASH_TO_MESSAGES.yaml",
       "summary": "Pivot from an attachment AV cluster hash or similar normalized file-family fingerprint to email messages carrying matching attachments.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -9962,12 +11031,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "malware_analysis"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "AV cluster hashes are implementation-specific and can change across engines, versions, or normalization choices.",
@@ -10029,10 +11106,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_ATTACHMENT_NAME_TO_MESSAGES",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_EMAIL_ATTACHMENT_NAME_TO_MESSAGES.yaml",
       "summary": "Pivot from a normalized email attachment name to messages that carried attachments with that name.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "enumeration",
@@ -10045,12 +11122,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "file_reputation"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Attachment names are attacker-controlled, user-visible, localized, and frequently generic.",
@@ -10112,10 +11197,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_HEADER_VALUE_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_EMAIL_HEADER_VALUE_CLUSTER.yaml",
       "summary": "Cluster email messages that share a rare normalized header value such as a mailer marker, charset, custom header, or relay artifact.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -10127,12 +11212,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "mail_telemetry"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Email header values can be spoofed, rewritten, normalized, stripped, or generated by common mail software.",
@@ -10194,10 +11287,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.yaml",
       "summary": "Cluster email messages that share the same normalized host or domain component extracted from Message-ID values.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -10209,12 +11302,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "mail_telemetry"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Message-ID host components can be forged, templated by mailing software, or inherited from legitimate mail infrastructure.",
@@ -10276,10 +11377,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_TEMPLATE_OR_ASSET_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_EMAIL_TEMPLATE_OR_ASSET_CLUSTER.yaml",
       "summary": "Cluster phishing or lure infrastructure reusing the same template asset, image, or packaged email content.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Email Template or Asset Hash -> Host Cluster",
@@ -10292,10 +11393,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sandbox"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common templates, stock images, and phishing-kit boilerplate can be shared by unrelated operators or reused by defenders in tests.",
@@ -10351,10 +11462,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_EMAIL_WEBMAIL_ATTACHMENT_SENDER_DOMAIN_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_EMAIL_WEBMAIL_ATTACHMENT_SENDER_DOMAIN_CLUSTER.yaml",
       "summary": "Pivot from a sender domain seen in webmail attachment telemetry to attachment file hashes and endpoint observations.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -10368,12 +11479,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "endpoint"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "suspected",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Webmail attachment origin metadata can reflect provider infrastructure, forwarding, cached attachments, or rewritten download URLs rather than sender-controlled infrastructure.",
@@ -10432,10 +11551,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_ENDPOINT_PROCESS_TO_REMOTE_CONNECTIONS",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_ENDPOINT_PROCESS_TO_REMOTE_CONNECTIONS.yaml",
       "summary": "Pivot from an endpoint process observation to remote network destinations connected by that process.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -10449,12 +11568,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "netflow"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Process-to-remote-connection joins can be distorted by proxy processes, browser helpers, service hosts, injected code, log forwarding, and endpoint telemetry gaps.",
@@ -10519,10 +11646,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_FILE_LSHASH_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_FILE_LSHASH_CLUSTER.yaml",
       "summary": "Cluster files by locality-sensitive hash values while preserving threshold, corpus, and exact-hash context.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -10536,12 +11663,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "edr"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Locality-sensitive hashes can overcluster files that share boilerplate, packers, libraries, templates, or benign build artifacts.",
@@ -10606,10 +11741,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_FILE_NAME_TO_HASHES",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_FILE_NAME_TO_HASHES.yaml",
       "summary": "Pivot from a normalized file name to file hashes observed with that name in endpoint, malware-analysis, or file-reputation telemetry.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "enumeration",
@@ -10623,12 +11758,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "file_reputation"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "File names are highly reusable, localized, user-controlled, and often generic.",
@@ -10690,10 +11833,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_HTTP_HEADER_FINGERPRINT_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_HTTP_HEADER_FINGERPRINT_CLUSTER.yaml",
       "summary": "Cluster webpages or services that expose the same normalized HTTP response-header fingerprint.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -10707,12 +11850,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "tls"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared hosting, CDNs, reverse proxies, WAFs, load balancers, and managed application platforms can stamp common header sets across unrelated tenants.",
@@ -10780,10 +11931,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_IMAGE_TEXT_REUSE_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_IMAGE_TEXT_REUSE_CLUSTER.yaml",
       "summary": "Cluster image assets or webpages that share distinctive normalized OCR text extracted from rendered images.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -10796,12 +11947,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Stock imagery, memes, common logos, boilerplate text, reused screenshots, and public templates can overcluster unrelated actors or campaigns.",
@@ -10870,10 +12029,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_PE_SECTION_HASH_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_PE_SECTION_HASH_CLUSTER.yaml",
       "summary": "Cluster PE files by normalized section hashes while retaining section name, entropy, and file-hash context.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -10887,12 +12046,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "edr"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "PE section hashes can reflect common runtimes, packers, resource templates, linked libraries, or compiler output rather than shared malicious logic.",
@@ -10957,10 +12124,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_PHISHKIT_TO_HOSTING_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_PHISHKIT_TO_HOSTING_CLUSTER.yaml",
       "summary": "Cluster infrastructure hosting the same phishing kit hash or path structure.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Phish Kit → Hosting Domain/IP Cluster",
@@ -10973,10 +12140,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Popular phishkits, copied path structures, and hosting panels can be shared across unrelated actors.",
@@ -11032,10 +12209,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_QR_PAYLOAD_REUSE_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_QR_PAYLOAD_REUSE_CLUSTER.yaml",
       "summary": "Cluster campaign assets or webpages that reuse the same normalized decoded QR payload.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -11049,12 +12226,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "document_assets"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Public QR generators, demo payloads, venue signage, shared payment flows, and URL shorteners can create unrelated decoded-payload reuse.",
@@ -11123,10 +12308,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_COMPILATION_TIMESTAMP_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_SAMPLE_COMPILATION_TIMESTAMP_CLUSTER.yaml",
       "summary": "Cluster samples with matching or tightly bounded compilation timestamps after normalization and common-build suppression.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -11139,12 +12324,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "file_reputation"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Compilation timestamps can be forged, zeroed, rounded, inherited from templates, or rewritten by packers.",
@@ -11206,10 +12399,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_FUNCTION_NAME_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.yaml",
       "summary": "Cluster samples that share rare normalized function names, exported symbols, or recovered debug-symbol names.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -11222,12 +12415,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "file_reputation"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Function names can come from public source, libraries, debug symbols, decompiler guesses, or common frameworks.",
@@ -11289,10 +12490,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.yaml",
       "summary": "Cluster samples that share an exact or normalized hash of an embedded resource section.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -11305,12 +12506,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "file_reputation"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Resource section hashes can group common packers, compilers, icons, manifests, or benign library resources.",
@@ -11372,10 +12581,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SAMPLE_UNIQUE_STRING_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.yaml",
       "summary": "Cluster samples that share a rare normalized string extracted from static or decoded content.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -11388,12 +12597,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "file_reputation"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Strings can be copied from public source, libraries, compiler output, debug text, or benign dependencies.",
@@ -11455,10 +12672,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SBL_HOSTING_RISK",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_SBL_HOSTING_RISK.yaml",
       "summary": "Score IPs by ASN and presence in Spamhaus/abuse.ch datasets to prioritize likely bad infra.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "IP → ASN with SBL/Abuse Reputation",
@@ -11471,10 +12688,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "abuse_ch"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Abuse blocklists, SBL entries, and hosting ASN reputation can lag cleanup or reflect one customer inside shared infrastructure.",
@@ -11534,10 +12761,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_SHORT_LIVED_CERT_INFRA_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_SHORT_LIVED_CERT_INFRA_CLUSTER.yaml",
       "summary": "Expand infrastructure presenting certificates that match a short-lived validity profile.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -11550,10 +12777,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "ct"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Short-lived certificates are increasingly normal in automated PKI ecosystems, so lifespan alone is too weak to imply malicious infrastructure.",
@@ -11612,10 +12849,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_THREAT_CVE_TOOL_IP",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_THREAT_CVE_TOOL_IP.yaml",
       "summary": "Pivot from a report-derived named-threat, CVE, and tool-family co-mention to contextual IP infrastructure observations.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Threat → CVE → Tool → IP",
@@ -11629,10 +12866,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "siem"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Named threat, CVE, and tool reports can be broad, stale, or based on public exploit adoption by unrelated actors.",
@@ -11693,10 +12940,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_THREAT_TOOLS_SHARED_INFRA",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_THREAT_TOOLS_SHARED_INFRA.yaml",
       "summary": "Suggest related threats when their tool families lead to overlapping infrastructure.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Threat ↔ Threat via Shared Tool/Infra",
@@ -11709,10 +12956,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cti_reports"
       ],
       "hop_count": 4,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Commodity tools and public malware builders can create common infrastructure features across unrelated threats.",
@@ -11768,10 +13025,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_THREAT_TOOL_FQDN_IP",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_THREAT_TOOL_FQDN_IP.yaml",
       "summary": "Tool-family infrastructure discovery via observed domains and their current/previous IPs.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Threat → Tool → FQDN → IP",
@@ -11786,10 +13043,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cti_reports"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "DNS history can include sinkholes, shared hosting, CDNs, parking, and reassigned IPs unrelated to the tool operator.",
@@ -11850,10 +13117,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_TLS_CERT_SUBJECT_PROFILE_TO_INFRA",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_TLS_CERT_SUBJECT_PROFILE_TO_INFRA.yaml",
       "summary": "Pivot from a normalized TLS certificate subject profile to infrastructure observed presenting certificates with that profile.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -11867,12 +13134,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "TLS subject profiles are weaker than certificate fingerprints because subject fields can be copied, templated, self-signed, or auto-generated.",
@@ -11934,10 +13209,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_TOOL_RELAY_INFRA_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_TOOL_RELAY_INFRA_CLUSTER.yaml",
       "summary": "Find relay infrastructure linked to a tool family via shared hosting, ASN, and pdns co-location.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Tool Family → Relay/Proxy Infra Cluster",
@@ -11950,10 +13225,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "siem"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Relay infrastructure may use shared VPNs, proxies, cloud providers, or commodity tooling reused by unrelated operators.",
@@ -12013,10 +13298,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_URLHAUS_REPO_COOCCURRENCE_INFRA",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_URLHAUS_REPO_COOCCURRENCE_INFRA.yaml",
       "summary": "Pivot from abuse-listed infrastructure through code-repository co-occurrence to additional domains or IPs, preserving repository and extraction provenance.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -12031,12 +13316,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "url_corpus"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "suspected",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Code repositories frequently contain copied indicators, sample configs, blocklists, tests, or security research artifacts unrelated to operator infrastructure.",
@@ -12102,10 +13395,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_WEBPAGE_SCRIPT_BEHAVIOR_CLUSTER",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_WEBPAGE_SCRIPT_BEHAVIOR_CLUSTER.yaml",
       "summary": "Cluster webpages that exhibit the same normalized script behavior fingerprint during rendering or interaction.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -12119,12 +13412,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "web_dynamic_analysis"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Script behavior can be framework-driven, environment-dependent, obfuscated, or shared by benign templates.",
@@ -12186,10 +13487,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_WEB_CLIENT_UID_TO_ENDPOINTS",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_WEB_CLIENT_UID_TO_ENDPOINTS.yaml",
       "summary": "Pivot from a normalized browser or web client identifier to endpoint identities only when telemetry provides an explicit client-to-endpoint binding.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -12204,12 +13505,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "endpoint"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "suspected",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Browser/client identifiers do not inherently identify an endpoint; they can map to browser profiles, accounts, cookie jars, devices, or vendor-local telemetry identities.",
@@ -12275,10 +13584,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "CTI_WEB_SEARCH_QUERY_TO_CLIENT_UIDS",
       "lane": "deferred",
       "category": "CTI",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/CTI_WEB_SEARCH_QUERY_TO_CLIENT_UIDS.yaml",
       "summary": "Pivot from a minimized web search query observation to browser or web client identifiers seen with that query.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "robustness_class": "multi_hop_inference",
@@ -12291,12 +13600,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "browser_telemetry"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "theoretical",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "observation"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Web search query pivots are privacy-sensitive and should remain deferred unless queries are minimized to a narrow atomic relationship with strict publication controls.",
@@ -12361,10 +13678,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_BANK_TXN_TO_SANCTIONED_COUNTERPART",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_BANK_TXN_TO_SANCTIONED_COUNTERPART.yaml",
       "summary": "Flag accounts transacting with sanctioned entities or intermediaries.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Bank Account → Transactions → Sanctioned Counterparty",
@@ -12376,10 +13693,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sanctions"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Sanctions screening and transaction data are sensitive, regulated, and time-dependent; list membership can change after the transaction date.",
@@ -12438,10 +13765,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_BENEFICIAL_OWNER_TO_SANCTIONS",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_BENEFICIAL_OWNER_TO_SANCTIONS.yaml",
       "summary": "Screen entities controlled by a person against sanctions via reported beneficial ownership.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Beneficial Owner → Controlled Entities → Sanctions",
@@ -12454,10 +13781,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sanctions"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Beneficial-ownership records can be stale, nominee-based, shared by service providers, jurisdiction-limited, or inconsistent across registries.",
@@ -12517,10 +13854,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_CRYPTO_OFFRAMP_COUNTERPARTY_CLUSTER",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_CRYPTO_OFFRAMP_COUNTERPARTY_CLUSTER.yaml",
       "summary": "Trace recurring crypto addresses through withdrawal or cash-out paths to shared off-ramp accounts, merchants, or beneficiary entities.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Crypto Address -> Off-Ramp Counterparty Cluster",
@@ -12533,10 +13870,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "payments"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Exchange deposit addresses, processors, mixers, and omnibus accounts can group unrelated crypto users.",
@@ -12591,10 +13938,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_CRYPTO_TX_TO_SANCTIONED",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_CRYPTO_TX_TO_SANCTIONED.yaml",
       "summary": "Trace on‑chain flows to sanctioned addresses/entities.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Crypto Address → On‑Chain Tx → Sanctioned Address/Entity",
@@ -12606,10 +13953,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sanctions"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Blockchain heuristics can over-attribute flows through mixers, exchanges, bridges, or shared custody accounts.",
@@ -12674,10 +14031,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_KYC_DOCUMENT_REUSE_CLUSTER",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_KYC_DOCUMENT_REUSE_CLUSTER.yaml",
       "summary": "Cluster people or accounts reusing the same KYC document image, scan, or canonical document hash.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "KYC Document Hash -> Identity Cluster",
@@ -12689,10 +14046,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "fraud_ops"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared scanners, stock document samples, templates, or document-theft victims can create false identity clusters.",
@@ -12748,10 +14115,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_MULE_RECRUITMENT_SOCIAL_TO_PAYOUT",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_MULE_RECRUITMENT_SOCIAL_TO_PAYOUT.yaml",
       "summary": "Tie mule-recruitment personas or social handles to payout accounts advertised, routed, or onboarded through recruitment channels.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Recruitment Persona -> Payout Account",
@@ -12764,10 +14131,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "bank_txn"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Recruitment posts, handles, and payment instructions can be copied, impersonated, or reused by intermediaries.",
@@ -12822,10 +14199,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_ORG_LEI_PARENT_SANCTIONS",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_ORG_LEI_PARENT_SANCTIONS.yaml",
       "summary": "Screen organizations via LEI ‘who owns whom’ up the chain and check against sanctions.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Org → LEI → Parent → Sanctions",
@@ -12837,10 +14214,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "sanctions"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "LEI parent relationships, shared holding structures, and sanctions lists can lag restructures, ownership changes, or jurisdiction-specific legal interpretations.",
@@ -12901,10 +14288,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_ORG_OFFICER_SHARE_CLUSTER",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_ORG_OFFICER_SHARE_CLUSTER.yaml",
       "summary": "Cluster companies by shared officers/directors to identify shell networks.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Org Officer/Director → Cross‑Directorship Cluster",
@@ -12915,10 +14302,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "opencorp"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common professional directors, formation agents, family names, and stale registry records can connect unrelated companies.",
@@ -12977,10 +14374,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_REFUND_DESTINATION_ACCOUNT_CLUSTER",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_REFUND_DESTINATION_ACCOUNT_CLUSTER.yaml",
       "summary": "Cluster merchants or actors whose refunds repeatedly terminate in the same beneficiary account or refund receiver.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Refund Destination Account -> Merchant Cluster",
@@ -12993,10 +14390,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "ecommerce"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Refund receivers, processors, and settlement accounts can be shared legitimately by marketplaces or service providers.",
@@ -13051,10 +14458,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_REGISTERED_ADDRESS_CLUSTER",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_REGISTERED_ADDRESS_CLUSTER.yaml",
       "summary": "Identify mass‑registration addresses linked to many entities (possible formation agents).",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Registered Address → Company Cluster",
@@ -13065,10 +14472,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "opencorp"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Registered agents, mail drops, coworking spaces, and residential blocks can create common address clusters at scale.",
@@ -13131,10 +14548,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_SUPPLIER_SPLIT_PAYMENTS",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_SUPPLIER_SPLIT_PAYMENTS.yaml",
       "summary": "Detect order splitting or structuring across suppliers linked by officers/addresses.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Supplier → Split Payments Pattern",
@@ -13146,10 +14563,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "opencorp"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared officers or addresses can reflect procurement agents, affiliates, or registration services rather than coordinated structuring.",
@@ -13208,10 +14635,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_SYNTHETIC_IDENTITY_ATTRIBUTE_CLUSTER",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_SYNTHETIC_IDENTITY_ATTRIBUTE_CLUSTER.yaml",
       "summary": "Link synthetic or mule identities reusing the same contact, address, or profile attributes across nominally distinct personas.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Synthetic Identity -> Shared Attribute Cluster",
@@ -13223,10 +14650,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "fraud_ops"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared phones, addresses, IPs, or devices can come from families, dorms, employers, proxies, or reused data brokers.",
@@ -13281,10 +14718,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "FIN_TRADE_PARTNER_SANCTIONS",
       "lane": "deferred",
       "category": "FIN",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/FIN_TRADE_PARTNER_SANCTIONS.yaml",
       "summary": "Cross‑border trade partners screened against sanctions lists.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Importer/Exporter → Trade Partner → Sanctions",
@@ -13296,10 +14733,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Trade counterparties, shared intermediaries, ownership chains, and sanctions lists change over time and vary by jurisdiction.",
@@ -13363,10 +14810,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "HUM_BLUETOOTH_PROXIMITY",
       "lane": "deferred",
       "category": "HUMINT_SIGINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/HUM_BLUETOOTH_PROXIMITY.yaml",
       "summary": "Proximity graph from Bluetooth beacon observations to infer meetings.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Device → Bluetooth Proximity → Device",
@@ -13377,10 +14824,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "siem"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Dense public venues, transit, and office environments create near-certain false positives for co-presence.",
@@ -13443,10 +14900,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "HUM_CDR_COLOCATION_LINK",
       "lane": "deferred",
       "category": "HUMINT_SIGINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/HUM_CDR_COLOCATION_LINK.yaml",
       "summary": "Infer links between MSISDNs via repeated co‑location in time and space (tower/sector).",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Phone → CDR → Co‑Location Link",
@@ -13457,10 +14914,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "cdr"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "CDR access is regulated in many jurisdictions and may require lawful-intercept or similarly restricted authority.",
@@ -13523,10 +14990,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "HUM_PERSON_EMAIL_ORG_LINK",
       "lane": "deferred",
       "category": "HUMINT_SIGINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/HUM_PERSON_EMAIL_ORG_LINK.yaml",
       "summary": "Associate a person to an organization via corporate email domains observed in communications.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Person Email → Organization Link",
@@ -13538,10 +15005,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "rdap"
       ],
       "hop_count": 3,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Corporate email usage can reflect contractors, temporary roles, or historical affiliations rather than current membership.",
@@ -13604,10 +15081,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "HUM_PERSON_FIN_ACCOUNTS_LINK",
       "lane": "deferred",
       "category": "HUMINT_SIGINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/HUM_PERSON_FIN_ACCOUNTS_LINK.yaml",
       "summary": "Link persons by shared devices/IPs used to access multiple accounts within short windows.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Person → Financial Accounts Link",
@@ -13619,10 +15096,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "siem"
       ],
       "hop_count": 4,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "CGNAT, shared Wi-Fi, and corporate NAT create systemic false matches when IP reuse is interpreted as person-level linkage.",
@@ -13677,10 +15164,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "HUM_PNR_COTRAVEL_LINK",
       "lane": "deferred",
       "category": "HUMINT_SIGINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/HUM_PNR_COTRAVEL_LINK.yaml",
       "summary": "Identify co‑travelers via shared PNR/segments within a time window.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "PNR → Co‑Travel Link",
@@ -13691,10 +15178,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pnr"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared itineraries do not by themselves establish association, intent, or operational collaboration.",
@@ -13758,10 +15255,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "HUM_WIFI_BSSID_CONTACT_CHAIN",
       "lane": "deferred",
       "category": "HUMINT_SIGINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/HUM_WIFI_BSSID_CONTACT_CHAIN.yaml",
       "summary": "Detect co‑presence via devices seen on the same BSSID within time windows.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "restricted_data_access",
       "name": "Device → Wi‑Fi BSSID → Co‑Presence",
@@ -13772,10 +15269,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "siem"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Public hotspots and enterprise guest networks create extremely high-degree noise for shared-BSSID inference.",
@@ -13839,10 +15346,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "IO_CONTENT_HASH_TO_ACCOUNT_CLUSTER",
       "lane": "deferred",
       "category": "IO",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/IO_CONTENT_HASH_TO_ACCOUNT_CLUSTER.yaml",
       "summary": "Cluster coordinated accounts reusing identical media assets, documents, or attachments across posts and campaigns.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Content Hash -> Account Cluster",
@@ -13854,10 +15361,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Stock media, memes, templates, and reposted documents can be common across unrelated accounts.",
@@ -13913,10 +15430,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "IO_CROSS_PLATFORM_HANDLE_CLUSTER",
       "lane": "deferred",
       "category": "IO",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/IO_CROSS_PLATFORM_HANDLE_CLUSTER.yaml",
       "summary": "Link common handle strings or aliases reused across platforms by coordinated or inauthentic personas.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Cross-Platform Handle -> Account Cluster",
@@ -13927,10 +15444,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "social"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Common usernames, fan accounts, impersonators, and namespace collisions can create false cross-platform links.",
@@ -13986,10 +15513,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "IO_FORGED_DOCUMENT_TEMPLATE_CLUSTER",
       "lane": "deferred",
       "category": "IO",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/IO_FORGED_DOCUMENT_TEMPLATE_CLUSTER.yaml",
       "summary": "Cluster operators or campaigns reusing the same forged-document templates, seals, or layout artifacts.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Forged Document Template -> Operator Cluster",
@@ -14002,10 +15529,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Public templates, copied seals, and common editing tools can produce similar documents across unrelated accounts or campaigns.",
@@ -14061,10 +15598,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "IO_SHARED_SHORTENER_OR_TRACKING_CLUSTER",
       "lane": "deferred",
       "category": "IO",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/IO_SHARED_SHORTENER_OR_TRACKING_CLUSTER.yaml",
       "summary": "Cluster IO properties reusing the same shortener, redirector, or campaign-tracking domain across accounts or sites.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Shortener or Tracking Domain -> IO Property Cluster",
@@ -14076,10 +15613,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Public shorteners, campaign platforms, and tracking vendors are shared across many unrelated accounts and domains.",
@@ -14135,10 +15682,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_REVERSE_DNS_HOST_CLUSTER",
       "lane": "deferred",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/OSINT_REVERSE_DNS_HOST_CLUSTER.yaml",
       "summary": "Cluster hosts reusing uncommon PTR or reverse-DNS hostnames while filtering commodity provider naming patterns.",
-      "pattern_schema_version": 1.2,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "name": "Reverse DNS Hostname -> Host Cluster",
@@ -14150,10 +15697,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "pdns"
       ],
       "hop_count": 2,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Provider default PTR names, recycled hostnames, and cloud templates can create common reverse-DNS values across unrelated hosts.",
@@ -14209,10 +15766,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_SHARED_IP_TO_DOMAINS",
       "lane": "deferred",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/OSINT_SHARED_IP_TO_DOMAINS.yaml",
       "summary": "Enumerate domains co-hosted on the same IP address during an overlapping observation window.",
-      "pattern_schema_version": 1.3,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "needs_fixtures",
       "robustness_class": "multi_hop_inference",
@@ -14226,12 +15783,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "asn"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "suspected",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Shared hosting, CDN edges, parking providers, and recycled cloud IPs can connect thousands of unrelated domains.",
@@ -14295,10 +15860,10 @@ window.__EVERYPIVOT_REGISTRY__ = {
       "id": "OSINT_TRACKING_ID_TO_DOMAINS",
       "lane": "deferred",
       "category": "OSINT",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "graph-pivots/deferred/OSINT_TRACKING_ID_TO_DOMAINS.yaml",
       "summary": "Cluster domains/pages sharing the same analytics or ad-tracking identifier.",
-      "pattern_schema_version": 1.4,
+      "pattern_schema_version": 1.5,
       "precision_tier": "exploratory",
       "deferred_reason": "high_cardinality",
       "robustness_class": "enumeration",
@@ -14310,12 +15875,20 @@ window.__EVERYPIVOT_REGISTRY__ = {
         "osint_web"
       ],
       "hop_count": 1,
-      "assessment": {
-        "claim": "indicates",
-        "basis": "assessed",
-        "scope": "entity_level",
-        "subject_role": "behavioural_cluster",
-        "object_role": "behavioural_cluster"
+      "assessment_mode": "evidence_only",
+      "assessment_compatibility": {
+        "status": "evidence_only",
+        "contract_version": "0.4-draft",
+        "coverage": {
+          "complete": true,
+          "checks_performed": [
+            "assessment_mode"
+          ],
+          "assessment_acceptance_evaluated": false
+        },
+        "warnings": [
+
+        ]
       },
       "hazards": [
         "Analytics tags, ad pixels, agency-managed accounts, and shared tracking vendors can appear on many unrelated domains.",

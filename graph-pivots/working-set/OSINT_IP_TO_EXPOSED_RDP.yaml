@@ -1,6 +1,6 @@
 id: OSINT_IP_TO_EXPOSED_RDP
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -21,12 +21,7 @@ category: OSINT
 description: Determine whether an IP exposes RDP and enumerate the observed RDP service surface.
 source: inet:ipv4
 target: it:service:rdp
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: exposes
   direction: out

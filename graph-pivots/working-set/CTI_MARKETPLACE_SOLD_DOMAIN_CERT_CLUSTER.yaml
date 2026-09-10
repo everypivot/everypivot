@@ -1,6 +1,6 @@
 id: CTI_MARKETPLACE_SOLD_DOMAIN_CERT_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: multi_hop_inference
@@ -20,10 +20,7 @@ category: CTI
 description: Expand recently sold domains into certificate-linked infrastructure by following post-sale TLS issuance and presentation.
 source: osint:marketplace:sale
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: sold_domain|transacted_domain
   direction: out

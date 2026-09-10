@@ -1,6 +1,6 @@
 id: CROSS_SOCIAL_HANDLE_TO_DOMAIN_INFRA
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -19,10 +19,7 @@ hazards:
 - 'Domains may reference fans, impersonators, or parked assets rather than infrastructure operated by the handle owner.'
 source: social:handle
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: links_to
   direction: out

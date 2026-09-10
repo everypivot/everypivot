@@ -1,6 +1,6 @@
 id: CTI_TOOL_RELAY_INFRA_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: CTI
 description: Find relay infrastructure linked to a tool family via shared hosting, ASN, and pdns co-location.
 source: it:prod:soft
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: communicates|relays_through
   direction: out

@@ -1,6 +1,6 @@
 id: CTI_FILE_HASH_TO_ENDPOINT_UIDS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -24,12 +24,7 @@ category: CTI
 description: Pivot from a normalized file hash to endpoint identifiers where the file was observed.
 source: file:hash
 target: endpoint:uid
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: observed_on
   direction: out

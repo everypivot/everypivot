@@ -1,4 +1,45 @@
 cases:
+  - id: valid_v15_evidence_only
+    root: fixtures/cases/valid_v15_evidence_only
+    expect_exit: 0
+    expect_output:
+      - "evidence_only=1"
+  - id: valid_v15_candidate_assessment
+    root: fixtures/cases/valid_v15_candidate_assessment
+    expect_exit: 0
+    expect_output:
+      - "candidate_compatible=1"
+  - id: invalid_v15_missing_mode
+    root: fixtures/cases/invalid_v15_missing_mode
+    expect_exit: 1
+    expect_output:
+      - "assessment_mode is required"
+  - id: invalid_v15_evidence_with_hint
+    root: fixtures/cases/invalid_v15_evidence_with_hint
+    expect_exit: 1
+    expect_output:
+      - "assessment is not allowed"
+  - id: invalid_v15_missing_requirements
+    root: fixtures/cases/invalid_v15_missing_requirements
+    expect_exit: 1
+    expect_output:
+      - "assessment_requirements is required"
+  - id: invalid_v15_blank_requirements
+    root: fixtures/cases/invalid_v15_blank_requirements
+    expect_exit: 1
+    expect_output:
+      - "assessment_requirements[0] must match"
+  - id: invalid_legacy_imphash_bridge
+    root: fixtures/cases/invalid_legacy_imphash_bridge
+    expect_exit: 1
+    expect_output:
+      - "SAIL object_not_allowed"
+      - "SAIL scope_not_allowed_for_subject"
+  - id: invalid_legacy_roleless_scope
+    root: fixtures/cases/invalid_legacy_roleless_scope
+    expect_exit: 1
+    expect_output:
+      - "SAIL scope_not_allowed_for_any_legal_subject"
   - id: valid_v12_minimal
     root: fixtures/cases/valid_v12_minimal
     expect_exit: 0

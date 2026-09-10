@@ -1,6 +1,6 @@
 id: CTI_SAMPLE_IMPHASH_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: medium
 robustness_class: enumeration
@@ -23,12 +23,7 @@ category: CTI
 description: Cluster Windows PE samples that share the same import hash, preserving file hashes and collection provenance.
 source: file:pe:imphash
 target: file:bytes
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: observed_in
   direction: out

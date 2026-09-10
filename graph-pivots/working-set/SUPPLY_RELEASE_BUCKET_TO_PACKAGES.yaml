@@ -1,6 +1,6 @@
 id: SUPPLY_RELEASE_BUCKET_TO_PACKAGES
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: ownership_signal
@@ -23,12 +23,7 @@ category: SUPPLY
 description: Cluster packages or release artifacts distributed from the same object-storage release bucket or release endpoint.
 source: cloud:bucket
 target: it:prod:softver
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: distributes
   direction: out

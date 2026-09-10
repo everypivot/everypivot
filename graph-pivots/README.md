@@ -16,6 +16,9 @@ Lifecycle lanes:
 - `working-set/` for live candidates under active review;
 - `deferred/` for first-class but intentionally non-promoted patterns.
 
-The corpus targets `pivot-pattern` v1.4. Older valid pattern versions remain in
-the tree where they have not yet needed a schema-shape revision, but newly
-reviewed patterns should use the current schema target.
+All 176 current patterns use `pivot-pattern` schema v1.5: 175 are
+`evidence_only`, and one is a conditional `candidate_assessment` with explicit
+qualifying-evidence requirements. A pattern match does not become an accepted
+conclusion. Historical releases and deliberate legacy validation fixtures retain
+their original schema versions. See [schema migration](../docs/SCHEMA_MIGRATION.md)
+and [the assessment boundary](../docs/ASSESSMENT_BRIDGE.md).

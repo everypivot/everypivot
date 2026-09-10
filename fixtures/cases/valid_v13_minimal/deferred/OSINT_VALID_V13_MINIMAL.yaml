@@ -9,10 +9,10 @@ description: Minimal deferred fixture that satisfies the v1.3 assessment bridge 
 source: inet:fqdn
 target: inet:fqdn
 assessment:
-  claim: indicates
+  claim: achieves
   basis: assessed
   scope: entity_level
-  subject_role: behavioural_cluster
+  subject_role: threat_actor
   object_kind: concept
 hops:
 - via: related_to

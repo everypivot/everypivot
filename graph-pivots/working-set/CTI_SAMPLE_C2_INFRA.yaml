@@ -1,6 +1,6 @@
 id: CTI_SAMPLE_C2_INFRA
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: multi_hop_inference
@@ -19,10 +19,7 @@ category: CTI
 description: Detonation-derived C2 infrastructure from file:bytes samples.
 source: file:bytes
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: sandbox_observed
   direction: out

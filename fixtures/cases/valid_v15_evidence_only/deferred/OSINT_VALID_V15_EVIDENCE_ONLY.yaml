@@ -1,0 +1,20 @@
+---
+id: OSINT_VALID_V15_EVIDENCE_ONLY
+version: 1.0.0
+pattern_schema_version: '1.5'
+validation_state: deferred
+deferred_reason: schema_migration_pending
+name: valid v15 evidence only
+category: OSINT
+description: Synthetic bridge validation fixture; its metadata is not evidence of
+  an analytical conclusion.
+source: inet:fqdn
+target: inet:fqdn
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30
+assessment_mode: evidence_only

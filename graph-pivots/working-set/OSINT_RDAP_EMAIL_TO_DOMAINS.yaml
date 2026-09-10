@@ -1,6 +1,6 @@
 id: OSINT_RDAP_EMAIL_TO_DOMAINS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: ownership_signal
@@ -23,12 +23,7 @@ category: OSINT
 description: Pivot by registrant email (where disclosed) to enumerate domains; filter privacy/proxy.
 source: rdap:email
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: registered
   direction: out

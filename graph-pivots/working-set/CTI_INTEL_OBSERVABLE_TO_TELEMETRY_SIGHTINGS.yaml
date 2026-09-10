@@ -1,6 +1,6 @@
 id: CTI_INTEL_OBSERVABLE_TO_TELEMETRY_SIGHTINGS
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: domain_expansion
@@ -20,12 +20,7 @@ category: CTI
 description: Pivot from a normalized intelligence observable to matching sightings across endpoint, mail, network, DNS, or proxy telemetry.
 source: intel:observable
 target: telemetry:sighting
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: matched_by
   direction: out

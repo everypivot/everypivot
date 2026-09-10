@@ -1,6 +1,6 @@
 id: CTI_ENDPOINT_UID_TO_FILE_PATHS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: domain_expansion
@@ -20,12 +20,7 @@ category: CTI
 description: Pivot from a normalized endpoint identifier to file paths observed on that endpoint.
 source: endpoint:uid
 target: file:path
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: observed_path
   direction: out

@@ -1,6 +1,6 @@
 id: CROSS_FQDN_TO_ORG_LEI_SANCTIONS
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: missing_negative_controls
 precision_tier: exploratory
@@ -21,10 +21,7 @@ category: CROSS
 description: Bridge a domain to its org via RDAP, map to LEI, and screen against sanctions.
 source: inet:fqdn
 target: sanction:entry
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: registered_to
   direction: out

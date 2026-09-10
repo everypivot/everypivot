@@ -1,6 +1,6 @@
 id: CTI_EMAIL_ATTACHMENT_AV_CLUSTER_HASH_TO_MESSAGES
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -22,12 +22,7 @@ category: CTI
 description: Pivot from an attachment AV cluster hash or similar normalized file-family fingerprint to email messages carrying matching attachments.
 source: file:av_cluster_hash
 target: email:message
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: attachment_cluster_hash
   direction: in

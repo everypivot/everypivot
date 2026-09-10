@@ -1,6 +1,6 @@
 id: CTI_EMAIL_MESSAGE_TO_FIRST_HOP_MTA
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: domain_expansion
@@ -25,12 +25,7 @@ category: CTI
 description: Pivot from a normalized email message to the first-hop mail transfer agent IP or host observed for that message.
 source: email:message
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: first_hop_mta
   direction: out

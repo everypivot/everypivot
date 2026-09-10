@@ -1,6 +1,6 @@
 id: AITS_SHARED_TOOL_REPO_TO_ABUSE_ACCOUNTS
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
@@ -21,10 +21,7 @@ category: AITS
 description: Connect shared abuse tooling or prompt-library repositories to model accounts reusing the resulting tools or artifacts.
 source: code:repo
 target: inet:web:acct
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: referenced_by
   direction: out

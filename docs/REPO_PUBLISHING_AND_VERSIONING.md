@@ -82,19 +82,25 @@ date alone.
 
 ### Website
 
-Recommended URL model:
-- `/`
-  - latest stable homepage
-- `/patterns`
-  - latest stable pattern browser
-- `/patterns/{id}`
-  - latest stable pattern detail
-- `/releases/v0.1.0/`
-  - pinned release homepage
-- `/releases/v0.1.0/patterns/{id}`
-  - pinned release pattern detail
-- `/edge/`
-  - optional current snapshot from `main`
+The maintained website is the compact, standalone `site/index.html`. At the
+public root `/`, it provides search, filters and expandable pattern details on
+one page. Schema access uses `/data/pivot-pattern.schema.json`; downloadable
+registry and corpus bundles use `/artifacts/`. Pattern-source links select the
+GitHub tag recorded in the loaded registry.
+
+There are no separate pattern-detail or schema-viewer pages, archived-release
+routes, or release selector. The earlier larger application has been removed.
+Historical releases remain available through tagged source and downloadable
+release artifacts.
+
+The preview manifest identifies `/site/index.html` when served from a checkout;
+the local preview helper serves a temporary copy at its own `/index.html`.
+An edge manifest may identify `/edge/`, but a separate hosting configuration is
+required to expose that optional snapshot. A manifest route does not establish
+that a deployment exists.
+
+Richer routing or a release selector would require a separately approved future
+design. Neither is part of the current UI or the schema v1.5 migration.
 
 ### Downloads / API Bundles
 
@@ -107,12 +113,15 @@ Recommended published artifacts:
 
 Each stable release should publish pinned downloadable assets alongside the human-facing site.
 
-## Recommended UX Defaults
+## Current UX and Optional Channels
 
-- default website view should be latest stable
-- release selector should let users browse older tags
-- `edge` should be clearly labeled as unreleased if exposed
-- working-set and deferred lanes should remain visible, but clearly caveated
+- The public website reads the generated release bundled with its deployment.
+  Local release preparation does not publish that snapshot.
+- Search, filters and expandable details share the compact index page.
+- Validated and working-set lanes are initially selected; deferred patterns
+  remain available through the lane filter, with their caveats.
+- Historical versions are selected through GitHub tags and release downloads.
+- Any optional edge or preview deployment must identify its unreleased channel.
 
 ## CI/CD Expectations
 
@@ -123,7 +132,10 @@ On pull request:
 
 On merge to `main`:
 - run validator
-- refresh optional `edge` deployment
+- validate the compact browser's evidence/assessment rendering before Pages
+  uploads or deploys the site
+- deploy the packaged static site only after its Pages gates pass
+- refresh an optional `edge` deployment only if separately configured
 
 On tag:
 - run validator

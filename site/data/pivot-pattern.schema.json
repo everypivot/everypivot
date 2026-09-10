@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Pivot Pattern v1.4",
+  "title": "Pivot Pattern v1.5",
   "$comment": "EveryPivot pivot-pattern schema. © 2026 EveryPivot Project. The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. This schema file is licensed under Apache-2.0 (see LICENSE-CODE). Pattern instances that conform to this schema (i.e. the corpus under graph-pivots/) are licensed under CC BY 4.0 (see LICENSE-DATA). EveryPivot is a trademark — see TRADEMARK.md.",
   "x-license": {
     "copyright": "© 2026 EveryPivot Project",
@@ -69,6 +69,14 @@
         {
           "type": "number",
           "const": 1.4
+        },
+        {
+          "type": "string",
+          "const": "1.5"
+        },
+        {
+          "type": "number",
+          "const": 1.5
         }
       ]
     },
@@ -399,6 +407,24 @@
       "items": {
         "type": "string"
       }
+    },
+    "assessment_mode": {
+      "type": "string",
+      "enum": [
+        "evidence_only",
+        "candidate_assessment"
+      ],
+      "description": "v1.5 evidence_only carries no default assessment. candidate_assessment provides a compatible candidate shape only; a match never establishes an accepted assessment."
+    },
+    "assessment_requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "description": "Documentary qualifying evidence required before considering the candidate assessment. These strings are not runtime evidence, confidence, or an acceptance decision."
     }
   },
   "allOf": [
@@ -500,6 +526,89 @@
         "required": [
           "deferred_reason"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pattern_schema_version": {
+            "enum": [
+              "1.5",
+              1.5
+            ]
+          }
+        },
+        "required": [
+          "pattern_schema_version"
+        ]
+      },
+      "then": {
+        "required": [
+          "assessment_mode"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "assessment_mode": {
+                  "const": "evidence_only"
+                }
+              },
+              "required": [
+                "assessment_mode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "assessment": false,
+                "assessment_requirements": false
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "assessment_mode": {
+                  "const": "candidate_assessment"
+                }
+              },
+              "required": [
+                "assessment_mode"
+              ]
+            },
+            "then": {
+              "required": [
+                "assessment",
+                "assessment_requirements"
+              ],
+              "properties": {
+                "assessment": {
+                  "required": [
+                    "subject_role"
+                  ],
+                  "anyOf": [
+                    {
+                      "required": [
+                        "object_role"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "object_kind"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "else": {
+        "properties": {
+          "assessment_mode": false,
+          "assessment_requirements": false
+        }
       }
     }
   ],

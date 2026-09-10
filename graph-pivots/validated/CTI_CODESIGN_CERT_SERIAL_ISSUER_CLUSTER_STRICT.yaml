@@ -1,6 +1,6 @@
 id: CTI_CODESIGN_CERT_SERIAL_ISSUER_CLUSTER_STRICT
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
@@ -23,12 +23,7 @@ category: CTI
 description: Cluster samples by exact code-signing certificate issuer+serial; strict filters exclude multi-tenant/signing services.
 source: x509:cert
 target: file:bytes
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: signs
   direction: out

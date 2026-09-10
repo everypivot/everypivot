@@ -1,6 +1,6 @@
 id: CTI_SHORT_LIVED_CERT_INFRA_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: CTI
 description: Expand infrastructure presenting certificates that match a short-lived validity profile.
 source: x509:cert:lifetime_profile
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: matches_profile
   direction: out

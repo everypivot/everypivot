@@ -1,6 +1,6 @@
 id: ADTECH_IMPRESSION_ID_REUSE_CLUSTER
-version: 0.1.0
-pattern_schema_version: 1.4
+version: 0.2.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: ownership_signal
@@ -24,12 +24,7 @@ category: ADTECH
 description: Cluster domains, analytics endpoints, and campaign surfaces that carry the same ad impression or auction identifier.
 source: adtech:impression:id
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: campaign_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: observed_in
   direction: in

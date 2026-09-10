@@ -1,118 +1,96 @@
 # Schema Migration
 
-## Purpose
+## Current Contract
 
-This note records the public EveryPivot schema migration stance for the v0.3
-semantic-doctrine track.
+`pivot-pattern` v1.5 defines the evidence/assessment boundary. Each pattern
+explicitly selects one of two modes:
 
-It is planning guidance, not a schema change. The public corpus remains on the
-current accepted schema versions until a reviewed migration lands.
+| Mode | Required behavior |
+| --- | --- |
+| `evidence_only` | Omit both `assessment` and `assessment_requirements`. The pattern supplies a lookup and its limits, with no default assessment claim. |
+| `candidate_assessment` | Include a complete compatible `assessment` and a nonempty list of specific `assessment_requirements`. These describe a possible claim and its qualifying evidence; they never accept a conclusion. |
 
-## Accepted Schema Versions
+The JSON schema accepts pattern schema versions `1.1`, `1.2`, `1.3`, `1.4` and
+`1.5`. Current pattern authoring uses `1.5`; older versions remain available for
+historical and compatibility checks. Parsing an older pattern does not establish
+SAIL compatibility or supply a missing evidence-only declaration.
 
-The current `pivot-pattern` schema accepts:
+See [`ASSESSMENT_BRIDGE.md`](ASSESSMENT_BRIDGE.md) for examples, compatibility
+states and the pinned, unchanged SAIL v0.4 DRAFT contract.
 
-- `1.1`
-- `1.2`
-- `1.3`
-- `1.4`
+## Scope and Version Boundaries
 
-New public pattern work should use the newest accepted schema unless there is a
-specific compatibility reason not to.
+The older families/facets/case-bound proposal once used the v1.5 name. That work
+is now the separately reviewed
+[`FUTURE_SEMANTIC_MODEL_PROPOSAL.md`](FUTURE_SEMANTIC_MODEL_PROPOSAL.md), with no
+schema version assigned. The implemented v1.5 does not introduce its
+`semantic_family`, `implementation_facets`, `parent_pattern`,
+`companion_patterns`, `inverse_of`, `applies_blocked_inferences` or
+`semantic_boundary` root fields. Unknown root fields remain invalid.
 
-## Current Boundary
+Pattern schema versions, individual pattern versions, registry release versions,
+SAIL contract versions, adapter formats and sidecar formats are independently
+versioned. Migrating pattern YAML to `1.5` does not rename those other formats.
+Historical releases and intentional legacy-compatibility fixtures retain their
+original versions.
 
-Schema v1.4 has a closed root object: unknown root fields are rejected.
+## Migrate a Pattern
 
-That means v1.5 concepts such as `semantic_family`, `implementation_facets`,
-`parent_pattern`, `companion_patterns`, `inverse_of`, and
-`applies_blocked_inferences` cannot be added directly to pattern YAML without a
-schema version change.
+1. Review what the source, target and hops actually establish. Preserve lookup
+   behavior, hazards, suppression, provenance, capability requirements and
+   lifecycle state unless a separately justified change is needed.
+2. Choose `evidence_only` when the lookup supplies a clue without a defensible
+   default assessment mapping. Remove the former hint and record the limitation
+   in the review trail; do not replace it with an unsupported stronger claim.
+3. Use `candidate_assessment` only when the intended subject, object and scope
+   follow the SAIL contract. Keep `claim`, `basis`, `scope`, `subject_role` and
+   at least one of `object_role` or `object_kind`. Add pattern-specific,
+   nonblank `assessment_requirements` describing qualifying case evidence,
+   alternatives and acceptance review.
+4. Set `pattern_schema_version: 1.5` and increment the individual pattern
+   version for the changed contract. Do not relabel entities or omit roles to
+   hide a mismatch, and do not treat a match as satisfaction of the requirements.
+5. Run document and full bridge validation, then review the resulting candidate
+   shape and preserved operational behavior.
 
-Do not add schema-facing fields early just because the doctrine is being
-designed.
-
-## v1.4 Compatibility Bridge
-
-The v1.4 `constraints` object can carry temporary compatibility material
-because it allows additional properties.
-
-Acceptable bridge material may include:
-
-```yaml
-constraints:
-  semantic_boundary:
-    allowed_claims:
-      - candidate_cluster_member
-    blocked_claims:
-      - actor_attribution
-      - final_assessment
-    safe_substitute_relations:
-      - artifact_correlation_candidate
+```sh
+ruby tools/validate_pivots.rb graph-pivots --strict-metadata --strict-bridge
+ruby tools/check_sail_bridge.rb graph-pivots --json --strict-incomplete
 ```
 
-This is a bridge only. It should not become a second permanent location for
-v1.5 semantics.
+JSON Schema validates document shape. The shared bridge checker additionally
+validates predicate, role-or-kind and subject-specific scope compatibility
+against the pinned SAIL contracts. Both are required for a distributable
+candidate; neither evaluates whether case evidence supports a conclusion.
 
-Do not put `semantic_family` under `constraints`. It is grouping metadata, not
-an enforcement constraint.
+## Migrate Consumers and Generated Artifacts
 
-## v1.5 Design Targets
+Consumers must distinguish evidence-only patterns from conditional candidates.
+They must preserve requirements, hazards, provenance and compatibility coverage,
+and prevent unknown, incomplete or incompatible records from enabling assessment
+generation. A consumer cannot infer an active hint from a missing mode or infer
+acceptance from a compatibility pass.
 
-Schema v1.5 design should cover:
+Regenerate the registry index, manifests, archives, browser JSON/JS, schema
+copies, embedded YAML sources and release pack from the same reviewed source and
+release identifiers. Ship the pinned contracts and checker with portable
+artifacts. Validate the exact export, including freshness, package contents,
+consumer displays, license coverage and public-safety checks, before publication.
+See [`REGISTRY_INDEX_SPEC.md`](REGISTRY_INDEX_SPEC.md) for exported fields and
+[`REPO_PUBLISHING_AND_VERSIONING.md`](REPO_PUBLISHING_AND_VERSIONING.md) for
+release preparation.
 
-- primitives;
-- reusable patterns;
-- case-bound pivots;
-- worked traversals;
-- blocked-inference objects;
-- semantic families;
-- typed implementation facets;
-- companion and inverse relationships;
-- source-status and provenance fields;
-- semantic boundaries with allowed claims, blocked claims, blocked relations,
-  and required output warnings.
+## Existing Doctrine and Promotion
 
-## Doctrine Rules
+Existing `constraints.semantic_boundary` material is a temporary compatibility
+convention, not a standardized v1.5 assessment mechanism. Do not add it to bypass
+`assessment_mode`, the bridge checker or runtime review. Consumers need explicit
+support before such material can enforce a boundary; grouping metadata does not
+belong under `constraints`.
 
-- `semantic_family` is grouping metadata only. It does not imply inheritance,
-  substitutability, promotion eligibility, or compatible fixtures.
-- Use `parent_pattern` only for true specialization or case-bound attachment.
-  Reusable child patterns need an explicit `specialization_reason`.
-- Implementation differences should use typed facets.
-- Claim differences should use separate patterns or justified children.
-- Prefer broad blocked-inference objects plus typed facets over many narrow
-  anti-pivot child patterns.
-- `safe_substitute_relations` belongs on `blocked_inference` objects in v1.5.
-  Any v1.4 use under `constraints.semantic_boundary` is temporary.
-
-## Promotion Expectations
-
-Schema migration does not promote a pattern.
-
-Promotion still requires:
-
-- useful and reusable pivot semantics;
-- clear hazards and caveats;
-- appropriate metadata for the target lane;
-- fixture or evidence support where applicable;
-- explicit maintainer review;
-- no unresolved credible challenge.
-
-Validated lifecycle state is not attribution, maliciousness, compromise,
-runtime confidence, or final assessment.
-
-## No Automatic Corpus Migration
-
-The v0.3 semantic-doctrine work should not migrate the public corpus
-automatically.
-
-The safe sequence is:
-
-1. Finish the public-safe doctrine.
-2. Review the v1.5 schema proposal in
-   [`SCHEMA_V1_5_PROPOSAL.md`](SCHEMA_V1_5_PROPOSAL.md).
-3. Add sidecar or fixture pilots where needed.
-4. Add schema support.
-5. Migrate a small reviewed slice.
-6. Expand only after validation, fixtures, and promotion docs agree.
+Schema migration does not promote a pattern. Promotion still requires useful
+pivot semantics, clear hazards, appropriate lane metadata, fixture or evidence
+support, explicit maintainer review and no unresolved credible challenge.
+Validated lifecycle state is not attribution, maliciousness, compromise, runtime
+confidence or final assessment. CTI promotion additionally follows
+[CTI promotion boundaries](CTI_PROMOTION_BOUNDARIES.md).

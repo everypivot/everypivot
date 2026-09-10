@@ -1,0 +1,67 @@
+{
+  "contract": "sail.semantic_roles",
+  "version": "0.4-draft",
+  "type": "semantic_role_vocabulary",
+  "roles": [
+    {
+      "id": "threat_actor",
+      "description": "Durable adversary or coordinated malicious actor identity.",
+      "durable_entity": true
+    },
+    {
+      "id": "campaign",
+      "description": "Bounded coordinated operation or campaign.",
+      "durable_entity": true
+    },
+    {
+      "id": "incident",
+      "description": "Specific incident, intrusion, or compromise instance.",
+      "durable_entity": false
+    },
+    {
+      "id": "observation",
+      "description": "Aggregate or privacy-preserving observation unit that may support an indicates assessment.",
+      "durable_entity": false
+    },
+    {
+      "id": "behavioural_cluster",
+      "description": "Clustered behavior grouping such as account clusters or related activity windows.",
+      "durable_entity": true
+    },
+    {
+      "id": "tool",
+      "description": "Adversary tool, malware family, or software capability.",
+      "durable_entity": true
+    },
+    {
+      "id": "vulnerability",
+      "description": "Exploit target such as a CVE or product weakness.",
+      "durable_entity": true
+    },
+    {
+      "id": "mitigation",
+      "description": "Control or mitigation object assessed against a risk.",
+      "durable_entity": true
+    },
+    {
+      "id": "detection_rule",
+      "description": "Detection content such as a rule, classifier, or ruleset.",
+      "durable_entity": true
+    },
+    {
+      "id": "target",
+      "description": "Victim or target entity class such as sector, geography, audience, or victim organization.",
+      "durable_entity": true
+    },
+    {
+      "id": "technique",
+      "description": "Technique or TTP used as an analytical object.",
+      "durable_entity": true
+    },
+    {
+      "id": "attribution_target",
+      "description": "Sponsor, country, organization, or motive target for attribution claims.",
+      "durable_entity": true
+    }
+  ]
+}

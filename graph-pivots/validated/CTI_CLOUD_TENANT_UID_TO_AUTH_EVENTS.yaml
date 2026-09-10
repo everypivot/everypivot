@@ -1,6 +1,6 @@
 id: CTI_CLOUD_TENANT_UID_TO_AUTH_EVENTS
-version: 1.1.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: low
 robustness_class: enumeration
@@ -26,12 +26,7 @@ category: CTI
 description: Pivot from a normalized cloud tenant identifier to authentication events observed within that tenant context. First-hop single-step scope; associated-session multi-hop expansion remains deferred for a separate review.
 source: cloud:tenant:uid
 target: auth:event
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: contains_auth_event
   direction: out

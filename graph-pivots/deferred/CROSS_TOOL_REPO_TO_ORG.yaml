@@ -1,6 +1,6 @@
 id: CROSS_TOOL_REPO_TO_ORG
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: CROSS
 description: Map tool repositories to maintainers/authors and then to their organizations (OSINT).
 source: code:repo
 target: org:org
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: maintained_by|authored_by
   direction: out

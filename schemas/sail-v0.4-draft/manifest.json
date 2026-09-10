@@ -1,0 +1,29 @@
+{
+  "contract": "everypivot.sail_contract_pack",
+  "version": "0.4-draft",
+  "license": "Apache-2.0",
+  "source_repository": "https://github.com/sailspec/sail",
+  "source_revision": "3b23012b1ec78cc2a65e093c14d06b6318675c16",
+  "files": {
+    "predicate_type_matrix.v0.4.json": {
+      "source_path": "contracts/predicate_type_matrix.v0.4.json",
+      "sha256": "8a494fbaef2d4aef82b0d5115c9336d53174b558b24aea6ebf5120e62c2dd3f7"
+    },
+    "semantic_roles.v0.4.json": {
+      "source_path": "contracts/semantic_roles.v0.4.json",
+      "sha256": "3693813b95b98abd9eb56c37fbcdc9b9c1397a3097a3f475b4abb3e5d96725e0"
+    },
+    "structural_object_kinds.v0.4.json": {
+      "source_path": "contracts/structural_object_kinds.v0.4.json",
+      "sha256": "5601a444b81d3ab03fcf3a00a74e077fca6110ce6b81abbb47bd3352868b3e50"
+    },
+    "LICENSE": {
+      "source_path": "LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "NOTICE": {
+      "source_path": "NOTICE",
+      "sha256": "55cf68c84f9ccfca43b5907770cd16a9e67b6c091f11347684b74bb3c3c32568"
+    }
+  }
+}

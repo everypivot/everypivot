@@ -45,3 +45,14 @@ work or a credible challenge changes the risk profile.
 Downstream systems own execution, scoring, case-specific corroboration, and
 final assessment.
 
+## Assessment compatibility
+
+Schema v1.5 requires an explicit `assessment_mode`. Evidence-only patterns
+provide useful results without a default assessment. Conditional candidate
+hints require a complete SAIL-compatible shape and qualifying-evidence
+requirements. Neither state accepts an analytical conclusion.
+
+The native validator checks the pinned SAIL matrix in addition to the local
+schema. Registry generation refuses incomplete or incompatible hints.
+See [Evidence and assessment hints](docs/ASSESSMENT_BRIDGE.md) for the mode,
+compatibility, and consumer requirements.

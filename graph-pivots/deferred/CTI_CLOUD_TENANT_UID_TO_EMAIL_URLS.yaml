@@ -1,6 +1,6 @@
 id: CTI_CLOUD_TENANT_UID_TO_EMAIL_URLS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -22,12 +22,7 @@ category: CTI
 description: Pivot from a normalized cloud tenant identifier to URLs observed in email telemetry associated with that tenant context.
 source: cloud:tenant:uid
 target: inet:url|email:message
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: associated_message
   direction: out

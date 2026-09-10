@@ -1,6 +1,6 @@
 id: CTI_CLOUD_SUBSCRIPTION_TO_TENANT
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: high
 robustness_class: ownership_signal
@@ -25,12 +25,7 @@ category: CTI
 description: Pivot from a normalized cloud subscription identifier to the tenant observed as owning or administering that subscription.
 source: cloud:subscription:uid
 target: cloud:tenant:uid
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: contained_by_tenant
   direction: out

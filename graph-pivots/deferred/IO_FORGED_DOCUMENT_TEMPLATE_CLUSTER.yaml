@@ -1,6 +1,6 @@
 id: IO_FORGED_DOCUMENT_TEMPLATE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: IO
 description: Cluster operators or campaigns reusing the same forged-document templates, seals, or layout artifacts.
 source: file:bytes
 target: inet:web:acct|risk:campaign
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: observed_in
   direction: out

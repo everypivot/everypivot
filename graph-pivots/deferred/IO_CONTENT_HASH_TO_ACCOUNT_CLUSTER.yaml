@@ -1,6 +1,6 @@
 id: IO_CONTENT_HASH_TO_ACCOUNT_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: IO
 description: Cluster coordinated accounts reusing identical media assets, documents, or attachments across posts and campaigns.
 source: hash:sha256
 target: inet:web:acct
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: posted_by|used_by
   direction: out

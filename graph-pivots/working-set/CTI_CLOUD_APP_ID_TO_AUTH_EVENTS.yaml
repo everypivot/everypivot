@@ -1,6 +1,6 @@
 id: CTI_CLOUD_APP_ID_TO_AUTH_EVENTS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: domain_expansion
@@ -26,12 +26,7 @@ category: CTI
 description: Pivot from a normalized cloud or OAuth application identifier to authentication, consent, or token-use events involving that application.
 source: cloud:application:uid|oauth:application:uid
 target: auth:event
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: observed_in_auth_event
   direction: out

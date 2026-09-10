@@ -1,0 +1,28 @@
+---
+id: OSINT_INVALID_V15_MISSING_MODE
+version: 1.0.0
+pattern_schema_version: '1.5'
+validation_state: deferred
+deferred_reason: schema_migration_pending
+name: invalid v15 missing mode
+category: OSINT
+description: Synthetic bridge validation fixture; its metadata is not evidence of
+  an analytical conclusion.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: incident_level
+  subject_role: behavioural_cluster
+  object_role: incident
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30
+assessment_requirements:
+- Corroborate the observation against a separately identified incident and review
+  contradictions.

@@ -1,6 +1,6 @@
 id: FIN_KYC_DOCUMENT_REUSE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: FIN
 description: Cluster people or accounts reusing the same KYC document image, scan, or canonical document hash.
 source: file:bytes
 target: person|fin:account
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: submitted_for
   direction: out

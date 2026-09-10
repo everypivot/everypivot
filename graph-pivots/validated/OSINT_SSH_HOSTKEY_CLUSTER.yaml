@@ -1,6 +1,6 @@
 id: OSINT_SSH_HOSTKEY_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
@@ -22,12 +22,7 @@ category: OSINT
 description: Cluster servers that present the exact same SSH host key (e.g., ed25519/rsa SHA256).
 source: ssh:hostkey
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: presented_by
   direction: out

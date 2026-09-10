@@ -1,6 +1,6 @@
 id: CTI_QR_PAYLOAD_REUSE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -25,12 +25,7 @@ category: CTI
 description: Cluster campaign assets or webpages that reuse the same normalized decoded QR payload.
 source: visual:qr_payload
 target: inet:url|payment:address|identity:account|file:image
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: decoded_from_image
   direction: in

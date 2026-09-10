@@ -1,6 +1,6 @@
 id: CTI_COOKIE_NAME_REUSE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -24,12 +24,7 @@ category: CTI
 description: Cluster webpages or hostnames that reuse distinctive normalized cookie names or cookie-name namespaces.
 source: web:cookie:name
 target: inet:fqdn|inet:url
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: cookie_name_observed_on
   direction: out

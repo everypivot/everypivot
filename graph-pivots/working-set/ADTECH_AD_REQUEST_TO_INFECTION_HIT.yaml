@@ -1,6 +1,6 @@
 id: ADTECH_AD_REQUEST_TO_INFECTION_HIT
-version: 0.1.0
-pattern_schema_version: 1.3
+version: 0.2.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: multi_hop_inference
@@ -20,12 +20,19 @@ category: ADTECH
 description: Link an ad-tech delivery or qualification request to a suspicious downstream endpoint when the two events share a device/session identifier and occur within a short time window.
 source: http:request
 target: risk:incident
+assessment_mode: candidate_assessment
 assessment:
   claim: indicates
   basis: assessed
   scope: incident_level
   subject_role: observation
   object_role: incident
+assessment_requirements:
+- "Bind the observation subject to the recorded ad request; retain the downstream request chain as supporting evidence, including request times, source-scoped identifiers, collection provenance, and evidence paths."
+- "Bind the incident object to an independently identified incident, and verify that the downstream endpoint is associated with that incident during the observation window; do not invent an incident from the match."
+- "Verify device or session continuity and the bounded event sequence using source-specific identifier semantics; address identifier rotation, collisions, shared devices, replay, and clock uncertainty."
+- "Require independent endpoint, file, or browser evidence corroborating the connection from the observed request chain to malicious delivery or execution in that incident; address normal redirects, ad verification, analytics, tracking pixels, and shared vendor infrastructure as alternative explanations."
+- "Use the compatible hint only as a candidate assessment shape after these requirements are evaluated; downstream evidence review, contradictions, confidence, and acceptance policy remain separate, and the match alone establishes neither infection nor actor attribution."
 hops:
 - via: carries_identifier
   direction: out

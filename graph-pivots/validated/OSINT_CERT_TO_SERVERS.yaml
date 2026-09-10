@@ -1,6 +1,6 @@
 id: OSINT_CERT_TO_SERVERS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
@@ -22,12 +22,7 @@ category: OSINT
 description: Enumerate servers that present an identical certificate or SPKI (public key).
 source: x509:cert
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: presented_at
   direction: out

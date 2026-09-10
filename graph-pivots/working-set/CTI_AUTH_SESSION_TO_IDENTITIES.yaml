@@ -1,6 +1,6 @@
 id: CTI_AUTH_SESSION_TO_IDENTITIES
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: domain_expansion
@@ -24,12 +24,7 @@ category: CTI
 description: Pivot from a bounded authentication session to normalized user or principal identities associated with that session.
 source: auth:session
 target: identity:user:uid
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: associated_identity
   direction: out

@@ -89,7 +89,8 @@ def compare_tar_gz_content(errors, label, expected, actual)
 end
 
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path
+  repo_root: Pathname(__dir__).join('..').expand_path,
+  preview: false
 }
 
 OptionParser.new do |parser|
@@ -98,16 +99,23 @@ OptionParser.new do |parser|
   parser.on('--repo-root PATH', 'Repository root to check') do |value|
     options[:repo_root] = Pathname(value).expand_path
   end
+  parser.on('--preview', 'Check candidate preview artifacts instead of the stable release snapshot') do
+    options[:preview] = true
+  end
 end.parse!
 
 repo_root = options[:repo_root]
 errors = []
-registry = parse_json(repo_root.join('artifacts', 'registry-index.json'), errors)
+suffix = options[:preview] ? '.preview' : ''
+registry_name = "registry-index#{suffix}.json"
+registry = parse_json(repo_root.join('artifacts', registry_name), errors)
 
 release = registry['release']
 published_at = registry['published_at']
-errors << 'artifacts/registry-index.json is missing release' if release.to_s.empty?
-errors << 'artifacts/registry-index.json is missing published_at' if published_at.to_s.empty?
+errors << "#{registry_name} is missing release" if release.to_s.empty?
+errors << "#{registry_name} is missing published_at" if published_at.to_s.empty?
+expected_channel = options[:preview] ? 'preview' : 'stable'
+errors << "#{registry_name} must use channel #{expected_channel}" unless registry['channel'] == expected_channel
 
 unless errors.empty?
   warn 'Generated data freshness check failed:'
@@ -117,11 +125,11 @@ end
 
 Dir.mktmpdir('everypivot-generated-freshness') do |tmp|
   tmp_root = Pathname(tmp)
-  output = tmp_root.join('registry-index.json')
+  output = tmp_root.join(registry_name)
   site_data_root = tmp_root.join('site-data')
   builder = repo_root.join('tools', 'build_registry_index.rb')
 
-  ok = system(
+  command = [
     RbConfig.ruby,
     builder.to_s,
     '--repo-root', repo_root.to_s,
@@ -129,7 +137,9 @@ Dir.mktmpdir('everypivot-generated-freshness') do |tmp|
     '--published-at', published_at,
     '--output', output.to_s,
     '--site-data-root', site_data_root.to_s
-  )
+  ]
+  command << '--preview' if options[:preview]
+  ok = system(*command)
 
   unless ok
     warn 'Generated data freshness check failed: registry build command failed'
@@ -145,6 +155,8 @@ Dir.mktmpdir('everypivot-generated-freshness') do |tmp|
     'site/data/pivot-pattern.schema.json' => site_data_root.join('pivot-pattern.schema.json'),
     'site/data/pivot-pattern.schema.js' => site_data_root.join('pivot-pattern.schema.js')
   }.each do |relative_path, regenerated_path|
+    relative_path = relative_path.sub(/\.(json|js)$/, "#{suffix}.\\1")
+    regenerated_path = Pathname(regenerated_path.to_s.sub(/\.(json|js)$/, "#{suffix}.\\1")) unless regenerated_path == output
     compare_file(errors, relative_path, repo_root.join(relative_path), regenerated_path)
   end
 
@@ -152,6 +164,8 @@ Dir.mktmpdir('everypivot-generated-freshness') do |tmp|
     'artifacts/patterns.tar.gz' => tmp_root.join('patterns.tar.gz'),
     'artifacts/fixtures.tar.gz' => tmp_root.join('fixtures.tar.gz')
   }.each do |relative_path, regenerated_path|
+    relative_path = relative_path.sub(/\.tar\.gz$/, "#{suffix}.tar.gz")
+    regenerated_path = Pathname(regenerated_path.to_s.sub(/\.tar\.gz$/, "#{suffix}.tar.gz"))
     compare_tar_gz_content(errors, relative_path, repo_root.join(relative_path), regenerated_path)
   end
 end

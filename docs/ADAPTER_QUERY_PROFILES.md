@@ -260,7 +260,7 @@ boundary visible in both source layout and generated release metadata.
 This pilot does not:
 
 - add schema-facing root fields;
-- migrate the public corpus to schema v1.5;
+- introduce future semantic-model fields or migrate independently versioned adapter formats;
 - claim runtime correctness for every Neo4j data model;
 - execute against live external data;
 - emit scores, final assessments, actor attribution, maliciousness, compromise,

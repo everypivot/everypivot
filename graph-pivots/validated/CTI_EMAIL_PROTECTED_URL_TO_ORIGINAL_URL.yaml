@@ -1,6 +1,6 @@
 id: CTI_EMAIL_PROTECTED_URL_TO_ORIGINAL_URL
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: high
 robustness_class: domain_expansion
@@ -24,12 +24,7 @@ category: CTI
 description: Decode a protected or rewritten email URL into the original embedded destination URL while preserving provider and adapter provenance.
 source: email:protected_url
 target: inet:url
-assessment:
-  claim: indicates
-  basis: demonstrated
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: decodes_to
   direction: out

@@ -1,6 +1,6 @@
 id: IO_CROSS_PLATFORM_HANDLE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: IO
 description: Link common handle strings or aliases reused across platforms by coordinated or inauthentic personas.
 source: social:handle
 target: inet:web:acct
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: resolves_to
   direction: out

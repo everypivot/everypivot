@@ -5,6 +5,7 @@ require 'pathname'
 require 'yaml'
 
 require_relative 'json_schema_validator'
+require_relative 'sail_bridge'
 
 library_root = if ARGV[0] && !ARGV[0].start_with?('--')
   Pathname(ARGV.shift).expand_path
@@ -13,6 +14,7 @@ else
 end
 
 strict_metadata = ARGV.delete('--strict-metadata')
+strict_bridge = ARGV.delete('--strict-bridge')
 schema_path = Pathname(__dir__).join('..', 'schemas', 'pivot_pattern.schema.json').expand_path
 
 unless library_root.directory?
@@ -33,6 +35,12 @@ rescue JSON::ParserError => e
 end
 
 schema_validator = EveryPivot::JsonSchemaValidator.new(schema)
+begin
+  bridge_validator = EveryPivot::SailBridge.new
+rescue EveryPivot::SailBridge::ContractError => e
+  warn e.message
+  exit 2
+end
 prefix_map = {
   'OSINT' => 'OSINT_',
   'CTI' => 'CTI_',
@@ -53,6 +61,7 @@ metadata_requirements = {
 errors = []
 warnings = []
 count = 0
+bridge_counts = EveryPivot::SailBridge::STATUSES.to_h { |status| [status, 0] }
 
 def lane_for(file, library_root)
   rel = file.relative_path_from(library_root).each_filename.to_a
@@ -91,6 +100,18 @@ Dir.glob(library_root.join('**', '*.yaml').to_s).sort.each do |path|
 
   schema_validator.validate(data).each do |message|
     add_message(errors, file.relative_path_from(library_root), message)
+  end
+
+  bridge = bridge_validator.check(data, path: file.relative_path_from(library_root).to_s)
+  bridge_counts[bridge['status']] += 1
+  bridge['errors'].each do |entry|
+    add_message(errors, file.relative_path_from(library_root), "SAIL #{entry['code']}: #{entry['message']}")
+  end
+  bridge['warnings'].each do |entry|
+    add_message(warnings, file.relative_path_from(library_root), "SAIL #{entry['code']}: #{entry['message']}")
+  end
+  if strict_bridge && bridge['status'] == 'incomplete'
+    add_message(errors, file.relative_path_from(library_root), 'SAIL incomplete bridge compatibility is forbidden by --strict-bridge')
   end
 
   lane = lane_for(file, library_root)
@@ -134,6 +155,8 @@ Dir.glob(library_root.join('**', '*.yaml').to_s).sort.each do |path|
 end
 
 puts "Validated #{count} pivot pattern files under #{library_root}"
+puts "SAIL bridge compatibility: #{bridge_counts.map { |status, total| "#{status}=#{total}" }.join(', ')}"
+puts 'Bridge compatibility does not evaluate evidence or accept analytical conclusions.'
 
 unless warnings.empty?
   puts

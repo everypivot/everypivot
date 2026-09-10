@@ -7,12 +7,15 @@ Lightweight registry tooling for the public EveryPivot&trade; repo shape.
 > [`TRADEMARK.md`](../TRADEMARK.md).
 
 Current tools:
-- `validate_pivots.rb` validates the `graph-pivots/` corpus against the published schema plus lane-policy rules
+- `validate_pivots.rb` validates schema, lane policy and the pinned SAIL contract; `--strict-bridge` rejects incomplete compatibility
+- `check_sail_bridge.rb` reports evidence-only, compatible candidate, incomplete and incompatible results; `--json --strict-incomplete` is the complete-coverage gate
+- `test_sail_bridge.rb` and `test_registry_assessment.rb` exercise contract and export boundaries
+- `test_site_assessment.js` checks the shared standalone browser assessment boundary
 - `check_fixture_suite.rb` runs the fixture manifest under `fixtures/` and validates traversal evidence examples
 - `check_query_profile_suite.rb` validates adapter/query profile sidecars, fixture graphs, and generated query freshness
 - `check_cti_promotion_lint.rb` blocks CTI promotion artifacts that encode assessment/review vocabulary, uncataloged tuples, or unsafe fixture content
 - `check_release_metadata.rb` verifies that README, release notes, builder defaults, committed artifacts, and site data agree on the current release
-- `check_generated_freshness.rb` rebuilds registry and site data into a temporary directory and compares the committed public outputs
+- `check_generated_freshness.rb` regenerates and compares stable distribution artifacts; `--preview` checks preview artifacts separately
 - `check_relation_catalog.rb` warns when pattern relation/form vocabulary is not yet listed in `docs/RELATION_CATALOG.md`
 - `check_site_links.rb` audits local `site/` links against the staged GitHub Pages publish root
 - `check_site_snapshot.rb` verifies that homepage pre-rendered counts agree with the registry data
@@ -25,6 +28,11 @@ Current tools:
 Recommended usage:
 
 ```bash
+ruby tools/validate_pivots.rb --strict-metadata --strict-bridge
+ruby tools/check_sail_bridge.rb --json --strict-incomplete
+ruby tools/test_sail_bridge.rb
+ruby tools/test_registry_assessment.rb
+node tools/test_site_assessment.js
 ruby tools/check_fixture_suite.rb
 ruby tools/check_query_profile_suite.rb
 ruby tools/check_cti_promotion_lint.rb
@@ -38,12 +46,12 @@ ruby tools/check_release_metadata.rb
 ruby tools/check_generated_freshness.rb
 ruby tools/check_site_links.rb
 ruby tools/check_site_snapshot.rb
-ruby tools/build_release_pack.rb --release v0.4.3 --published-at 2026-06-03 --artifact-mode stable --authority-status canonical --force
+ruby tools/build_release_pack.rb --release v0.5.0 --published-at 2026-09-10 --artifact-mode stable --authority-status canonical --force
 ruby tools/build_release_pack.rb --skip-fixtures --output-dir /tmp/everypivot-release-pack --force
 ```
 
 Gate split:
-- `validate_pivots.rb` enforces schema and lane-policy correctness
+- `validate_pivots.rb` enforces schema, lane policy and assessment-contract compatibility; it does not validate case evidence or accept conclusions
 - `check_cti_promotion_lint.rb` is the promotion-blocking CTI safety gate for public CTI pattern and fixture material
 - `check_relation_catalog.rb` remains the warning-only relation/form inventory check used by reviewers and tooling
 
@@ -51,3 +59,7 @@ Default behavior:
 - `build_release_pack.rb` validates the copied corpus and runs the copied CTI lint, fixture suite, and query-profile suite before emitting artifacts
 - stable `build_release_pack.rb` output includes `site/`, regenerates `site/data/`, and reruns release metadata, generated-freshness, site-link, and homepage-snapshot checks inside the copied pack
 - use `--skip-fixtures` only when you explicitly need a pack despite a known fixture issue
+
+`test_site_assessment.js` requires Node and the standalone `site/index.html`. Run
+it from the source checkout or a stable release pack; preview packs omit the
+site and cannot run that browser test.

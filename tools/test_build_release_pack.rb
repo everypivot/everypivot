@@ -43,8 +43,8 @@ class BuildReleasePackTest < Minitest::Test
       output_dir = Pathname(dir).join('everypivot-pack')
       manifest = EveryPivot::BuildReleasePack.build_release_pack(
         output_dir: output_dir,
-        release: 'v0.4.3',
-        published_at: '2026-06-03',
+        release: 'v0.5.0',
+        published_at: '2026-09-10',
         force: false,
         artifact_mode: 'stable',
         authority_status: 'canonical',

@@ -1,6 +1,6 @@
 id: CTI_FAVICON_HASH_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: enumeration
@@ -19,10 +19,7 @@ category: CTI
 description: Pivot by identical HTTP favicon hash to discover co-hosted panels or cloned kits.
 source: web:site
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: http_favicon_hash
   direction: out

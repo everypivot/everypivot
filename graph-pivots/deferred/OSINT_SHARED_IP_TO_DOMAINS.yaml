@@ -1,6 +1,6 @@
 id: OSINT_SHARED_IP_TO_DOMAINS
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -21,12 +21,7 @@ category: OSINT
 description: Enumerate domains co-hosted on the same IP address during an overlapping observation window.
 source: inet:ipv4
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: suspected
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: hosted
   direction: in

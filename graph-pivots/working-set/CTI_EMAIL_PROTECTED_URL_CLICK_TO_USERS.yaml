@@ -1,6 +1,6 @@
 id: CTI_EMAIL_PROTECTED_URL_CLICK_TO_USERS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: domain_expansion
@@ -19,12 +19,7 @@ category: CTI
 description: Pivot from a protected email URL click event to the user identity and message context associated with the click.
 source: email:url_click
 target: identity:user|email:message
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: clicked_by
   direction: out

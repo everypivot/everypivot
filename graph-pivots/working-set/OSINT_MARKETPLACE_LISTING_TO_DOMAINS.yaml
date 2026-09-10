@@ -1,6 +1,6 @@
 id: OSINT_MARKETPLACE_LISTING_TO_DOMAINS
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -18,10 +18,7 @@ category: OSINT
 description: Enumerate domains observed on reseller or auction marketplace listing feeds.
 source: osint:marketplace:listing
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: lists|offers
   direction: out

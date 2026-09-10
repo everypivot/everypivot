@@ -1,6 +1,6 @@
 id: ADTECH_PIPELINE_PHASE_MISMATCH
-version: 0.1.0
-pattern_schema_version: 1.3
+version: 0.2.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: multi_hop_inference
@@ -20,12 +20,7 @@ category: ADTECH
 description: Flag ad-tech URLs whose observed request phase conflicts with the domain, path, or declared role suggested by the endpoint.
 source: http:request
 target: risk:observation
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: incident_level
-  subject_role: observation
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: classified_as
   direction: out

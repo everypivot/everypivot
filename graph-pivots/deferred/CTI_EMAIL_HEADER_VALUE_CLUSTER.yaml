@@ -1,6 +1,6 @@
 id: CTI_EMAIL_HEADER_VALUE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -22,12 +22,7 @@ category: CTI
 description: Cluster email messages that share a rare normalized header value such as a mailer marker, charset, custom header, or relay artifact.
 source: email:header:value
 target: email:message
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: header_value_present
   direction: in

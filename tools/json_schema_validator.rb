@@ -11,6 +11,8 @@ module EveryPivot
     private
 
     def validate_fragment(schema, instance, path)
+      return ["#{format_path(path)} is not allowed"] if schema == false
+      return [] if schema == true
       return [] unless schema.is_a?(Hash)
 
       errors = []
@@ -58,6 +60,15 @@ module EveryPivot
 
       if schema.key?('const') && instance != schema['const']
         errors << "#{format_path(path)} must equal #{schema['const'].inspect}"
+      end
+
+      if instance.is_a?(String)
+        if schema.key?('minLength') && instance.length < schema['minLength']
+          errors << "#{format_path(path)} must contain at least #{schema['minLength']} character(s)"
+        end
+        if schema.key?('pattern') && !Regexp.new(schema['pattern']).match?(instance)
+          errors << "#{format_path(path)} must match #{schema['pattern'].inspect}"
+        end
       end
 
       if instance.is_a?(Hash)

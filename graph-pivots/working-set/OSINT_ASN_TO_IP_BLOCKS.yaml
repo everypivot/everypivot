@@ -1,6 +1,6 @@
 id: OSINT_ASN_TO_IP_BLOCKS
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -20,10 +20,7 @@ category: OSINT
 description: Enumerate prefixes and live IPs announced by an ASN.
 source: net:asn
 target: inet:ipv4
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: announces
   direction: out

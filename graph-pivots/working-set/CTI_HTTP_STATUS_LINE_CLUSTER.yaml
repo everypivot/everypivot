@@ -1,6 +1,6 @@
 id: CTI_HTTP_STATUS_LINE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: enumeration
@@ -20,12 +20,7 @@ category: CTI
 description: Cluster HTTP observations by normalized response status line while preserving request context.
 source: http:status_line
 target: inet:url|inet:fqdn|http:response
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: status_of
   direction: out

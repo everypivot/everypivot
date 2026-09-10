@@ -1,6 +1,6 @@
 id: CTI_THREAT_TOOL_FQDN_IP
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: CTI
 description: Tool-family infrastructure discovery via observed domains and their current/previous IPs.
 source: risk:threat
 target: inet:ipv4
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: uses
   direction: out

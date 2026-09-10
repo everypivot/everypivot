@@ -1,6 +1,6 @@
 id: OSINT_TLS_JA3_TO_FQDNS
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: enumeration
@@ -19,10 +19,7 @@ capability_requirements:
   - 'internet_scan_archive_lookup'
 source: tls:ja3
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: observed_on
   direction: out

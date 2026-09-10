@@ -46,3 +46,26 @@ Files: .github/**
  site/TRADEMARK.md
 Copyright: 2026 EveryPivot Project
 License: Apache-2.0
+
+Files: schemas/sail-v0.4-draft/predicate_type_matrix.v0.4.json
+ schemas/sail-v0.4-draft/semantic_roles.v0.4.json
+ schemas/sail-v0.4-draft/structural_object_kinds.v0.4.json
+ schemas/sail-v0.4-draft/LICENSE
+ schemas/sail-v0.4-draft/NOTICE
+Copyright: 2026 Mark Graham and contributors
+License: Apache-2.0
+
+Files: artifacts/registry-index.preview.json
+ artifacts/patterns.preview.tar.gz
+ artifacts/fixtures.preview.tar.gz
+ site/data/registry-index.preview.json
+ site/data/registry-index.preview.js
+ site/data/pattern-sources.preview.js
+Copyright: 2026 EveryPivot Project
+License: CC-BY-4.0
+
+Files: artifacts/release-manifest.preview.json
+ site/data/pivot-pattern.schema.preview.json
+ site/data/pivot-pattern.schema.preview.js
+Copyright: 2026 EveryPivot Project
+License: Apache-2.0

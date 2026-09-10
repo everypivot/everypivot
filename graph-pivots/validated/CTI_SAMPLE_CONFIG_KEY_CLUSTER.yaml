@@ -1,6 +1,6 @@
 id: CTI_SAMPLE_CONFIG_KEY_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
@@ -23,12 +23,7 @@ category: CTI
 description: Cluster malware sharing exact C2 crypto keys, campaign IDs, or license/public keys from config.
 source: c2:config:key
 target: file:bytes
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: observed_in
   direction: out

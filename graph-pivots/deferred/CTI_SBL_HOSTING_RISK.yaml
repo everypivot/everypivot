@@ -1,6 +1,6 @@
 id: CTI_SBL_HOSTING_RISK
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: CTI
 description: Score IPs by ASN and presence in Spamhaus/abuse.ch datasets to prioritize likely bad infra.
 source: inet:ipv4
 target: net:asn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: bgp_origin|asn_of
   direction: out

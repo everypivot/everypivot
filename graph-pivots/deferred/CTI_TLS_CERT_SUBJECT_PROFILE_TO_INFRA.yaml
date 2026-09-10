@@ -1,6 +1,6 @@
 id: CTI_TLS_CERT_SUBJECT_PROFILE_TO_INFRA
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -22,12 +22,7 @@ category: CTI
 description: Pivot from a normalized TLS certificate subject profile to infrastructure observed presenting certificates with that profile.
 source: x509:subject
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: presented_by
   direction: in

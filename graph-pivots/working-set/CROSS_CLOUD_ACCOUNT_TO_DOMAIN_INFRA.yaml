@@ -1,6 +1,6 @@
 id: CROSS_CLOUD_ACCOUNT_TO_DOMAIN_INFRA
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: ownership_signal
@@ -24,12 +24,7 @@ category: CROSS
 description: Expand from a parent cloud account or project to the domains and infrastructure it operates through owned services and assets.
 source: cloud:account
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: owns
   direction: out

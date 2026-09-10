@@ -1,6 +1,6 @@
 id: CTI_IMAGE_TEXT_REUSE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -25,12 +25,7 @@ category: CTI
 description: Cluster image assets or webpages that share distinctive normalized OCR text extracted from rendered images.
 source: image:ocr:text_hash
 target: file:image|inet:url
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: ocr_text_extracted_from
   direction: in

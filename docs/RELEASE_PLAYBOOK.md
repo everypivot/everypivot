@@ -23,9 +23,10 @@ You are here when work is in progress on a feature branch or in the working tree
 
 ### Required
 - [ ] The change has a stated purpose that fits within the project's stated scope (see `REPO_SCOPE.md`).
-- [ ] Validators pass locally: `ruby tools/validate_pivots.rb --strict-metadata`, `ruby tools/check_fixture_suite.rb`, `ruby tools/check_cti_promotion_lint.rb`, `ruby tools/check_query_profile_suite.rb`, `ruby tools/check_relation_catalog.rb`.
+- [ ] Validators pass locally: `ruby tools/validate_pivots.rb --strict-metadata --strict-bridge`, `ruby tools/check_sail_bridge.rb --strict-incomplete`, `ruby tools/check_fixture_suite.rb`, `ruby tools/check_cti_promotion_lint.rb`, `ruby tools/check_query_profile_suite.rb`, `ruby tools/check_relation_catalog.rb`.
 - [ ] If patterns are added or promoted: hazards, blocked assertions, fixtures, and the CTI promotion-boundary rules (`docs/CTI_PROMOTION_BOUNDARIES.md`) are satisfied.
 - [ ] If schema, validator, or relation catalog changed: dependent docs and exemplars updated.
+- [ ] Assessment-boundary regression checks pass: `ruby tools/test_sail_bridge.rb`, `ruby tools/test_registry_assessment.rb`, and `node tools/test_site_assessment.js`. These verify formal compatibility and transport/rendering behavior, not analytical truth or acceptance.
 
 ### Not required at this stage
 - The branch does not need to be pushed.
@@ -48,7 +49,7 @@ You are here once `release/vX.Y.Z` exists with the bumped version and all releas
 - [ ] `tools/check_site_links.rb` and `tools/check_site_snapshot.rb` pass.
 - [ ] `tools/check_reachable_history.rb` passes — no secret-shaped literal exists at any commit reachable from the release-prep branch tip. **This is the gate that catches secret-shaped strings introduced earlier in the branch's history**, not just in the current tree.
 - [ ] `reuse lint` passes (or the local equivalent — `tools/check_reuse_coverage.rb` if running offline) — every tracked file is covered by a `.reuse/dep5` stanza, and every stanza names files that exist.
-- [ ] Release pack builds clean: `ruby tools/build_release_pack.rb --output-dir /tmp/check-pack --force`, then the pack self-validates from inside (`cd /tmp/check-pack && ruby tools/check_release_metadata.rb`).
+- [ ] Build a fresh stable pack with the reviewed version and date: `ruby tools/build_release_pack.rb --release vX.Y.Z --published-at YYYY-MM-DD --artifact-mode stable --authority-status canonical --output-dir /tmp/check-pack --force`. Unpack the exact delivery archive into a separate directory, then run its metadata, freshness, strict bridge, registry regression and compact browser tests. Preview packs intentionally omit the website and are not a substitute for this stable-pack check.
 - [ ] The release commit's message describes the diff if the diff is substantive — new doctrine, new tooling, schema changes, lifecycle promotions. See *Commit-message expectations* below.
 
 ### Not required at this stage
@@ -67,10 +68,10 @@ You are here once `release/vX.Y.Z` exists with the bumped version and all releas
 You are here once the release-prep branch has been merged to `main` and the `vX.Y.Z` tag has been pushed.
 
 ### Push order
-The tag should be pushed **before or atomically with** main, because the site interpolates the release tag into source-link URLs (`site/index.html:576-654`). If main lands first and the tag is pushed seconds later, source links 404 briefly. Recommended single transaction:
+The tag should be pushed **before or atomically with** main, because the site interpolates the release tag into source-link URLs in `site/index.html`. If main lands first and the tag is pushed seconds later, source links 404 briefly. Recommended single transaction:
 
 ```sh
-git push origin vX.Y.Z main
+git push --atomic origin vX.Y.Z main
 ```
 
 Or, if pushing separately:
@@ -111,7 +112,7 @@ You are here once the Pages workflow for the merge to `main` has finished.
 
 ### Post-deploy
 
-- [ ] Confirm the release is reproducible from public files alone: download the release pack, unpack it, and run `ruby tools/validate_pivots.rb --strict-metadata`, `ruby tools/check_fixture_suite.rb`, and `ruby tools/check_cti_promotion_lint.rb` from inside the unpacked pack.
+- [ ] Confirm the release is reproducible from public files alone: download the release pack, unpack it, and run `ruby tools/validate_pivots.rb --strict-metadata --strict-bridge`, `ruby tools/check_sail_bridge.rb --strict-incomplete`, `ruby tools/check_fixture_suite.rb`, and `ruby tools/check_cti_promotion_lint.rb` from inside the unpacked pack.
 - [ ] Monitor public issues and PRs for any credible challenge raised against the new release.
 
 ---

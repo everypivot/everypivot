@@ -1,6 +1,6 @@
 id: ADTECH_RTB_URL_PARAMS_TO_CAMPAIGN_CLUSTER
-version: 0.1.0
-pattern_schema_version: 1.3
+version: 0.2.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: multi_hop_inference
@@ -20,12 +20,7 @@ category: ADTECH
 description: Cluster ad-tech requests into candidate campaigns using recurring RTB query parameters such as campaign IDs, DSP IDs, impression IDs, device IDs, location, OS, browser, and auction fields.
 source: inet:url
 target: risk:campaign
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: campaign_level
-  subject_role: behavioural_cluster
-  object_role: campaign
+assessment_mode: evidence_only
 hops:
 - via: has_query_param
   direction: out

@@ -1,6 +1,6 @@
 id: CTI_C2_CERT_TO_SAMPLE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: multi_hop_inference
@@ -20,10 +20,7 @@ category: CTI
 description: Link malware samples whose detonated C2 endpoints present the same TLS certificate or SPKI material.
 source: x509:cert
 target: file:bytes
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: presented_at
   direction: out

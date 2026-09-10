@@ -375,7 +375,7 @@
     <header class="page">
       <h1>EveryPivot<span class="tm">™</span> — Pattern Library</h1>
       <div class="meta">
-        <span id="release">v0.4.3</span> · schema pivot_pattern <span id="schema">1.4</span> · published <span id="published">2026-06-03</span> · <span class="license-pill" id="license-code-pill">code: Apache-2.0</span> <span class="license-pill license-pill-data" id="license-corpus-pill">corpus: CC BY 4.0</span> · <span id="copyright-line">© 2026 EveryPivot Project</span>
+        <span id="release">v0.5.0</span> · schema pivot_pattern <span id="schema">1.5</span> · published <span id="published">2026-09-10</span> · <span class="license-pill" id="license-code-pill">code: Apache-2.0</span> <span class="license-pill license-pill-data" id="license-corpus-pill">corpus: CC BY 4.0</span> · <span id="copyright-line">© 2026 EveryPivot Project</span>
       </div>
       <div class="stats">
         <span><b id="c-validated">21</b> validated</span>
@@ -409,7 +409,7 @@
           <label><input type="checkbox" data-lane="working_set" checked /> working set</label>
           <label><input type="checkbox" data-lane="deferred" /> deferred</label>
         </div>
-        <span class="result-count" id="result-count">95 patterns</span>
+        <span class="result-count" id="result-count">97 patterns</span>
       </div>
 
       <section class="artifact-links" aria-labelledby="artifact-links-h">
@@ -427,7 +427,7 @@
         <section class="fallback-panel" aria-labelledby="noscript-h">
           <h2 id="noscript-h">JavaScript-free release snapshot</h2>
           <p>
-            Release v0.4.3, published 2026-06-03. The browser UI needs
+            Release v0.5.0, published 2026-09-10. The browser UI needs
             JavaScript for filtering and expanded pattern details, but the
             release counts and downloadable artifacts are available here.
           </p>
@@ -532,7 +532,7 @@ Source: https://everypivot.io.</div>
       © 2026 EveryPivot Project · EveryPivot™ · code Apache-2.0 · corpus CC BY 4.0.
     </footer>
 
-    <script src="./data/registry-index.js?v=v0.4.3"></script>
+    <script src="./data/registry-index.js?v=v0.5.0"></script>
     <script>
       (function () {
         const host = document.getElementById("list-host");
@@ -620,8 +620,40 @@ Source: https://everypivot.io.</div>
           );
         }
 
+        function completeBridgeCheck(pattern, status) {
+          const check = pattern.assessment_compatibility;
+          return String(pattern.pattern_schema_version) === "1.5" &&
+            check?.status === status && check.contract_version === "0.4-draft" &&
+            check.coverage?.complete === true &&
+            check.coverage.assessment_acceptance_evaluated === false;
+        }
+
+        function candidateAssessment(pattern) {
+          const hint = pattern.assessment;
+          const validHint = hint && typeof hint === "object" && !Array.isArray(hint) &&
+            ["claim", "basis", "scope", "subject_role"].every((key) =>
+              typeof hint[key] === "string" && hint[key].trim()) &&
+            ["object_role", "object_kind"].some((key) =>
+              typeof hint[key] === "string" && hint[key].trim());
+          if (pattern.assessment_mode !== "candidate_assessment" ||
+              !completeBridgeCheck(pattern, "candidate_compatible") || !validHint ||
+              !Array.isArray(pattern.assessment_requirements) ||
+              !pattern.assessment_requirements.length ||
+              !pattern.assessment_requirements.every((value) =>
+                typeof value === "string" && value.trim())) return null;
+          return hint;
+        }
+
+        function isEvidenceOnly(pattern) {
+          return pattern.assessment_mode === "evidence_only" &&
+            completeBridgeCheck(pattern, "evidence_only") &&
+            !Object.prototype.hasOwnProperty.call(pattern, "assessment") &&
+            !Object.prototype.hasOwnProperty.call(pattern, "assessment_requirements");
+        }
+
+
         function renderBody(p) {
-          const a = p.assessment || {};
+          const a = candidateAssessment(p) || {};
           const cr = p.capability_requirements || {};
           const review = p.review || {};
           const hazards = Array.isArray(p.hazards) ? p.hazards : [];
@@ -634,7 +666,12 @@ Source: https://everypivot.io.</div>
           parts.push(renderField("precision", p.precision_tier));
           parts.push(renderField("robustness", p.robustness_class));
           parts.push(renderField("schema", p.pattern_schema_version));
-          parts.push(renderField("claim", a.claim));
+          parts.push(renderField("assessment boundary", isEvidenceOnly(p)
+            ? "Evidence only. No default assessment."
+            : candidateAssessment(p)
+              ? "Conditional candidate only. A match is not an accepted conclusion."
+              : "Assessment mapping unavailable or unchecked.", true));
+          parts.push(renderField("candidate claim", a.claim));
           parts.push(renderField("basis", a.basis));
           parts.push(renderField("scope", a.scope));
           parts.push(renderField("datasets", p.datasets));
@@ -643,6 +680,14 @@ Source: https://everypivot.io.</div>
           parts.push(renderField("last reviewed", review.last_reviewed));
           parts.push(renderField("next review", review.next_review));
           parts.push("</div>");
+
+          if (candidateAssessment(p)) {
+            parts.push('<div class="hazards"><h4>Qualifying evidence for the candidate</h4><ul>');
+            for (const requirement of p.assessment_requirements) {
+              parts.push("<li>" + escape(requirement) + "</li>");
+            }
+            parts.push("</ul></div>");
+          }
 
           if (hazards.length) {
             parts.push('<div class="hazards"><h4>Hazards</h4><ul>');

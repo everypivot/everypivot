@@ -1,6 +1,6 @@
 id: CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: CROSS
 description: Bridge repository identity through published packages or release endpoints to the domains or infrastructure serving them.
 source: code:repo
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: publishes
   direction: out

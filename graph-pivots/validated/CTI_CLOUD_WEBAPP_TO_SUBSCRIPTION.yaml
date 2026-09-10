@@ -1,6 +1,6 @@
 id: CTI_CLOUD_WEBAPP_TO_SUBSCRIPTION
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: high
 robustness_class: ownership_signal
@@ -24,12 +24,7 @@ category: CTI
 description: Pivot from a normalized cloud web app hostname or resource identifier to the cloud subscription that contains it.
 source: cloud:webapp|inet:fqdn|inet:url
 target: cloud:subscription:uid
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: belongs_to_subscription
   direction: out

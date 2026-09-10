@@ -1,6 +1,6 @@
 id: ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE
-version: 0.1.0
-pattern_schema_version: 1.4
+version: 0.2.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -24,12 +24,7 @@ category: ADTECH
 description: Pivot from exposed JavaScript bundles or source maps to recovered application routes, panel strings, and administration surfaces.
 source: web:asset
 target: web:admin:surface
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_kind: concept
+assessment_mode: evidence_only
 hops:
 - via: references
   direction: out

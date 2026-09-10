@@ -1,6 +1,6 @@
 id: OSINT_DMARC_RUA_TO_DOMAINS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: validated
 precision_tier: medium
 robustness_class: ownership_signal
@@ -24,12 +24,7 @@ category: OSINT
 description: Cluster domains that send aggregate DMARC reports to the same reporting mailbox, filtering provider-managed collection endpoints.
 source: mail:dmarc:rua
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: receives_reports_for
   direction: out

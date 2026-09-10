@@ -1,6 +1,6 @@
 id: CTI_SAMPLE_RICHPE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -19,10 +19,7 @@ category: CTI
 description: Cluster Windows samples sharing the same Rich header fingerprint or canonicalized RichPE hash.
 source: pe:rich:hash
 target: file:bytes
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: observed_in
   direction: out

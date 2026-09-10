@@ -1,6 +1,6 @@
 id: HUM_PERSON_EMAIL_ORG_LINK
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
@@ -19,10 +19,7 @@ capability_requirements:
   - 'employment_context'
 source: person
 target: org:org
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: uses_email
   direction: out

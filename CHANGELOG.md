@@ -6,6 +6,20 @@ All notable changes to EveryPivot&trade; are documented here.
 
 No changes yet.
 
+## v0.5.0 - 2026-09-10
+
+See [release notes](docs/releases/v0.5.0.md).
+
+- Added the narrow `pivot-pattern v1.5` evidence-only / conditional assessment
+  contract and pinned SAIL v0.4 DRAFT role, object, and scope validation.
+- Reviewed all 176 pattern hints: 175 now explicitly provide evidence without
+  a default assessment, and one retains a conditional candidate hint with
+  qualifying-evidence requirements. Pattern versions change; traversal
+  definitions, hazards, suppression controls, and lifecycle lanes stay intact.
+- Registry exports and browser views distinguish evidence from candidate
+  claims and refuse incomplete or incompatible active mappings. A compatible
+  hint never supplies runtime confidence or an accepted conclusion.
+
 ## v0.4.3 - 2026-06-03
 
 See [release notes](docs/releases/v0.4.3.md).

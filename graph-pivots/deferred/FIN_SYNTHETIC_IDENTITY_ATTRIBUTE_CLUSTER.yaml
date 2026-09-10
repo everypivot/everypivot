@@ -1,6 +1,6 @@
 id: FIN_SYNTHETIC_IDENTITY_ATTRIBUTE_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
@@ -19,10 +19,7 @@ category: FIN
 description: Link synthetic or mule identities reusing the same contact, address, or profile attributes across nominally distinct personas.
 source: person
 target: person
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: uses_attribute
   direction: out

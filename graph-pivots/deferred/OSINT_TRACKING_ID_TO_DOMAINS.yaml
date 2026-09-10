@@ -1,6 +1,6 @@
 id: OSINT_TRACKING_ID_TO_DOMAINS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: high_cardinality
 precision_tier: exploratory
@@ -24,12 +24,7 @@ category: OSINT
 description: Cluster domains/pages sharing the same analytics or ad-tracking identifier.
 source: web:tracking:id
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: present_on
   direction: out

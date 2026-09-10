@@ -1,6 +1,6 @@
 id: CTI_EMAIL_URL_COMPONENT_HASH_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -19,12 +19,7 @@ category: CTI
 description: Cluster embedded or final email URLs by normalized component hashes such as canonical URL, host, path, query, or final URL hash.
 source: url:component_hash
 target: inet:url|email:message
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: component_of
   direction: out

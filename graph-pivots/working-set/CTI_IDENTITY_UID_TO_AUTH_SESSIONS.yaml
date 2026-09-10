@@ -1,6 +1,6 @@
 id: CTI_IDENTITY_UID_TO_AUTH_SESSIONS
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: domain_expansion
@@ -24,12 +24,7 @@ category: CTI
 description: Pivot from a normalized user identity identifier to authentication sessions observed for that identity.
 source: identity:user:uid
 target: auth:session
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: authenticated_in
   direction: out

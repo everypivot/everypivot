@@ -1,0 +1,23 @@
+---
+id: OSINT_INVALID_LEGACY_ROLELESS_SCOPE
+version: 1.0.0
+pattern_schema_version: '1.2'
+validation_state: deferred
+deferred_reason: schema_migration_pending
+name: invalid legacy roleless scope
+category: OSINT
+description: Synthetic bridge validation fixture; its metadata is not evidence of
+  an analytical conclusion.
+source: inet:fqdn
+target: inet:fqdn
+assessment:
+  claim: indicates
+  basis: assessed
+  scope: entity_level
+hops:
+- via: related_to
+  direction: out
+  form: inet:fqdn
+constraints:
+  temporal:
+    window_days: 30

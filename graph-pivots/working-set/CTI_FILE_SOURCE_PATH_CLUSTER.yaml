@@ -1,6 +1,6 @@
 id: CTI_FILE_SOURCE_PATH_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: enumeration
@@ -21,12 +21,7 @@ category: CTI
 description: Cluster files that expose the same normalized source, build, or project path in metadata, debug records, strings, or extracted configuration.
 source: file:source_path
 target: file:hash
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: embedded_in_file
   direction: in

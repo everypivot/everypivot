@@ -1,6 +1,6 @@
 id: CTI_FILE_NAME_TO_HASHES
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -22,12 +22,7 @@ category: CTI
 description: Pivot from a normalized file name to file hashes observed with that name in endpoint, malware-analysis, or file-reputation telemetry.
 source: file:name
 target: file:hash
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: observation
+assessment_mode: evidence_only
 hops:
 - via: observed_as_name
   direction: in

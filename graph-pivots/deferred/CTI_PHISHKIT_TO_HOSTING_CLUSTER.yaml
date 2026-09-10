@@ -1,6 +1,6 @@
 id: CTI_PHISHKIT_TO_HOSTING_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: CTI
 description: Cluster infrastructure hosting the same phishing kit hash or path structure.
 source: phish:kit
 target: inet:fqdn|inet:ipv4
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: hosted_on
   direction: out

@@ -1,6 +1,6 @@
 id: OSINT_REVERSE_DNS_HOST_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -20,10 +20,7 @@ category: OSINT
 description: Cluster hosts reusing uncommon PTR or reverse-DNS hostnames while filtering commodity provider naming patterns.
 source: inet:fqdn
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: reverse_resolves
   direction: out

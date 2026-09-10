@@ -1,6 +1,6 @@
 id: SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA
-version: 1.0.0
-pattern_schema_version: 1.2
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: medium
 robustness_class: domain_expansion
@@ -21,10 +21,7 @@ category: SUPPLY
 description: Bridge software packages to their source repositories and the domains or infrastructure that distribute or operate them.
 source: it:prod:softver
 target: inet:ipv4|inet:fqdn
-assessment:
-  claim: indicates
-  basis: assessed
-  scope: entity_level
+assessment_mode: evidence_only
 hops:
 - via: published_from
   direction: out

@@ -11,11 +11,15 @@ on:
       - "graph-pivots/**"
       - "schemas/**"
       - "tools/build_registry_index.rb"
+      - "tools/validate_pivots.rb"
+      - "tools/sail_bridge.rb"
+      - "tools/check_sail_bridge.rb"
       - "tools/check_fixture_suite.rb"
       - "tools/check_generated_freshness.rb"
       - "tools/check_release_metadata.rb"
       - "tools/check_site_links.rb"
       - "tools/check_site_snapshot.rb"
+      - "tools/test_site_assessment.js"
       - "docs/releases/**"
       - "README.md"
       - ".github/workflows/pages.yml"
@@ -53,6 +57,11 @@ jobs:
       - name: Verify release metadata
         run: ruby tools/check_release_metadata.rb
 
+      - name: Validate schema and complete assessment compatibility
+        run: |
+          ruby tools/validate_pivots.rb --strict-metadata --strict-bridge
+          ruby tools/check_sail_bridge.rb --strict-incomplete
+
       - name: Run fixture suite
         run: ruby tools/check_fixture_suite.rb
 
@@ -64,6 +73,9 @@ jobs:
 
       - name: Check homepage release snapshot agreement
         run: ruby tools/check_site_snapshot.rb
+
+      - name: Test compact browser assessment boundary
+        run: node tools/test_site_assessment.js
 
       - name: Prepare site directory
         run: |

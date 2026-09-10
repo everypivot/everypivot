@@ -1,6 +1,6 @@
 id: CTI_AUTHENTICODE_HASH_CLUSTER
-version: 1.0.0
-pattern_schema_version: 1.4
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -21,12 +21,7 @@ category: CTI
 description: Cluster signed files by normalized Authenticode or signature-derived hash material while preserving certificate and file-hash context.
 source: code:authenticode:hash
 target: file:hash|x509:cert
-assessment:
-  claim: indicates
-  basis: theoretical
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: signs_or_describes
   direction: out

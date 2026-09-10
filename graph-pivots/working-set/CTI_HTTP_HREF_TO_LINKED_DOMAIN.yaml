@@ -1,6 +1,6 @@
 id: CTI_HTTP_HREF_TO_LINKED_DOMAIN
-version: 1.0.0
-pattern_schema_version: 1.3
+version: 2.0.0
+pattern_schema_version: 1.5
 validation_state: working_set
 precision_tier: low
 robustness_class: enumeration
@@ -19,12 +19,7 @@ category: CTI
 description: Pivot from a crawled web page to external FQDNs referenced in href, script, image, form, or embedded resource links.
 source: web:page
 target: inet:fqdn
-assessment:
-  claim: indicates
-  basis: suspected
-  scope: entity_level
-  subject_role: behavioural_cluster
-  object_role: behavioural_cluster
+assessment_mode: evidence_only
 hops:
 - via: links_to
   direction: out
