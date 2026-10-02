@@ -1,23 +1,23 @@
 id: CTI_SBL_HOSTING_RISK
-version: 2.0.0
+version: 3.0.0
 pattern_schema_version: 1.5
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'abuse_feed_ingestion'
-  - 'asn_enrichment'
+  - 'explicit_successor_selection'
   optional:
   - 'passive_dns'
   - 'hosting_provider_classification'
 hazards:
+- Deprecated compatibility definition without executable semantics. Select the IP listing, explicit ASN listing, or ASN-associated infrastructure successor; no automatic rewrite is valid.
 - Abuse blocklists, SBL entries, and hosting ASN reputation can lag cleanup or reflect one customer inside shared infrastructure.
 - Corroborate listing history with current observations; risk scoring should not label all tenants of a provider as malicious.
 - Provider-level reputation is hosting-risk context only and must not be treated as tenant-specific maliciousness, ownership, or control.
-name: IP → ASN with SBL/Abuse Reputation
+name: Deprecated IP/ASN Hosting Reputation Compatibility Definition
 category: CTI
-description: Score IPs by ASN and presence in Spamhaus/abuse.ch datasets to prioritize likely bad infra.
+description: Retained historical identifier only. Use CTI_IP_TO_LISTING_ASSERTIONS for publisher assertions about an IP, CTI_ASN_TO_EXPLICIT_LISTING_ASSERTIONS for assertions explicitly naming an ASN, or CTI_ASN_TO_LISTED_INFRASTRUCTURE for separately evidenced ASN-associated listed infrastructure. No scoring, provider-wide risk, tenant inference, or executable traversal is defined here.
 source: inet:ipv4
 target: net:asn
 assessment_mode: evidence_only
@@ -29,37 +29,13 @@ hops:
   direction: out
   form: reputation:list
 constraints:
-  temporal:
-    order:
-    - asn.firstseen <= ip.seen
-    window_days: 1095
-  degree_caps:
-    net:asn: 1
-  negative_nodes:
-  - form: net:asn
-    list: hyperscaler_or_shared_hosting_asns
-  - form: reputation:list
-    list: remediated_blocklist_entries
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - bgp
 - spamhaus

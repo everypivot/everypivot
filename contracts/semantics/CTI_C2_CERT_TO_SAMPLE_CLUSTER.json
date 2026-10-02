@@ -1,0 +1,6213 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_C2_CERT_TO_SAMPLE_CLUSTER",
+    "version": "3.0.0"
+  },
+  "description": "Collection-scoped first availability of separately supported sample encounters and endpoint-mediated leads. Actual event dates remain separate; a later scan alone is never a sample encounter.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-c2-finding-availability-window-purpose",
+  "parameters": {
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Explicit analyst/case inclusive UTC period; this pattern declares its own event purpose."
+    },
+    "source_ids": {
+      "type": "string_array",
+      "required": true,
+      "description": "Exact admitted source-revision IDs; no external or independent-source completeness claim.",
+      "min_items": 1,
+      "unique_items": true,
+      "item_reference": "source"
+    },
+    "selector": {
+      "type": "selector",
+      "required": true,
+      "description": "Explicit whole-certificate or exact SPKI comparison; no role or actor inference.",
+      "selector_kinds": [
+        "certificate_sha256",
+        "spki_sha256"
+      ]
+    },
+    "purpose": {
+      "type": "string",
+      "required": true,
+      "description": "Encounter and endpoint-mediated discovery lead are distinct claims.",
+      "enum": [
+        "encounter",
+        "endpoint_lead"
+      ]
+    },
+    "endpoint_scope": {
+      "type": "string",
+      "required": false,
+      "description": "Indirect association correspondence only; service-context identity never follows merely from the same address.",
+      "enum": [
+        "address",
+        "service_context"
+      ],
+      "requires_when": {
+        "parameter": "purpose",
+        "values": [
+          "endpoint_lead"
+        ]
+      },
+      "allowed_when": {
+        "parameter": "purpose",
+        "values": [
+          "endpoint_lead"
+        ]
+      }
+    },
+    "history": {
+      "type": "record_id",
+      "required": true,
+      "description": "Preserved complete declared collection history of the typed finding."
+    },
+    "exclude_shared_certificate": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicit supported certificate-class filter."
+    },
+    "exclude_controlled_occurrence": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicit supported sinkhole/simulated/intercepted occurrence filter; laboratory provenance alone is insufficient."
+    }
+  },
+  "branches": [
+    {
+      "id": "certificate_sha256_encounter_service_context",
+      "bindings": [
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector.kind"
+                },
+                "right": {
+                  "literal": "certificate_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector"
+                },
+                "right": {
+                  "param": "selector"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sample",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sample"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "contact",
+          "kind": "occurrence",
+          "types": [
+            "sample:network_contact"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.subject"
+                },
+                "right": {
+                  "ref": "sample.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.address_selector"
+                    },
+                    "right": {
+                      "ref": "ip.attributes.selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.sample_execution_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.connection_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.occurrence_namespace"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "contact.attributes.attribution"
+                },
+                "right": {
+                  "literal": [
+                    "source_reported_sample_connection",
+                    "locally_attributed_sample_connection"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "contact"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.object"
+                },
+                "right": {
+                  "ref": "service.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.attributes.service_context_id"
+                },
+                "right": {
+                  "ref": "service.attributes.context_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "encounter",
+          "kind": "assertion",
+          "types": [
+            "sample:certificate_encounter"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.subject"
+                },
+                "right": {
+                  "ref": "contact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.object"
+                },
+                "right": {
+                  "ref": "presentation.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.attributes.sample_execution_id"
+                },
+                "right": {
+                  "ref": "contact.attributes.sample_execution_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.attributes.connection_id"
+                },
+                "right": {
+                  "ref": "contact.attributes.connection_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.attributes.certificate_role"
+                },
+                "right": {
+                  "ref": "presentation.attributes.certificate_role"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "encounter.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "encounter.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "encounter.attributes.evidence_status"
+                },
+                "right": {
+                  "literal": [
+                    "attributable_source_report",
+                    "locally_checked_occurrence"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "encounter"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "shared_certificate",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.class_id"
+                },
+                "right": {
+                  "literal": "shared_cdn_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "shared_certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "controlled_occurrence",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.subject"
+                },
+                "right": {
+                  "ref": "contact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.class_id"
+                },
+                "right": {
+                  "literal": "controlled_sample_connection"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "controlled_occurrence"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "eq",
+        "left": {
+          "param": "purpose"
+        },
+        "right": {
+          "literal": "encounter"
+        }
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.occurred"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "contact.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sample.times.collection_available"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "sample.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ip.times.collection_available"
+          },
+          "object": {
+            "ref": "ip.id"
+          },
+          "occurrence": {
+            "ref": "ip.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.collection_available"
+          },
+          "object": {
+            "ref": "contact.id"
+          },
+          "occurrence": {
+            "ref": "contact.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "encounter.times.collection_available"
+          },
+          "object": {
+            "ref": "encounter.id"
+          },
+          "occurrence": {
+            "ref": "encounter.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "sample",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "literal": "encounter"
+          },
+          {
+            "literal": "service_context"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "sample_associated_certificate_encounter"
+          },
+          "sample": {
+            "ref": "sample.id"
+          },
+          "artifact_selector": {
+            "ref": "sample.attributes.artifact_selector"
+          },
+          "comparison_kind": {
+            "literal": "certificate_sha256"
+          },
+          "contact": {
+            "ref": "contact.id"
+          },
+          "contact_time": {
+            "ref": "contact.times.occurred"
+          },
+          "sample_execution_id": {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          "connection_id": {
+            "ref": "contact.attributes.connection_id"
+          },
+          "attribution_basis": {
+            "ref": "contact.attributes.attribution"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "observed_address": {
+            "ref": "ip.attributes.selector"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "endpoint_scope": {
+            "literal": "service_context"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "limitation": {
+            "literal": "No malicious C2 function, actor, continuity or direct encounter is inferred from an indirect path."
+          },
+          "encounter_status": {
+            "ref": "encounter.attributes.evidence_status"
+          },
+          "shared_certificate_membership": {
+            "ref": "shared_certificate.attributes.membership"
+          },
+          "controlled_occurrence_membership": {
+            "ref": "controlled_occurrence.attributes.membership"
+          }
+        }
+      },
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "encounter"
+        ]
+      },
+      "finding": {
+        "id": "cti_c2_cert_to_sample_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "literal": "encounter"
+          },
+          {
+            "literal": "service_context"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "support": [
+          "certificate",
+          "sample",
+          "presentation",
+          "service",
+          "ip",
+          "contact",
+          "encounter"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "policies": [
+        {
+          "id": "shared_certificate",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_shared_certificate",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "controlled_occurrence",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "contact.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_controlled_occurrence",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "sample.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "ip.times.collection_available"
+        },
+        {
+          "ref": "contact.times.collection_available"
+        },
+        {
+          "ref": "encounter.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "contact.times.occurred"
+          },
+          "right": {
+            "ref": "contact.times.collection_available"
+          }
+        }
+      ]
+    },
+    {
+      "id": "certificate_sha256_endpoint_lead_address",
+      "bindings": [
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector.kind"
+                },
+                "right": {
+                  "literal": "certificate_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector"
+                },
+                "right": {
+                  "param": "selector"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sample",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sample"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "contact",
+          "kind": "occurrence",
+          "types": [
+            "sample:network_contact"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.subject"
+                },
+                "right": {
+                  "ref": "sample.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.address_selector"
+                    },
+                    "right": {
+                      "ref": "ip.attributes.selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.sample_execution_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.connection_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.occurrence_namespace"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "contact.attributes.attribution"
+                },
+                "right": {
+                  "literal": [
+                    "source_reported_sample_connection",
+                    "locally_attributed_sample_connection"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "contact"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "shared_certificate",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.class_id"
+                },
+                "right": {
+                  "literal": "shared_cdn_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "shared_certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "controlled_occurrence",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.subject"
+                },
+                "right": {
+                  "ref": "contact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.class_id"
+                },
+                "right": {
+                  "literal": "controlled_sample_connection"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "controlled_occurrence"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "endpoint_lead"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "param": "endpoint_scope"
+            },
+            "right": {
+              "literal": "address"
+            }
+          }
+        ]
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.occurred"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "contact.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sample.times.collection_available"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "sample.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ip.times.collection_available"
+          },
+          "object": {
+            "ref": "ip.id"
+          },
+          "occurrence": {
+            "ref": "ip.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.collection_available"
+          },
+          "object": {
+            "ref": "contact.id"
+          },
+          "occurrence": {
+            "ref": "contact.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "sample",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "literal": "endpoint_lead"
+          },
+          {
+            "literal": "address"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "endpoint_mediated_certificate_association_lead"
+          },
+          "sample": {
+            "ref": "sample.id"
+          },
+          "artifact_selector": {
+            "ref": "sample.attributes.artifact_selector"
+          },
+          "comparison_kind": {
+            "literal": "certificate_sha256"
+          },
+          "contact": {
+            "ref": "contact.id"
+          },
+          "contact_time": {
+            "ref": "contact.times.occurred"
+          },
+          "sample_execution_id": {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          "connection_id": {
+            "ref": "contact.attributes.connection_id"
+          },
+          "attribution_basis": {
+            "ref": "contact.attributes.attribution"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "observed_address": {
+            "ref": "ip.attributes.selector"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "endpoint_scope": {
+            "literal": "address"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "limitation": {
+            "literal": "No malicious C2 function, actor, continuity or direct encounter is inferred from an indirect path."
+          },
+          "shared_certificate_membership": {
+            "ref": "shared_certificate.attributes.membership"
+          },
+          "controlled_occurrence_membership": {
+            "ref": "controlled_occurrence.attributes.membership"
+          }
+        }
+      },
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "endpoint_lead"
+        ]
+      },
+      "finding": {
+        "id": "cti_c2_cert_to_sample_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "literal": "endpoint_lead"
+          },
+          {
+            "literal": "address"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "support": [
+          "certificate",
+          "sample",
+          "presentation",
+          "service",
+          "ip",
+          "contact"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "policies": [
+        {
+          "id": "shared_certificate",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_shared_certificate",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "controlled_occurrence",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "contact.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_controlled_occurrence",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "sample.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "ip.times.collection_available"
+        },
+        {
+          "ref": "contact.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "contact.times.occurred"
+          },
+          "right": {
+            "ref": "contact.times.collection_available"
+          }
+        }
+      ]
+    },
+    {
+      "id": "certificate_sha256_endpoint_lead_service_context",
+      "bindings": [
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector.kind"
+                },
+                "right": {
+                  "literal": "certificate_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector"
+                },
+                "right": {
+                  "param": "selector"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sample",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sample"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "contact",
+          "kind": "occurrence",
+          "types": [
+            "sample:network_contact"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.subject"
+                },
+                "right": {
+                  "ref": "sample.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.address_selector"
+                    },
+                    "right": {
+                      "ref": "ip.attributes.selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.sample_execution_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.connection_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.occurrence_namespace"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "contact.attributes.attribution"
+                },
+                "right": {
+                  "literal": [
+                    "source_reported_sample_connection",
+                    "locally_attributed_sample_connection"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "contact"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.object"
+                },
+                "right": {
+                  "ref": "service.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.attributes.service_context_id"
+                },
+                "right": {
+                  "ref": "service.attributes.context_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "shared_certificate",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.class_id"
+                },
+                "right": {
+                  "literal": "shared_cdn_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "shared_certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "controlled_occurrence",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.subject"
+                },
+                "right": {
+                  "ref": "contact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.class_id"
+                },
+                "right": {
+                  "literal": "controlled_sample_connection"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "controlled_occurrence"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "endpoint_lead"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "param": "endpoint_scope"
+            },
+            "right": {
+              "literal": "service_context"
+            }
+          }
+        ]
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.occurred"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "contact.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sample.times.collection_available"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "sample.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ip.times.collection_available"
+          },
+          "object": {
+            "ref": "ip.id"
+          },
+          "occurrence": {
+            "ref": "ip.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.collection_available"
+          },
+          "object": {
+            "ref": "contact.id"
+          },
+          "occurrence": {
+            "ref": "contact.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "sample",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "literal": "endpoint_lead"
+          },
+          {
+            "literal": "service_context"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "endpoint_mediated_certificate_association_lead"
+          },
+          "sample": {
+            "ref": "sample.id"
+          },
+          "artifact_selector": {
+            "ref": "sample.attributes.artifact_selector"
+          },
+          "comparison_kind": {
+            "literal": "certificate_sha256"
+          },
+          "contact": {
+            "ref": "contact.id"
+          },
+          "contact_time": {
+            "ref": "contact.times.occurred"
+          },
+          "sample_execution_id": {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          "connection_id": {
+            "ref": "contact.attributes.connection_id"
+          },
+          "attribution_basis": {
+            "ref": "contact.attributes.attribution"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "observed_address": {
+            "ref": "ip.attributes.selector"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "endpoint_scope": {
+            "literal": "service_context"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "limitation": {
+            "literal": "No malicious C2 function, actor, continuity or direct encounter is inferred from an indirect path."
+          },
+          "shared_certificate_membership": {
+            "ref": "shared_certificate.attributes.membership"
+          },
+          "controlled_occurrence_membership": {
+            "ref": "controlled_occurrence.attributes.membership"
+          }
+        }
+      },
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "endpoint_lead"
+        ]
+      },
+      "finding": {
+        "id": "cti_c2_cert_to_sample_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "literal": "endpoint_lead"
+          },
+          {
+            "literal": "service_context"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "support": [
+          "certificate",
+          "sample",
+          "presentation",
+          "service",
+          "ip",
+          "contact"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "policies": [
+        {
+          "id": "shared_certificate",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_shared_certificate",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "controlled_occurrence",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "contact.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_controlled_occurrence",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "sample.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "ip.times.collection_available"
+        },
+        {
+          "ref": "contact.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "contact.times.occurred"
+          },
+          "right": {
+            "ref": "contact.times.collection_available"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spki_sha256_encounter_service_context",
+      "bindings": [
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector.kind"
+                },
+                "right": {
+                  "literal": "spki_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector"
+                },
+                "right": {
+                  "param": "selector"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sample",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sample"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "contact",
+          "kind": "occurrence",
+          "types": [
+            "sample:network_contact"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.subject"
+                },
+                "right": {
+                  "ref": "sample.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.address_selector"
+                    },
+                    "right": {
+                      "ref": "ip.attributes.selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.sample_execution_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.connection_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.occurrence_namespace"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "contact.attributes.attribution"
+                },
+                "right": {
+                  "literal": [
+                    "source_reported_sample_connection",
+                    "locally_attributed_sample_connection"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "contact"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.object"
+                },
+                "right": {
+                  "ref": "service.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.attributes.service_context_id"
+                },
+                "right": {
+                  "ref": "service.attributes.context_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "encounter",
+          "kind": "assertion",
+          "types": [
+            "sample:certificate_encounter"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.subject"
+                },
+                "right": {
+                  "ref": "contact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.object"
+                },
+                "right": {
+                  "ref": "presentation.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.attributes.sample_execution_id"
+                },
+                "right": {
+                  "ref": "contact.attributes.sample_execution_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.attributes.connection_id"
+                },
+                "right": {
+                  "ref": "contact.attributes.connection_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "encounter.attributes.certificate_role"
+                },
+                "right": {
+                  "ref": "presentation.attributes.certificate_role"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "encounter.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "encounter.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "encounter.attributes.evidence_status"
+                },
+                "right": {
+                  "literal": [
+                    "attributable_source_report",
+                    "locally_checked_occurrence"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "encounter"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "shared_certificate",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.class_id"
+                },
+                "right": {
+                  "literal": "shared_cdn_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "shared_certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "controlled_occurrence",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.subject"
+                },
+                "right": {
+                  "ref": "contact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.class_id"
+                },
+                "right": {
+                  "literal": "controlled_sample_connection"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "controlled_occurrence"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "eq",
+        "left": {
+          "param": "purpose"
+        },
+        "right": {
+          "literal": "encounter"
+        }
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.occurred"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "contact.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sample.times.collection_available"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "sample.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ip.times.collection_available"
+          },
+          "object": {
+            "ref": "ip.id"
+          },
+          "occurrence": {
+            "ref": "ip.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.collection_available"
+          },
+          "object": {
+            "ref": "contact.id"
+          },
+          "occurrence": {
+            "ref": "contact.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "encounter.times.collection_available"
+          },
+          "object": {
+            "ref": "encounter.id"
+          },
+          "occurrence": {
+            "ref": "encounter.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "sample",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "literal": "encounter"
+          },
+          {
+            "literal": "service_context"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "sample_associated_certificate_encounter"
+          },
+          "sample": {
+            "ref": "sample.id"
+          },
+          "artifact_selector": {
+            "ref": "sample.attributes.artifact_selector"
+          },
+          "comparison_kind": {
+            "literal": "spki_sha256"
+          },
+          "contact": {
+            "ref": "contact.id"
+          },
+          "contact_time": {
+            "ref": "contact.times.occurred"
+          },
+          "sample_execution_id": {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          "connection_id": {
+            "ref": "contact.attributes.connection_id"
+          },
+          "attribution_basis": {
+            "ref": "contact.attributes.attribution"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "observed_address": {
+            "ref": "ip.attributes.selector"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "endpoint_scope": {
+            "literal": "service_context"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "limitation": {
+            "literal": "No malicious C2 function, actor, continuity or direct encounter is inferred from an indirect path."
+          },
+          "encounter_status": {
+            "ref": "encounter.attributes.evidence_status"
+          },
+          "shared_certificate_membership": {
+            "ref": "shared_certificate.attributes.membership"
+          },
+          "controlled_occurrence_membership": {
+            "ref": "controlled_occurrence.attributes.membership"
+          }
+        }
+      },
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "encounter"
+        ]
+      },
+      "finding": {
+        "id": "cti_c2_cert_to_sample_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "literal": "encounter"
+          },
+          {
+            "literal": "service_context"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "support": [
+          "certificate",
+          "sample",
+          "presentation",
+          "service",
+          "ip",
+          "contact",
+          "encounter"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "policies": [
+        {
+          "id": "shared_certificate",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_shared_certificate",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "controlled_occurrence",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "contact.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_controlled_occurrence",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "sample.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "ip.times.collection_available"
+        },
+        {
+          "ref": "contact.times.collection_available"
+        },
+        {
+          "ref": "encounter.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "contact.times.occurred"
+          },
+          "right": {
+            "ref": "contact.times.collection_available"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spki_sha256_endpoint_lead_address",
+      "bindings": [
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector.kind"
+                },
+                "right": {
+                  "literal": "spki_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector"
+                },
+                "right": {
+                  "param": "selector"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sample",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sample"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "contact",
+          "kind": "occurrence",
+          "types": [
+            "sample:network_contact"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.subject"
+                },
+                "right": {
+                  "ref": "sample.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.address_selector"
+                    },
+                    "right": {
+                      "ref": "ip.attributes.selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.sample_execution_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.connection_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.occurrence_namespace"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "contact.attributes.attribution"
+                },
+                "right": {
+                  "literal": [
+                    "source_reported_sample_connection",
+                    "locally_attributed_sample_connection"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "contact"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "shared_certificate",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.class_id"
+                },
+                "right": {
+                  "literal": "shared_cdn_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "shared_certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "controlled_occurrence",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.subject"
+                },
+                "right": {
+                  "ref": "contact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.class_id"
+                },
+                "right": {
+                  "literal": "controlled_sample_connection"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "controlled_occurrence"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "endpoint_lead"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "param": "endpoint_scope"
+            },
+            "right": {
+              "literal": "address"
+            }
+          }
+        ]
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.occurred"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "contact.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sample.times.collection_available"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "sample.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ip.times.collection_available"
+          },
+          "object": {
+            "ref": "ip.id"
+          },
+          "occurrence": {
+            "ref": "ip.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.collection_available"
+          },
+          "object": {
+            "ref": "contact.id"
+          },
+          "occurrence": {
+            "ref": "contact.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "sample",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "literal": "endpoint_lead"
+          },
+          {
+            "literal": "address"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "endpoint_mediated_certificate_association_lead"
+          },
+          "sample": {
+            "ref": "sample.id"
+          },
+          "artifact_selector": {
+            "ref": "sample.attributes.artifact_selector"
+          },
+          "comparison_kind": {
+            "literal": "spki_sha256"
+          },
+          "contact": {
+            "ref": "contact.id"
+          },
+          "contact_time": {
+            "ref": "contact.times.occurred"
+          },
+          "sample_execution_id": {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          "connection_id": {
+            "ref": "contact.attributes.connection_id"
+          },
+          "attribution_basis": {
+            "ref": "contact.attributes.attribution"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "observed_address": {
+            "ref": "ip.attributes.selector"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "endpoint_scope": {
+            "literal": "address"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "limitation": {
+            "literal": "No malicious C2 function, actor, continuity or direct encounter is inferred from an indirect path."
+          },
+          "shared_certificate_membership": {
+            "ref": "shared_certificate.attributes.membership"
+          },
+          "controlled_occurrence_membership": {
+            "ref": "controlled_occurrence.attributes.membership"
+          }
+        }
+      },
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "endpoint_lead"
+        ]
+      },
+      "finding": {
+        "id": "cti_c2_cert_to_sample_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "literal": "endpoint_lead"
+          },
+          {
+            "literal": "address"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "support": [
+          "certificate",
+          "sample",
+          "presentation",
+          "service",
+          "ip",
+          "contact"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "policies": [
+        {
+          "id": "shared_certificate",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_shared_certificate",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "controlled_occurrence",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "contact.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_controlled_occurrence",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "sample.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "ip.times.collection_available"
+        },
+        {
+          "ref": "contact.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "contact.times.occurred"
+          },
+          "right": {
+            "ref": "contact.times.collection_available"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spki_sha256_endpoint_lead_service_context",
+      "bindings": [
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector.kind"
+                },
+                "right": {
+                  "literal": "spki_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector"
+                },
+                "right": {
+                  "param": "selector"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sample",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sample"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "contact",
+          "kind": "occurrence",
+          "types": [
+            "sample:network_contact"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.subject"
+                },
+                "right": {
+                  "ref": "sample.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sample.attributes.artifact_selector.kind"
+                    },
+                    "right": {
+                      "literal": "artifact_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.artifact_selector"
+                    },
+                    "right": {
+                      "ref": "sample.attributes.artifact_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "contact.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "contact.attributes.address_selector"
+                    },
+                    "right": {
+                      "ref": "ip.attributes.selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.sample_execution_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.connection_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "contact.attributes.occurrence_namespace"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "contact.attributes.attribution"
+                },
+                "right": {
+                  "literal": [
+                    "source_reported_sample_connection",
+                    "locally_attributed_sample_connection"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "contact"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.object"
+                },
+                "right": {
+                  "ref": "service.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "contact.attributes.service_context_id"
+                },
+                "right": {
+                  "ref": "service.attributes.context_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "shared_certificate",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.class_id"
+                },
+                "right": {
+                  "literal": "shared_cdn_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "shared_certificate.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "shared_certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "controlled_occurrence",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.subject"
+                },
+                "right": {
+                  "ref": "contact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.class_id"
+                },
+                "right": {
+                  "literal": "controlled_sample_connection"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "controlled_occurrence.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "controlled_occurrence"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "endpoint_lead"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "param": "endpoint_scope"
+            },
+            "right": {
+              "literal": "service_context"
+            }
+          }
+        ]
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.occurred"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "contact.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sample.times.collection_available"
+          },
+          "object": {
+            "ref": "sample.id"
+          },
+          "occurrence": {
+            "ref": "sample.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ip.times.collection_available"
+          },
+          "object": {
+            "ref": "ip.id"
+          },
+          "occurrence": {
+            "ref": "ip.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "contact.times.collection_available"
+          },
+          "object": {
+            "ref": "contact.id"
+          },
+          "occurrence": {
+            "ref": "contact.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "sample",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "literal": "endpoint_lead"
+          },
+          {
+            "literal": "service_context"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "endpoint_mediated_certificate_association_lead"
+          },
+          "sample": {
+            "ref": "sample.id"
+          },
+          "artifact_selector": {
+            "ref": "sample.attributes.artifact_selector"
+          },
+          "comparison_kind": {
+            "literal": "spki_sha256"
+          },
+          "contact": {
+            "ref": "contact.id"
+          },
+          "contact_time": {
+            "ref": "contact.times.occurred"
+          },
+          "sample_execution_id": {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          "connection_id": {
+            "ref": "contact.attributes.connection_id"
+          },
+          "attribution_basis": {
+            "ref": "contact.attributes.attribution"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "observed_address": {
+            "ref": "ip.attributes.selector"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "endpoint_scope": {
+            "literal": "service_context"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "limitation": {
+            "literal": "No malicious C2 function, actor, continuity or direct encounter is inferred from an indirect path."
+          },
+          "shared_certificate_membership": {
+            "ref": "shared_certificate.attributes.membership"
+          },
+          "controlled_occurrence_membership": {
+            "ref": "controlled_occurrence.attributes.membership"
+          }
+        }
+      },
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "endpoint_lead"
+        ]
+      },
+      "finding": {
+        "id": "cti_c2_cert_to_sample_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "selector_identity": "sample.attributes.artifact_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "literal": "endpoint_lead"
+          },
+          {
+            "literal": "service_context"
+          },
+          {
+            "ref": "contact.attributes.occurrence_namespace"
+          },
+          {
+            "ref": "contact.attributes.sample_execution_id"
+          },
+          {
+            "ref": "contact.attributes.connection_id"
+          },
+          {
+            "ref": "presentation.attributes.occurrence_id"
+          },
+          {
+            "ref": "presentation.attributes.certificate_role"
+          }
+        ],
+        "support": [
+          "certificate",
+          "sample",
+          "presentation",
+          "service",
+          "ip",
+          "contact"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "policies": [
+        {
+          "id": "shared_certificate",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_shared_certificate",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "shared_certificate.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "controlled_occurrence",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "contact.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_controlled_occurrence",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "controlled_occurrence.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "sample.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "ip.times.collection_available"
+        },
+        {
+          "ref": "contact.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "contact.times.occurred"
+          },
+          "right": {
+            "ref": "contact.times.collection_available"
+          }
+        }
+      ]
+    }
+  ]
+}

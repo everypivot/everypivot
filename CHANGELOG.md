@@ -2,9 +2,25 @@
 
 All notable changes to EveryPivot&trade; are documented here.
 
-## Unreleased
+## v0.6.0 - 2026-10-02
 
-No changes yet.
+See [release notes](docs/releases/v0.6.0.md).
+
+- Added authoring schema 1.6 and digest-bound finite execution, evidence and
+  result contracts. Forty-one existing patterns have explicit execution;
+  four companions cover JA3S and scoped listing inquiries. The broad SBL
+  identifier is deprecated and non-executable.
+- Separated certificate/key/signature identities, client/server TLS roles,
+  reported ownership/control, event/knowledge times and named result bindings.
+  Preserved content, revisions, conflicts and query budgets remain explicit.
+- Hardened duplicate identity, date-window bounds, evidence consistency,
+  numerical schema parity, browser compatibility and STIX mapping validation.
+- Included semantic contracts, tests and dependencies in downloadable bundles.
+  Synthetic execution and bounded adapter checks do not confer assessment
+  acceptance or lifecycle promotion.
+- Counts: 21 validated, 77 working_set and 82 deferred; 180 total. The other
+  134 original patterns remain outside the focused executable migration.
+  Existing review dates, lifecycle lanes and the SAIL v0.4 DRAFT pin are unchanged.
 
 ## v0.5.0 - 2026-09-10
 
@@ -72,20 +88,10 @@ See [release notes](docs/releases/v0.4.2.md).
 
 ### Changed
 
-- `tools/build_release_pack.rb` `authority_note` is simplified to two
-  canonical values; the longer environment-conditioned strings used by
-  non-canonical release modes have been removed from the public copy
-  of the tool. The MANIFEST.json `provenance.note` string in any newly-
-  built stable release pack now reads "Authoritative public registry
-  pack."
-- `tools/check_release_metadata.rb`, `tools/check_site_links.rb`, and
-  `tools/check_site_snapshot.rb` were simplified: single mode, no
-  dual-mode toggle. Previously-relaxed assertions are now applied
-  unconditionally.
-- `tools/test_build_release_pack.rb` was trimmed to cover only
-  canonical-stable behaviour.
-- Minor doc sanitization in `docs/releases/v0.3.0.md` and
-  `docs/SCHEMA_V1_5_PROPOSAL.md`.
+- Stable release packs use the provenance note "Authoritative public registry
+  pack." Metadata, site-link and snapshot checks apply the canonical release
+  requirements consistently.
+- Release-pack tests cover canonical stable distributions.
 
 ### Notes
 
@@ -132,11 +138,11 @@ See [release notes](docs/releases/v0.4.0.md).
 
 ### Added
 
-- Added bounded EP-WP15 OpenCTI/STIX-side mapping coverage with an
+- Added bounded OpenCTI/STIX-side mapping coverage with an
   `opencti_stix_v0` profile, synthetic import-hash fixture slice, generated
   STIX 2.1 bundle, and profile-suite checks that prevent suppressed traversal
   candidates from becoming ordinary STIX relationship objects.
-- Documented the incubator `stix2-validator` path for generated STIX bundles
+- Documented optional `stix2-validator` checks for generated STIX bundles
   and hardened the first OpenCTI/STIX bundle with spec-conformant UUIDv5
   file-SCO IDs, a checked top-level `x_everypivot_*` extension definition, and
   a schema document for those mapping properties.
@@ -166,7 +172,7 @@ See [release notes](docs/releases/v0.3.0.md).
 - Added public schema-migration and v1.5 doctrine proposals for semantic
   families, typed facets, blocked-inference objects, companion/inverse
   relationships, and justified `parent_pattern` use.
-- Started EP-WP15 with a public-safe Neo4j/Cypher query-profile pilot for the
+- Added a bounded Neo4j/Cypher query-profile pilot for the
   validated SSH host-key pattern.
 - Added sidecar adapter metadata, a synthetic query-profile fixture graph, a
   generated demo query, and profile freshness/semantic-boundary checks.

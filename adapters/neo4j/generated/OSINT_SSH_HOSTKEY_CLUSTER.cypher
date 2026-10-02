@@ -16,7 +16,8 @@ MATCH (source:EveryPivotNode {id: source_id})-[edge:PRESENTED_BY]->(target:Every
 WHERE source.form IN ['ssh:hostkey']
   AND target.form IN ['inet:ipv4', 'inet:fqdn']
   AND date(edge.seen) >= as_of - duration({days: 730})
-  AND (target.negative_node_list IS NULL OR NOT target.negative_node_list IN ['known_scanner_asns', 'shared_hosting_ranges'])
+  AND date(edge.seen) <= as_of
+  AND (target.form <> 'inet:ipv4' OR target.negative_node_list IS NULL OR NOT target.negative_node_list IN ['known_scanner_asns', 'shared_hosting_ranges'])
 RETURN {
   pattern_id: 'OSINT_SSH_HOSTKEY_CLUSTER',
   query_profile_id: 'neo4j_cypher_v0',

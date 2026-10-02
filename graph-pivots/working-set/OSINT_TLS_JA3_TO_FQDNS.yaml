@@ -1,61 +1,46 @@
 id: OSINT_TLS_JA3_TO_FQDNS
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: working_set
 precision_tier: low
 robustness_class: enumeration
-name: TLS JA3 → FQDNs
+name: Client JA3 → Domains Named in Observed Attempts
 category: OSINT
-description: Cluster servers or panels that present identical JA3/JA3S fingerprints.
+description: Find domains explicitly associated with actual client TLS messages matching a selected JA3. Preserve the observed exchange and leg, name-association basis and attempt state; a shared client fingerprint does not identify a server or establish a response.
 hazards:
 - 'Common TLS client libraries share JA3 fingerprints across large benign populations, so this pivot is inherently noisy.'
 - 'Middleboxes, fingerprint evolution, and collection bias can make JA3 overlap unstable across time and vantage points.'
+- 'A planned scan, DNS co-occurrence or certificate name does not prove an observed named attempt. A missing response does not establish failure.'
+- 'Source-reported fingerprints remain reported unless their actual retained material and extraction are independently reproduced. Matches establish no endpoint identity, ownership, maliciousness or accepted assessment.'
 capability_requirements:
   required:
-  - 'tls_scanning'
-  - 'ja3_fingerprint_extraction'
+  - 'observed_client_tls_message_evidence'
+  - 'typed_ja3_selector_and_source_revision'
+  - 'exchange_leg_domain_correspondence'
+  - 'semantic_execution_contract_v1'
   optional:
-  - 'common_client_library_suppression'
-  - 'internet_scan_archive_lookup'
+  - 'explicit_source_class_or_exchange_filters'
+  - 'derivation_and_collection_receipt_history'
 source: tls:ja3
 target: inet:fqdn
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/OSINT_TLS_JA3_TO_FQDNS.json
+  sha256: fcfa1f20e1f1ba398a1727d0edaff3380dc00fda99465a7743ef273e1cad09d9
 hops:
-- via: observed_on
+- via: named_client_attempt
   direction: out
   form: inet:fqdn
 constraints:
-  temporal:
-    order:
-    - ja3.seen <= fqdn.seen
-    window_days: 365
-  degree_caps:
-    tls:ja3: 5000
-  negative_nodes:
-  - form: tls:ja3
-    list: common_client_library_ja3
-  - form: tls:ja3
-    list: common_scanner_ja3
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - tls
-- shodan_censys

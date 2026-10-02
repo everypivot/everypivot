@@ -1,0 +1,1111 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "OSINT_CRT_SH_SUBDOMAINS",
+    "version": "3.0.0"
+  },
+  "description": "Explicit names and separately typed wildcard clues from source-bound CT records in the chosen record-occurrence period. No wildcard expansion, DNS answer or service presentation is inferred.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-ct-name-record-occurrence-window-purpose",
+  "parameters": {
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Explicit analyst/case inclusive UTC period; this pattern declares its own event purpose."
+    },
+    "source_ids": {
+      "type": "string_array",
+      "required": true,
+      "description": "Exact admitted source-revision IDs; no external or independent-source completeness claim.",
+      "min_items": 1,
+      "unique_items": true,
+      "item_reference": "source"
+    },
+    "seed_selector": {
+      "type": "selector",
+      "required": true,
+      "description": "Explicit concrete DNS suffix scope; no public-suffix inference.",
+      "selector_kinds": [
+        "dns_name"
+      ]
+    },
+    "exclude_shared_hosting": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicit supported certificate-class filter; wildcard alone is not membership."
+    }
+  },
+  "branches": [
+    {
+      "id": "dns_name",
+      "bindings": [
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": [
+                    "certificate",
+                    "precertificate"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ct_record",
+          "kind": "occurrence",
+          "types": [
+            "x509:ct_record"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ct_record.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ct_record.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ct_record.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "ct_record.attributes.log_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "ct_record.attributes.record_id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "ct_record.attributes.event_meaning"
+                },
+                "right": {
+                  "literal": [
+                    "source_reported_record_date",
+                    "log_inclusion_observed"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ct_record"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate_name",
+          "kind": "assertion",
+          "types": [
+            "x509:certificate_name"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_name.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate_name.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate_name.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "certificate_name.attributes.field_kind"
+                },
+                "right": {
+                  "literal": [
+                    "subject_common_name",
+                    "san_dns"
+                  ]
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "certificate_name.attributes.association_basis"
+                },
+                "right": {
+                  "literal": [
+                    "reported_certificate_field",
+                    "locally_extracted_certificate_field",
+                    "ct_reported_certificate_field"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate_name"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_name.attributes.ct_record"
+                },
+                "right": {
+                  "ref": "ct_record.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_name.attributes.name_selector.kind"
+                },
+                "right": {
+                  "literal": "dns_name"
+                }
+              },
+              {
+                "op": "ct_name_in_scope",
+                "name": {
+                  "ref": "certificate_name.attributes.name_selector"
+                },
+                "seed": {
+                  "param": "seed_selector"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "domain",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "domain.id"
+                },
+                "right": {
+                  "ref": "certificate_name.object"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "domain.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate_name.attributes.name_selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "domain.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "certificate_name.attributes.name_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "domain"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "hosting_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "hosting_class.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "hosting_class.attributes.class_id"
+                },
+                "right": {
+                  "literal": "shared_cdn_or_hosting_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "hosting_class.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "hosting_class"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "within",
+        "value": {
+          "ref": "ct_record.times.occurred"
+        },
+        "period": {
+          "param": "period"
+        },
+        "quantifier": "contained"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "ct_record.times.occurred"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "ct_record.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ct_record.times.collection_available"
+          },
+          "object": {
+            "ref": "ct_record.id"
+          },
+          "occurrence": {
+            "ref": "ct_record.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate_name.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate_name.id"
+          },
+          "occurrence": {
+            "ref": "certificate_name.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "domain.times.collection_available"
+          },
+          "object": {
+            "ref": "domain.id"
+          },
+          "occurrence": {
+            "ref": "domain.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "inet:fqdn",
+        "binding": "domain",
+        "identity": [
+          {
+            "ref": "domain.id"
+          },
+          {
+            "ref": "certificate.id"
+          },
+          {
+            "ref": "ct_record.id"
+          },
+          {
+            "ref": "certificate_name.id"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "explicit_CT_certificate_name"
+          },
+          "name": {
+            "ref": "certificate_name.attributes.name_selector"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "artifact_role": {
+            "ref": "certificate.attributes.artifact_role"
+          },
+          "ct_record": {
+            "ref": "ct_record.id"
+          },
+          "record_time": {
+            "ref": "ct_record.times.occurred"
+          },
+          "event_meaning": {
+            "ref": "ct_record.attributes.event_meaning"
+          },
+          "reported_log": {
+            "ref": "ct_record.attributes.log_id"
+          },
+          "source_record_id": {
+            "ref": "ct_record.attributes.record_id"
+          },
+          "record_verification": {
+            "ref": "ct_record.attributes.verification"
+          },
+          "field_kind": {
+            "ref": "certificate_name.attributes.field_kind"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "hosting_class_membership": {
+            "ref": "hosting_class.attributes.membership"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "hosting_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_shared_hosting",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "hosting_class.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "hosting_class.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "hosting_class.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "ct_record.times.collection_available"
+        },
+        {
+          "ref": "certificate_name.times.collection_available"
+        },
+        {
+          "ref": "domain.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "ct_record.times.occurred"
+          },
+          "right": {
+            "ref": "ct_record.times.collection_available"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dns_wildcard",
+      "bindings": [
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": [
+                    "certificate",
+                    "precertificate"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ct_record",
+          "kind": "occurrence",
+          "types": [
+            "x509:ct_record"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ct_record.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ct_record.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ct_record.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "ct_record.attributes.log_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "ct_record.attributes.record_id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "ct_record.attributes.event_meaning"
+                },
+                "right": {
+                  "literal": [
+                    "source_reported_record_date",
+                    "log_inclusion_observed"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ct_record"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate_name",
+          "kind": "assertion",
+          "types": [
+            "x509:certificate_name"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_name.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate_name.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate_name.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "certificate_name.attributes.field_kind"
+                },
+                "right": {
+                  "literal": [
+                    "subject_common_name",
+                    "san_dns"
+                  ]
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "certificate_name.attributes.association_basis"
+                },
+                "right": {
+                  "literal": [
+                    "reported_certificate_field",
+                    "locally_extracted_certificate_field",
+                    "ct_reported_certificate_field"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate_name"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_name.attributes.ct_record"
+                },
+                "right": {
+                  "ref": "ct_record.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_name.attributes.name_selector.kind"
+                },
+                "right": {
+                  "literal": "dns_wildcard"
+                }
+              },
+              {
+                "op": "ct_name_in_scope",
+                "name": {
+                  "ref": "certificate_name.attributes.name_selector"
+                },
+                "seed": {
+                  "param": "seed_selector"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "hosting_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "hosting_class.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "hosting_class.attributes.class_id"
+                },
+                "right": {
+                  "literal": "shared_cdn_or_hosting_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "hosting_class.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "hosting_class"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "within",
+        "value": {
+          "ref": "ct_record.times.occurred"
+        },
+        "period": {
+          "param": "period"
+        },
+        "quantifier": "contained"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "ct_record.times.occurred"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "ct_record.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ct_record.times.collection_available"
+          },
+          "object": {
+            "ref": "ct_record.id"
+          },
+          "occurrence": {
+            "ref": "ct_record.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate_name.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate_name.id"
+          },
+          "occurrence": {
+            "ref": "certificate_name.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "construct",
+        "form": "evidence:ct_wildcard_scope",
+        "identity": [
+          {
+            "ref": "certificate.id"
+          },
+          {
+            "ref": "ct_record.id"
+          },
+          {
+            "ref": "certificate_name.id"
+          },
+          {
+            "ref": "certificate_name.attributes.name_selector.value"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "literal_CT_wildcard_scope_clue"
+          },
+          "name": {
+            "ref": "certificate_name.attributes.name_selector"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "artifact_role": {
+            "ref": "certificate.attributes.artifact_role"
+          },
+          "ct_record": {
+            "ref": "ct_record.id"
+          },
+          "record_time": {
+            "ref": "ct_record.times.occurred"
+          },
+          "event_meaning": {
+            "ref": "ct_record.attributes.event_meaning"
+          },
+          "reported_log": {
+            "ref": "ct_record.attributes.log_id"
+          },
+          "source_record_id": {
+            "ref": "ct_record.attributes.record_id"
+          },
+          "record_verification": {
+            "ref": "ct_record.attributes.verification"
+          },
+          "field_kind": {
+            "ref": "certificate_name.attributes.field_kind"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "hosting_class_membership": {
+            "ref": "hosting_class.attributes.membership"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "hosting_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_shared_hosting",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "hosting_class.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "hosting_class.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "hosting_class.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "ct_record.times.collection_available"
+        },
+        {
+          "ref": "certificate_name.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "ct_record.times.occurred"
+          },
+          "right": {
+            "ref": "ct_record.times.collection_available"
+          }
+        }
+      ]
+    }
+  ]
+}

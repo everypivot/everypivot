@@ -1,0 +1,177 @@
+{
+  "fixture_type": "independent_semantic_expectations",
+  "families": [
+    {
+      "family": "crypto",
+      "pattern_id": "FIN_CRYPTO_TX_TO_SANCTIONED",
+      "kind": "event",
+      "retrospective": {
+        "entry": "entry",
+        "subject": "listed-subject",
+        "count": 1
+      },
+      "historical_at": {
+        "date": "2024-12-03T12:00:00Z",
+        "count": 0,
+        "reason": "Source-stated designation begins September 2026; it cannot establish December 2024 status."
+      },
+      "positive_historical_variant": {
+        "status_start": "2024-01-01T00:00:00Z",
+        "status_end": "2024-12-31T23:59:59Z",
+        "count": 1,
+        "reason": "Later published evidence explicitly supports the historical interval; knowledge remains September 2026."
+      }
+    },
+    {
+      "family": "bank",
+      "pattern_id": "FIN_BANK_TXN_TO_SANCTIONED_COUNTERPART",
+      "kind": "event",
+      "retrospective": {
+        "entry": "entry",
+        "subject": "listed-subject",
+        "count": 1
+      },
+      "historical_at": {
+        "date": "2024-12-03T12:00:00Z",
+        "count": 0,
+        "reason": "Source-stated designation begins September 2026; it cannot establish December 2024 status."
+      },
+      "positive_historical_variant": {
+        "status_start": "2024-01-01T00:00:00Z",
+        "status_end": "2024-12-31T23:59:59Z",
+        "count": 1,
+        "reason": "Later published evidence explicitly supports the historical interval; knowledge remains September 2026."
+      }
+    },
+    {
+      "family": "trade",
+      "pattern_id": "FIN_TRADE_PARTNER_SANCTIONS",
+      "kind": "event",
+      "retrospective": {
+        "entry": "entry",
+        "subject": "listed-subject",
+        "count": 1
+      },
+      "historical_at": {
+        "date": "2024-12-03T12:00:00Z",
+        "count": 0,
+        "reason": "Source-stated designation begins September 2026; it cannot establish December 2024 status."
+      },
+      "positive_historical_variant": {
+        "status_start": "2024-01-01T00:00:00Z",
+        "status_end": "2024-12-31T23:59:59Z",
+        "count": 1,
+        "reason": "Later published evidence explicitly supports the historical interval; knowledge remains September 2026."
+      }
+    },
+    {
+      "family": "owner",
+      "pattern_id": "FIN_BENEFICIAL_OWNER_TO_SANCTIONS",
+      "kind": "relationship",
+      "retrospective": {
+        "entry": "entry",
+        "subject": "listed-subject",
+        "count": 1
+      },
+      "historical_at": {
+        "date": "2024-12-03T12:00:00Z",
+        "count": 0,
+        "reason": "Source-stated designation begins September 2026; it cannot establish December 2024 status."
+      },
+      "positive_historical_variant": {
+        "status_start": "2024-01-01T00:00:00Z",
+        "status_end": "2024-12-31T23:59:59Z",
+        "count": 1,
+        "reason": "Later published evidence explicitly supports the historical interval; knowledge remains September 2026."
+      }
+    },
+    {
+      "family": "parent",
+      "pattern_id": "FIN_ORG_LEI_PARENT_SANCTIONS",
+      "kind": "relationship",
+      "retrospective": {
+        "entry": "entry",
+        "subject": "listed-subject",
+        "count": 1
+      },
+      "historical_at": {
+        "date": "2024-12-03T12:00:00Z",
+        "count": 0,
+        "reason": "Source-stated designation begins September 2026; it cannot establish December 2024 status."
+      },
+      "positive_historical_variant": {
+        "status_start": "2024-01-01T00:00:00Z",
+        "status_end": "2024-12-31T23:59:59Z",
+        "count": 1,
+        "reason": "Later published evidence explicitly supports the historical interval; knowledge remains September 2026."
+      }
+    },
+    {
+      "family": "certificate",
+      "pattern_id": "CROSS_CERT_SUBJECT_TO_LEI_SANCTIONS",
+      "kind": "reference",
+      "retrospective": {
+        "entry": "entry",
+        "subject": "listed-subject",
+        "count": 1
+      },
+      "historical_at": {
+        "date": "2024-12-03T12:00:00Z",
+        "count": 0,
+        "reason": "Source-stated designation begins September 2026; it cannot establish December 2024 status."
+      },
+      "positive_historical_variant": {
+        "status_start": "2024-01-01T00:00:00Z",
+        "status_end": "2024-12-31T23:59:59Z",
+        "count": 1,
+        "reason": "Later published evidence explicitly supports the historical interval; knowledge remains September 2026."
+      }
+    },
+    {
+      "family": "domain",
+      "pattern_id": "CROSS_FQDN_TO_ORG_LEI_SANCTIONS",
+      "kind": "relationship",
+      "retrospective": {
+        "entry": "entry",
+        "subject": "listed-subject",
+        "count": 1
+      },
+      "historical_at": {
+        "date": "2024-12-03T12:00:00Z",
+        "count": 0,
+        "reason": "Source-stated designation begins September 2026; it cannot establish December 2024 status."
+      },
+      "positive_historical_variant": {
+        "status_start": "2024-01-01T00:00:00Z",
+        "status_end": "2024-12-31T23:59:59Z",
+        "count": 1,
+        "reason": "Later published evidence explicitly supports the historical interval; knowledge remains September 2026."
+      }
+    },
+    {
+      "family": "asn",
+      "pattern_id": "CROSS_ASN_ORG_TO_SANCTIONS",
+      "kind": "relationship",
+      "retrospective": {
+        "entry": "entry",
+        "subject": "listed-subject",
+        "count": 1
+      },
+      "historical_at": {
+        "date": "2024-12-03T12:00:00Z",
+        "count": 0,
+        "reason": "Source-stated designation begins September 2026; it cannot establish December 2024 status."
+      },
+      "positive_historical_variant": {
+        "status_start": "2024-01-01T00:00:00Z",
+        "status_end": "2024-12-31T23:59:59Z",
+        "count": 1,
+        "reason": "Later published evidence explicitly supports the historical interval; knowledge remains September 2026."
+      }
+    }
+  ],
+  "limits": [
+    "The examples model possible source assertions; they are not real payments, official list contents, authentication or native runtime evidence.",
+    "Contract tests do not establish legal effect, sanctions violation, source independence, ownership/control or accepted assessments."
+  ]
+}

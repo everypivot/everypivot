@@ -69,3 +69,10 @@ not part of the default validation gate; it exists to catch obvious fixture/load
 or generated-query execution drift in a local disposable Neo4j database.
 `--reset-fixtures` deletes all `EveryPivotNode` nodes before loading fixtures,
 so use it only against disposable demo data.
+
+## Structured native acceptance
+
+For the bounded three-target pilot, see
+[`ACCEPTANCE.md`](ACCEPTANCE.md). The separate Python standard-library runner
+checks full structured records, multiplicity, loaded graph content and persisted
+state. The plain-text smoke helper above remains smoke evidence only.

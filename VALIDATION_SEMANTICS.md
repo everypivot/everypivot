@@ -45,6 +45,12 @@ work or a credible challenge changes the risk profile.
 Downstream systems own execution, scoring, case-specific corroboration, and
 final assessment.
 
+The evidence-pack suite checks structure and bounded one-hop consistency, not
+complete execution of pattern constraints. Positive/negative/suppression labels
+alone are authored expectations. Promotion evidence must name its executed
+oracle and separately retain unsupported semantic expectations. See
+[fixture scope](fixtures/README.md) and [unresolved bindings](docs/UNRESOLVED_SEMANTICS.md).
+
 ## Assessment compatibility
 
 Schema v1.5 requires an explicit `assessment_mode`. Evidence-only patterns
@@ -56,3 +62,20 @@ The native validator checks the pinned SAIL matrix in addition to the local
 schema. Registry generation refuses incomplete or incompatible hints.
 See [Evidence and assessment hints](docs/ASSESSMENT_BRIDGE.md) for the mode,
 compatibility, and consumer requirements.
+
+
+## Focused executable semantics
+
+Authoring 1.6 binds an independently versioned finite execution contract by exact
+bytes, pattern ID/version and result forms. `check_semantic_suite.rb` runs the
+packaged synthetic tests over declared normalized evidence. This provides a
+separate behavioural check for the 45 admitted definitions, without upgrading
+legacy 1.5 patterns, lifecycle labels or assessment status. The broad SBL
+compatibility identifier has no execution reference. The 134 other original
+patterns remain outside this focused semantic audit.
+
+Source authenticity, upstream parsing, independence, cryptographic verification,
+analyst acceptance and native adapters are separate claims. The limited hybrid
+Neo4j profile admits only exact JA3/JA3S contract revisions. Its native storage
+round trip plus Ruby evaluation does not implement general native Cypher
+semantics. See [the execution contract](docs/SEMANTIC_EXECUTION_CONTRACT.md).

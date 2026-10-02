@@ -1,0 +1,528 @@
+{
+  "contract": "everypivot.semantic_evidence",
+  "version": "1.0",
+  "collection_id": "sanctions-case",
+  "sources": [
+    {
+      "id": "relationship-source",
+      "publisher": "Synthetic historical records",
+      "document": "domain-source.json",
+      "revision": "fixture-r1",
+      "collection": "sanctions-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "c2ecb8cab4b113d2d1638bc93cb1c73c26ffcc2690d01be78994818b9b02420c",
+        "scope": "exact_source_bytes"
+      }
+    },
+    {
+      "id": "list-source",
+      "publisher": "Synthetic list provider",
+      "document": "domain-source.json",
+      "revision": "fixture-r1",
+      "collection": "sanctions-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "c2ecb8cab4b113d2d1638bc93cb1c73c26ffcc2690d01be78994818b9b02420c",
+        "scope": "exact_source_bytes"
+      }
+    },
+    {
+      "id": "correction-source",
+      "publisher": "Synthetic historical records",
+      "document": "domain-source.json",
+      "revision": "fixture-r1",
+      "collection": "sanctions-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "c2ecb8cab4b113d2d1638bc93cb1c73c26ffcc2690d01be78994818b9b02420c",
+        "scope": "exact_source_bytes"
+      }
+    },
+    {
+      "id": "list-correction-source",
+      "publisher": "Synthetic list provider",
+      "document": "domain-source.json",
+      "revision": "fixture-r1",
+      "collection": "sanctions-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "c2ecb8cab4b113d2d1638bc93cb1c73c26ffcc2690d01be78994818b9b02420c",
+        "scope": "exact_source_bytes"
+      }
+    }
+  ],
+  "records": [
+    {
+      "id": "seed",
+      "kind": "entity",
+      "type": "inet:fqdn",
+      "attributes": {
+        "name": "Selected source"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/seed"
+        }
+      ]
+    },
+    {
+      "id": "listed-subject",
+      "kind": "entity",
+      "type": "org:org",
+      "attributes": {
+        "name": "Actually identified list subject"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/listed-subject"
+        }
+      ]
+    },
+    {
+      "id": "relationship",
+      "kind": "assertion",
+      "type": "inet:domain_registration",
+      "attributes": {
+        "assertion_namespace": "domain:relationship",
+        "role": "registrant_of_record",
+        "identity_basis": "registry_identifier",
+        "provider_context": "shared_service"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "relationship",
+            "occurrence": "relationship"
+          },
+          "field": "/claims/relationship/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        },
+        "applicable": {
+          "binding": {
+            "object": "relationship",
+            "occurrence": "relationship"
+          },
+          "field": "/claims/relationship/applicable",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "interval",
+          "interval_role": "validity",
+          "start": "2024-01-01T00:00:00Z",
+          "end": "2024-12-31T23:59:59Z",
+          "start_inclusive": true,
+          "end_inclusive": true
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/relationship"
+        }
+      ],
+      "subject": "seed",
+      "object": "listed-subject"
+    },
+    {
+      "id": "lei",
+      "kind": "entity",
+      "type": "lei:record",
+      "attributes": {
+        "identifier": "998800SYNTHETIC00321",
+        "issued": "2026-01-01"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/lei"
+        }
+      ]
+    },
+    {
+      "id": "lei-identity",
+      "kind": "assertion",
+      "type": "lei:entity_identity",
+      "attributes": {
+        "assertion_namespace": "domain:lei-identity",
+        "role": "identifies_same_legal_entity",
+        "basis": "documented_continuity"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "lei-identity",
+            "occurrence": "lei-identity"
+          },
+          "field": "/claims/lei-identity/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/lei-identity"
+        }
+      ],
+      "subject": "listed-subject",
+      "object": "lei"
+    },
+    {
+      "id": "entry",
+      "kind": "entity",
+      "type": "sanction:entry",
+      "attributes": {
+        "list_id": "synthetic-list",
+        "entry_id": "synthetic-entry-1",
+        "entry_revision": "revision-2026-09-02"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/entry"
+        }
+      ]
+    },
+    {
+      "id": "entry-subject",
+      "kind": "assertion",
+      "type": "sanction:entry_subject",
+      "attributes": {
+        "assertion_namespace": "domain:entry-subject",
+        "role": "source_listed_subject",
+        "identity_basis": "exact_source_identifier"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "entry-subject",
+            "occurrence": "entry-subject"
+          },
+          "field": "/claims/entry-subject/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/entry-subject"
+        }
+      ],
+      "subject": "listed-subject",
+      "object": "entry"
+    },
+    {
+      "id": "status",
+      "kind": "assertion",
+      "type": "sanction:status",
+      "attributes": {
+        "assertion_namespace": "domain:status",
+        "status": "listed",
+        "list_id": "synthetic-list",
+        "entry_revision": "revision-2026-09-02"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "status",
+            "occurrence": "status"
+          },
+          "field": "/claims/status/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        },
+        "applicable": {
+          "binding": {
+            "object": "entry",
+            "occurrence": "status"
+          },
+          "field": "/claims/status/applicable",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "interval",
+          "interval_role": "validity",
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-12-31T23:59:59Z",
+          "start_inclusive": true,
+          "end_inclusive": true
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/status"
+        }
+      ],
+      "subject": "entry",
+      "object": "listed-subject"
+    },
+    {
+      "id": "relationship-receipt",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "assertion_namespace": "domain:relationship-receipt",
+        "collection_id": "sanctions-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "relationship",
+            "occurrence": "relationship-receipt"
+          },
+          "field": "/claims/relationship-receipt/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-03T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/relationship-receipt"
+        }
+      ],
+      "subject": "relationship"
+    },
+    {
+      "id": "lei-identity-receipt",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "assertion_namespace": "domain:lei-identity-receipt",
+        "collection_id": "sanctions-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "lei-identity",
+            "occurrence": "lei-identity-receipt"
+          },
+          "field": "/claims/lei-identity-receipt/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-03T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/lei-identity-receipt"
+        }
+      ],
+      "subject": "lei-identity"
+    },
+    {
+      "id": "entry-subject-receipt",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "assertion_namespace": "domain:entry-subject-receipt",
+        "collection_id": "sanctions-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "entry-subject",
+            "occurrence": "entry-subject-receipt"
+          },
+          "field": "/claims/entry-subject-receipt/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-03T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/entry-subject-receipt"
+        }
+      ],
+      "subject": "entry-subject"
+    },
+    {
+      "id": "status-receipt",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "assertion_namespace": "domain:status-receipt",
+        "collection_id": "sanctions-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "status",
+            "occurrence": "status-receipt"
+          },
+          "field": "/claims/status-receipt/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-03T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/status-receipt"
+        }
+      ],
+      "subject": "status"
+    },
+    {
+      "id": "source-class",
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "attributes": {
+        "assertion_namespace": "domain:source-class",
+        "class_id": "shared_provider",
+        "policy_basis": "selected_source_revision",
+        "membership": "member"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "source-class",
+            "occurrence": "source-class"
+          },
+          "field": "/claims/source-class/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/source-class"
+        }
+      ],
+      "subject": "seed"
+    },
+    {
+      "id": "path-class",
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "attributes": {
+        "assertion_namespace": "domain:path-class",
+        "class_id": "shared_intermediary",
+        "policy_basis": "selected_source_revision",
+        "membership": "member"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "path-class",
+            "occurrence": "path-class"
+          },
+          "field": "/claims/path-class/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/path-class"
+        }
+      ],
+      "subject": "listed-subject"
+    }
+  ]
+}

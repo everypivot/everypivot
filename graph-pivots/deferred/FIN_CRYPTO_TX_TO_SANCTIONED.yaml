@@ -1,27 +1,47 @@
 id: FIN_CRYPTO_TX_TO_SANCTIONED
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'financial_records'
-  - 'crypto_transaction_enrichment'
-  - 'sanctions_list_access'
+  - financial_records
+  - crypto_transaction_enrichment
+  - sanctions_list_access
+  - semantic_execution_contract_v1
+  - source_revision_scoped_relations
+  - explicit_temporal_applicability
+  - amendment_context
   optional:
-  - 'address_cluster_context'
-  - 'transaction_timing_context'
+  - address_cluster_context
+  - transaction_timing_context
 hazards:
-- Blockchain heuristics can over-attribute flows through mixers, exchanges, bridges, or shared custody accounts.
-- Sanctions lists and address clusters are temporal; corroborate transaction timing and ownership before drawing compliance conclusions.
-- Compliance, exchange, and customer-identification evidence may be regulated or restricted and must be governed before use.
-name: Crypto Address → On‑Chain Tx → Sanctioned Address/Entity
+- Blockchain heuristics can over-attribute flows through mixers, exchanges, bridges,
+  or shared custody accounts.
+- Sanctions lists and address clusters are temporal; corroborate transaction timing
+  and ownership before drawing compliance conclusions.
+- Compliance, exchange, and customer-identification evidence may be regulated or restricted
+  and must be governed before use.
+- Source-reported identity, relationship and list status require separate evidence;
+  no traversal supplies legal exposure, liability, control, source independence or
+  accepted assessment status.
+- A selected historical-status inquiry requires the actual applicable relationship
+  and list intervals. Later publication, receipt and correction do not backdate analyst
+  knowledge or refresh activity.
+name: Crypto Transaction → Referenced Sanctions Entries
 category: FIN
-description: Trace on‑chain flows to sanctioned addresses/entities.
+description: Follow an actual source-reported transaction endpoint and separately
+  evidenced listed-subject correspondence to selected sanctions entry revisions. Retrospective
+  discovery and source-stated historical status are explicit distinct inquiries.
 source: crypto:address
 target: sanction:entry
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/FIN_CRYPTO_TX_TO_SANCTIONED.json
+  sha256: 00ad8eb37c88937a35b72bf86d8481d50a8b1aabda668c63cf3c099598af0045
 hops:
 - via: transfers_to|transfers_from
   direction: out
@@ -33,39 +53,14 @@ hops:
   direction: out
   form: sanction:entry
 constraints:
-  temporal:
-    order:
-    - tx.ts <= sanction.listed
-    window_days: 3650
-  degree_caps:
-    ledger:tx: 100000
-  negative_nodes:
-  - form: crypto:address
-    list: exchange_or_custody_addresses
-  - form: crypto:address
-    list: high_volume_non_sanctioned_bridge_addresses
-  - form: ledger:tx
-    list: dust_or_airdrop_transactions
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - blockchain
 - sanctions

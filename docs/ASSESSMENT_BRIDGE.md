@@ -54,8 +54,8 @@ contract manifest. Validation fails if the contract is absent or corrupt.
 SAIL model semantics remain authoritative and unchanged.
 
 ```sh
-ruby tools/validate_pivots.rb --strict-metadata
-ruby tools/check_sail_bridge.rb --json --strict-incomplete
+ruby tools/validate_pivots.rb --strict-metadata --strict-bridge --current-distribution
+ruby tools/check_sail_bridge.rb --json --strict-incomplete --current-distribution
 ```
 
 The bridge checker reports four states:
@@ -73,6 +73,27 @@ scope is still rejected: `indicates` never permits `entity_level` for any of
 its legal subject roles. Legacy structural values in `object_role` retain
 SAIL v0.4's deprecated compatibility treatment and produce warnings.
 
+Semantic compatibility and current distribution eligibility are separate checks.
+The four semantic states above retain their meaning for supported v1.1–v1.4
+records. A complete legacy hint may remain `candidate_compatible` as diagnostic
+material; it is never eligible for current distribution. All registry channels
+(stable, preview and edge) and release packaging require v1.5 or v1.6, an explicit mode
+and complete applicable fields. Any legacy record rejects the entire publication
+unit with `migration_required` before registry, browser or archive output writes.
+There is no legacy-publication option.
+
+Both diagnostic CLIs accept `--current-distribution` to enforce this policy.
+Without that flag, valid complete legacy hints may exit 0, including with
+`--strict-bridge` or `--strict-incomplete`. Those strict flags still concern
+semantic completeness only. Diagnostic output explicitly marks legacy records
+as non-distributable. JSON retains `report_version: 1` and its existing semantic
+`counts` and statuses, adds `counts_scope: semantic_compatibility_only`, separate
+`distribution_counts`, and per-finding `distribution` with `eligible`,
+`classification` (`current`, `legacy_diagnostic`, or `unsupported`) and `errors`.
+Only eligible candidates contribute to `current_candidate_compatible` in
+`distribution_counts`; semantic `candidate_compatible` counts include diagnostic
+legacy hints. No count establishes case-specific evidence acceptance.
+
 Registry generation refuses incomplete or incompatible mappings. The index
 carries `assessment_mode`, conditional `assessment` and
 `assessment_requirements`, `assessment_compatibility`, and top-level
@@ -87,12 +108,23 @@ those records as unchecked and does not display their claim as an active
 candidate. A hosted service must enforce equivalent behavior before adopting
 the new contract; this repository does not execute a hosted assessment service.
 
-## Migration from v1.2–v1.4
+Each generated compatibility result includes `manifest_sha256` and
+`checked_input`: the exact schema version, mode, hint and requirements checked
+by the generator, including field presence. The browser requires the pinned
+manifest digest and compares this input with the displayed record; a changed
+scope, role, basis, requirement, unknown field, or missing binding is unchecked.
+Object key order is immaterial; array order and absent versus null are preserved.
+This diagnostic binding detects stale or partially updated records. It is not
+a cryptographic signature and does not make an untrusted publisher authoritative.
+External publishers and services must run the pinned bridge validator themselves;
+labels and copied compatibility metadata cannot accept assessments.
+
+## Migration from v1.1–v1.4
 
 Older schemas retain their original assessment-block requirements so existing
-records can be parsed and diagnosed. Parsing legacy data is not a compatibility
-pass. Supplied hints are checked against the pinned PTM, and incomplete hints
-cannot be published as active mappings by the registry builder.
+records can be parsed and diagnosed. Legacy hints are checked against the pinned PTM using their version-specific
+rules. Passing those semantic checks is not eligibility for current distribution:
+even complete compatible legacy hints require reviewed migration to v1.5.
 
 Version a pattern when changing its bridge contract. For each pattern, review
 what its lookup actually establishes, preserve its operational controls, and
@@ -103,3 +135,10 @@ technique's lifecycle solely because its assessment metadata was wrong.
 
 The v1.5 change is limited to the assessment boundary. It does not adopt the
 separate facets, grouping, or case-bound schema proposals.
+
+
+Authoring 1.6 preserves this assessment boundary while adding an independently
+checked execution declaration. Its semantic evidence/results contracts do not
+change the pinned SAIL v0.4 DRAFT model, predicates, roles, kinds or licenses.
+A constructed evidence observation, qualified match, requirement string or
+compatibility result remains insufficient for accepted assessment status.

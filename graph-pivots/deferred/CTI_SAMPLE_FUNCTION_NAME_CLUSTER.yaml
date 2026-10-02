@@ -1,6 +1,6 @@
 id: CTI_SAMPLE_FUNCTION_NAME_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -11,55 +11,42 @@ hazards:
 - 'Function-name clusters need library suppression and corroborating static or behavioral evidence.'
 capability_requirements:
   required:
-  - 'sample_static_analysis'
-  - 'function_name_extraction'
+  - sample_static_analysis
+  - function_name_extraction
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'library_function_suppression'
-  - 'symbol_source_context'
-  - 'sample_prevalence_enrichment'
+  - symbol_source_context
+  - sample_prevalence_enrichment
 name: Sample Function Name Cluster
 category: CTI
-description: Cluster samples that share rare normalized function names, exported symbols, or recovered debug-symbol names.
+description: Find preserved samples with the selected recovered function name. External
+  debug material additionally requires preserved symbol bytes and explicit sample
+  correspondence; later processing does not refresh an equivalent finding.
 source: file:feature:function_name
 target: file:hash
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json
+  sha256: d3dd52dcb6475f0982b62e7cda22a83458f1d6d6363664ff4e7cfb88ea3708c0
 hops:
 - via: function_name_extracted_from
   direction: in
   form: file:hash
 constraints:
-  temporal:
-    order:
-    - sample.observed >= function_name.extracted
-    window_days: 365
-  degree_caps:
-    file:feature:function_name: 100000
-    file:hash: 1000000
-  negative_nodes:
-  - form: file:feature:function_name
-    list: common_library_or_framework_function_names
-  - form: file:hash
-    list: common_benign_file_hashes
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- symbol_source
-- export_flag
-- library_penalty
-- prevalence
-- temporal_consistency
-- novelty_flag
+features: []
 outputs:
-  top_paths: 5
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - malware_analysis
 - file_reputation

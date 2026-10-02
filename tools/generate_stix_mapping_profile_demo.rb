@@ -6,6 +6,25 @@ require 'json'
 require 'optparse'
 require 'pathname'
 require 'yaml'
+require_relative 'json_schema_validator'
+require_relative 'utf8_text'
+require_relative 'stix_mapping_validation'
+
+def load_yaml(path)
+  YAML.safe_load(EveryPivot::Utf8Text.read(path), aliases: false)
+rescue EveryPivot::Utf8Text::Error => e
+  abort e.message
+rescue Psych::Exception => e
+  abort "Invalid YAML in #{path}: #{e.message}"
+end
+
+def load_json(path)
+  JSON.parse(EveryPivot::Utf8Text.read(path))
+rescue EveryPivot::Utf8Text::Error => e
+  abort e.message
+rescue JSON::ParserError => e
+  abort "Invalid JSON in #{path}: #{e.message}"
+end
 
 STIX_SCO_DET_ID_NAMESPACE = '00abedb4-aa42-466c-9c01-fed23315a9b7'
 
@@ -53,7 +72,7 @@ def find_profile_target(repo_root, pattern_id, requested_profile_path)
   matches = []
 
   profile_paths.each do |profile_path|
-    profile = YAML.safe_load(profile_path.read, aliases: false)
+    profile = load_yaml(profile_path)
     next unless opencti_stix_profile?(profile)
 
     profile_targets(profile).each do |target|
@@ -76,10 +95,7 @@ def find_profile_target(repo_root, pattern_id, requested_profile_path)
 end
 
 def stix_timestamp(value)
-  text = value.to_s
-  return text if text.match?(/\A\d{4}-\d{2}-\d{2}T/)
-
-  Date.iso8601(text).strftime('%Y-%m-%dT00:00:00.000Z')
+  EveryPivot::StixMappingValidation.timestamp(value)
 end
 
 def sorted_json_value(value)
@@ -118,10 +134,11 @@ end
 
 def chosen_hash(hash_dict)
   hashes = hash_value(hash_dict)
-  %w[MD5 SHA-1 SHA-256 SHA3-256 SHA3-512 SHA-512 SSDEEP TLSH].each do |key|
+  %w[MD5 SHA-1 SHA-256 SHA-512].each do |key|
     return { key => hashes[key] } if hashes.key?(key)
   end
-  nil
+  key = hashes.keys.sort.first
+  key ? { key => hashes[key] } : nil
 end
 
 def deterministic_file_ref(entry)
@@ -129,6 +146,7 @@ def deterministic_file_ref(entry)
   hash_value = chosen_hash(entry['hashes'])
   contributing['hashes'] = hash_value if hash_value
   contributing['name'] = entry['name'] unless entry['name'].to_s.empty?
+  raise ArgumentError, 'File requires at least one identifier-contributing hash or name' if contributing.empty?
   "file--#{uuid_v5(STIX_SCO_DET_ID_NAMESPACE, canonical_json(contributing))}"
 end
 
@@ -137,6 +155,9 @@ def validate_file_ref!(entry, label)
   return expected if entry['stix_ref'] == expected
 
   warn "#{label} stix_ref must be deterministic UUIDv5 #{expected}; got #{entry['stix_ref'].inspect}"
+  exit 2
+rescue ArgumentError => e
+  warn "#{label}: #{e.message}"
   exit 2
 end
 
@@ -180,7 +201,7 @@ def observed_data_object(source, target, profile, pattern, fixture, hop, window_
     'spec_version' => profile.dig('stix_model', 'spec_version') || '2.1',
     'id' => target['observed_data_ref'],
     'created' => fixture['created'],
-    'modified' => fixture['created'],
+    'modified' => fixture.fetch('modified', fixture['created']),
     'first_observed' => seen_at,
     'last_observed' => seen_at,
     'number_observed' => 1,
@@ -214,7 +235,7 @@ def relationship_object(source, target, profile, pattern, fixture, hop)
     'spec_version' => profile.dig('stix_model', 'spec_version') || '2.1',
     'id' => target['relationship_ref'],
     'created' => fixture['created'],
-    'modified' => fixture['created'],
+    'modified' => fixture.fetch('modified', fixture['created']),
     'relationship_type' => profile.dig('stix_model', 'relationship_type') || 'related-to',
     'source_ref' => deterministic_file_ref(source),
     'target_ref' => deterministic_file_ref(target),
@@ -256,7 +277,7 @@ def note_object(source, included_targets, observed_refs, relationship_refs, prof
     'spec_version' => profile.dig('stix_model', 'spec_version') || '2.1',
     'id' => fixture.dig('stix', 'note_ref'),
     'created' => fixture['created'],
-    'modified' => fixture['created'],
+    'modified' => fixture.fetch('modified', fixture['created']),
     'abstract' => "EveryPivot #{pattern['id']} mapping caveats",
     'content' => content_lines.join("\n"),
     'object_refs' => object_refs,
@@ -281,12 +302,13 @@ def toplevel_extension_definition_object(profile, fixture, objects)
     'type' => 'extension-definition',
     'spec_version' => profile.dig('stix_model', 'spec_version') || '2.1',
     'id' => extension_definition_ref(fixture),
-    'created' => fixture['created'],
-    'modified' => fixture['created'],
+    'created' => fixture.dig('stix', 'extension_created'),
+    'modified' => fixture.dig('stix', 'extension_created'),
     'name' => extension_config['name'],
     'description' => extension_config['description'],
     'schema' => extension_config['schema_url'],
-    'version' => profile['version'].to_s,
+    'version' => extension_config['version'].to_s,
+    'created_by_ref' => fixture.dig('stix', 'created_by_ref'),
     'extension_types' => [
       'toplevel-property-extension'
     ],
@@ -295,7 +317,7 @@ def toplevel_extension_definition_object(profile, fixture, objects)
 end
 
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path,
+  repo_root: Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path,
   pattern_id: 'CTI_SAMPLE_IMPHASH_CLUSTER',
   profile: nil,
   fixture_mapping: nil,
@@ -338,8 +360,8 @@ unless pattern_path
   exit 2
 end
 
-fixture = JSON.parse(fixture_path.read)
-pattern = YAML.safe_load(Pathname(pattern_path).read, aliases: false)
+fixture = load_json(fixture_path)
+pattern = load_yaml(pattern_path)
 
 unless fixture['pattern_id'] == pattern['id'] && fixture['profile_id'] == profile['profile_id']
   warn "Fixture mapping does not match profile #{profile['profile_id']} and pattern #{pattern['id']}"
@@ -360,7 +382,7 @@ unless shape['hop_count'] == 1 && shape['hop_direction'] == hop['direction'] && 
 end
 
 window_days = pattern.dig('constraints', 'temporal', 'window_days')
-if shape['temporal_window_required'] && !(window_days.is_a?(Integer) && window_days.positive?)
+if shape['temporal_window_required'] && !(EveryPivot::JsonSchemaValidator.integer?(window_days) && window_days.positive?)
   warn "Target #{profile['profile_id']}/#{target['pattern_id']} requires constraints.temporal.window_days"
   exit 2
 end
@@ -374,7 +396,7 @@ if extension_definition_ref(fixture).to_s.empty?
   exit 2
 end
 extension_config = extension_definition_config(profile)
-%w[name description schema_url].each do |field|
+%w[name description schema_url version].each do |field|
   next unless extension_config[field].to_s.empty?
 
   warn "Profile must declare stix_model.extension_definition.#{field}"
@@ -399,6 +421,16 @@ targets.each_with_index do |target_entry, index|
 end
 
 included_targets = targets.select { |target_entry| target_entry['include'] == true }
+begin
+  EveryPivot::StixMappingValidation.timestamp(fixture['created'], date_allowed: false, milliseconds_required: true)
+  EveryPivot::StixMappingValidation.timestamp(fixture.fetch('modified', fixture['created']), date_allowed: false, milliseconds_required: true)
+  raise ArgumentError, 'modified precedes created' if DateTime.iso8601(fixture.fetch('modified', fixture['created'])) < DateTime.iso8601(fixture['created'])
+  EveryPivot::StixMappingValidation.timestamp(fixture.dig('stix', 'extension_created'), date_allowed: false, milliseconds_required: true)
+  included_targets.each { |entry| stix_timestamp(entry['seen']) }
+rescue ArgumentError => e
+  warn "Fixture STIX timestamp invalid: #{e.message}"
+  exit 2
+end
 objects = []
 objects << source_or_target_file_object(source, profile, pattern, fixture)
 included_targets.each do |target_entry|
@@ -415,12 +447,37 @@ included_targets.each do |target_entry|
 end
 objects << note_object(source, included_targets, observed_refs, relationship_refs, profile, pattern, fixture)
 objects.unshift(toplevel_extension_definition_object(profile, fixture, objects))
+objects << fixture['extension_creator']
+creator_errors = EveryPivot::StixMappingValidation.creator_errors(objects, fixture.dig('stix', 'created_by_ref'))
+unless creator_errors.empty?
+  warn "Extension creator invalid: #{creator_errors.join('; ')}"
+  exit 2
+end
 
 bundle = {
   'type' => profile.dig('stix_model', 'bundle_type') || 'bundle',
   'id' => fixture.dig('stix', 'bundle_id'),
   'objects' => objects
 }
+
+extension_schema_path = repo_root.join('adapters', 'opencti', 'schemas', 'x_everypivot_toplevel_extension.schema.json')
+extension_validator = EveryPivot::JsonSchemaValidator.new(load_json(extension_schema_path))
+extension_errors = objects.flat_map do |object|
+  extension_validator.validate(object).map { |error| "#{object['id']}: #{error}" }
+end
+def recursive_keys(value)
+  case value
+  when Hash then value.keys + value.values.flat_map { |v| recursive_keys(v) }
+  when Array then value.flat_map { |v| recursive_keys(v) }
+  else []
+  end
+end
+forbidden = recursive_keys(bundle) & Array(profile.dig('outputs', 'forbidden_properties'))
+extension_errors << "forbidden authority properties: #{forbidden.join(', ')}" unless forbidden.empty?
+unless extension_errors.empty?
+  warn "EveryPivot extension schema validation failed: #{extension_errors.join('; ')}"
+  exit 2
+end
 
 json = JSON.pretty_generate(bundle) + "\n"
 

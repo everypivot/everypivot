@@ -1,0 +1,152 @@
+{
+  "type": "bundle",
+  "id": "bundle--4a46f77c-9d2a-4d4c-8ac8-2f8c9062f7fd",
+  "objects": [
+    {
+      "type": "extension-definition",
+      "spec_version": "2.1",
+      "id": "extension-definition--3f6d5a22-c719-4f53-a07b-1e88f44bb5a1",
+      "created": "2026-05-27T00:00:00.000Z",
+      "modified": "2026-05-27T00:00:00.000Z",
+      "name": "EveryPivot OpenCTI/STIX mapping properties",
+      "description": "Defines the x_everypivot_* top-level custom properties used by generated EveryPivot OpenCTI/STIX mapping bundles to preserve profile, fixture, relation, hazard, and suppression metadata without adding runtime assessment semantics.",
+      "schema": "https://raw.githubusercontent.com/everypivot/everypivot/v0.4.0/adapters/opencti/schemas/x_everypivot_toplevel_extension.schema.json",
+      "version": "0.1.0",
+      "extension_types": [
+        "toplevel-property-extension"
+      ],
+      "extension_properties": [
+        "x_everypivot_blocked_assertions",
+        "x_everypivot_boundary",
+        "x_everypivot_evidence_path",
+        "x_everypivot_features",
+        "x_everypivot_fixture_id",
+        "x_everypivot_hazards",
+        "x_everypivot_pattern_id",
+        "x_everypivot_profile_id",
+        "x_everypivot_relation",
+        "x_everypivot_source_id",
+        "x_everypivot_suppressed_targets",
+        "x_everypivot_target_id"
+      ]
+    },
+    {
+      "type": "file",
+      "spec_version": "2.1",
+      "id": "file--253b8c62-bbe6-56c7-9236-b0cbbc1b29d1",
+      "hashes": {
+        "x_imphash": "7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f"
+      },
+      "name": "example-imphash-7b3f"
+    },
+    {
+      "type": "file",
+      "spec_version": "2.1",
+      "id": "file--3adec29d-f054-5953-9e06-9222be534a46",
+      "hashes": {
+        "SHA-256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "name": "example-alpha.bin"
+    },
+    {
+      "type": "observed-data",
+      "spec_version": "2.1",
+      "id": "observed-data--e1a494a3-7e8d-4b18-92a8-57ba1a333333",
+      "created": "2026-05-27T00:00:00.000Z",
+      "modified": "2026-05-27T00:00:00.000Z",
+      "first_observed": "2026-05-20T00:00:00.000Z",
+      "last_observed": "2026-05-20T00:00:00.000Z",
+      "number_observed": 1,
+      "object_refs": [
+        "file--253b8c62-bbe6-56c7-9236-b0cbbc1b29d1",
+        "file--3adec29d-f054-5953-9e06-9222be534a46"
+      ],
+      "x_everypivot_profile_id": "opencti_stix_v0",
+      "x_everypivot_pattern_id": "CTI_SAMPLE_IMPHASH_CLUSTER",
+      "x_everypivot_fixture_id": "opencti_stix_cti_sample_imphash_cluster_v1",
+      "x_everypivot_source_id": "file:pe:imphash:7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f",
+      "x_everypivot_target_id": "file:bytes:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "x_everypivot_relation": "observed_in",
+      "x_everypivot_evidence_path": [
+        "file:pe:imphash:7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f",
+        "observed_in",
+        "file:bytes:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "x_everypivot_features": {
+        "path_length": 1,
+        "temporal_window_days": 3650,
+        "source": "example_static_parser_a"
+      },
+      "extensions": {
+        "extension-definition--3f6d5a22-c719-4f53-a07b-1e88f44bb5a1": {
+          "extension_type": "toplevel-property-extension"
+        }
+      }
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--79e91051-d28d-46ce-9f32-1d6512444444",
+      "created": "2026-05-27T00:00:00.000Z",
+      "modified": "2026-05-27T00:00:00.000Z",
+      "relationship_type": "related-to",
+      "source_ref": "file--253b8c62-bbe6-56c7-9236-b0cbbc1b29d1",
+      "target_ref": "file--3adec29d-f054-5953-9e06-9222be534a46",
+      "start_time": "2026-05-20T00:00:00.000Z",
+      "description": "EveryPivot relation observed_in mapped as STIX related-to for this bounded profile; EveryPivot semantics remain in pattern YAML.",
+      "x_everypivot_profile_id": "opencti_stix_v0",
+      "x_everypivot_pattern_id": "CTI_SAMPLE_IMPHASH_CLUSTER",
+      "x_everypivot_fixture_id": "opencti_stix_cti_sample_imphash_cluster_v1",
+      "x_everypivot_source_id": "file:pe:imphash:7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f",
+      "x_everypivot_target_id": "file:bytes:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "x_everypivot_relation": "observed_in",
+      "x_everypivot_boundary": "Generated mapping artifact only; not a live OpenCTI connector, importer, synchronizer, or runtime assessment.",
+      "extensions": {
+        "extension-definition--3f6d5a22-c719-4f53-a07b-1e88f44bb5a1": {
+          "extension_type": "toplevel-property-extension"
+        }
+      }
+    },
+    {
+      "type": "note",
+      "spec_version": "2.1",
+      "id": "note--97b560a0-4926-43f8-bd78-945a2c2a6f6c",
+      "created": "2026-05-27T00:00:00.000Z",
+      "modified": "2026-05-27T00:00:00.000Z",
+      "abstract": "EveryPivot CTI_SAMPLE_IMPHASH_CLUSTER mapping caveats",
+      "content": "Pattern hazards:\n- Common packers, frameworks, malware builders, and benign software families can share import hashes without shared operation.\n- Import hashes can change with minor build changes and can be distorted by packing, import reconstruction, or damaged PE metadata.\n\nBlocked assertions:\n- Validated lifecycle state is not a runtime confidence score.\n- A shared import hash is feature evidence, not proof of common operator identity, authorship, ownership, or attribution.\n- The generated STIX bundle is a mapping artifact only; it does not assert maliciousness, compromise, malware-family membership, or final assessment.\n- Suppressed traversal candidates must not be emitted as ordinary STIX relationship objects.\n- OpenCTI ingestion, synchronization, marking, scoring, and workflow state are outside this fixture.\n\nBoundary: generated STIX bundle only; no live OpenCTI connector, importer, score, workflow state, or final assessment.",
+      "object_refs": [
+        "file--253b8c62-bbe6-56c7-9236-b0cbbc1b29d1",
+        "file--3adec29d-f054-5953-9e06-9222be534a46",
+        "observed-data--e1a494a3-7e8d-4b18-92a8-57ba1a333333",
+        "relationship--79e91051-d28d-46ce-9f32-1d6512444444"
+      ],
+      "x_everypivot_profile_id": "opencti_stix_v0",
+      "x_everypivot_pattern_id": "CTI_SAMPLE_IMPHASH_CLUSTER",
+      "x_everypivot_fixture_id": "opencti_stix_cti_sample_imphash_cluster_v1",
+      "x_everypivot_hazards": [
+        "Common packers, frameworks, malware builders, and benign software families can share import hashes without shared operation.",
+        "Import hashes can change with minor build changes and can be distorted by packing, import reconstruction, or damaged PE metadata."
+      ],
+      "x_everypivot_blocked_assertions": [
+        "Validated lifecycle state is not a runtime confidence score.",
+        "A shared import hash is feature evidence, not proof of common operator identity, authorship, ownership, or attribution.",
+        "The generated STIX bundle is a mapping artifact only; it does not assert maliciousness, compromise, malware-family membership, or final assessment.",
+        "Suppressed traversal candidates must not be emitted as ordinary STIX relationship objects.",
+        "OpenCTI ingestion, synchronization, marking, scoring, and workflow state are outside this fixture."
+      ],
+      "x_everypivot_suppressed_targets": [
+        {
+          "id": "file:bytes:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "reason": "The observation is outside the CTI_SAMPLE_IMPHASH_CLUSTER temporal window for the fixture as_of date."
+        }
+      ],
+      "x_everypivot_boundary": "Suppressed traversal candidates are documented as fixture metadata only and are not emitted as STIX relationship objects.",
+      "extensions": {
+        "extension-definition--3f6d5a22-c719-4f53-a07b-1e88f44bb5a1": {
+          "extension_type": "toplevel-property-extension"
+        }
+      }
+    }
+  ]
+}

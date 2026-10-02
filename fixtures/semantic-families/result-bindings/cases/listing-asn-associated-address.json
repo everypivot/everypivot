@@ -1,0 +1,466 @@
+{
+  "pattern": "CTI_ASN_TO_LISTED_INFRASTRUCTURE",
+  "evidence": {
+    "contract": "everypivot.semantic_evidence",
+    "version": "1.0",
+    "collection_id": "fixture-collection",
+    "sources": [
+      {
+        "id": "report",
+        "publisher": "synthetic laboratory fixture",
+        "document": "report",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null
+      },
+      {
+        "id": "manifest",
+        "publisher": "synthetic laboratory fixture",
+        "document": "manifest",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "23107a0395edd30657d70e9d23a82f47c34de466715e029c0f8eea78bfb297bc",
+          "scope": "exact_source_bytes"
+        }
+      }
+    ],
+    "records": [
+      {
+        "id": "origin",
+        "kind": "occurrence",
+        "type": "collection:origin",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+          "origin": {
+            "binding": {
+              "object": "origin",
+              "occurrence": "origin"
+            },
+            "field": "/records/origin/origin",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2020-01-01T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/origin"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/origin/origin"
+          }
+        ]
+      },
+      {
+        "id": "snapshot",
+        "kind": "occurrence",
+        "type": "collection:history_snapshot",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+          "through": {
+            "binding": {
+              "object": "snapshot",
+              "occurrence": "snapshot"
+            },
+            "field": "/records/snapshot/through",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-14T23:59:59Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/snapshot"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/snapshot/through"
+          }
+        ]
+      },
+      {
+        "id": "history",
+        "kind": "assertion",
+        "type": "finding:history",
+        "attributes": {
+          "manifest_source_id": "manifest",
+          "manifest_field": "/history"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "manifest",
+            "field": "/history"
+          }
+        ]
+      },
+      {
+        "id": "seed",
+        "kind": "entity",
+        "type": "net:asn",
+        "attributes": {
+          "number": 64500
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/seed"
+          }
+        ]
+      },
+      {
+        "id": "receipt-infrastructure",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-infrastructure"
+          }
+        ]
+      },
+      {
+        "id": "infrastructure",
+        "kind": "entity",
+        "type": "inet:ipv4",
+        "attributes": {
+          "selector": {
+            "kind": "ipv4",
+            "normalization": "strict_dotted_decimal_v1",
+            "value": "192.0.2.20",
+            "provenance": {
+              "source": "report",
+              "record_id": "infrastructure",
+              "source_revision": "r1",
+              "field": "/records/infrastructure/selector",
+              "basis": "reported"
+            },
+            "representation": "dotted_decimal"
+          },
+          "availability_occurrence": "receipt-infrastructure"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "infrastructure",
+              "occurrence": "receipt-infrastructure"
+            },
+            "field": "/records/infrastructure/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/infrastructure"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/infrastructure/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-entry",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-entry"
+          }
+        ]
+      },
+      {
+        "id": "entry",
+        "kind": "entity",
+        "type": "reputation:entry",
+        "attributes": {
+          "collection_identity": "publisher-list-A",
+          "entry_identity": "entry-17",
+          "entry_revision": "entry-r1",
+          "availability_occurrence": "receipt-entry"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "entry",
+              "occurrence": "receipt-entry"
+            },
+            "field": "/records/entry/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/entry"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/entry/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-claim",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-claim"
+          }
+        ]
+      },
+      {
+        "id": "claim",
+        "kind": "assertion",
+        "type": "reputation:assertion",
+        "attributes": {
+          "subject_kind": "ipv4",
+          "claim_kind": "listing_status",
+          "time_basis": "established_state",
+          "assertion_namespace": "publisher-list-A",
+          "statement": "source reports listed status during April2024",
+          "source_scope": "specified entry subject only",
+          "entry_revision": "entry-r1",
+          "availability_occurrence": "receipt-claim"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "claim",
+              "occurrence": "receipt-claim"
+            },
+            "field": "/records/claim/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          },
+          "applies": {
+            "binding": {
+              "object": "infrastructure",
+              "occurrence": "claim"
+            },
+            "field": "/records/claim/applies",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "interval",
+            "interval_role": "validity",
+            "start": "2024-04-01T00:00:00Z",
+            "end": "2024-04-30T23:59:59Z",
+            "start_inclusive": true,
+            "end_inclusive": true
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/claim"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/claim/available"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/claim/applies"
+          }
+        ],
+        "subject": "infrastructure",
+        "object": "entry"
+      },
+      {
+        "id": "receipt-association",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-association"
+          }
+        ]
+      },
+      {
+        "id": "association",
+        "kind": "assertion",
+        "type": "network:asn_association",
+        "attributes": {
+          "role": "bgp_origin",
+          "vantage": "retained-route-observer",
+          "coverage": "entire_subject_scope",
+          "assertion_namespace": "route-source-A",
+          "availability_occurrence": "receipt-association"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "association",
+              "occurrence": "receipt-association"
+            },
+            "field": "/records/association/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          },
+          "applicable": {
+            "binding": {
+              "object": "infrastructure",
+              "occurrence": "association"
+            },
+            "field": "/records/association/applicable",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "interval",
+            "interval_role": "validity",
+            "start": "2024-01-01T00:00:00Z",
+            "end": "2026-12-31T23:59:59Z",
+            "start_inclusive": true,
+            "end_inclusive": true
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/association"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/association/available"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/association/applicable"
+          }
+        ],
+        "subject": "infrastructure",
+        "object": "seed"
+      }
+    ]
+  },
+  "query": {
+    "parameters": {
+      "seed": "seed",
+      "period": {
+        "start": "2024-04-01",
+        "end": "2024-04-30"
+      },
+      "period_origin": "case",
+      "claim_kind": "listing_status",
+      "reference_sources": [
+        "report"
+      ]
+    },
+    "limits": {
+      "max_bindings": 20000,
+      "max_results": 100
+    }
+  },
+  "preserved_source_bytes": {
+    "manifest": "{\"history\":{\"contract\":\"everypivot.finding_history\",\"version\":\"1.0\",\"history_id\":\"history\",\"revision\":\"r1\",\"collection_id\":\"fixture-collection\",\"scope_id\":\"synthetic-declared-origin-through-snapshot\",\"origin_id\":\"origin\",\"origin_sha256\":\"f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856\",\"through_id\":\"snapshot\",\"through_sha256\":\"2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4\",\"coverage\":\"complete_declared_scope\",\"qualification\":{\"id\":\"cti_asn_to_listed_infrastructure\",\"revision\":\"1.0\",\"contract_sha256\":\"3ca7f0848ac0d34d237a15613d3ddf3756886a4354999283ace0f4adac430788\"},\"establishments\":[]}}"
+  },
+  "claims": [
+
+  ],
+  "contract_path": "contracts/semantics/CTI_ASN_TO_LISTED_INFRASTRUCTURE.json",
+  "expected": {
+    "forms": [
+      "inet:ipv4"
+    ],
+    "bound_ids": [
+      "infrastructure"
+    ],
+    "execution_status": "complete",
+    "assessment_acceptance": "not_evaluated"
+  }
+}

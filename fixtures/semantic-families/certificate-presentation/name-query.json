@@ -1,0 +1,25 @@
+{
+  "parameters": {
+    "source_certificate": "cert-1",
+    "selector": {
+      "kind": "certificate_sha256",
+      "algorithm": "sha256",
+      "representation": "der",
+      "normalization": "exact_der_v1",
+      "scope": "whole_certificate",
+      "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+      "provenance": {
+        "source": "case-selection",
+        "record_id": "case-selected-certificate",
+        "source_revision": "case-r1",
+        "field": "/selected_certificate_sha256",
+        "basis": "reported"
+      }
+    },
+    "purpose": "certificate_name_association"
+  },
+  "limits": {
+    "max_bindings": 10000,
+    "max_results": 100
+  }
+}

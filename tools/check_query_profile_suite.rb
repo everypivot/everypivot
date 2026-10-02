@@ -6,23 +6,41 @@ require 'open3'
 require 'pathname'
 require 'rbconfig'
 require 'yaml'
+require_relative 'query_profile_traversal'
+require_relative 'json_schema_validator'
+require_relative 'utf8_text'
+require_relative 'stix_mapping_validation'
+include EveryPivot::QueryProfileTraversal
 
-repo_root = Pathname(__dir__).join('..').expand_path
+repo_root = Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path
 generator_path = repo_root.join('tools', 'generate_query_profile_demo.rb')
 stix_generator_path = repo_root.join('tools', 'generate_stix_mapping_profile_demo.rb')
 
 def load_yaml(path, errors)
-  YAML.safe_load(path.read, aliases: false)
+  YAML.safe_load(EveryPivot::Utf8Text.read(path), aliases: false)
+rescue EveryPivot::Utf8Text::Error => e
+  errors << e.message
+  {}
 rescue StandardError => e
   errors << "#{path}: YAML parse failed: #{e.message}"
   {}
 end
 
 def load_json(path, errors)
-  JSON.parse(path.read)
+  JSON.parse(EveryPivot::Utf8Text.read(path))
+rescue EveryPivot::Utf8Text::Error => e
+  errors << e.message
+  {}
 rescue StandardError => e
   errors << "#{path}: JSON parse failed: #{e.message}"
   {}
+end
+
+def load_text(path, errors)
+  EveryPivot::Utf8Text.read(path)
+rescue EveryPivot::Utf8Text::Error => e
+  errors << e.message
+  ''
 end
 
 def node_ids(nodes)
@@ -59,29 +77,6 @@ def cypher_list(values)
   "[#{values.map { |value| cypher_string(value) }.join(', ')}]"
 end
 
-def form_list(value)
-  value.to_s.split('|').map(&:strip).reject(&:empty?)
-end
-
-def relation_type(relation, strategy)
-  case strategy
-  when 'uppercase_relation'
-    relation.to_s.upcase.gsub(/[^A-Z0-9]+/, '_').gsub(/\A_+|_+\z/, '')
-  else
-    relation.to_s
-  end
-end
-
-def negative_lists_for_forms(negative_nodes, forms)
-  form_set = forms.map(&:to_s)
-  Array(negative_nodes).each_with_object([]) do |node, lists|
-    next unless node.is_a?(Hash)
-
-    list = node['list']
-    lists << list if form_set.include?(node['form'].to_s) && !list.to_s.empty?
-  end.uniq
-end
-
 def top_level_return_fields(query, result_alias)
   match = query.match(/RETURN \{\n(?<body>.*?)\n\} AS #{Regexp.escape(result_alias)}/m)
   return [] unless match
@@ -90,74 +85,6 @@ def top_level_return_fields(query, result_alias)
     field = line[/^  ([a-z_]+):/, 1]
     fields << field if field
   end
-end
-
-def fixture_targets(pattern, profile, fixture, errors)
-  hop = Array(pattern['hops']).first || {}
-  source_id = fixture.dig('parameters', 'source_id')
-  as_of = Date.iso8601(fixture.dig('parameters', 'as_of').to_s)
-  window_days = pattern.dig('constraints', 'temporal', 'window_days')
-  unless window_days.is_a?(Integer) && window_days.positive?
-    errors << 'fixture traversal requires a positive pattern temporal window_days'
-    return [[], []]
-  end
-
-  earliest_seen = as_of - window_days
-  relationship_type = relation_type(hop['via'], profile.dig('graph_model', 'relationship_type_strategy'))
-  nodes_by_id = Array(fixture['nodes']).each_with_object({}) do |node, nodes|
-    nodes[node['id']] = node if node.is_a?(Hash)
-  end
-  source = nodes_by_id[source_id]
-  source_forms = form_list(pattern['source'])
-  target_forms = form_list(hop['form'].to_s.empty? ? pattern['target'] : hop['form'])
-  negative_nodes = Array(pattern.dig('constraints', 'negative_nodes'))
-  source_negative_lists = negative_lists_for_forms(negative_nodes, source_forms)
-  target_negative_lists = negative_lists_for_forms(negative_nodes, target_forms)
-  included = []
-  suppressed = []
-
-  unless source && source_forms.include?(source['form'])
-    errors << 'fixture source node does not match pattern source form'
-    return [included, suppressed]
-  end
-
-  Array(fixture['relationships']).each do |relationship|
-    next unless relationship['type'] == relationship_type
-
-    target_id = if hop['direction'] == 'in'
-                  next unless relationship['to'] == source_id
-
-                  relationship['from']
-                else
-                  next unless relationship['from'] == source_id
-
-                  relationship['to']
-                end
-    target = nodes_by_id[target_id]
-    next unless target && target_forms.include?(target['form'])
-
-    seen = Date.iso8601(relationship.dig('properties', 'seen').to_s)
-    negative_property = profile.dig('graph_model', 'negative_node_list_property') || 'negative_node_list'
-    source_negative_list = source[negative_property]
-    target_negative_list = target[negative_property]
-    stale = seen < earliest_seen
-    suppressed_by_list =
-      (!source_negative_list.to_s.empty? && source_negative_lists.include?(source_negative_list)) ||
-      (!target_negative_list.to_s.empty? && target_negative_lists.include?(target_negative_list))
-
-    if stale || suppressed_by_list
-      suppressed << target['id']
-    else
-      included << target['id']
-    end
-  rescue Date::Error => e
-    errors << "fixture relationship date parse failed: #{e.message}"
-  end
-
-  [included.uniq.sort, suppressed.uniq.sort]
-rescue Date::Error => e
-  errors << "fixture parameter date parse failed: #{e.message}"
-  [[], []]
 end
 
 def repo_path(repo_root, value)
@@ -227,7 +154,7 @@ def check_target(repo_root, generator_path, profile_path, profile, target, error
   errors << "#{target_label}: pattern hop count does not match target shape" unless Array(pattern['hops']).length == shape['hop_count']
   errors << "#{target_label}: pattern hop direction does not match target shape" unless Array(pattern['hops']).first&.fetch('direction', nil) == shape['hop_direction']
   if shape['temporal_window_required']
-    errors << "#{target_label}: target requires temporal window_days" unless pattern.dig('constraints', 'temporal', 'window_days').is_a?(Integer)
+    errors << "#{target_label}: target requires temporal window_days" unless EveryPivot::JsonSchemaValidator.integer?(pattern.dig('constraints', 'temporal', 'window_days'))
   end
   simplifications = Array(target['graph_simplifications']).map(&:to_s)
   errors << "#{target_label}: target must document scalar negative-node-list simplification" unless simplifications.any? { |note| note.include?('negative_node_list is a scalar property') }
@@ -298,11 +225,11 @@ def check_target(repo_root, generator_path, profile_path, profile, target, error
     errors << "#{target_label}: generator failed: #{[stdout, stderr].reject(&:empty?).join("\n")}"
   end
 
-  generated = generated_path.file? ? generated_path.read : ''
-  fixture_load = fixture_load_path.file? ? fixture_load_path.read : ''
+  generated = generated_path.file? ? load_text(generated_path, errors) : ''
+  fixture_load = fixture_load_path.file? ? load_text(fixture_load_path, errors) : ''
   errors << "#{target_label}: missing generated query: #{generated_path}" if generated.empty?
   errors << "#{target_label}: missing fixture loader: #{fixture_load_path}" if fixture_load.empty?
-  errors << "#{target_label}: generated query is stale; regenerate with tools/generate_query_profile_demo.rb" if status.success? && stdout != generated
+  errors << "#{target_label}: generated query is stale; regenerate with tools/generate_query_profile_demo.rb" if status.success? && stdout.b != generated.b
 
   unless fixture_load.empty?
     errors << "#{target_label}: fixture loader must delete only fixture-scoped nodes" unless fixture_load.include?('MATCH (n:EveryPivotNode {fixture_id: $fixture_id})')
@@ -331,7 +258,7 @@ def check_target(repo_root, generator_path, profile_path, profile, target, error
     errors << "#{target_label}: generated query missing negative-node list: #{list}" unless list.to_s.empty? || generated.include?(list)
   end
 
-  window_days = pattern.dig('constraints', 'temporal', 'window_days')
+  window_days = pattern.dig('constraints', 'temporal', 'window_days').to_i
   errors << "#{target_label}: generated query missing temporal window #{window_days}" unless generated.include?("duration({days: #{window_days}})")
   source_forms = form_list(pattern['source'])
   target_forms = form_list(hop['form'].to_s.empty? ? pattern['target'] : hop['form'])
@@ -365,15 +292,18 @@ def check_target(repo_root, generator_path, profile_path, profile, target, error
     'match clause' => expected_match_clause,
     'source-form clause' => expected_source_clause,
     'target-form clause' => expected_target_clause,
-    'temporal-window clause' => expected_temporal_clause
+    'temporal-window clause' => expected_temporal_clause,
+    'temporal upper endpoint' => "  AND date(edge.#{seen_property}) <= as_of"
   }
-  if source_negative_lists.any?
-    expected_clauses['source negative-list suppression clause'] =
-      "  AND (source.#{negative_property} IS NULL OR NOT source.#{negative_property} IN #{cypher_list(source_negative_lists)})"
-  end
-  if target_negative_lists.any?
-    expected_clauses['target negative-list suppression clause'] =
-      "  AND (target.#{negative_property} IS NULL OR NOT target.#{negative_property} IN #{cypher_list(target_negative_lists)})"
+  [['source', source_forms], ['target', target_forms]].each do |variable, forms|
+    forms.each do |form|
+      lists = negative_lists_for_forms(pattern.dig('constraints', 'negative_nodes'), [form])
+      next if lists.empty?
+
+      guard = forms.length > 1 ? "#{variable}.#{form_property} <> #{cypher_string(form)} OR " : ''
+      expected_clauses["#{variable} #{form} negative-list suppression clause"] =
+        "  AND (#{guard}#{variable}.#{negative_property} IS NULL OR NOT #{variable}.#{negative_property} IN #{cypher_list(lists)})"
+    end
   end
   expected_clauses.each do |label, clause|
     errors << "#{target_label}: generated query missing #{label}: #{clause}" unless generated.include?(clause)
@@ -475,7 +405,7 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
   errors << "#{target_label}: pattern hop count does not match target shape" unless Array(pattern['hops']).length == shape['hop_count']
   errors << "#{target_label}: pattern hop direction does not match target shape" unless Array(pattern['hops']).first&.fetch('direction', nil) == shape['hop_direction']
   if shape['temporal_window_required']
-    errors << "#{target_label}: target requires temporal window_days" unless pattern.dig('constraints', 'temporal', 'window_days').is_a?(Integer)
+    errors << "#{target_label}: target requires temporal window_days" unless EveryPivot::JsonSchemaValidator.integer?(pattern.dig('constraints', 'temporal', 'window_days'))
   end
 
   hop = Array(pattern['hops']).first || {}
@@ -489,7 +419,7 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
   errors << "#{target_label}: target must document EveryPivot relation handling" unless simplifications.any? { |note| note.include?('x_everypivot_relation') && note.include?('related-to') }
   errors << "#{target_label}: target must document suppressed-target relationship omission" unless simplifications.any? { |note| note.include?('Suppressed targets') && note.include?('not emitted as STIX relationship objects') }
   errors << "#{target_label}: target must document no live OpenCTI integration" unless simplifications.any? { |note| note.include?('not a live OpenCTI connector') }
-  errors << "#{target_label}: target must document STIX UUIDv5 custom-hash exclusion" unless simplifications.any? { |note| note.include?('UUIDv5') && note.include?('x_imphash') && note.include?('not used as UUID inputs') }
+  errors << "#{target_label}: target must document STIX UUIDv5 hash selection" unless simplifications.any? { |note| note.include?('UUIDv5') && note.include?('x_imphash') && note.include?('lexical key order') }
   errors << "#{target_label}: target must document File SCO custom-property boundary" unless simplifications.any? { |note| note.include?('custom properties') && note.include?('observed-data') && note.include?('relationship') && note.include?('note') }
   errors << "#{target_label}: target must document observed-data source/target bundling simplification" unless simplifications.any? { |note| note.include?('source and target file SCOs') && note.include?('observed-data') }
   errors << "#{target_label}: target must document degree cap/top path limitation" unless simplifications.any? { |note| note.include?('degree_caps') && note.include?('outputs.top_paths') && note.include?('not enforced') }
@@ -541,12 +471,12 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
   errors << "#{target_label}: STIX mapping fixture must emit at least one relationship target" if expected_relationship_targets.empty?
 
   begin
-    as_of = Date.iso8601(fixture.dig('parameters', 'as_of').to_s)
-    window_days = pattern.dig('constraints', 'temporal', 'window_days')
+    as_of = EveryPivot::StixMappingValidation.as_of_date(fixture.dig('parameters', 'as_of'))
+    window_days = pattern.dig('constraints', 'temporal', 'window_days').to_i
     earliest_seen = as_of - window_days
     targets.each_with_index do |entry, index|
-      seen = Date.iso8601(entry['seen'].to_s)
-      stale = seen < earliest_seen
+      seen = EveryPivot::StixMappingValidation.observation_date(entry['seen'])
+      stale = seen < earliest_seen || seen > as_of
       if entry['include'] == true && stale
         errors << "#{target_label}: fixture targets[#{index}] is included despite being outside the temporal window"
       end
@@ -554,7 +484,7 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
         errors << "#{target_label}: fixture targets[#{index}] is suppressed without a declared reason"
       end
     end
-  rescue Date::Error => e
+  rescue ArgumentError => e
     errors << "#{target_label}: fixture date parse failed: #{e.message}"
   end
 
@@ -570,9 +500,9 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
     errors << "#{target_label}: STIX mapping generator failed: #{[stdout, stderr].reject(&:empty?).join("\n")}"
   end
 
-  generated = generated_path.file? ? generated_path.read : ''
+  generated = generated_path.file? ? load_text(generated_path, errors) : ''
   errors << "#{target_label}: missing generated STIX bundle: #{generated_path}" if generated.empty?
-  errors << "#{target_label}: generated STIX bundle is stale; regenerate with tools/generate_stix_mapping_profile_demo.rb" if status.success? && stdout != generated
+  errors << "#{target_label}: generated STIX bundle is stale; regenerate with tools/generate_stix_mapping_profile_demo.rb" if status.success? && stdout.b != generated.b
 
   bundle = generated.empty? ? {} : load_json(generated_path, errors)
   errors << "#{target_label}: generated bundle type must be bundle" unless bundle['type'] == 'bundle'
@@ -580,6 +510,7 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
   objects = Array(bundle['objects'])
   errors << "#{target_label}: generated bundle must contain objects" if objects.empty?
 
+  EveryPivot::StixMappingValidation.creator_errors(objects, fixture.dig('stix', 'created_by_ref')).each { |error| errors << "#{target_label}: #{error}" }
   allowed_types = Array(profile.dig('outputs', 'allowed_object_types'))
   object_types = objects.map { |object| object['type'] if object.is_a?(Hash) }.compact
   unexpected_types = object_types.uniq - allowed_types
@@ -617,6 +548,9 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
   errors << "#{target_label}: EveryPivot extension-definition description mismatch" unless toplevel_extension['description'] == extension_config['description']
   errors << "#{target_label}: EveryPivot extension-definition schema URL mismatch" unless toplevel_extension['schema'] == extension_config['schema_url']
 
+  errors << "#{target_label}: extension version mismatch" unless toplevel_extension['version'] == extension_config['version']
+  identities = objects.select { |object| object.is_a?(Hash) && object['type'] == 'identity' }
+  errors << "#{target_label}: creator Identity differs from fixture" unless identities == [fixture['extension_creator']]
   custom_properties = objects.flat_map do |object|
     object.is_a?(Hash) ? object.keys.select { |key| key.start_with?('x_everypivot_') } : []
   end.uniq.sort
@@ -626,6 +560,10 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
   end
   extension_schema_path = repo_root.join('adapters', 'opencti', 'schemas', 'x_everypivot_toplevel_extension.schema.json')
   extension_schema = load_json(extension_schema_path, errors)
+  extension_validator = EveryPivot::JsonSchemaValidator.new(extension_schema)
+  objects.each do |object|
+    extension_validator.validate(object).each { |error| errors << "#{target_label}: extension #{object['id']}: #{error}" }
+  end
   schema_properties = extension_schema['properties'].is_a?(Hash) ? extension_schema['properties'].keys.sort : []
   extension_properties = Array(toplevel_extension['extension_properties']).sort
   errors << "#{target_label}: EveryPivot extension schema $id mismatch" unless extension_schema['$id'] == toplevel_extension['schema']
@@ -643,7 +581,7 @@ def check_stix_target(repo_root, generator_path, profile_path, profile, target, 
     errors << "#{target_label}: generated file[#{index}] must not carry EveryPivot extension markers" if file.key?('extensions')
   end
 
-  (objects - extension_definitions - files).each_with_index do |object, index|
+  (objects - extension_definitions - files - identities).each_with_index do |object, index|
     next unless object.is_a?(Hash) && object.keys.any? { |key| key.start_with?('x_everypivot_') }
 
     extensions = object['extensions'].is_a?(Hash) ? object['extensions'] : {}

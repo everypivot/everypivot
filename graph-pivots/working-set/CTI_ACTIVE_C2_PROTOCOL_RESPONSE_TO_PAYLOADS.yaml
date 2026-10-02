@@ -1,6 +1,6 @@
 id: CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: working_set
 precision_tier: medium
 robustness_class: multi_hop_inference
@@ -10,18 +10,30 @@ hazards:
 - 'Protocol response reuse links observations, but it does not prove common operator control.'
 capability_requirements:
   required:
-  - 'active_protocol_probe_result_normalization'
-  - 'payload_decoding'
+  - active_protocol_probe_result_normalization
+  - payload_decoding
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'sample_hashing'
-  - 'payload_family_classification'
-  - 'decoy_response_suppression'
+  - sample_hashing
+  - payload_family_classification
 name: Active C2 Protocol Response -> Payloads
 category: CTI
-description: Pivot from a normalized active protocol response to decoded payloads, loaders, or configuration blobs recovered from that response.
+description: Return preserved payload or configuration bytes evidenced as recovered
+  from a particular protocol response. Direct configuration, payload-derived configuration
+  and the payload hash have explicit bindings; a marker alone does not classify bytes
+  or prove maliciousness.
 source: network:service:probe_response
 target: malware:payload|file:hash|malware:config
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json
+  sha256: d14e09a0f11eb4b7c682b8eae04e61d6a8c21fb9227d104229fe169ec31361cf
 hops:
 - via: contains_payload
   direction: out
@@ -30,38 +42,14 @@ hops:
   direction: out
   form: file:hash
 constraints:
-  temporal:
-    order:
-    - probe.sent <= response.observed <= payload.extracted
-    window_days: 30
-  degree_caps:
-    network:service:probe_response: 1000
-    malware:payload: 5000
-  negative_nodes:
-  - form: malware:payload
-    list: known_test_or_decoy_payloads
-  - form: file:hash
-    list: common_benign_payload_hashes
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- payload_hash
-- decode_method
-- response_marker_rarity
-- temporal_consistency
-- decoy_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 10
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - active_discovery_results
 - malware_analysis

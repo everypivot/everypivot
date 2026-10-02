@@ -1,0 +1,5175 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "FIN_CRYPTO_TX_TO_SANCTIONED",
+    "version": "3.0.0"
+  },
+  "description": "Source-qualified sanctions association and source-stated historical-status inquiries with explicit roles, selected reference revisions and amendment history. Matches never establish legal effect, status of another node, control, liability or accepted assessment.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-separate-retrospective-and-historical-status-sanctions-inquiries",
+  "parameters": {
+    "source": {
+      "type": "record_id",
+      "required": true,
+      "description": "Explicit source entity identity; source-qualified relations must independently establish every path."
+    },
+    "purpose": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "retrospective",
+        "historical_at",
+        "historical_some",
+        "historical_all"
+      ],
+      "description": "Retrospective retains dated source reports and attached corrections. Historical modes ask source-stated status and relevant applicability, never legal effect."
+    },
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Case-selected actual individual event period; historical_all additionally asks listed-subject status throughout the range, not continuous transactions."
+    },
+    "reference_sources": {
+      "type": "string_array",
+      "required": true,
+      "min_items": 1,
+      "unique_items": true,
+      "description": "Exact supplied source revision IDs eligible for every required path record; no automatic all-history expansion.",
+      "item_reference": "source"
+    },
+    "entry_revisions": {
+      "type": "string_array",
+      "required": true,
+      "min_items": 1,
+      "unique_items": true,
+      "description": "Exact revision-specific sanction:entry record IDs selected as reference, independently of activity dates.",
+      "item_reference": "record"
+    },
+    "exclude_source_classes": {
+      "type": "boolean",
+      "required": false,
+      "enum": [
+        false,
+        true
+      ],
+      "description": "Explicit reusable source policy; disabled by default. Unknown or conflicting membership is retained."
+    },
+    "source_classes": {
+      "type": "string_array",
+      "required": false,
+      "min_items": 1,
+      "unique_items": true,
+      "requires_when": {
+        "parameter": "exclude_source_classes",
+        "values": [
+          true
+        ]
+      },
+      "allowed_when": {
+        "parameter": "exclude_source_classes",
+        "values": [
+          true
+        ]
+      },
+      "description": "Exact source-reported class IDs for a deliberately selected revision-based filter; neither historical membership nor universal clearance is inferred."
+    },
+    "exclude_path_classes": {
+      "type": "boolean",
+      "required": false,
+      "enum": [
+        false,
+        true
+      ],
+      "description": "Explicit reusable path policy; disabled by default. Unknown or conflicting membership is retained."
+    },
+    "path_classes": {
+      "type": "string_array",
+      "required": false,
+      "min_items": 1,
+      "unique_items": true,
+      "requires_when": {
+        "parameter": "exclude_path_classes",
+        "values": [
+          true
+        ]
+      },
+      "allowed_when": {
+        "parameter": "exclude_path_classes",
+        "values": [
+          true
+        ]
+      },
+      "description": "Exact source-reported class IDs for a deliberately selected revision-based filter; neither historical membership nor universal clearance is inferred."
+    },
+    "exclude_event_classes": {
+      "type": "boolean",
+      "required": false,
+      "enum": [
+        false,
+        true
+      ],
+      "description": "Explicit reusable event policy; disabled by default. Unknown or conflicting membership is retained."
+    },
+    "event_classes": {
+      "type": "string_array",
+      "required": false,
+      "min_items": 1,
+      "unique_items": true,
+      "requires_when": {
+        "parameter": "exclude_event_classes",
+        "values": [
+          true
+        ]
+      },
+      "allowed_when": {
+        "parameter": "exclude_event_classes",
+        "values": [
+          true
+        ]
+      },
+      "description": "Exact source-reported class IDs for a deliberately selected revision-based filter; neither historical membership nor universal clearance is inferred."
+    }
+  },
+  "branches": [
+    {
+      "id": "retrospective",
+      "description": "An individual event remains a point occurrence. Historical all means listed-subject status throughout the requested period, not continuous events or common control.",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "crypto:address"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "seed.id"
+                },
+                "right": {
+                  "param": "source"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "retrospective"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "event",
+          "kind": "occurrence",
+          "types": [
+            "ledger:tx"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.subject"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.object"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.record_kind"
+                },
+                "right": {
+                  "literal": "individual_transfer"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.execution_state"
+                },
+                "right": {
+                  "literal": "completed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.environment"
+                },
+                "right": {
+                  "literal": "reported_real_network"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "event.attributes.transaction_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "event.attributes.transfer_unit_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "listed_subject",
+          "kind": "entity",
+          "types": [
+            "crypto:address"
+          ],
+          "where": {
+            "op": "any",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.subject"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "listed_subject.id"
+                    },
+                    "right": {
+                      "ref": "event.object"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.object"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "listed_subject.id"
+                    },
+                    "right": {
+                      "ref": "event.subject"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "sanction:entry"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry.id"
+                },
+                "right": {
+                  "param": "entry_revisions"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry_subject",
+          "kind": "assertion",
+          "types": [
+            "sanction:entry_subject"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.object"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.attributes.role"
+                },
+                "right": {
+                  "literal": "source_listed_subject"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry_subject.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "exact_source_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "status",
+          "kind": "assertion",
+          "types": [
+            "sanction:status"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.subject"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.object"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.status"
+                },
+                "right": {
+                  "literal": "listed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.list_id"
+                },
+                "right": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.entry_revision"
+                },
+                "right": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_receipt.subject"
+                },
+                "right": {
+                  "ref": "event.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "event_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "entry_subject_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.subject"
+                },
+                "right": {
+                  "ref": "entry_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "entry_subject_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "status_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.subject"
+                },
+                "right": {
+                  "ref": "status.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "status_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "source_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "source_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "path_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "path_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "event_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.subject"
+                },
+                "right": {
+                  "ref": "event.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "event_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "retrospective"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "seed"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "event"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "listed_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "status"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "event.times.occurred"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "event.times.published"
+        },
+        {
+          "ref": "event_receipt.times.received"
+        },
+        {
+          "ref": "entry_subject.times.published"
+        },
+        {
+          "ref": "entry_subject_receipt.times.received"
+        },
+        {
+          "ref": "status.times.published"
+        },
+        {
+          "ref": "status_receipt.times.received"
+        },
+        {
+          "ref": "event.times.occurred"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "event.times.published"
+          },
+          "right": {
+            "ref": "event_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "entry_subject.times.published"
+          },
+          "right": {
+            "ref": "entry_subject_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "status.times.published"
+          },
+          "right": {
+            "ref": "status_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "event.times.occurred"
+          },
+          "right": {
+            "ref": "event.times.published"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "event.times.occurred"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.applicable"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "event.times.published"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "event_receipt.times.received"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject.times.published"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject_receipt.times.received"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.published"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status_receipt.times.received"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status_receipt.id"
+          }
+        }
+      ],
+      "amendments": {
+        "support": [
+          "event",
+          "entry_subject",
+          "status"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "retain_reports"
+      },
+      "policies": [
+        {
+          "id": "source_reported_class",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_source_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "source_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "path_reported_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "listed_subject.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_path_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit path classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "path_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "event_reported_class",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "event.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_event_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit event classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "event_class.attributes.class_id"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "sanction:entry",
+        "binding": "entry",
+        "identity": [
+          {
+            "ref": "entry.id"
+          },
+          {
+            "ref": "seed.id"
+          },
+          {
+            "ref": "listed_subject.id"
+          },
+          {
+            "ref": "event.id"
+          },
+          {
+            "ref": "entry_subject.id"
+          },
+          {
+            "ref": "status.id"
+          },
+          {
+            "param": "purpose"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "source_reported_historical_association_with_amendment_context"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "source": {
+            "ref": "seed.id"
+          },
+          "listed_subject": {
+            "ref": "listed_subject.id"
+          },
+          "entry_record": {
+            "ref": "entry.id"
+          },
+          "list_id": {
+            "ref": "entry.attributes.list_id"
+          },
+          "entry_id": {
+            "ref": "entry.attributes.entry_id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "status_assertion": {
+            "ref": "status.id"
+          },
+          "status_applicability": {
+            "ref": "status.times.applicable"
+          },
+          "relationship_anchor": {
+            "ref": "event.id"
+          },
+          "time_meaning": {
+            "literal": "An individual event remains a point occurrence. Historical all means listed-subject status throughout the requested period, not continuous events or common control."
+          },
+          "scope_statement": {
+            "literal": "Explicit supplied source/entry revisions; no exhaustive external history, list clearance, status propagation, legal conclusion, confidence or accepted assessment."
+          },
+          "source_class_context": {
+            "ref": "source_class.attributes"
+          },
+          "path_class_context": {
+            "ref": "path_class.attributes"
+          },
+          "event_time": {
+            "ref": "event.times.occurred"
+          },
+          "event_context": {
+            "ref": "event.attributes"
+          },
+          "event_class_context": {
+            "ref": "event_class.attributes"
+          },
+          "path_class_subject": {
+            "ref": "path_class.subject"
+          },
+          "classification_knowledge_scope": {
+            "literal": "Selected source-revision class policies are explicitly revision-based context; no historical class membership or class availability at a knowledge cutoff is inferred."
+          }
+        }
+      }
+    },
+    {
+      "id": "historical_at",
+      "description": "An individual event remains a point occurrence. Historical all means listed-subject status throughout the requested period, not continuous events or common control.",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "crypto:address"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "seed.id"
+                },
+                "right": {
+                  "param": "source"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "historical_at"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "event",
+          "kind": "occurrence",
+          "types": [
+            "ledger:tx"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.subject"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.object"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.record_kind"
+                },
+                "right": {
+                  "literal": "individual_transfer"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.execution_state"
+                },
+                "right": {
+                  "literal": "completed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.environment"
+                },
+                "right": {
+                  "literal": "reported_real_network"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "event.attributes.transaction_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "event.attributes.transfer_unit_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "listed_subject",
+          "kind": "entity",
+          "types": [
+            "crypto:address"
+          ],
+          "where": {
+            "op": "any",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.subject"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "listed_subject.id"
+                    },
+                    "right": {
+                      "ref": "event.object"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.object"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "listed_subject.id"
+                    },
+                    "right": {
+                      "ref": "event.subject"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "sanction:entry"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry.id"
+                },
+                "right": {
+                  "param": "entry_revisions"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry_subject",
+          "kind": "assertion",
+          "types": [
+            "sanction:entry_subject"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.object"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.attributes.role"
+                },
+                "right": {
+                  "literal": "source_listed_subject"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry_subject.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "exact_source_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "status",
+          "kind": "assertion",
+          "types": [
+            "sanction:status"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.subject"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.object"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.status"
+                },
+                "right": {
+                  "literal": "listed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.list_id"
+                },
+                "right": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.entry_revision"
+                },
+                "right": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_receipt.subject"
+                },
+                "right": {
+                  "ref": "event.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "event_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "entry_subject_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.subject"
+                },
+                "right": {
+                  "ref": "entry_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "entry_subject_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "status_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.subject"
+                },
+                "right": {
+                  "ref": "status.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "status_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "source_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "source_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "path_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "path_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "event_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.subject"
+                },
+                "right": {
+                  "ref": "event.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "event_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "historical_at"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "seed"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "event"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "listed_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "status"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "event.times.occurred"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "status.times.applicable"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "at",
+            "at": {
+              "ref": "event.times.occurred"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "event.times.published"
+        },
+        {
+          "ref": "event_receipt.times.received"
+        },
+        {
+          "ref": "entry_subject.times.published"
+        },
+        {
+          "ref": "entry_subject_receipt.times.received"
+        },
+        {
+          "ref": "status.times.published"
+        },
+        {
+          "ref": "status_receipt.times.received"
+        },
+        {
+          "ref": "event.times.occurred"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "event.times.published"
+          },
+          "right": {
+            "ref": "event_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "entry_subject.times.published"
+          },
+          "right": {
+            "ref": "entry_subject_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "status.times.published"
+          },
+          "right": {
+            "ref": "status_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "event.times.occurred"
+          },
+          "right": {
+            "ref": "event.times.published"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "event.times.occurred"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.applicable"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "event.times.published"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "event_receipt.times.received"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject.times.published"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject_receipt.times.received"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.published"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status_receipt.times.received"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status_receipt.id"
+          }
+        }
+      ],
+      "amendments": {
+        "support": [
+          "event",
+          "entry_subject",
+          "status"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "require_unwithdrawn_in_scope"
+      },
+      "policies": [
+        {
+          "id": "source_reported_class",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_source_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "source_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "path_reported_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "listed_subject.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_path_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit path classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "path_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "event_reported_class",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "event.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_event_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit event classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "event_class.attributes.class_id"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "sanction:entry",
+        "binding": "entry",
+        "identity": [
+          {
+            "ref": "entry.id"
+          },
+          {
+            "ref": "seed.id"
+          },
+          {
+            "ref": "listed_subject.id"
+          },
+          {
+            "ref": "event.id"
+          },
+          {
+            "ref": "entry_subject.id"
+          },
+          {
+            "ref": "status.id"
+          },
+          {
+            "param": "purpose"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "source_stated_list_status_with_declared_time_qualification"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "source": {
+            "ref": "seed.id"
+          },
+          "listed_subject": {
+            "ref": "listed_subject.id"
+          },
+          "entry_record": {
+            "ref": "entry.id"
+          },
+          "list_id": {
+            "ref": "entry.attributes.list_id"
+          },
+          "entry_id": {
+            "ref": "entry.attributes.entry_id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "status_assertion": {
+            "ref": "status.id"
+          },
+          "status_applicability": {
+            "ref": "status.times.applicable"
+          },
+          "relationship_anchor": {
+            "ref": "event.id"
+          },
+          "time_meaning": {
+            "literal": "An individual event remains a point occurrence. Historical all means listed-subject status throughout the requested period, not continuous events or common control."
+          },
+          "scope_statement": {
+            "literal": "Explicit supplied source/entry revisions; no exhaustive external history, list clearance, status propagation, legal conclusion, confidence or accepted assessment."
+          },
+          "source_class_context": {
+            "ref": "source_class.attributes"
+          },
+          "path_class_context": {
+            "ref": "path_class.attributes"
+          },
+          "event_time": {
+            "ref": "event.times.occurred"
+          },
+          "event_context": {
+            "ref": "event.attributes"
+          },
+          "event_class_context": {
+            "ref": "event_class.attributes"
+          },
+          "path_class_subject": {
+            "ref": "path_class.subject"
+          },
+          "classification_knowledge_scope": {
+            "literal": "Selected source-revision class policies are explicitly revision-based context; no historical class membership or class availability at a knowledge cutoff is inferred."
+          }
+        }
+      }
+    },
+    {
+      "id": "historical_some",
+      "description": "An individual event remains a point occurrence. Historical all means listed-subject status throughout the requested period, not continuous events or common control.",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "crypto:address"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "seed.id"
+                },
+                "right": {
+                  "param": "source"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "historical_some"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "event",
+          "kind": "occurrence",
+          "types": [
+            "ledger:tx"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.subject"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.object"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.record_kind"
+                },
+                "right": {
+                  "literal": "individual_transfer"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.execution_state"
+                },
+                "right": {
+                  "literal": "completed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.environment"
+                },
+                "right": {
+                  "literal": "reported_real_network"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "event.attributes.transaction_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "event.attributes.transfer_unit_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "listed_subject",
+          "kind": "entity",
+          "types": [
+            "crypto:address"
+          ],
+          "where": {
+            "op": "any",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.subject"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "listed_subject.id"
+                    },
+                    "right": {
+                      "ref": "event.object"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.object"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "listed_subject.id"
+                    },
+                    "right": {
+                      "ref": "event.subject"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "sanction:entry"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry.id"
+                },
+                "right": {
+                  "param": "entry_revisions"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry_subject",
+          "kind": "assertion",
+          "types": [
+            "sanction:entry_subject"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.object"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.attributes.role"
+                },
+                "right": {
+                  "literal": "source_listed_subject"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry_subject.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "exact_source_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "status",
+          "kind": "assertion",
+          "types": [
+            "sanction:status"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.subject"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.object"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.status"
+                },
+                "right": {
+                  "literal": "listed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.list_id"
+                },
+                "right": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.entry_revision"
+                },
+                "right": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_receipt.subject"
+                },
+                "right": {
+                  "ref": "event.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "event_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "entry_subject_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.subject"
+                },
+                "right": {
+                  "ref": "entry_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "entry_subject_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "status_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.subject"
+                },
+                "right": {
+                  "ref": "status.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "status_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "source_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "source_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "path_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "path_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "event_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.subject"
+                },
+                "right": {
+                  "ref": "event.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "event_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "historical_some"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "seed"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "event"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "listed_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "status"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "event.times.occurred"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "status.times.applicable"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "at",
+            "at": {
+              "ref": "event.times.occurred"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "event.times.published"
+        },
+        {
+          "ref": "event_receipt.times.received"
+        },
+        {
+          "ref": "entry_subject.times.published"
+        },
+        {
+          "ref": "entry_subject_receipt.times.received"
+        },
+        {
+          "ref": "status.times.published"
+        },
+        {
+          "ref": "status_receipt.times.received"
+        },
+        {
+          "ref": "event.times.occurred"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "event.times.published"
+          },
+          "right": {
+            "ref": "event_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "entry_subject.times.published"
+          },
+          "right": {
+            "ref": "entry_subject_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "status.times.published"
+          },
+          "right": {
+            "ref": "status_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "event.times.occurred"
+          },
+          "right": {
+            "ref": "event.times.published"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "event.times.occurred"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.applicable"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "event.times.published"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "event_receipt.times.received"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject.times.published"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject_receipt.times.received"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.published"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status_receipt.times.received"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status_receipt.id"
+          }
+        }
+      ],
+      "amendments": {
+        "support": [
+          "event",
+          "entry_subject",
+          "status"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "require_unwithdrawn_in_scope"
+      },
+      "policies": [
+        {
+          "id": "source_reported_class",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_source_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "source_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "path_reported_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "listed_subject.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_path_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit path classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "path_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "event_reported_class",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "event.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_event_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit event classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "event_class.attributes.class_id"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "sanction:entry",
+        "binding": "entry",
+        "identity": [
+          {
+            "ref": "entry.id"
+          },
+          {
+            "ref": "seed.id"
+          },
+          {
+            "ref": "listed_subject.id"
+          },
+          {
+            "ref": "event.id"
+          },
+          {
+            "ref": "entry_subject.id"
+          },
+          {
+            "ref": "status.id"
+          },
+          {
+            "param": "purpose"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "source_stated_list_status_with_declared_time_qualification"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "source": {
+            "ref": "seed.id"
+          },
+          "listed_subject": {
+            "ref": "listed_subject.id"
+          },
+          "entry_record": {
+            "ref": "entry.id"
+          },
+          "list_id": {
+            "ref": "entry.attributes.list_id"
+          },
+          "entry_id": {
+            "ref": "entry.attributes.entry_id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "status_assertion": {
+            "ref": "status.id"
+          },
+          "status_applicability": {
+            "ref": "status.times.applicable"
+          },
+          "relationship_anchor": {
+            "ref": "event.id"
+          },
+          "time_meaning": {
+            "literal": "An individual event remains a point occurrence. Historical all means listed-subject status throughout the requested period, not continuous events or common control."
+          },
+          "scope_statement": {
+            "literal": "Explicit supplied source/entry revisions; no exhaustive external history, list clearance, status propagation, legal conclusion, confidence or accepted assessment."
+          },
+          "source_class_context": {
+            "ref": "source_class.attributes"
+          },
+          "path_class_context": {
+            "ref": "path_class.attributes"
+          },
+          "event_time": {
+            "ref": "event.times.occurred"
+          },
+          "event_context": {
+            "ref": "event.attributes"
+          },
+          "event_class_context": {
+            "ref": "event_class.attributes"
+          },
+          "path_class_subject": {
+            "ref": "path_class.subject"
+          },
+          "classification_knowledge_scope": {
+            "literal": "Selected source-revision class policies are explicitly revision-based context; no historical class membership or class availability at a knowledge cutoff is inferred."
+          }
+        }
+      }
+    },
+    {
+      "id": "historical_all",
+      "description": "An individual event remains a point occurrence. Historical all means listed-subject status throughout the requested period, not continuous events or common control.",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "crypto:address"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "seed.id"
+                },
+                "right": {
+                  "param": "source"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "historical_all"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "event",
+          "kind": "occurrence",
+          "types": [
+            "ledger:tx"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.subject"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.object"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.record_kind"
+                },
+                "right": {
+                  "literal": "individual_transfer"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.execution_state"
+                },
+                "right": {
+                  "literal": "completed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event.attributes.environment"
+                },
+                "right": {
+                  "literal": "reported_real_network"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "event.attributes.transaction_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "event.attributes.transfer_unit_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "listed_subject",
+          "kind": "entity",
+          "types": [
+            "crypto:address"
+          ],
+          "where": {
+            "op": "any",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.subject"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "listed_subject.id"
+                    },
+                    "right": {
+                      "ref": "event.object"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event.object"
+                    },
+                    "right": {
+                      "ref": "seed.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "listed_subject.id"
+                    },
+                    "right": {
+                      "ref": "event.subject"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "sanction:entry"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry.id"
+                },
+                "right": {
+                  "param": "entry_revisions"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry_subject",
+          "kind": "assertion",
+          "types": [
+            "sanction:entry_subject"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.object"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.attributes.role"
+                },
+                "right": {
+                  "literal": "source_listed_subject"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry_subject.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "exact_source_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "status",
+          "kind": "assertion",
+          "types": [
+            "sanction:status"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.subject"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.object"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.status"
+                },
+                "right": {
+                  "literal": "listed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.list_id"
+                },
+                "right": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.entry_revision"
+                },
+                "right": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_receipt.subject"
+                },
+                "right": {
+                  "ref": "event.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "event_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "entry_subject_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.subject"
+                },
+                "right": {
+                  "ref": "entry_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "entry_subject_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "status_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.subject"
+                },
+                "right": {
+                  "ref": "status.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "status_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "source_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "source_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "path_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "path_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "event_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.subject"
+                },
+                "right": {
+                  "ref": "event.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "event_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "historical_all"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "seed"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "event"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "listed_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "status"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "event.times.occurred"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "status.times.applicable"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "all"
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "event.times.published"
+        },
+        {
+          "ref": "event_receipt.times.received"
+        },
+        {
+          "ref": "entry_subject.times.published"
+        },
+        {
+          "ref": "entry_subject_receipt.times.received"
+        },
+        {
+          "ref": "status.times.published"
+        },
+        {
+          "ref": "status_receipt.times.received"
+        },
+        {
+          "ref": "event.times.occurred"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "event.times.published"
+          },
+          "right": {
+            "ref": "event_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "entry_subject.times.published"
+          },
+          "right": {
+            "ref": "entry_subject_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "status.times.published"
+          },
+          "right": {
+            "ref": "status_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "event.times.occurred"
+          },
+          "right": {
+            "ref": "event.times.published"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "event.times.occurred"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.applicable"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "event.times.published"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "event_receipt.times.received"
+          },
+          "object": {
+            "ref": "event.id"
+          },
+          "occurrence": {
+            "ref": "event_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject.times.published"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject_receipt.times.received"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.published"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status_receipt.times.received"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status_receipt.id"
+          }
+        }
+      ],
+      "amendments": {
+        "support": [
+          "event",
+          "entry_subject",
+          "status"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "require_unwithdrawn_in_scope"
+      },
+      "policies": [
+        {
+          "id": "source_reported_class",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_source_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "source_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "path_reported_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "listed_subject.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_path_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit path classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "path_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "event_reported_class",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "event.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_event_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit event classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "event_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "event_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "event_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "event_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "event_class.attributes.class_id"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "sanction:entry",
+        "binding": "entry",
+        "identity": [
+          {
+            "ref": "entry.id"
+          },
+          {
+            "ref": "seed.id"
+          },
+          {
+            "ref": "listed_subject.id"
+          },
+          {
+            "ref": "event.id"
+          },
+          {
+            "ref": "entry_subject.id"
+          },
+          {
+            "ref": "status.id"
+          },
+          {
+            "param": "purpose"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "source_stated_list_status_with_declared_time_qualification"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "source": {
+            "ref": "seed.id"
+          },
+          "listed_subject": {
+            "ref": "listed_subject.id"
+          },
+          "entry_record": {
+            "ref": "entry.id"
+          },
+          "list_id": {
+            "ref": "entry.attributes.list_id"
+          },
+          "entry_id": {
+            "ref": "entry.attributes.entry_id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "status_assertion": {
+            "ref": "status.id"
+          },
+          "status_applicability": {
+            "ref": "status.times.applicable"
+          },
+          "relationship_anchor": {
+            "ref": "event.id"
+          },
+          "time_meaning": {
+            "literal": "An individual event remains a point occurrence. Historical all means listed-subject status throughout the requested period, not continuous events or common control."
+          },
+          "scope_statement": {
+            "literal": "Explicit supplied source/entry revisions; no exhaustive external history, list clearance, status propagation, legal conclusion, confidence or accepted assessment."
+          },
+          "source_class_context": {
+            "ref": "source_class.attributes"
+          },
+          "path_class_context": {
+            "ref": "path_class.attributes"
+          },
+          "event_time": {
+            "ref": "event.times.occurred"
+          },
+          "event_context": {
+            "ref": "event.attributes"
+          },
+          "event_class_context": {
+            "ref": "event_class.attributes"
+          },
+          "path_class_subject": {
+            "ref": "path_class.subject"
+          },
+          "classification_knowledge_scope": {
+            "literal": "Selected source-revision class policies are explicitly revision-based context; no historical class membership or class availability at a knowledge cutoff is inferred."
+          }
+        }
+      }
+    }
+  ]
+}

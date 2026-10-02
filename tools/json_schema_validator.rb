@@ -1,5 +1,9 @@
 module EveryPivot
   class JsonSchemaValidator
+    def self.integer?(instance)
+      instance.is_a?(Integer) || (instance.is_a?(Float) && instance.finite? && instance == instance.to_i)
+    end
+
     def initialize(schema)
       @schema = schema
     end
@@ -136,9 +140,9 @@ module EveryPivot
       when 'string'
         instance.is_a?(String)
       when 'integer'
-        instance.is_a?(Integer)
+        self.class.integer?(instance)
       when 'number'
-        instance.is_a?(Numeric)
+        instance.is_a?(Integer) || (instance.is_a?(Float) && instance.finite?)
       when 'boolean'
         instance == true || instance == false
       when 'null'

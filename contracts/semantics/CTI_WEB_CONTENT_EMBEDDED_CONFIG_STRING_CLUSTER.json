@@ -1,0 +1,4502 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER",
+    "version": "3.0.0"
+  },
+  "description": "Source-qualified extraction findings over exact preserved content; 90-day inclusive UTC calendar lookback is applied to earliest complete finding in the supplied history, never to refreshed artifact sightings. Transformations are evidenced source reports, not extraction algorithms executed by this evaluator.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-general-uri-scope-for-resource-findings",
+  "parameters": {
+    "seed": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact supplied source entity; global discovery time is not per-artifact extraction time."
+    },
+    "history": {
+      "type": "record_id",
+      "required": true,
+      "description": "Preserved collection-scoped finding history covering the declared origin through snapshot; no global novelty claim."
+    },
+    "query_date": {
+      "type": "date",
+      "required": true,
+      "description": "Explicit inclusive UTC calendar end date for this pattern's retained complete-finding lookback."
+    },
+    "common_framework_or_analytics_tokens_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned common_framework_or_analytics_tokens revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    },
+    "common_hosting_or_cdn_domains_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned common_hosting_or_cdn_domains revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    }
+  },
+  "branches": [
+    {
+      "id": "url",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "malware:config:string",
+            "web:content:token"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:web_token_extraction"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "evidence:resource_content"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "extraction.subject"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "evidence:extracted_value"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "identifier",
+          "kind": "assertion",
+          "types": [
+            "capture:resource_identifier"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          }
+        },
+        {
+          "name": "url",
+          "kind": "entity",
+          "types": [
+            "inet:url"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "url.id"
+            },
+            "right": {
+              "ref": "identifier.object"
+            }
+          }
+        },
+        {
+          "name": "control_0_equivalence",
+          "kind": "assertion",
+          "types": [
+            "selector:equivalence"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_context"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector_context"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:selector_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_framework_or_analytics_tokens"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "common_framework_or_analytics_tokens_revision"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "content_matches",
+                        "record": {
+                          "ref": "control_0_equivalence.id"
+                        },
+                        "source": {
+                          "ref": "control_0_equivalence.attributes.content.source_id"
+                        },
+                        "sha256": {
+                          "ref": "control_0_equivalence.attributes.content.sha256"
+                        },
+                        "byte_length": {
+                          "ref": "control_0_equivalence.attributes.content.byte_length"
+                        },
+                        "representation": {
+                          "ref": "control_0_equivalence.attributes.content.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0_equivalence.attributes.profile"
+                        },
+                        "right": {
+                          "literal": "explicit_selector_equivalence_v1"
+                        }
+                      },
+                      {
+                        "op": "nonblank_text",
+                        "value": {
+                          "ref": "control_0_equivalence.attributes.method"
+                        }
+                      },
+                      {
+                        "op": "nonblank_text",
+                        "value": {
+                          "ref": "control_0_equivalence.attributes.method_version"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "contained_token"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.namespace"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.namespace"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.representation"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.profile"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.profile"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.value"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.value"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "seed.attributes.selector.namespace"
+            },
+            "right": {
+              "literal": [
+                "malware:config:string",
+                "web:content:token"
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.profile"
+            },
+            "right": {
+              "literal": "literal_exact_v1"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "seed.attributes.selector.value"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "seed.attributes.selector.representation"
+            },
+            "right": {
+              "literal": [
+                "utf8_literal",
+                "utf8_decoded"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.attributes.capture_id"
+            },
+            "right": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.attributes.uri.kind"
+            },
+            "right": {
+              "literal": "uri"
+            }
+          },
+          {
+            "op": "uri_component_equal",
+            "uri": {
+              "ref": "identifier.attributes.uri"
+            },
+            "component": "url",
+            "right": {
+              "ref": "url.attributes.value"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "identifier.times.collection_available"
+        },
+        {
+          "ref": "url.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "identifier.times.collection_available"
+          },
+          "object": {
+            "ref": "identifier.id"
+          },
+          "occurrence": {
+            "ref": "identifier.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "url.times.collection_available"
+          },
+          "object": {
+            "ref": "url.id"
+          },
+          "occurrence": {
+            "ref": "url.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_web_content_embedded_config_string_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "resource_token"
+          },
+          {
+            "ref": "input.attributes.capture_id"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "selector_identity": "identifier.attributes.uri"
+          },
+          {
+            "ref": "extraction.attributes.selector.namespace"
+          },
+          {
+            "ref": "extraction.attributes.selector.representation"
+          },
+          {
+            "ref": "extraction.attributes.selector.profile"
+          },
+          {
+            "ref": "extraction.attributes.selector.value"
+          }
+        ],
+        "support": [
+          "extraction",
+          "input",
+          "output",
+          "identifier",
+          "url"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 90
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "url",
+        "form": "inet:url",
+        "identity": [
+          {
+            "ref": "url.attributes.value"
+          },
+          {
+            "ref": "input.attributes.capture_id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "preserved_resource_contains_token"
+          },
+          "uri": {
+            "ref": "identifier.attributes.uri"
+          },
+          "capture": {
+            "ref": "input.id"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "common_framework_or_analytics_tokens",
+          "revision": "1.0",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.attributes.selector"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "resource",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "malware:config:string",
+            "web:content:token"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:web_token_extraction"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "evidence:resource_content"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "extraction.subject"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "evidence:extracted_value"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "identifier",
+          "kind": "assertion",
+          "types": [
+            "capture:resource_identifier"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          }
+        },
+        {
+          "name": "control_0_equivalence",
+          "kind": "assertion",
+          "types": [
+            "selector:equivalence"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_context"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector_context"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:selector_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_framework_or_analytics_tokens"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "common_framework_or_analytics_tokens_revision"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "content_matches",
+                        "record": {
+                          "ref": "control_0_equivalence.id"
+                        },
+                        "source": {
+                          "ref": "control_0_equivalence.attributes.content.source_id"
+                        },
+                        "sha256": {
+                          "ref": "control_0_equivalence.attributes.content.sha256"
+                        },
+                        "byte_length": {
+                          "ref": "control_0_equivalence.attributes.content.byte_length"
+                        },
+                        "representation": {
+                          "ref": "control_0_equivalence.attributes.content.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0_equivalence.attributes.profile"
+                        },
+                        "right": {
+                          "literal": "explicit_selector_equivalence_v1"
+                        }
+                      },
+                      {
+                        "op": "nonblank_text",
+                        "value": {
+                          "ref": "control_0_equivalence.attributes.method"
+                        }
+                      },
+                      {
+                        "op": "nonblank_text",
+                        "value": {
+                          "ref": "control_0_equivalence.attributes.method_version"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "contained_token"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.namespace"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.namespace"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.representation"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.profile"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.profile"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.value"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.value"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "seed.attributes.selector.namespace"
+            },
+            "right": {
+              "literal": [
+                "malware:config:string",
+                "web:content:token"
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.profile"
+            },
+            "right": {
+              "literal": "literal_exact_v1"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "seed.attributes.selector.value"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "seed.attributes.selector.representation"
+            },
+            "right": {
+              "literal": [
+                "utf8_literal",
+                "utf8_decoded"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.attributes.capture_id"
+            },
+            "right": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.attributes.uri.kind"
+            },
+            "right": {
+              "literal": "uri"
+            }
+          },
+          {
+            "op": "not",
+            "arg": {
+              "op": "uri_component_equal",
+              "uri": {
+                "ref": "identifier.attributes.uri"
+              },
+              "component": "url",
+              "right": {
+                "ref": "identifier.attributes.uri.value"
+              }
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "identifier.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "identifier.times.collection_available"
+          },
+          "object": {
+            "ref": "identifier.id"
+          },
+          "occurrence": {
+            "ref": "identifier.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_web_content_embedded_config_string_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "resource_token"
+          },
+          {
+            "ref": "input.attributes.capture_id"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "selector_identity": "identifier.attributes.uri"
+          },
+          {
+            "ref": "extraction.attributes.selector.namespace"
+          },
+          {
+            "ref": "extraction.attributes.selector.representation"
+          },
+          {
+            "ref": "extraction.attributes.selector.profile"
+          },
+          {
+            "ref": "extraction.attributes.selector.value"
+          }
+        ],
+        "support": [
+          "extraction",
+          "input",
+          "output",
+          "identifier"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 90
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "input",
+        "form": "evidence:resource_content",
+        "identity": [
+          {
+            "ref": "input.attributes.capture_id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "preserved_resource_contains_token"
+          },
+          "uri": {
+            "ref": "identifier.attributes.uri"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "common_framework_or_analytics_tokens",
+          "revision": "1.0",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.attributes.selector"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "domain",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "malware:config:string",
+            "web:content:token"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:web_token_extraction"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "evidence:resource_content"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "extraction.subject"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "evidence:extracted_value"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "identifier",
+          "kind": "assertion",
+          "types": [
+            "capture:resource_identifier"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          }
+        },
+        {
+          "name": "host",
+          "kind": "assertion",
+          "types": [
+            "uri:dns_host"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "host.subject"
+            },
+            "right": {
+              "ref": "identifier.id"
+            }
+          }
+        },
+        {
+          "name": "domain",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "domain.id"
+            },
+            "right": {
+              "ref": "host.object"
+            }
+          }
+        },
+        {
+          "name": "control_0_equivalence",
+          "kind": "assertion",
+          "types": [
+            "selector:equivalence"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0_equivalence.attributes.left_context"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector_context"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:selector_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_framework_or_analytics_tokens"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "common_framework_or_analytics_tokens_revision"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "content_matches",
+                        "record": {
+                          "ref": "control_0_equivalence.id"
+                        },
+                        "source": {
+                          "ref": "control_0_equivalence.attributes.content.source_id"
+                        },
+                        "sha256": {
+                          "ref": "control_0_equivalence.attributes.content.sha256"
+                        },
+                        "byte_length": {
+                          "ref": "control_0_equivalence.attributes.content.byte_length"
+                        },
+                        "representation": {
+                          "ref": "control_0_equivalence.attributes.content.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0_equivalence.attributes.profile"
+                        },
+                        "right": {
+                          "literal": "explicit_selector_equivalence_v1"
+                        }
+                      },
+                      {
+                        "op": "nonblank_text",
+                        "value": {
+                          "ref": "control_0_equivalence.attributes.method"
+                        }
+                      },
+                      {
+                        "op": "nonblank_text",
+                        "value": {
+                          "ref": "control_0_equivalence.attributes.method_version"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "control_0_equivalence.attributes.right_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_1",
+          "kind": "assertion",
+          "types": [
+            "policy:dns_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_hosting_or_cdn_domains"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.revision"
+                },
+                "right": {
+                  "param": "common_hosting_or_cdn_domains_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "control_1.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "domain.attributes.selector"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "contained_token"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.namespace"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.namespace"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.representation"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.profile"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.profile"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.value"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.value"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "seed.attributes.selector.namespace"
+            },
+            "right": {
+              "literal": [
+                "malware:config:string",
+                "web:content:token"
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.profile"
+            },
+            "right": {
+              "literal": "literal_exact_v1"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "seed.attributes.selector.value"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "seed.attributes.selector.representation"
+            },
+            "right": {
+              "literal": [
+                "utf8_literal",
+                "utf8_decoded"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.attributes.capture_id"
+            },
+            "right": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "identifier.attributes.uri.kind"
+            },
+            "right": {
+              "literal": "uri"
+            }
+          },
+          {
+            "op": "uri_component_equal",
+            "uri": {
+              "ref": "identifier.attributes.uri"
+            },
+            "component": "dns_host",
+            "right": {
+              "ref": "host.attributes.selector"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "host.attributes.selector"
+            },
+            "right": {
+              "ref": "domain.attributes.selector"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "identifier.times.collection_available"
+        },
+        {
+          "ref": "host.times.collection_available"
+        },
+        {
+          "ref": "domain.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "identifier.times.collection_available"
+          },
+          "object": {
+            "ref": "identifier.id"
+          },
+          "occurrence": {
+            "ref": "identifier.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "host.times.collection_available"
+          },
+          "object": {
+            "ref": "host.id"
+          },
+          "occurrence": {
+            "ref": "host.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "domain.times.collection_available"
+          },
+          "object": {
+            "ref": "domain.id"
+          },
+          "occurrence": {
+            "ref": "domain.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_web_content_embedded_config_string_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "resource_token_dns_host"
+          },
+          {
+            "ref": "input.attributes.capture_id"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "selector_identity": "identifier.attributes.uri"
+          },
+          {
+            "ref": "extraction.attributes.selector.namespace"
+          },
+          {
+            "ref": "extraction.attributes.selector.representation"
+          },
+          {
+            "ref": "extraction.attributes.selector.profile"
+          },
+          {
+            "ref": "extraction.attributes.selector.value"
+          },
+          {
+            "selector_identity": "host.attributes.selector"
+          }
+        ],
+        "support": [
+          "extraction",
+          "input",
+          "output",
+          "identifier",
+          "host",
+          "domain"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 90
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "domain",
+        "form": "inet:fqdn",
+        "identity": [
+          {
+            "ref": "domain.id"
+          },
+          {
+            "ref": "input.attributes.capture_id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "dns_hostname_component_of_resource_identifier"
+          },
+          "uri": {
+            "ref": "identifier.attributes.uri"
+          },
+          "capture": {
+            "ref": "input.id"
+          },
+          "association": {
+            "ref": "host.id"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "common_framework_or_analytics_tokens",
+          "revision": "1.0",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.attributes.selector"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_framework_or_analytics_tokens"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "any",
+                    "args": [
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "seed.attributes.selector_context"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "all",
+                        "args": [
+                          {
+                            "op": "content_matches",
+                            "record": {
+                              "ref": "control_0_equivalence.id"
+                            },
+                            "source": {
+                              "ref": "control_0_equivalence.attributes.content.source_id"
+                            },
+                            "sha256": {
+                              "ref": "control_0_equivalence.attributes.content.sha256"
+                            },
+                            "byte_length": {
+                              "ref": "control_0_equivalence.attributes.content.byte_length"
+                            },
+                            "representation": {
+                              "ref": "control_0_equivalence.attributes.content.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0_equivalence.attributes.profile"
+                            },
+                            "right": {
+                              "literal": "explicit_selector_equivalence_v1"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method"
+                            }
+                          },
+                          {
+                            "op": "nonblank_text",
+                            "value": {
+                              "ref": "control_0_equivalence.attributes.method_version"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.namespace"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.namespace"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.representation"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.representation"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.profile"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.profile"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector.value"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_selector.value"
+                            }
+                          },
+                          {
+                            "op": "eq",
+                            "left": {
+                              "ref": "control_0.attributes.selector_context"
+                            },
+                            "right": {
+                              "ref": "control_0_equivalence.attributes.right_context"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "common_hosting_or_cdn_domains",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "selector_identity": "domain.attributes.selector"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_hosting_or_cdn_domains"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "dns_name"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "control_1.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "domain.attributes.selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_hosting_or_cdn_domains"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "dns_name"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "control_1.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "domain.attributes.selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_hosting_or_cdn_domains"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "dns_name"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "control_1.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "domain.attributes.selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

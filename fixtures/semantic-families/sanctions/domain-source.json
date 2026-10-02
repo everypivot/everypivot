@@ -1,0 +1,132 @@
+{
+  "fixture_type": "independently_authored_synthetic_sanctions_case",
+  "family": "domain",
+  "scope": "Hypothetical normalized records, not actual payments, list designations, source truth or native runtime acceptance.",
+  "claims": {
+    "seed": {
+      "kind": "entity",
+      "type": "inet:fqdn",
+      "name": "Selected source"
+    },
+    "listed-subject": {
+      "kind": "entity",
+      "type": "org:org",
+      "name": "Actually identified list subject"
+    },
+    "relationship": {
+      "kind": "assertion",
+      "type": "inet:domain_registration",
+      "assertion_namespace": "domain:relationship",
+      "role": "registrant_of_record",
+      "identity_basis": "registry_identifier",
+      "provider_context": "shared_service",
+      "published": "2026-09-02T00:00:00Z",
+      "applicable": {
+        "start": "2024-01-01T00:00:00Z",
+        "end": "2024-12-31T23:59:59Z"
+      },
+      "subject": "seed",
+      "object": "listed-subject"
+    },
+    "lei": {
+      "kind": "entity",
+      "type": "lei:record",
+      "identifier": "998800SYNTHETIC00321",
+      "issued": "2026-01-01"
+    },
+    "lei-identity": {
+      "kind": "assertion",
+      "type": "lei:entity_identity",
+      "assertion_namespace": "domain:lei-identity",
+      "role": "identifies_same_legal_entity",
+      "basis": "documented_continuity",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "listed-subject",
+      "object": "lei"
+    },
+    "entry": {
+      "kind": "entity",
+      "type": "sanction:entry",
+      "list_id": "synthetic-list",
+      "entry_id": "synthetic-entry-1",
+      "entry_revision": "revision-2026-09-02"
+    },
+    "entry-subject": {
+      "kind": "assertion",
+      "type": "sanction:entry_subject",
+      "assertion_namespace": "domain:entry-subject",
+      "role": "source_listed_subject",
+      "identity_basis": "exact_source_identifier",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "listed-subject",
+      "object": "entry"
+    },
+    "status": {
+      "kind": "assertion",
+      "type": "sanction:status",
+      "assertion_namespace": "domain:status",
+      "status": "listed",
+      "list_id": "synthetic-list",
+      "entry_revision": "revision-2026-09-02",
+      "published": "2026-09-02T00:00:00Z",
+      "applicable": {
+        "start": "2026-09-01T00:00:00Z",
+        "end": "2026-12-31T23:59:59Z"
+      },
+      "subject": "entry",
+      "object": "listed-subject"
+    },
+    "relationship-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "domain:relationship-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "relationship"
+    },
+    "lei-identity-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "domain:lei-identity-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "lei-identity"
+    },
+    "entry-subject-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "domain:entry-subject-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "entry-subject"
+    },
+    "status-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "domain:status-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "status"
+    },
+    "source-class": {
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "assertion_namespace": "domain:source-class",
+      "class_id": "shared_provider",
+      "policy_basis": "selected_source_revision",
+      "membership": "member",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "seed"
+    },
+    "path-class": {
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "assertion_namespace": "domain:path-class",
+      "class_id": "shared_intermediary",
+      "policy_basis": "selected_source_revision",
+      "membership": "member",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "listed-subject"
+    }
+  }
+}

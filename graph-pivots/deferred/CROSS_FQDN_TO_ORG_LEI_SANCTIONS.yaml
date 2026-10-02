@@ -1,27 +1,46 @@
 id: CROSS_FQDN_TO_ORG_LEI_SANCTIONS
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: missing_negative_controls
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'rdap_enrichment'
-  - 'lei_resolution'
-  - 'sanctions_list_access'
+  - rdap_enrichment
+  - lei_resolution
+  - sanctions_list_access
+  - semantic_execution_contract_v1
+  - source_revision_scoped_relations
+  - explicit_temporal_applicability
+  - amendment_context
   optional:
-  - 'privacy_service_suppression'
-  - 'registrar_reseller_context'
+  - privacy_service_suppression
+  - registrar_reseller_context
 hazards:
-- RDAP registrants may be privacy-proxied, stale, reseller-owned, common service providers, or same-name collisions rather than the domain controller.
-- LEI and sanctions joins are temporal; corroborate current registration evidence and avoid treating intermediary links as direct control.
-- Suppress privacy proxies, registrars, resellers, service providers, and same-name organization collisions before sanctions propagation.
-name: FQDN → RDAP Org → LEI → Sanctions
+- RDAP registrants may be privacy-proxied, stale, reseller-owned, common service providers,
+  or same-name collisions rather than the domain controller.
+- LEI and sanctions joins are temporal; corroborate current registration evidence
+  and avoid treating intermediary links as direct control.
+- Source-reported identity, relationship and list status require separate evidence;
+  no traversal supplies legal exposure, liability, control, source independence or
+  accepted assessment status.
+- A selected historical-status inquiry requires the actual applicable relationship
+  and list intervals. Later publication, receipt and correction do not backdate analyst
+  knowledge or refresh activity.
+name: Domain → Reported Organization → Sanctions Entries
 category: CROSS
-description: Bridge a domain to its org via RDAP, map to LEI, and screen against sanctions.
+description: Follow a dated source-reported domain/organization relationship and explicit
+  legal-entity correspondence to selected sanctions entry revisions. Preserve the
+  relationship role and period; domain association does not establish ownership or
+  liability.
 source: inet:fqdn
 target: sanction:entry
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CROSS_FQDN_TO_ORG_LEI_SANCTIONS.json
+  sha256: 0405fcf986d3f87bea6cf4a3194892debaa68f48863198e68873da7e75f10a5c
 hops:
 - via: registered_to
   direction: out
@@ -33,35 +52,14 @@ hops:
   direction: out
   form: sanction:entry
 constraints:
-  temporal:
-    order:
-    - fqdn.created <= sanction.listed
-    window_days: 3650
-  degree_caps:
-    inet:fqdn: 10000
-  negative_nodes:
-  - form: org:org
-    list: privacy_protect_whois
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - rdap
 - lei

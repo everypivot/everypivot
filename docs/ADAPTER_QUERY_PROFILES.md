@@ -2,7 +2,7 @@
 
 ## Purpose
 
-EP-WP15 starts the execution-adapter track without changing pattern semantics.
+Query and mapping profiles describe bounded backend capabilities without changing pattern semantics.
 The public contract is:
 
 - pattern YAML remains backend-neutral;
@@ -84,6 +84,16 @@ not yet enforce `temporal.order`, `degree_caps`, or `outputs.top_paths`. Those
 omissions are declared in each target's `graph_simplifications` and must not be
 treated as complete operational semantics.
 
+The Neo4j pilot uses calendar dates, with an inclusive interval
+`[as_of - window_days, as_of]`. Future observations are outside the requested
+window; there is no clock-skew allowance. Fixture parameters and relationship
+`seen` values must be valid `YYYY-MM-DD` strings. Timestamps, time zones and
+sub-day precision are unsupported by this date-only profile and the reference
+checker rejects them. Native consumers must validate this input contract before
+running generated Cypher; a date window does not establish that a source was
+available at an earlier event time. Native Neo4j acceptance remains a separate
+smoke procedure below.
+
 The SSH host-key fixture behaviourally exercises target-side negative-list
 suppression. The email-originating-IP target has source-form negative nodes; its
 positive fixture verifies the generated source-side suppression clause but does
@@ -134,6 +144,7 @@ generated artifacts:
 
 ```bash
 ruby tools/check_query_profile_suite.rb
+ruby tools/test_validation_boundaries.rb
 ```
 
 The check compares the committed query to regenerated output and verifies that
@@ -170,23 +181,15 @@ inputs; the helper owns fixture and query file selection.
 
 ## Optional STIX Validation
 
-The repository does not require external STIX validation for normal checks. For
-incubator review of generated STIX bundles, maintainers can run the OASIS
-`stix2-validator` through `uv run`.
-
-The current `uv` wheel for `stix2-validator` may not include the bundled STIX
-JSON schemas. If direct validation fails with a missing
-`cyber-observable-core.json` schema, use a temporary overlay seeded from the
-official OASIS STIX JSON schemas repository:
+External STIX validation is optional. Maintainers can run the OASIS
+`stix2-validator` against generated bundles. If its installation lacks
+`cyber-observable-core.json`, provide the official STIX 2.1 JSON schemas from
 [`oasis-open/cti-stix2-json-schemas`](https://github.com/oasis-open/cti-stix2-json-schemas).
-In the 2026-05-27 incubator check, the generated OpenCTI/STIX bundle validated
-as STIX 2.1 when those schemas were available. After the follow-up hardening
-pass, file-SCO UUIDv5 inputs exclude custom hash keys, `x_everypivot_*`
-properties are kept off File SCOs, and strict validation passed without
-disabled best-practice checks.
+Schema-validator success alone does not establish full specification conformance
+or native OpenCTI compatibility. The bounded profile also checks creator closure,
+File identity, extension fields and timestamp handling.
 
-When the validator package can see the STIX 2.1 schemas, the intended incubator
-check is:
+With the STIX 2.1 schemas available, run:
 
 ```bash
 uv run --with stix2-validator stix2_validator \
@@ -195,45 +198,31 @@ uv run --with stix2-validator stix2_validator \
   adapters/opencti/generated/CTI_SAMPLE_IMPHASH_CLUSTER.bundle.json
 ```
 
-## Contract Review Status
+## Query-profile coverage
 
-The Neo4j/Cypher contract is accepted for EP-WP15 second-adapter planning as of
-2026-05-26. The acceptance record is
-[`docs/assessments/2026-05-26/neo4j_cypher_contract_review.md`](assessments/2026-05-26/neo4j_cypher_contract_review.md).
+The three-target Neo4j/Cypher pilot has a
+[historical contract review](assessments/2026-05-26/neo4j_cypher_contract_review.md)
+covering repository-local profile checks, synthetic fixtures and strict corpus
+validation. That record does not establish live runtime correctness for arbitrary
+graph models or execution of the optional `cypher-shell` path.
 
-Acceptance is based on repository-local verification of the query-profile
-contract, fixture suite, and strict corpus validation. It is not a claim that
-generated Cypher is production-correct for every Neo4j graph model, and it does
-not imply that the optional live `cypher-shell` smoke path was run.
+## OpenCTI/STIX mapping scope
 
-## Second Adapter Decision
-
-The second adapter target is OpenCTI/STIX-side mapping coverage.
-
-Initial scope:
-
-- define a mapping/profile shape outside pattern YAML;
-- start with a narrow synthetic fixture slice for
-  `CTI_SAMPLE_IMPHASH_CLUSTER`;
-- map EveryPivot forms and bounded traversal output into STIX/OpenCTI-side
-  observable or relationship records without adding attribution, maliciousness,
-  compromise, ownership, runtime-confidence, or final-assessment semantics;
-- preserve hazards, caveats, blocked assertions, and source fixture boundaries;
-- do not build a live OpenCTI connector, importer, or server integration in the
-  first slice.
-
-This choice gives the adapter track a CTI object-model pressure test after the
-Neo4j graph-query pilot, without making STIX/OpenCTI canonical for the corpus.
+The OpenCTI/STIX profile maps a bounded synthetic `CTI_SAMPLE_IMPHASH_CLUSTER`
+fixture. It preserves EveryPivot hazards and blocked assertions, with no live
+connector, importer, server integration, workflow state or assessment authority.
+STIX/OpenCTI is a backend mapping rather than the corpus's canonical model.
 
 Current status:
 
 - `opencti_stix_v0` maps the bounded `CTI_SAMPLE_IMPHASH_CLUSTER` fixture into
   a STIX 2.1 bundle containing file, observed-data, relationship, and note
-  objects;
+  objects plus an extension-definition and its included creator Identity;
 - EveryPivot relation semantics are carried in `x_everypivot_relation` while
   the STIX relationship type remains `related-to`;
 - generated file SCO IDs are UUIDv5-derived from STIX 2.1 ID-contributing file
-  properties; custom `x_imphash` hash keys are not UUID inputs;
+  properties; one hash is chosen by MD5/SHA-1/SHA-256/SHA-512 priority,
+  then lexical key order including custom `x_imphash`;
 - `x_everypivot_*` custom properties are carried on observed-data,
   relationship, and note objects, and are covered by a generated
   `toplevel-property-extension` definition plus local schema document;
@@ -265,3 +254,33 @@ This pilot does not:
 - execute against live external data;
 - emit scores, final assessments, actor attribution, maliciousness, compromise,
   or ownership claims.
+
+### STIX conformance and mapping migration
+
+The historical six-object format omitted the extension-definition creator
+required by STIX 2.1 OS section 7.3.1. The 0.2.1 profile includes the EveryPivot
+Project group Identity and a distinct replacement extension identifier.
+Historical-format and synthetic-creator inputs remain regression fixtures;
+neither establishes factual creator provenance. See
+[the migration record](../adapters/opencti/MIGRATION.md).
+
+The generator and suite apply the extension-property schema and validate complete
+calendar/timestamp values. Fixture checks use both inclusive window endpoints.
+Serialization maps selected entries without performing traversal. Mapping profile
+0.2.1 and extension schema 0.1.0 are separate version identities. Native OpenCTI
+import, persistence, export and replay remain untested.
+
+## Separate semantic evidence adapter
+
+The independently versioned `adapters/semantic-profiles/neo4j_semantic_evidence_v1.json`
+profile is hybrid normalized-evidence storage/readback followed by the portable
+Ruby evaluator. Its explicit admission manifest currently covers exact client
+JA3 and server JA3S contracts only. It checks graph identity/reference round
+trips; it does not execute the semantic grammar in Cypher or parse/authenticate
+PCAP, client/server logs or external feeds. Native acceptance must be bound to
+the exact runtime, adapter, contracts, fixtures and executor hashes; an older
+checkpoint is not acceptance of a changed implementation.
+
+This separate profile does not expand the original three-target one-hop pilot,
+its calendar-date window, or the OpenCTI/STIX mapping. It makes no statement of
+native acceptance for the remaining focused families or other consumers.

@@ -8,11 +8,15 @@ require 'digest'
 require 'rubygems/package'
 require 'tmpdir'
 require 'zlib'
+require_relative 'utf8_text'
 
 def parse_json(path, errors)
-  JSON.parse(path.read)
+  JSON.parse(EveryPivot::Utf8Text.read(path))
 rescue Errno::ENOENT
   errors << "Missing #{path}"
+  {}
+rescue EveryPivot::Utf8Text::Error => e
+  errors << e.message
   {}
 rescue JSON::ParserError => e
   errors << "Invalid JSON in #{path}: #{e.message}"
@@ -89,7 +93,7 @@ def compare_tar_gz_content(errors, label, expected, actual)
 end
 
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path,
+  repo_root: Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path,
   preview: false
 }
 

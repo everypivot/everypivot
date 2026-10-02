@@ -5,6 +5,7 @@ require 'optparse'
 require 'pathname'
 require 'tmpdir'
 require 'uri'
+require_relative 'utf8_text'
 
 STAGED_ARTIFACTS = %w[
   registry-index.json
@@ -26,6 +27,13 @@ PREVIEW_LEAK_MARKERS = %w[
   pattern-sources.preview
   pivot-pattern.schema.preview
 ].freeze
+
+def read_text(path, errors)
+  EveryPivot::Utf8Text.read(path)
+rescue EveryPivot::Utf8Text::Error => e
+  errors << e.message
+  ''
+end
 
 def local_url?(value)
   return false if value.empty? || value.start_with?('#', '//')
@@ -100,7 +108,7 @@ def audit_local_reference(errors, root, source_file, relative_source, attribute,
 end
 
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path
+  repo_root: Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path
 }
 
 OptionParser.new do |parser|
@@ -118,7 +126,7 @@ Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
   staging_parent = Pathname(tmp)
   staging_root = copy_site_to_staging(repo_root, staging_parent)
   homepage = staging_root.join('index.html')
-  homepage_text = homepage.read
+  homepage_text = read_text(homepage, errors)
 
   STAGED_ARTIFACTS.each do |name|
     staged = staging_root.join('artifacts', name)
@@ -145,7 +153,7 @@ Dir.mktmpdir('everypivot-site-link-audit') do |tmp|
   Dir.glob(staging_root.join('**', '*.html').to_s).sort.each do |html_path|
     source_file = Pathname(html_path)
     relative_source = source_file.relative_path_from(staging_root).to_s
-    text = source_file.read
+    text = read_text(source_file, errors)
 
     text.scan(/(?<![\w-])(href|src)\s*=\s*(['"])(.*?)\2/i) do |attribute, _quote, raw_value|
       audit_local_reference(errors, staging_root, source_file, relative_source, attribute, raw_value)

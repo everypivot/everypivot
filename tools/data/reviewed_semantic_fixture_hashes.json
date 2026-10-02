@@ -1,0 +1,2176 @@
+{
+  "contract": "everypivot.reviewed_synthetic_fixture_hashes",
+  "version": "1.0",
+  "review_scope": "Exactly the 80 retained semantic-family JSON files listed below; local synthetic inputs only. This records hash derivation and reviewed content, not source authenticity, runtime acceptance or an approval to regenerate exceptions.",
+  "inventory": {
+    "fixtures/semantic-families/certificate-presentation/certificates.json": "341b3abc13a4d368acc75c7952f7fb46a88471d57af5aaa51bcafe5a1c7bbe7f",
+    "fixtures/semantic-families/certificate-presentation/evidence.json": "8f709a972d92e390dfa960559145c2a2816c5d52651007002727d16c95297d09",
+    "fixtures/semantic-families/certificate-presentation/exact-query.json": "5a4506ca00535047d44e7e075def8df9c13b3717a819b409e2060257dd583dde",
+    "fixtures/semantic-families/certificate-presentation/expected.json": "7a97765fc3aa0f0576c3049d6194e86021616532fb2da3baf4b0e9ec55a02f24",
+    "fixtures/semantic-families/certificate-presentation/name-query.json": "9259e1214d6627be05b7af15c86b6d1fbb16f0db7ef15e3bf0ce9941cd693313",
+    "fixtures/semantic-families/certificate-presentation/source.json": "78b8ac6eb76273c023d3d0d3eba34010498e9b812a6697836de8e95ae42d8ab2",
+    "fixtures/semantic-families/certificate-presentation/spki-query.json": "932f185804de9e70254f1e9940b41d19352e5c685a2dcb32d3236be377de2f6c",
+    "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json": "b9bef64ca8d36bd885ebaed2a9a19144518ea6a1ba1e6d66c9b0b44457ef8b46",
+    "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json": "0b7cd48371d810f0fd57eb2d083bbe771ed5b93c5146292e516aaea578e18b0e",
+    "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json": "fc45d1cfeccc70cc337046567553904d05e388cebb565ffafaf7c763eb163efb",
+    "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json": "dcb7f1a52a6e742fe718cf1d227f727f854056cbecfb5a44bc7939c73cbcf3f0",
+    "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json": "edede76caded4df8fefadd3e0e2c2615ed725a2608eddf3a6dcc981aecc837c8",
+    "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json": "edf440e5196fac5e95aa139c2df706110326b8243304fd54e38032725fe92e21",
+    "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json": "ebba9f463749ee0b3fa84d27b31e0341f2e7c420d80b2b4ba424a858026caf71",
+    "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json": "acb330f881a20f7f6a222bad0cdfa6dc6e72aafe5e7b9f73c5b624cfb51264e5",
+    "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json": "39dabb8d0dbc5c0d2ce84bc7f0aa1787a7bc8518105a46d47e9dff10d647a06e",
+    "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json": "fba45db38fd91f8a940e5f693759bd8716eb7e741e75a98cbd0901e39d15092b",
+    "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json": "32b1c3bf01c9161a349dae25d67848b8e097b866a62d59cf972de535be939a85",
+    "fixtures/semantic-families/ja3/client-query.json": "4fe330db5a384cb9406c483fb793ccc4cd4c9b74719e2825c824d557cf698581",
+    "fixtures/semantic-families/ja3/evidence.json": "13de94b7704113ea520a7cd31f0afcbed10376554067e381b0e5ccb2d4773398",
+    "fixtures/semantic-families/ja3/expected.json": "219bf19675f8fd6ee28907a6f9bd8db4f56742b4869ebba035e8b15a9e56ee4f",
+    "fixtures/semantic-families/ja3/server-query.json": "1aa7f8fd499c872a1d471690273e6a9966b7cb7764ae8f26d96aae96909a9a5f",
+    "fixtures/semantic-families/ja3/source.json": "9665a3e2a4674e7e58b466c43482d7a764440969ea09b96d53ea09cadc4bb002",
+    "fixtures/semantic-families/package-repository/CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA.json": "28e40ba77ab6401bf4d3cef00709fa4de67abe2f2a4fce5c4c1318ad82d8e362",
+    "fixtures/semantic-families/package-repository/SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA.json": "1256cd68585ed7c53896228bd47c9557e2a18cd2557712d3fa22ef5860e2117f",
+    "fixtures/semantic-families/result-bindings/cases/creative-reference.json": "371ab661c793f482b887c5b33c156bc40252c073a99389641ed735796dd3644c",
+    "fixtures/semantic-families/result-bindings/cases/creative-request.json": "9761c48c364c54631bf0bb1a5323f6f963c88575f90ab15706324bb5e03ed7bb",
+    "fixtures/semantic-families/result-bindings/cases/kit-archive.json": "7a66f54cbf4089b658a726f474cef5e577fddd88c8431bd057bf48b08b5bd0e7",
+    "fixtures/semantic-families/result-bindings/cases/kit-file-set.json": "b4f3fb59f1e2f944f1b0f001aa68986e80d04c0a2fce654dbc132564351d41db",
+    "fixtures/semantic-families/result-bindings/cases/kit-shared-paths.json": "773e3298511d6b85b815a4b15e3b3336e973b0096ed2a6b3801ccbb62ae38a7c",
+    "fixtures/semantic-families/result-bindings/cases/listing-asn-associated-address.json": "9be1c63684f4e1fa217054db2a5893d6aff5d7c88cb486c59103d5d3301dee6d",
+    "fixtures/semantic-families/result-bindings/cases/listing-covering-prefix.json": "0cd4d2262c48d902467044ef46b47e3736afd1c8513217a9212fdde649686d5d",
+    "fixtures/semantic-families/result-bindings/cases/listing-explicit-asn.json": "23a45832060547be46e726f5314e9dee3d70ea6af06c4d062b9546f2364e139e",
+    "fixtures/semantic-families/result-bindings/cases/listing-ip.json": "63a75910cbb386b18a10c67373e6550d2ea6613d6be8c5f6b44da5dd5b695522",
+    "fixtures/semantic-families/result-bindings/cases/officer-direct.json": "552ebf7adeeac1e86d807f7dd8802164fd93effde27be19fc5a6b38312f45e79",
+    "fixtures/semantic-families/result-bindings/cases/phase-contested.json": "d62fdbd141e93e30454a71d3c78103f9684c0685da1ff60220d1ec29e881c4af",
+    "fixtures/semantic-families/result-bindings/cases/phase-mismatch.json": "44605ac234397ca98be35a3ccdc5f36a872043cbfdcdcde7a816097383fd3f1f",
+    "fixtures/semantic-families/sanctions/asn-evidence.json": "9a200cb2542aa7603805a0924616af7a4bd302827197c07d7c52fe9c3e500842",
+    "fixtures/semantic-families/sanctions/asn-historical-query.json": "4b21697a34499808451a2114147915bda9364e7fad5d1fe56dc5b8a2dec25f9e",
+    "fixtures/semantic-families/sanctions/asn-retrospective-query.json": "917117a25b66a64ee560092652777d8075172b35f2547dac015ccf47ba5df75d",
+    "fixtures/semantic-families/sanctions/asn-source.json": "b55354c2be443103ab618f6a81d55e95b74090f422c7cf13f36b5caea984fdc3",
+    "fixtures/semantic-families/sanctions/bank-evidence.json": "5eb7384e3ff69d8ee7e6195610532c335f27d47d1f8487c5be90e78f5624aab1",
+    "fixtures/semantic-families/sanctions/bank-historical-query.json": "8553b005073fe519b56e8624bdc8889dbe2fa937b64d11baf8bb5a66e8f5df4f",
+    "fixtures/semantic-families/sanctions/bank-retrospective-query.json": "917117a25b66a64ee560092652777d8075172b35f2547dac015ccf47ba5df75d",
+    "fixtures/semantic-families/sanctions/bank-source.json": "d93d1dc8faf682b2cb6d766e376612e3591a86c7d4a798a3c1ecda00f021507b",
+    "fixtures/semantic-families/sanctions/certificate-evidence.json": "c97a2f195efafa17f3dbd5ef51b33f727714a6f0a431550466769aa4d64a499c",
+    "fixtures/semantic-families/sanctions/certificate-historical-query.json": "d1c6e41db220539b7bbc54e48cf68acc06f5cd93f0e1123a8aec440b116d3874",
+    "fixtures/semantic-families/sanctions/certificate-retrospective-query.json": "df7b051ea954739dfba25d271392d8ac72e320761caad3939100feec55896d21",
+    "fixtures/semantic-families/sanctions/certificate-source.json": "b1a295edfb35c29fa7c8e613fa9cf1bafba8bcd9572becf354c681da0154c270",
+    "fixtures/semantic-families/sanctions/crypto-evidence.json": "0a4c23f68330179828152291daa7c2504312353506356d15080ba46eddfb67f2",
+    "fixtures/semantic-families/sanctions/crypto-historical-query.json": "8553b005073fe519b56e8624bdc8889dbe2fa937b64d11baf8bb5a66e8f5df4f",
+    "fixtures/semantic-families/sanctions/crypto-retrospective-query.json": "917117a25b66a64ee560092652777d8075172b35f2547dac015ccf47ba5df75d",
+    "fixtures/semantic-families/sanctions/crypto-source.json": "cd9a39ea375e94213a8a6c543c1af8f0efaab1a2fc2c9fc4a10395fe6a6fcd46",
+    "fixtures/semantic-families/sanctions/domain-evidence.json": "4fcd2763a7b25945e3ccc11f47d5f6b2eade0ae5571efcf546628d3e365e9723",
+    "fixtures/semantic-families/sanctions/domain-historical-query.json": "4b21697a34499808451a2114147915bda9364e7fad5d1fe56dc5b8a2dec25f9e",
+    "fixtures/semantic-families/sanctions/domain-retrospective-query.json": "917117a25b66a64ee560092652777d8075172b35f2547dac015ccf47ba5df75d",
+    "fixtures/semantic-families/sanctions/domain-source.json": "c2ecb8cab4b113d2d1638bc93cb1c73c26ffcc2690d01be78994818b9b02420c",
+    "fixtures/semantic-families/sanctions/expected.json": "ea8b5cfb60ab92e2bf82d755ccd28247dcf1d4db8ca8159556ebcefb64c76c88",
+    "fixtures/semantic-families/sanctions/owner-evidence.json": "4e0f0f53cd21dcfb497c0156f754819f7e9cbfc873fe9e496b7f405b0cf792e3",
+    "fixtures/semantic-families/sanctions/owner-historical-query.json": "4b21697a34499808451a2114147915bda9364e7fad5d1fe56dc5b8a2dec25f9e",
+    "fixtures/semantic-families/sanctions/owner-retrospective-query.json": "917117a25b66a64ee560092652777d8075172b35f2547dac015ccf47ba5df75d",
+    "fixtures/semantic-families/sanctions/owner-source.json": "a0c26ce682abdb6fb2876273bc71da6d232c4a37933cf330f77a34dda85e9d9c",
+    "fixtures/semantic-families/sanctions/parent-evidence.json": "10e7e3fb28bcc69b4ed272918c3a0c05ad4c434c69af0913a46782282ca7e925",
+    "fixtures/semantic-families/sanctions/parent-historical-query.json": "4b21697a34499808451a2114147915bda9364e7fad5d1fe56dc5b8a2dec25f9e",
+    "fixtures/semantic-families/sanctions/parent-retrospective-query.json": "917117a25b66a64ee560092652777d8075172b35f2547dac015ccf47ba5df75d",
+    "fixtures/semantic-families/sanctions/parent-source.json": "df1181c3f9756119629104cb1d41a9c670d249eb53123ac5cac20cbb41635d4a",
+    "fixtures/semantic-families/sanctions/trade-evidence.json": "1c30caeac094030be0d4d49eb2f30db04a59d96b33d4686030c824b4003e4743",
+    "fixtures/semantic-families/sanctions/trade-historical-query.json": "8553b005073fe519b56e8624bdc8889dbe2fa937b64d11baf8bb5a66e8f5df4f",
+    "fixtures/semantic-families/sanctions/trade-retrospective-query.json": "917117a25b66a64ee560092652777d8075172b35f2547dac015ccf47ba5df75d",
+    "fixtures/semantic-families/sanctions/trade-source.json": "4c7cd0bd36c205d9a45d681ce82836a2bcef174dc0587ec5dbcaad7e5024c766",
+    "fixtures/semantic-families/signing/cases/apk-presence.json": "7e63934e3a4b6d79beb43a256043c7d9df21cd632229a74604f88f036784cee1",
+    "fixtures/semantic-families/signing/cases/authenticode-image.json": "9eac76f6fcf4f4cf2f56e445b313a3d3aff9f0ddb95377ceaf302b4c9c15645e",
+    "fixtures/semantic-families/signing/cases/authenticode-old-reference.json": "e7735df487ec1d52c219937e6c4e0a51d6e2fbfefc90947cd362d83350a5a0b9",
+    "fixtures/semantic-families/signing/cases/authenticode-timestamp-material.json": "4fbdc715cdaf406d24159b58d4fcae7396c75895a0723ad098af057c1a5d154d",
+    "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json": "fd55f72fe84322d962e53aee1c547dabb0e80103cbfdb9389ad44da4f996f339",
+    "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json": "f409eea7f5c47bc561b741b74b739910134edc16998214063bf0c8f16833b029",
+    "fixtures/semantic-families/signing/cases/cti_codesign_cert_serial_issuer_cluster_strict.json": "d14a1c9dcc82f2fe1cfb17170d337687d68645c36558fee7778d835fed60c608",
+    "fixtures/semantic-families/signing/cases/cti_sample_codesign_cert_cluster.json": "c04f42dc83bc3934ebcd521b4f2a0ac96ea91bf7f927e7248921145b8725bbb6",
+    "fixtures/semantic-families/signing/cases/sample-scoped-check.json": "98846e7a33cbffce788e4a6141d05ab062bcb0d6587b67ff6583e44bf7252e19",
+    "fixtures/semantic-families/signing/cases/supply_codesign_cert_to_packages.json": "b7e47897849fdd42ed78acd60d51f66a427c491402248ed95934d91ce1da719e"
+  },
+  "derivations": {
+    "011c177f8eebc9b0e835878e35913814398d5eea3fece834d0ad9a69c53e5576": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-input"
+    },
+    "0123456789abcdef0123456789abcdef": {
+      "recipe": "explicit_synthetic_selector_vector",
+      "value": "0123456789abcdef0123456789abcdef",
+      "basis": "Deliberately repeated ascending hexadecimal alphabet; same synthetic selector text tests role and association boundaries, not an asserted computed JA3/JA3S digest."
+    },
+    "017f9df3a345091d94077a60510164aac01de1b9678f7360cde95998f9ffb238": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-selector"
+    },
+    "031e1076eef2c8d1e54690b1924c79c6d64c376880c9cb1eb2525b7561816294": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-image.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "03fa25a227b68e0a6c54efdf21806db3c5cf0e6a87bc161c7bb1aa3069f1aadd": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-shared-paths.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-right"
+    },
+    "0441567fb00f05d6fbbaeec8fdab7ed6504b3293ef8efa0b3e5ab36846e3a5a6": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "record_id": "seed"
+    },
+    "04f612ce99b120a25f03bf7e48b1c2a71b39d2aed92e6eda85cba868c9d5043b": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "claim_index": 0
+    },
+    "05ae49031fccb4e43b1c698cb17dc265d9af2f1af70d13ce4eb4a538582f1e51": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/phase-contested.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-rule"
+    },
+    "05b36f1235175cf3a50fc227bb05070d975b60de5df1a1b5a10c7adcb36667df": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "claim_index": 0
+    },
+    "06e28ed6c33e2f24f050b806295f8042f999029b8ced7834519faafd2aa7ed96": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_codesign_cert_serial_issuer_cluster_strict.json",
+      "record_id": "established"
+    },
+    "07674ae52344e6b664fa03c374b39af20e5f90e3e6b6dd401473e0f540ed22db": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json",
+      "record_id": "established"
+    },
+    "08e4754556e142672e89d37ece9faaa2f6c07d80b68baa57b47e6172e17cc07b": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json",
+      "record_id": "output"
+    },
+    "0b9f4520e180b0c66a875b6729c2684dce5a06e7b007e7e29d6120c894925afc": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_sample_codesign_cert_cluster.json",
+      "record_id": "established"
+    },
+    "0c2b932ca4fb20c743553428c085808fb088efef50f67313aceac15230350b68": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "record_id": "creative-established"
+    },
+    "0dea3af0d9e08224f372baaf06d5a993ca2b44c02c2e8876af0995d864125f5c": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-script"
+    },
+    "0e3988e4970f921aacee464539ea6cb5c2a44d8486aa8bdae39918836e568ea2": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "record_id": "output"
+    },
+    "0e5f5955ff94b6d80aa8e3cdece5acfe640148632f97bfbaef1df0947715a672": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/supply_codesign_cert_to_packages.json",
+      "claim_index": 0
+    },
+    "0fae5bdf84d72d62957ed1672d16f3627f8738593e65ec11c4d4af0c713523cb": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-image.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "1153f52bdb1336677056594d26611fd0c62d0705365e265db2dd81a64cf672aa": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "record_id": "extraction"
+    },
+    "13c14c390eb8d763e4c2d0473b4127cfdf1f6135556880f3171e426d5bad106c": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "record_id": "established"
+    },
+    "13cf2fdb69f7aee94d028d306fb0eda2aec35543b77ee2612840a2f6229a3fb5": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json",
+      "record_id": "output"
+    },
+    "1429a87374af44eb003bd3d045f0a81d6b0194d81e60cb1b5face62ad143a8b9": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-seed"
+    },
+    "153b3063577771deec4161f5f025deae98b7807649d7f27c2509cebc5a8002f7": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/supply_codesign_cert_to_packages.json",
+      "record_id": "established"
+    },
+    "15879f94b622cf9632f5d7228e63a19ba2b231a7158cb26865380b76ad70b3fb": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/ADTECH_PIPELINE_PHASE_MISMATCH.json"
+    },
+    "16ce3874d259437c4389c88cef5778c83a105ab943af17343b085d2a39ee136b": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "record_id": "input"
+    },
+    "17f78b9b3df0ee119e0a0e4e8ce80d31662ef811ffa3b588023c7158fb0b1230": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "record_id": "route-established"
+    },
+    "1888df014ba0781bc882f95b6882864a4b7e6d8b1c70d64a2683fcd890f514b0": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/phase-contested.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-request-input"
+    },
+    "19e56a5a4aae54f4abbdbe3e4a8d599b2639777a1080b67158ca51c555504230": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-cdn"
+    },
+    "1d37fc40801f860bdeaeef41205f2d96a2b25ef50c314f88d80455f634b10c28": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "record_id": "output"
+    },
+    "1d91ec79a1ef3d47c52f067985cf2f15d5f002f1ea0857d0647aa37803aa4976": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "record_id": "response"
+    },
+    "1f28e1b2913274d44bd5e90fd81f899db1d94565732b2afca2ebfe6eb328320a": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-old-reference.json",
+      "record_id": "reference_analysis"
+    },
+    "2108bf46973f30b09da3e3ddda333891340d1504ad8c7096e64ddb944e0b661f": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "2149602385b26ee49bcc5f2ae6ad3ff46bf1a329f7465aea9050bc7337393cd1": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/sample-scoped-check.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "22799e4626f39322e9ac8eaf5af24b8671781afaca5f19c68c7865ed1883d7fa": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-timestamp-material.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "23107a0395edd30657d70e9d23a82f47c34de466715e029c0f8eea78bfb297bc": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/listing-asn-associated-address.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "232d6d5bd3b69cfa0c531d6d2b55c972abf7491a41b33fab420dc4ac361727ec": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/supply_codesign_cert_to_packages.json",
+      "record_id": "package_link"
+    },
+    "2335a971e59b6f323bdbe149bfa7a601b33907e37c8000dd6ee3844b9ddadd99": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-selector"
+    },
+    "2407122e541b30dbbf8de956f2b9f25ecbce2f29b53f56fd6548953e12de08ef": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-archive.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "25d7c79fc8442ab33515730a0fc348f598f8c72be79f1e41f90f0d08cca26212": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-url"
+    },
+    "26b58c1176d80a68037bb1c1569e8b2f815f1062b1a44689715c4e2dc49b4cbc": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "26fcc0d1b17da8ee9c2c070cd25b3d6f371991891721b43ccce69f326d5e5d0a": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json",
+      "record_id": "established"
+    },
+    "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-output"
+    },
+    "2a2aaaa9314e67ec02ed88187a2b982ee1633fd9c4c05232ae6f281a6ba2a57a": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/listing-explicit-asn.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "2aae5d3cbf8329b985ee4ee88ac1abea7f957d69c235ad33042d9ee63c63d392": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "record_id": "extraction"
+    },
+    "2b425127f37dac9970844ef57c7d483be0518bccc7ebd7c15cd991a10f4c6a8f": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_codesign_cert_serial_issuer_cluster_strict.json",
+      "record_id": "artifact"
+    },
+    "2b4cd442fd89b52859dc9fbdcbe3ba5c8a726becdd80fe2bd1829e9614a883ed": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "record_id": "request"
+    },
+    "2d7c09188d414c888f37b661e27aecdd54231e027ea2c8ad9c1e313aab34c5d9": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-output"
+    },
+    "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "record_id": "snapshot"
+    },
+    "2e8a7fc6315fe25bdde94eb6c2611d1af736c2e927f7740244e494fba400ff4e": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "2ea659668a2a8ab260c3149ae19e14489c7ae7834fb25de74d240c633d806b80": {
+      "recipe": "synthetic_signing_label_sha256",
+      "parts": [
+        "signature_material_digest",
+        "timestamp",
+        "cms_authenticode"
+      ]
+    },
+    "300c8e0b0130b47c1a779ecba4f997894773848815bee41f507961a5c6bd8c92": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-timestamp-material.json",
+      "record_id": "established"
+    },
+    "311e453e8b55abcaa4bc8300eb4b46fffc7e9e2e8781aafdbad081bceac033c7": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "record_id": "extraction"
+    },
+    "3251dd05e86c11bdba011e8780226cfc7e24e3142bf3b2376ce2472c69852f73": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json",
+      "record_id": "signature"
+    },
+    "332dbddbf576a7e036e605062153f644430656acbff1afa2d29446d8084c1d49": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "record_id": "seed"
+    },
+    "336f61d6e579856a81ed3144959fd22f20a6e3677c3c3b97e9afbe5952175d68": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-output"
+    },
+    "35d9fbb181ea166d5cb0b98a2f5ca9a18fcd3cf50710530501fd1d95f0668c17": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "36c1fbacb48e7e298c31da8cd5bc9dfe4a5512ec5e6170a5bede9cbc7297fb9e": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-host"
+    },
+    "37733fc5fa5900a3edbd14aca1cbf305d5ee3a0c02b6211c14c55898536320a7": {
+      "recipe": "synthetic_signing_label_sha256",
+      "parts": [
+        "scheme_content_digest",
+        "primary_signer",
+        "cms_authenticode"
+      ]
+    },
+    "37ba13e2564d8f0b63408bdb30afd4f2fa0cdc44c62d921db4f6bf80004739bb": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_IP_TO_LISTING_ASSERTIONS.json"
+    },
+    "38bbb48bb399d59d8e4a11b3cf2aca036b80402c0e8ada37884979db1498eb72": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/supply_codesign_cert_to_packages.json",
+      "record_id": "package"
+    },
+    "3a9fb8c57e4408969d45d34278fa828b8e9557f97b26f42ee4e219c21622f9d4": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "3b631e7a49f78fbe6bffd21b23dad144e39faa87efe66b2327c43dd71aef3fee": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-input"
+    },
+    "3ca7f0848ac0d34d237a15613d3ddf3756886a4354999283ace0f4adac430788": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_ASN_TO_LISTED_INFRASTRUCTURE.json"
+    },
+    "3d4316f319b744cd86c634a3c7f9b8a9c71dfb83bb0f73773ff9a73760c21816": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-selector"
+    },
+    "3e406a936290ad1ad0ad4136451694c7d0d41be5047e528ca648f1251e2cc6a2": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-timestamp-material.json",
+      "claim_index": 0
+    },
+    "3ecc8a77b78f1b02a627b6221910a85ca36416da8d1b58d3e8fddd94d1245159": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-file-set.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-right"
+    },
+    "4299435ca07d6879084b06eeb5cd9641179190bcc53e0c867c16c15c18bfdb28": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-old-reference.json",
+      "record_id": "reference_artifact"
+    },
+    "43299d1710cf3e885e324ac7d54a40b3c10def9481216af267da5d4cc89b2ed3": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/sample-scoped-check.json",
+      "record_id": "established"
+    },
+    "446e86c782cc8d5ec31e65f434f998fd1f06b68a4ae473b419fc0128db821a4e": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-input"
+    },
+    "4560474548ebae08b34432721b33c2ba4c383e86577a59ecd95994181a747e01": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json",
+      "record_id": "signature"
+    },
+    "461e4868e0965ba50a5a6408bf0b6781b33872db61a6b17d49fcf4fb390afbdc": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "record_id": "certificate"
+    },
+    "477d00e7169b2e2511a5091149b4e9b2cdbc99a54e1569fec006a6f8498ac28a": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "48bd1e11695d74317e8fde8b2b960a9badbe690c372eb73b0cc52b1c71dbca90": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/supply_codesign_cert_to_packages.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "48eb0e9bd9c34f62e31de7868d646d1011fb440ae05678606865451dc9521bcf": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_APK_SIGNING_CERT_CLUSTER.json"
+    },
+    "494194fb0ae084ad2b20a6a2f7ee5c89a1ce29f6a1f15c4d8d023942d301dd14": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "record_id": "association"
+    },
+    "49ec1dfe86c69aaa7474178ca2ef64e472842700782c1d9043a5bc53ceecce64": {
+      "recipe": "base64_bytes_sha256",
+      "file": "fixtures/semantic-families/certificate-presentation/certificates.json",
+      "vector_index": 2,
+      "field": "der_base64"
+    },
+    "4c1a552a7bce381d489096987dcad3f4e50346b46a8ac20d69f634ecbe453e92": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json",
+      "record_id": "extraction"
+    },
+    "4c7cd0bd36c205d9a45d681ce82836a2bcef174dc0587ec5dbcaad7e5024c766": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/sanctions/trade-source.json"
+    },
+    "4d8633a776c2b87afe84c870d7b197bcb966e4b0796a69d3f3b92ff523a6c30f": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-input"
+    },
+    "4df74ed142e6739911c3a01672d56256caf1b184220c5cb0c3e681a9aa29e0be": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "4e21e74bacdd6764bab3292ed44d27713bce9cd945fbd8063c152209038ad50a": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-selector"
+    },
+    "4e3778779366b17499780f08784df0006ca935ca478d5c1b5aa4be818d41a8b2": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "record_id": "extraction"
+    },
+    "4e5bf7f9e158f0d6dd0654045a28be93b6d23e6d23968a92cbeebe4846b12e29": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json",
+      "record_id": "extraction"
+    },
+    "552bd3d3574a84d08e40833ab94cb447f13ff3662f739ea6e4d2277cbead767e": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/phase-contested.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-host"
+    },
+    "564cb9fea8988d2858a38fdbccc695b37e0943ec9531fbe5f21e83fc92c01788": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "record_id": "route"
+    },
+    "5668904af9ca6d3974b27a69ed0312193882e2b6aa96232c8fe6ea639593f89c": {
+      "recipe": "base64_bytes_sha256",
+      "file": "fixtures/semantic-families/certificate-presentation/certificates.json",
+      "vector_index": 1,
+      "field": "der_base64"
+    },
+    "56c1ec021cc6a16aacbf8a3a175d2cc480f6ac9f63d80bff196e4434284bfda8": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "record_id": "output"
+    },
+    "5848fff668b3a0e33c30ccfa8133d8a2bc8206714570f578d905fb0683d34fba": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-pixel"
+    },
+    "58e66ac78f666867d7b0da6e11af05d26b90e716f8d2b67ab0c37378cfe9335b": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_sample_codesign_cert_cluster.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "5b55c676058f6af7fa762ec8b3e89136ab8c4fd77f8442b752e1d2eb6caa39ae": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "record_id": "established"
+    },
+    "5e67bdddc9ac454a9fcafefa8f41367b7d7b33357e70dadc57de65e1dcedff29": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/SUPPLY_CODESIGN_CERT_TO_PACKAGES.json"
+    },
+    "5e8501b30bcbe7784114fd79d190ad8b3da9c92ca20ba5fe5ba85705ec5237bb": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json",
+      "claim_index": 0
+    },
+    "601d8a109528f7cd88bcee6b40a5982b04cd809387b2391ab5e5ab9447e5dec2": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/officer-direct.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "6039308fa130007a15d40c6ac4ef96b180bbfcab63493ce412e08b10e76dc24e": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-input"
+    },
+    "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "record_id": "snapshot"
+    },
+    "633244ec78cd413b623bf147a78f3b11890f2d5f9ba8072d4fbcf76cdcb9c4e8": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-image.json",
+      "record_id": "analysis"
+    },
+    "63764eaa0ec5a1b205629f6739e2338e5aabdf3f21cd0d1823b8a537aecae858": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_sample_codesign_cert_cluster.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "64302825ca38fe5fdac12f72d080e6114d95223d6f0a36ed348be4cfb381f8bd": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json",
+      "claim_index": 0
+    },
+    "645b6319045b941f6843013e7efeaf3573bb6a9410a010f932b3f4b139a21a6a": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_SAMPLE_CODESIGN_CERT_CLUSTER.json"
+    },
+    "6495225b85f2be698c81d5e30bbf466f43fc869fca31cbe4515552c925404d19": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "record_id": "extraction"
+    },
+    "64a7bdd4196e8bfbf75ca4800b8a63fac81ab4cfa42742596c00310601d9e7ed": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json"
+    },
+    "6634b040bd73176c7962d269458b0528b4e4bfe5429aafa2259f204d5266ac8c": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-file-set.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-left-coverage"
+    },
+    "673b047d7025884195046873da89c8dd3f6bca19d7219c2d9f20e8c282b823b3": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-file-set.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-left"
+    },
+    "68472f32f2a08386269de3fbbdc6651e3cf930295a800a23197e528970228c66": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "record_id": "input"
+    },
+    "68e7f12dc82541b4ea21e15fbd593e8ede577dc17a404bdd2f4b51beaa279e84": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-old-reference.json",
+      "claim_index": 1
+    },
+    "6939e1d24a90d8631493c137663ddf8f9befc0d9e36f0d431b4c303181a27873": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/FIN_ORG_OFFICER_SHARE_CLUSTER.json"
+    },
+    "693fe1db1a1720281fbe45dcb023af351878fdf6d17b6a99754b69c4b991f4ed": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "claim_index": 0
+    },
+    "6978f013ac7e7bd876eeb7447e55e8de70940d7aa1d918dd4cc4e13a4740f15d": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_ASN_TO_EXPLICIT_LISTING_ASSERTIONS.json"
+    },
+    "6b3436a927af5580ca9a64d9a85d2ef2b7b859ebcba4c41fb7eadcb53156ad6c": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "record_id": "seed"
+    },
+    "6ba8a1cc732c2b8a25477400302ca5dcba76e648847e0c9cbea35aa7998b418e": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json",
+      "claim_index": 0
+    },
+    "6baf2f1ec1f6ec137cdc8bdfbbbe8ccef279ca770897da41175fc63af888cb31": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/cti_sample_codesign_cert_cluster.json",
+      "claim_index": 0
+    },
+    "6c7a5406490f6e4ce0e6ba96e932d006e1d744d9ba3c3193b8a652c9ad761fe2": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "claim_index": 0
+    },
+    "6d52e7c691a5ee87cd592452d456f4a14e924dc8b23dfd843bf53995e25f5779": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/sample-scoped-check.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "6ed4b50c7c530d0b2fcc03ae4b7a9ff97bd89bb8c99e97ffc40b8ebdfbb0c095": {
+      "recipe": "synthetic_signing_label_sha256",
+      "parts": [
+        "scheme_content_digest",
+        "primary_signer",
+        "apk_v2"
+      ]
+    },
+    "702213106dadaa2b9a25003600e6fb99cad13f924f2f30489f4bf4b0225c6bdc": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json"
+    },
+    "70ec820cdffa9f8786c9b255b352c918042dc51e6f68f9f9df9e8d32fc121143": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/phase-contested.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "70ed04ce09590f92c3b8822ebe7d9e2bccbcbc05a2247e9fc29cd0abdefd894b": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json",
+      "record_id": "association"
+    },
+    "71166c42bee3aac05f4f8db96a2e14b59c5ad819d12e4861172fbaee468b9dd3": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "71cb556035ca7bb8c2e4c83e423055b0129facbdc00944f7d97057ea58968ff9": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json"
+    },
+    "7571548954ee4211eaa4ffd29370f1ff43b5420aaf958e18d812b6bf9870eb5f": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/ADTECH_CREATIVE_SCRIPT_TO_DELIVERY_ENDPOINT.json"
+    },
+    "7583668d8e34f3a25437b8244f8618cccf1d8338a73bd543b42c9c3cd71225de": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/phase-contested.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-role-input"
+    },
+    "75d724f7e15985b93e873a06c2ea9044bf411abc2b88feec3626af122a170c6f": {
+      "recipe": "synthetic_signing_label_sha256",
+      "parts": [
+        "signature_material_digest",
+        "primary_signer",
+        "apk_v2"
+      ]
+    },
+    "762542bd46884944660ae6e825ea1435ac2ed752393d200836648482522eb2ba": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_PHISHKIT_TO_HOSTING_CLUSTER.json"
+    },
+    "78b8ac6eb76273c023d3d0d3eba34010498e9b812a6697836de8e95ae42d8ab2": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/certificate-presentation/source.json"
+    },
+    "78cf1bfa1e47267fd554fde551d449b22758609726a622574f63cf2030224331": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-old-reference.json",
+      "record_id": "reference-established"
+    },
+    "7a76187118f9165764246320b0c0df11e845f7fea0a17d8e046b2c0ec7cf00b2": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-seed"
+    },
+    "7ace96f9f995aebd2d35e185a7fe604424cc5a7eb25e6e76c7ec2f46ad9dc04e": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "claim_index": 0
+    },
+    "7cb1fa868ad76e9d8f25f1fa6ea388f6713c9b55fe205b60ee527acf4fb29306": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json",
+      "claim_index": 0
+    },
+    "7ece7573da338614c47fb7a62fce75c7bf0424ee10ee0aebff7d52d1baa36365": {
+      "recipe": "synthetic_signing_label_sha256",
+      "parts": [
+        "authenticode_image_digest",
+        "primary_signer",
+        "cms_authenticode"
+      ]
+    },
+    "7fa0f66eacf3b692d76817cbb96330eb44212df5af776847859167852fb3d4f2": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "8090b8cdd106809ea3ea6e8332b91df9f94ad27447bf8683bf948b0303812959": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "80bc897bb6245db493bd7bc1704e1e0b2361c27ffebef6631574a0a945f5ea6e": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json",
+      "record_id": "output"
+    },
+    "8292e6ffab07f992e657cc504f56356b864d449f6f9adb6a2eca755dd08b84a2": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-input"
+    },
+    "8392a7fd19b9980a4f4ccc2e7e301a2729db8085dd61ec4f62e35fc3528c070c": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-timestamp-material.json",
+      "record_id": "analysis"
+    },
+    "84a04c248965d2392b463bd74424c512aab08a08ac8c231ccd34591a617c9913": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-output"
+    },
+    "8778edd0b2e7c8a80007b020fdbf27023313e78f9dd740dbdee87738cad4703b": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "claim_index": 0
+    },
+    "88defe84765fe5a208a534794ea170df166ba5a410f7170427fb35e916b15641": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json",
+      "record_id": "input"
+    },
+    "88f0f6c63bfd0f5c349da69a4dab705a377f0452a96ba036b8e3a176e044c449": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json",
+      "record_id": "extraction"
+    },
+    "89b81f9704e5154bcebc73e81ae86f58cf8150018dbfff782025207d0dba8e4a": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "record_id": "trace"
+    },
+    "8a07d1650b6cb90208eace69038b0df34a0d26951c6f4b232b3cdbad08eaa9d1": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/package-repository/SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA.json",
+      "container": "source_bytes",
+      "source_id": "control-bytes"
+    },
+    "8a501cdbcbb9a07e43060c17b5c1e86caa639cae30dfd7981766465f38a40b75": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "record_id": "extraction"
+    },
+    "8b31e1521d81d5a6f01c7fbef59ab2b45a3d349f0cd53014b38b87a8aad64c2e": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "record_id": "seed"
+    },
+    "8c3f9f8cd1f4dd5ad031fc118b16676b83834ec7be71c887e43a7c0c48a70b0f": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "record_id": "url"
+    },
+    "8d35c97ca141cef73b792721ebe89313f426100213288442d47ad259ac371223": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/listing-covering-prefix.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "8e36602debdd5971395c212d81d92a5ed3b458d662dd881dc1117370b342dbd6": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-image.json",
+      "claim_index": 0
+    },
+    "8f2c004c30a7d77da3b2f147d1c690bbe532f64787c6d0a918d397e50438f909": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json",
+      "record_id": "established"
+    },
+    "92102d9127fe8f08b01201fe3968f2777bde99245345dc1d1fca5f595745bc3a": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/cti_codesign_cert_serial_issuer_cluster_strict.json",
+      "claim_index": 0
+    },
+    "927490a8f8b9ad9f4685754d1287b471b407443b02ce51c65e7ce110227eac76": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "record_id": "url"
+    },
+    "94cbe6bda5b7b2adac6d5124a273c606e308a163d2112f6ee455e3488e9bd421": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "94f81fc79528c35b1a903692886f558a82cc72d5d9e4e4c0e5b8d67920432c86": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "record_id": "correlation"
+    },
+    "957e331cec280bdf2af8840e1a9e83e78b7dd6e0f4e1eba43b5b1c04eb1322be": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-file-set.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-left-file-1"
+    },
+    "95ddd185d7812c19d0020048fce582487be5a0f38f2da30ab11e9eddb730f921": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "record_id": "output"
+    },
+    "9665a3e2a4674e7e58b466c43482d7a764440969ea09b96d53ea09cadc4bb002": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/ja3/source.json"
+    },
+    "97009371d7edeaa8ac110df60b0bf6d00f2a1abd22c24d2f0ee4a95f645b5570": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json",
+      "claim_index": 0
+    },
+    "994486d72f1d56a975cfd15787344cb3db128bb1bbbb4a901818be569ab96c9b": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-archive.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-left"
+    },
+    "9be5eba9de753ff0d0c95fb6295fc244c27d886035dcf0bf587d44da98d0f06f": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "record_id": "established"
+    },
+    "9c4c29bcb4370d124e75c82f6bec689dfa0c03ed80b320a6298cb197c7cbb636": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json",
+      "claim_index": 0
+    },
+    "9c707dd1c0339fd8f75bb554b05e37f8a782e560451434895551632b6e71559f": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "record_id": "resource-established"
+    },
+    "9d9a78c47a635543f72095ce8a9e77168ca7df2f242d575672050902e9eae103": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_codesign_cert_serial_issuer_cluster_strict.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "a0c26ce682abdb6fb2876273bc71da6d232c4a37933cf330f77a34dda85e9d9c": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/sanctions/owner-source.json"
+    },
+    "a135dc0555d1fa4c3829760a56ccebaac3b49cf6ba493f30b938602a4d944d55": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "record_id": "input"
+    },
+    "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2": {
+      "recipe": "synthetic_literal_sha256",
+      "input": "historically retained artifact A"
+    },
+    "a2e02f7ac3a1113a15537c0680b9611ddc3156429bcfa50042823f7292e7d6e8": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-trace"
+    },
+    "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3": {
+      "recipe": "base64_bytes_sha256",
+      "file": "fixtures/semantic-families/certificate-presentation/certificates.json",
+      "vector_index": 0,
+      "field": "spki_der_base64"
+    },
+    "a54023317c5898791b03ae4228a8177fbec89e4aad5c0380309f21006565dd95": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "record_id": "host"
+    },
+    "a5b30b79bb8f74af2936c688fa7f348d640596b76d9527bfa41ae9b166d9ac58": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json",
+      "record_id": "established"
+    },
+    "a5e496412b235029dfa61bc624087720d11ac0d4c60f2b0a4fe4c6c914079d66": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "a7592cd433de8190ff85d9423e72f06c8febdd330b613dc58c28a961e8490696": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "record_id": "output-established"
+    },
+    "a8349facc3b8085834009ddf465f827ac29beec171573f13cff9b9c25db33835": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "aa4ab2d852690a4829e5124fadd41be43fbf88761d3a1c627931571e090ca0f1": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-selector"
+    },
+    "ab636c20973c8d837a80c1303136999ca4db061b2cd36a4143b204c77b3d41ed": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-file-set.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-right-coverage"
+    },
+    "acc00fe5b9564d01eb78241ed4bb5138c8ab18c8275610fdafb8935477414749": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-shared-paths.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-right-coverage"
+    },
+    "ad8f1dc21b8c507ddeb06034cb1ed1030021ad677fa8abc0f124c1c2d11a8f0b": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-selector"
+    },
+    "ae15911a83dde18751791cfb373d2003179e96440b5148fbf8c65fd41f86ff40": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "ae7803bf20a1ffe6e72328fe41026bebfa747cda89c8fa3e251038f50d381457": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-image.json",
+      "record_id": "established"
+    },
+    "afcd2da50ec66552dae0e7bee4cdb1eacbb1c34f4600d07a7ce2734950ae4a24": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json"
+    },
+    "b0a89354740f6215b80cfd6d1cca5956121d1d03339d3947bdebacdc3f76f914": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "record_id": "embed"
+    },
+    "b1a295edfb35c29fa7c8e613fa9cf1bafba8bcd9572becf354c681da0154c270": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/sanctions/certificate-source.json"
+    },
+    "b26c6dd29f13660f0f863c27f82a0337500f8ae00e3d7f29a3e0ecae52cc152a": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json",
+      "record_id": "extraction"
+    },
+    "b29adba63d3dc1131617c844eef35389988e44926e16f523a1d1b7ee65ef0a9c": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-old-reference.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "b3d3cdc80dd1492a7578261e6acf71b3e2b2e35694eb71e4b0457e145ae59fa8": {
+      "recipe": "synthetic_literal_sha256",
+      "input": "different historical reference file R"
+    },
+    "b55354c2be443103ab618f6a81d55e95b74090f422c7cf13f36b5caea984fdc3": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/sanctions/asn-source.json"
+    },
+    "b6a8642ecfae37932009df47ef127ab03c8d07c2621fa01723b52fd9f88be982": {
+      "recipe": "synthetic_signing_label_sha256",
+      "parts": [
+        "signature_material_digest",
+        "primary_signer",
+        "cms_authenticode"
+      ]
+    },
+    "b7e031bbb429b978848d0e04b20c3b4bff178b8ac40a4fda277c4251ebba9976": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-timestamp-material.json",
+      "record_id": "signature"
+    },
+    "b9e9a0a7305f4122255f9d2f7ad9924b56dc3fb07a14c6f0073e5f53e53271cc": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/sample-scoped-check.json",
+      "claim_index": 0
+    },
+    "ba204919dfb4cb168bfbdab9299daab2c8c1707a5c368376364c25f8fbd9d797": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "baecaecbeab6f007472a7fbf9fd039558b9fdec3b0849df9597353cb76e98cc5": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-old-reference.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "bceda9c68367731fe98b757e3286fc18349695d99f93cbc358ebdab3f9fa503d": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json"
+    },
+    "bda54efa62ec0dc3ce2b20e2be9ecf3a591ad76b30c0c06084fc2b22d9ae209d": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json",
+      "claim_index": 0
+    },
+    "be85d85fcbeec09c3a0f3e260addb67ec683e3175a78cf8975276b98ca363dde": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "record_id": "script"
+    },
+    "bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/package-repository/CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA.json",
+      "container": "source_bytes",
+      "source_id": "registry"
+    },
+    "c1054b403fe047a885a81b4026a85510f3ad40bff4836a89e967b63558a103cd": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-archive.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-deployment-input"
+    },
+    "c1290ace9c566f7ddf603d11e396010311c050aaf5f5b8105329aabb9233c3f5": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1": {
+      "recipe": "base64_bytes_sha256",
+      "file": "fixtures/semantic-families/certificate-presentation/certificates.json",
+      "vector_index": 0,
+      "field": "der_base64"
+    },
+    "c2bdeff6c09d104ece703628f9b6d613ada6d87062ec636a0a6e11c745778b20": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json"
+    },
+    "c2ecb8cab4b113d2d1638bc93cb1c73c26ffcc2690d01be78994818b9b02420c": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/sanctions/domain-source.json"
+    },
+    "c52b6b70ebfbafb9ad30cfd10bf168bf37f4e29ef2a4381162231f3d347a7929": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json",
+      "record_id": "established"
+    },
+    "c63f89234b4d8058897905fdec505cc1db7cab655bf383becc8925f6424d1c93": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json",
+      "record_id": "verification"
+    },
+    "c890d818af118b322a9b82c48a5d26dd3b1367a16aa996684444c0e8f7e60d2e": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-output"
+    },
+    "c928d91b4ff4fd07278329d6878fa71ca03f76fc908d5b0cd400dd7c7d5afa36": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-file-set.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-left-file-0"
+    },
+    "c9b056d9e215b535a1419c110708fb78dfcc215c818f20ca912d7d6f9384657a": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "c9b4ee544577cf68bb36d7272bb0fa690a415a94aef494df8caecab7d928acde": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "claim_index": 0
+    },
+    "cad71d1c252762190861e6d0c7682b43dda89078751845fdbb84186233e178d5": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-request.json",
+      "record_id": "creative-established"
+    },
+    "cafb14e4c02f26b1f44029ad45f7740f2c2d73798d8c244519c337aa31078d86": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/phase-contested.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-endpoint"
+    },
+    "cd9a39ea375e94213a8a6c543c1af8f0efaab1a2fc2c9fc4a10395fe6a6fcd46": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/sanctions/crypto-source.json"
+    },
+    "ce0c7a8d80cb2ef869b6737d08159e74a7d5bfd083fc1dab5055cb0c08508de5": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-seed"
+    },
+    "ce6a8b7236d02d25a1672ba6d82d7439458d057d809e95cf6cedd401b633dc49": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json",
+      "record_id": "established"
+    },
+    "cfb3ec8d0e07dbe5dae42fc427dab09de0cf2fde6657f5bc96c342022d0468ef": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "record_id": "extraction"
+    },
+    "d0283502dcd5e577a6793b3dcb3394426dd053ae962b8b60404e91b7a198457b": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_FILE_SOURCE_PATH_CLUSTER.json"
+    },
+    "d10d6a99390615e0e6b08fce980d16e2c14034972e97d61c7106206fc78b11c5": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "record_id": "artifact"
+    },
+    "d3657a8031360bb96527e5c570d535e9439c0c4da489dd1d8b31e15335ec2451": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json",
+      "record_id": "extraction"
+    },
+    "d44d115a13bcbb3862d109eff198b028f969ab69a86e2dfba597e3c72007ee32": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-output"
+    },
+    "d4d5f450925ffb26ab63c37f14f9ecd07503b48a5910e17441b53cc918651487": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-payload-hash"
+    },
+    "d77157b8394bb4795bfacdda2933be7cd3bd2cc445c0f5a0378e88867f7712f3": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/phase-contested.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-contrary-role-input"
+    },
+    "d7f4c6078e3914681cb461db6a96a6330707482c5e30e3a373a42196ab01dec9": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "record_id": "output"
+    },
+    "d8b1d548bbf30c6d0ae839f993c034101701ba001a8b21c89ac03e2de1acc8c6": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_IMAGE_TEXT_REUSE_CLUSTER.json"
+    },
+    "d93d1dc8faf682b2cb6d766e376612e3591a86c7d4a798a3c1ecda00f021507b": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/sanctions/bank-source.json"
+    },
+    "db37ea3d06a9d871ebe3084d9b9ccc473c54a18d7501187b6f87508c42eaf6b1": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json"
+    },
+    "def70211cb29bc310fa7901afa6733694e007a64f79969a780f4a4214aa99fc6": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-selector"
+    },
+    "df1181c3f9756119629104cb1d41a9c670d249eb53123ac5cac20cbb41635d4a": {
+      "recipe": "file_bytes_sha256",
+      "file": "fixtures/semantic-families/sanctions/parent-source.json"
+    },
+    "e1a28307363b9ec0605f00c68732705bab6cacccb17ff223762bb1bb1518a0fc": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_AUTHENTICODE_HASH_CLUSTER.json"
+    },
+    "e3eaa41de5df97230d6ee56109c2e1afe070206c033362bb675628399978b5a3": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_codesign_cert_serial_issuer_cluster_strict.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "e3fdae2e8cf8728fec5ef29307c73630af4b6c359d76c2ff0ea9f35afe868af4": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "claim_index": 0
+    },
+    "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-output"
+    },
+    "e667a7781aa9ba753ccaa8a6498549ff1f05fbfe0f61ce9394d198f216b1347f": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-timestamp-material.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "e7d6cb70cea0ce065a0e3eeec6eab5e07e1cf1cedd2c906e182848fc15c9bcce": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/authenticode-image.json",
+      "record_id": "artifact"
+    },
+    "e7ebd7281a9cfadcf6e0d2a5ec0829503d7f52de7e3a1cf23cc0eaa407746bbc": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json",
+      "record_id": "output"
+    },
+    "e8bb9a6e0e1ec2b649a5e81be192c1ac81990b92c201c287454edfdcde70f280": {
+      "recipe": "base64_bytes_sha256",
+      "file": "fixtures/semantic-families/certificate-presentation/certificates.json",
+      "vector_index": 2,
+      "field": "spki_der_base64"
+    },
+    "e90c6e2cca7ebc7dd2ead5add5197e1ccde84a2c403e5e43ccd687bb69abd48c": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "record_id": "output"
+    },
+    "e9756830640282441d08ef23387a6d37ee468ab47ad4f89d7c4bd14f7f8c457b": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_EMAIL_HEADER_VALUE_CLUSTER.json"
+    },
+    "eac630436d03314d4fee8a9fd9193c51644420310c18be4295a4d267303589e9": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "ebb0a02415130b5edc58d5961ac5a68a10b64d4ea224353384bcd33e467d3e88": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json"
+    },
+    "eec415c5960e231c4c5343d55ec25d2af84b01db1d8e164dec3c2964f9c896d8": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json",
+      "record_id": "output"
+    },
+    "ef695004ea6ea24cba93af75205bd368052803fdb0550a4c9c6e70fb4a4eb509": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-seed"
+    },
+    "effed21c41237f0476ac4044386ba16b3c6080275640ed9a25c421c7b3c9600f": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json",
+      "record_id": "signer"
+    },
+    "f1e6aae6e11b0db89000c6df5d760ba405f2ec9f6c6a863d561c71751acd884a": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json",
+      "record_id": "association"
+    },
+    "f26d0e4032d86a96c590093e6f40151bf0569d2565ff41e4ebe2e30cfa9d56dd": {
+      "recipe": "finding_claim_key_v1",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "claim_index": 0
+    },
+    "f36d85f390c6dfbd18a55e103de3b5d5ed6ee439ea156843e591ee3bdc2e78b6": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-selector"
+    },
+    "f3fb2d26a1905cf61e8a310b5514def3cca4cf24282946fb15e998e3472f3a57": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json",
+      "record_id": "established"
+    },
+    "f48d6da71d78f68c67b3fc50cd0e74dd13535dcf50eb71d96643c296380eecb2": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/signing/cases/supply_codesign_cert_to_packages.json",
+      "container": "preserved_source_bytes",
+      "source_id": "report"
+    },
+    "f4a78ac1e4d6554696045d5e48fb7283f8b780704c9bf80eb48545a2e14a51ba": {
+      "recipe": "canonical_json_v1_sha256",
+      "file": "contracts/semantics/CTI_CODESIGN_CERT_SERIAL_ISSUER_CLUSTER_STRICT.json"
+    },
+    "f4bffbb64e54adddb203a49b4eec5cd9a565df9f840737d631cfed0141ae5ad7": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json",
+      "record_id": "output"
+    },
+    "f6c72fe8f9b15352ce3b4f9eacd2a49ed66757bfdeefa9680d4205319cacf2d2": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/package-repository/CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA.json",
+      "container": "source_bytes",
+      "source_id": "control-bytes"
+    },
+    "f7705316d2550d8778579cfa0291540cb4850a5c44603a474cb577d70451428c": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "record_id": "identifier"
+    },
+    "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json",
+      "record_id": "origin"
+    },
+    "fa2c84d017e7793e4fc5775aedf52b86bee4f283835db69064e06851476c039f": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/kit-shared-paths.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-right-file-0"
+    },
+    "fa732aa95c0a6188c15bad485212fcedc19910209dbe7a6666ffb60b035b36af": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/result-bindings/cases/creative-reference.json",
+      "record_id": "snapshot"
+    },
+    "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/signing/cases/apk-presence.json",
+      "record_id": "origin"
+    },
+    "fc9b266605d4db8a4c8ea54fbceecab11d58022d1440c89cd95f430f83b3699a": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "record_id": "image-established"
+    },
+    "fe4ca213f6654c405d994685184fb5b4247723650386921d2cf81bd4e7d3f0b9": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/package-repository/CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA.json",
+      "container": "source_bytes",
+      "source_id": "sidecar-bytes"
+    },
+    "fe62cc5078fea4da5ade0866d847b70673e05cfe528fecd5285e85f86909e515": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "manifest"
+    },
+    "ff1f1f286a4de7129348df7d301970ad50cfa0904fb7b82df66e6478686c0908": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/package-repository/SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA.json",
+      "container": "source_bytes",
+      "source_id": "sidecar-bytes"
+    },
+    "ff3108382fa5f0b7c21cc875114ff365f54f3442a659dec4f2b91cabba670e10": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-image"
+    },
+    "ff74ebd625b3c64abedcdbaf87dd0b2f14a54911e8ae1dab74bf0480ca132ec0": {
+      "recipe": "record_canonical_json_v1_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+      "record_id": "url"
+    },
+    "ff7a052c888048b927f9116322b4b237417eb7efacc367af4485ba998da8767f": {
+      "recipe": "preserved_string_sha256",
+      "file": "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json",
+      "container": "preserved_source_bytes",
+      "source_id": "bytes-clear-payload"
+    }
+  },
+  "files": {
+    "fixtures/semantic-families/certificate-presentation/certificates.json": {
+      "file_sha256": "341b3abc13a4d368acc75c7952f7fb46a88471d57af5aaa51bcafe5a1c7bbe7f",
+      "allowed_hex": [
+        "49ec1dfe86c69aaa7474178ca2ef64e472842700782c1d9043a5bc53ceecce64",
+        "5668904af9ca6d3974b27a69ed0312193882e2b6aa96232c8fe6ea639593f89c",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "e8bb9a6e0e1ec2b649a5e81be192c1ac81990b92c201c287454edfdcde70f280"
+      ]
+    },
+    "fixtures/semantic-families/certificate-presentation/evidence.json": {
+      "file_sha256": "8f709a972d92e390dfa960559145c2a2816c5d52651007002727d16c95297d09",
+      "allowed_hex": [
+        "49ec1dfe86c69aaa7474178ca2ef64e472842700782c1d9043a5bc53ceecce64",
+        "5668904af9ca6d3974b27a69ed0312193882e2b6aa96232c8fe6ea639593f89c",
+        "78b8ac6eb76273c023d3d0d3eba34010498e9b812a6697836de8e95ae42d8ab2",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "e8bb9a6e0e1ec2b649a5e81be192c1ac81990b92c201c287454edfdcde70f280"
+      ]
+    },
+    "fixtures/semantic-families/certificate-presentation/exact-query.json": {
+      "file_sha256": "5a4506ca00535047d44e7e075def8df9c13b3717a819b409e2060257dd583dde",
+      "allowed_hex": [
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1"
+      ]
+    },
+    "fixtures/semantic-families/certificate-presentation/name-query.json": {
+      "file_sha256": "9259e1214d6627be05b7af15c86b6d1fbb16f0db7ef15e3bf0ce9941cd693313",
+      "allowed_hex": [
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1"
+      ]
+    },
+    "fixtures/semantic-families/certificate-presentation/source.json": {
+      "file_sha256": "78b8ac6eb76273c023d3d0d3eba34010498e9b812a6697836de8e95ae42d8ab2",
+      "allowed_hex": [
+        "49ec1dfe86c69aaa7474178ca2ef64e472842700782c1d9043a5bc53ceecce64",
+        "5668904af9ca6d3974b27a69ed0312193882e2b6aa96232c8fe6ea639593f89c",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "e8bb9a6e0e1ec2b649a5e81be192c1ac81990b92c201c287454edfdcde70f280"
+      ]
+    },
+    "fixtures/semantic-families/certificate-presentation/spki-query.json": {
+      "file_sha256": "932f185804de9e70254f1e9940b41d19352e5c685a2dcb32d3236be377de2f6c",
+      "allowed_hex": [
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json": {
+      "file_sha256": "b9bef64ca8d36bd885ebaed2a9a19144518ea6a1ba1e6d66c9b0b44457ef8b46",
+      "allowed_hex": [
+        "17f78b9b3df0ee119e0a0e4e8ce80d31662ef811ffa3b588023c7158fb0b1230",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "3b631e7a49f78fbe6bffd21b23dad144e39faa87efe66b2327c43dd71aef3fee",
+        "564cb9fea8988d2858a38fdbccc695b37e0943ec9531fbe5f21e83fc92c01788",
+        "6b3436a927af5580ca9a64d9a85d2ef2b7b859ebcba4c41fb7eadcb53156ad6c",
+        "71cb556035ca7bb8c2e4c83e423055b0129facbdc00944f7d97057ea58968ff9",
+        "84a04c248965d2392b463bd74424c512aab08a08ac8c231ccd34591a617c9913",
+        "ae15911a83dde18751791cfb373d2003179e96440b5148fbf8c65fd41f86ff40",
+        "c9b4ee544577cf68bb36d7272bb0fa690a415a94aef494df8caecab7d928acde",
+        "cfb3ec8d0e07dbe5dae42fc427dab09de0cf2fde6657f5bc96c342022d0468ef",
+        "d7f4c6078e3914681cb461db6a96a6330707482c5e30e3a373a42196ab01dec9",
+        "ef695004ea6ea24cba93af75205bd368052803fdb0550a4c9c6e70fb4a4eb509",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS.json": {
+      "file_sha256": "0b7cd48371d810f0fd57eb2d083bbe771ed5b93c5146292e516aaea578e18b0e",
+      "allowed_hex": [
+        "1d91ec79a1ef3d47c52f067985cf2f15d5f002f1ea0857d0647aa37803aa4976",
+        "2108bf46973f30b09da3e3ddda333891340d1504ad8c7096e64ddb944e0b661f",
+        "2d7c09188d414c888f37b661e27aecdd54231e027ea2c8ad9c1e313aab34c5d9",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "332dbddbf576a7e036e605062153f644430656acbff1afa2d29446d8084c1d49",
+        "4e3778779366b17499780f08784df0006ca935ca478d5c1b5aa4be818d41a8b2",
+        "7a76187118f9165764246320b0c0df11e845f7fea0a17d8e046b2c0ec7cf00b2",
+        "a7592cd433de8190ff85d9423e72f06c8febdd330b613dc58c28a961e8490696",
+        "d4d5f450925ffb26ab63c37f14f9ecd07503b48a5910e17441b53cc918651487",
+        "db37ea3d06a9d871ebe3084d9b9ccc473c54a18d7501187b6f87508c42eaf6b1",
+        "e90c6e2cca7ebc7dd2ead5add5197e1ccde84a2c403e5e43ccd687bb69abd48c",
+        "f26d0e4032d86a96c590093e6f40151bf0569d2565ff41e4ebe2e30cfa9d56dd",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856",
+        "ff7a052c888048b927f9116322b4b237417eb7efacc367af4485ba998da8767f"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_EMAIL_HEADER_VALUE_CLUSTER.json": {
+      "file_sha256": "fc45d1cfeccc70cc337046567553904d05e388cebb565ffafaf7c763eb163efb",
+      "allowed_hex": [
+        "04f612ce99b120a25f03bf7e48b1c2a71b39d2aed92e6eda85cba868c9d5043b",
+        "13c14c390eb8d763e4c2d0473b4127cfdf1f6135556880f3171e426d5bad106c",
+        "16ce3874d259437c4389c88cef5778c83a105ab943af17343b085d2a39ee136b",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "311e453e8b55abcaa4bc8300eb4b46fffc7e9e2e8781aafdbad081bceac033c7",
+        "446e86c782cc8d5ec31e65f434f998fd1f06b68a4ae473b419fc0128db821a4e",
+        "8292e6ffab07f992e657cc504f56356b864d449f6f9adb6a2eca755dd08b84a2",
+        "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba",
+        "e9756830640282441d08ef23387a6d37ee468ab47ad4f89d7c4bd14f7f8c457b",
+        "eac630436d03314d4fee8a9fd9193c51644420310c18be4295a4d267303589e9",
+        "f36d85f390c6dfbd18a55e103de3b5d5ed6ee439ea156843e591ee3bdc2e78b6",
+        "f4bffbb64e54adddb203a49b4eec5cd9a565df9f840737d631cfed0141ae5ad7",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_ID_HOST_CLUSTER.json": {
+      "file_sha256": "dcb7f1a52a6e742fe718cf1d227f727f854056cbecfb5a44bc7939c73cbcf3f0",
+      "allowed_hex": [
+        "07674ae52344e6b664fa03c374b39af20e5f90e3e6b6dd401473e0f540ed22db",
+        "16ce3874d259437c4389c88cef5778c83a105ab943af17343b085d2a39ee136b",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "446e86c782cc8d5ec31e65f434f998fd1f06b68a4ae473b419fc0128db821a4e",
+        "477d00e7169b2e2511a5091149b4e9b2cdbc99a54e1569fec006a6f8498ac28a",
+        "4e21e74bacdd6764bab3292ed44d27713bce9cd945fbd8063c152209038ad50a",
+        "5e8501b30bcbe7784114fd79d190ad8b3da9c92ca20ba5fe5ba85705ec5237bb",
+        "8292e6ffab07f992e657cc504f56356b864d449f6f9adb6a2eca755dd08b84a2",
+        "afcd2da50ec66552dae0e7bee4cdb1eacbb1c34f4600d07a7ce2734950ae4a24",
+        "b26c6dd29f13660f0f863c27f82a0337500f8ae00e3d7f29a3e0ecae52cc152a",
+        "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba",
+        "eec415c5960e231c4c5343d55ec25d2af84b01db1d8e164dec3c2964f9c896d8",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_EMAIL_MESSAGE_TO_EMBEDDED_URLS.json": {
+      "file_sha256": "edede76caded4df8fefadd3e0e2c2615ed725a2608eddf3a6dcc981aecc837c8",
+      "allowed_hex": [
+        "1d37fc40801f860bdeaeef41205f2d96a2b25ef50c314f88d80455f634b10c28",
+        "25d7c79fc8442ab33515730a0fc348f598f8c72be79f1e41f90f0d08cca26212",
+        "26b58c1176d80a68037bb1c1569e8b2f815f1062b1a44689715c4e2dc49b4cbc",
+        "2aae5d3cbf8329b985ee4ee88ac1abea7f957d69c235ad33042d9ee63c63d392",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "336f61d6e579856a81ed3144959fd22f20a6e3677c3c3b97e9afbe5952175d68",
+        "36c1fbacb48e7e298c31da8cd5bc9dfe4a5512ec5e6170a5bede9cbc7297fb9e",
+        "7ace96f9f995aebd2d35e185a7fe604424cc5a7eb25e6e76c7ec2f46ad9dc04e",
+        "8b31e1521d81d5a6f01c7fbef59ab2b45a3d349f0cd53014b38b87a8aad64c2e",
+        "927490a8f8b9ad9f4685754d1287b471b407443b02ce51c65e7ce110227eac76",
+        "9be5eba9de753ff0d0c95fb6295fc244c27d886035dcf0bf587d44da98d0f06f",
+        "bceda9c68367731fe98b757e3286fc18349695d99f93cbc358ebdab3f9fa503d",
+        "ce0c7a8d80cb2ef869b6737d08159e74a7d5bfd083fc1dab5055cb0c08508de5",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_FILE_SOURCE_PATH_CLUSTER.json": {
+      "file_sha256": "edf440e5196fac5e95aa139c2df706110326b8243304fd54e38032725fe92e21",
+      "allowed_hex": [
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "4e5bf7f9e158f0d6dd0654045a28be93b6d23e6d23968a92cbeebe4846b12e29",
+        "6039308fa130007a15d40c6ac4ef96b180bbfcab63493ce412e08b10e76dc24e",
+        "7cb1fa868ad76e9d8f25f1fa6ea388f6713c9b55fe205b60ee527acf4fb29306",
+        "8292e6ffab07f992e657cc504f56356b864d449f6f9adb6a2eca755dd08b84a2",
+        "88defe84765fe5a208a534794ea170df166ba5a410f7170427fb35e916b15641",
+        "8f2c004c30a7d77da3b2f147d1c690bbe532f64787c6d0a918d397e50438f909",
+        "c1290ace9c566f7ddf603d11e396010311c050aaf5f5b8105329aabb9233c3f5",
+        "d0283502dcd5e577a6793b3dcb3394426dd053ae962b8b60404e91b7a198457b",
+        "def70211cb29bc310fa7901afa6733694e007a64f79969a780f4a4214aa99fc6",
+        "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba",
+        "e7ebd7281a9cfadcf6e0d2a5ec0829503d7f52de7e3a1cf23cc0eaa407746bbc",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_IMAGE_TEXT_REUSE_CLUSTER.json": {
+      "file_sha256": "ebba9f463749ee0b3fa84d27b31e0341f2e7c420d80b2b4ba424a858026caf71",
+      "allowed_hex": [
+        "011c177f8eebc9b0e835878e35913814398d5eea3fece834d0ad9a69c53e5576",
+        "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "56c1ec021cc6a16aacbf8a3a175d2cc480f6ac9f63d80bff196e4434284bfda8",
+        "6495225b85f2be698c81d5e30bbf466f43fc869fca31cbe4515552c925404d19",
+        "6c7a5406490f6e4ce0e6ba96e932d006e1d744d9ba3c3193b8a652c9ad761fe2",
+        "a135dc0555d1fa4c3829760a56ccebaac3b49cf6ba493f30b938602a4d944d55",
+        "aa4ab2d852690a4829e5124fadd41be43fbf88761d3a1c627931571e090ca0f1",
+        "d8b1d548bbf30c6d0ae839f993c034101701ba001a8b21c89ac03e2de1acc8c6",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856",
+        "fc9b266605d4db8a4c8ea54fbceecab11d58022d1440c89cd95f430f83b3699a",
+        "fe62cc5078fea4da5ade0866d847b70673e05cfe528fecd5285e85f86909e515",
+        "ff3108382fa5f0b7c21cc875114ff365f54f3442a659dec4f2b91cabba670e10"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_FUNCTION_NAME_CLUSTER.json": {
+      "file_sha256": "acb330f881a20f7f6a222bad0cdfa6dc6e72aafe5e7b9f73c5b624cfb51264e5",
+      "allowed_hex": [
+        "08e4754556e142672e89d37ece9faaa2f6c07d80b68baa57b47e6172e17cc07b",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "3d4316f319b744cd86c634a3c7f9b8a9c71dfb83bb0f73773ff9a73760c21816",
+        "6039308fa130007a15d40c6ac4ef96b180bbfcab63493ce412e08b10e76dc24e",
+        "702213106dadaa2b9a25003600e6fb99cad13f924f2f30489f4bf4b0225c6bdc",
+        "8292e6ffab07f992e657cc504f56356b864d449f6f9adb6a2eca755dd08b84a2",
+        "88defe84765fe5a208a534794ea170df166ba5a410f7170427fb35e916b15641",
+        "88f0f6c63bfd0f5c349da69a4dab705a377f0452a96ba036b8e3a176e044c449",
+        "9c4c29bcb4370d124e75c82f6bec689dfa0c03ed80b320a6298cb197c7cbb636",
+        "a5b30b79bb8f74af2936c688fa7f348d640596b76d9527bfa41ae9b166d9ac58",
+        "c9b056d9e215b535a1419c110708fb78dfcc215c818f20ca912d7d6f9384657a",
+        "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json": {
+      "file_sha256": "39dabb8d0dbc5c0d2ce84bc7f0aa1787a7bc8518105a46d47e9dff10d647a06e",
+      "allowed_hex": [
+        "13cf2fdb69f7aee94d028d306fb0eda2aec35543b77ee2612840a2f6229a3fb5",
+        "2335a971e59b6f323bdbe149bfa7a601b33907e37c8000dd6ee3844b9ddadd99",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "4c1a552a7bce381d489096987dcad3f4e50346b46a8ac20d69f634ecbe453e92",
+        "6039308fa130007a15d40c6ac4ef96b180bbfcab63493ce412e08b10e76dc24e",
+        "7fa0f66eacf3b692d76817cbb96330eb44212df5af776847859167852fb3d4f2",
+        "8292e6ffab07f992e657cc504f56356b864d449f6f9adb6a2eca755dd08b84a2",
+        "88defe84765fe5a208a534794ea170df166ba5a410f7170427fb35e916b15641",
+        "97009371d7edeaa8ac110df60b0bf6d00f2a1abd22c24d2f0ee4a95f645b5570",
+        "c2bdeff6c09d104ece703628f9b6d613ada6d87062ec636a0a6e11c745778b20",
+        "c890d818af118b322a9b82c48a5d26dd3b1367a16aa996684444c0e8f7e60d2e",
+        "ce6a8b7236d02d25a1672ba6d82d7439458d057d809e95cf6cedd401b633dc49",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json": {
+      "file_sha256": "fba45db38fd91f8a940e5f693759bd8716eb7e741e75a98cbd0901e39d15092b",
+      "allowed_hex": [
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "6039308fa130007a15d40c6ac4ef96b180bbfcab63493ce412e08b10e76dc24e",
+        "64a7bdd4196e8bfbf75ca4800b8a63fac81ab4cfa42742596c00310601d9e7ed",
+        "6ba8a1cc732c2b8a25477400302ca5dcba76e648847e0c9cbea35aa7998b418e",
+        "80bc897bb6245db493bd7bc1704e1e0b2361c27ffebef6631574a0a945f5ea6e",
+        "8292e6ffab07f992e657cc504f56356b864d449f6f9adb6a2eca755dd08b84a2",
+        "88defe84765fe5a208a534794ea170df166ba5a410f7170427fb35e916b15641",
+        "a8349facc3b8085834009ddf465f827ac29beec171573f13cff9b9c25db33835",
+        "ad8f1dc21b8c507ddeb06034cb1ed1030021ad677fa8abc0f124c1c2d11a8f0b",
+        "c52b6b70ebfbafb9ad30cfd10bf168bf37f4e29ef2a4381162231f3d347a7929",
+        "d3657a8031360bb96527e5c570d535e9439c0c4da489dd1d8b31e15335ec2451",
+        "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/extraction/cases/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json": {
+      "file_sha256": "32b1c3bf01c9161a349dae25d67848b8e097b866a62d59cf972de535be939a85",
+      "allowed_hex": [
+        "017f9df3a345091d94077a60510164aac01de1b9678f7360cde95998f9ffb238",
+        "0e3988e4970f921aacee464539ea6cb5c2a44d8486aa8bdae39918836e568ea2",
+        "1153f52bdb1336677056594d26611fd0c62d0705365e265db2dd81a64cf672aa",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "4d8633a776c2b87afe84c870d7b197bcb966e4b0796a69d3f3b92ff523a6c30f",
+        "68472f32f2a08386269de3fbbdc6651e3cf930295a800a23197e528970228c66",
+        "9c707dd1c0339fd8f75bb554b05e37f8a782e560451434895551632b6e71559f",
+        "a5e496412b235029dfa61bc624087720d11ac0d4c60f2b0a4fe4c6c914079d66",
+        "e3fdae2e8cf8728fec5ef29307c73630af4b6c359d76c2ff0ea9f35afe868af4",
+        "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba",
+        "ebb0a02415130b5edc58d5961ac5a68a10b64d4ea224353384bcd33e467d3e88",
+        "f7705316d2550d8778579cfa0291540cb4850a5c44603a474cb577d70451428c",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856",
+        "ff74ebd625b3c64abedcdbaf87dd0b2f14a54911e8ae1dab74bf0480ca132ec0"
+      ]
+    },
+    "fixtures/semantic-families/ja3/client-query.json": {
+      "file_sha256": "4fe330db5a384cb9406c483fb793ccc4cd4c9b74719e2825c824d557cf698581",
+      "allowed_hex": [
+        "0123456789abcdef0123456789abcdef"
+      ]
+    },
+    "fixtures/semantic-families/ja3/evidence.json": {
+      "file_sha256": "13de94b7704113ea520a7cd31f0afcbed10376554067e381b0e5ccb2d4773398",
+      "allowed_hex": [
+        "0123456789abcdef0123456789abcdef",
+        "9665a3e2a4674e7e58b466c43482d7a764440969ea09b96d53ea09cadc4bb002"
+      ]
+    },
+    "fixtures/semantic-families/ja3/server-query.json": {
+      "file_sha256": "1aa7f8fd499c872a1d471690273e6a9966b7cb7764ae8f26d96aae96909a9a5f",
+      "allowed_hex": [
+        "0123456789abcdef0123456789abcdef"
+      ]
+    },
+    "fixtures/semantic-families/ja3/source.json": {
+      "file_sha256": "9665a3e2a4674e7e58b466c43482d7a764440969ea09b96d53ea09cadc4bb002",
+      "allowed_hex": [
+        "0123456789abcdef0123456789abcdef"
+      ]
+    },
+    "fixtures/semantic-families/package-repository/CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA.json": {
+      "file_sha256": "28e40ba77ab6401bf4d3cef00709fa4de67abe2f2a4fce5c4c1318ad82d8e362",
+      "allowed_hex": [
+        "bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7",
+        "f6c72fe8f9b15352ce3b4f9eacd2a49ed66757bfdeefa9680d4205319cacf2d2",
+        "fe4ca213f6654c405d994685184fb5b4247723650386921d2cf81bd4e7d3f0b9"
+      ]
+    },
+    "fixtures/semantic-families/package-repository/SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA.json": {
+      "file_sha256": "1256cd68585ed7c53896228bd47c9557e2a18cd2557712d3fa22ef5860e2117f",
+      "allowed_hex": [
+        "8a07d1650b6cb90208eace69038b0df34a0d26951c6f4b232b3cdbad08eaa9d1",
+        "bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7",
+        "ff1f1f286a4de7129348df7d301970ad50cfa0904fb7b82df66e6478686c0908"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/creative-reference.json": {
+      "file_sha256": "371ab661c793f482b887c5b33c156bc40252c073a99389641ed735796dd3644c",
+      "allowed_hex": [
+        "0441567fb00f05d6fbbaeec8fdab7ed6504b3293ef8efa0b3e5ab36846e3a5a6",
+        "0c2b932ca4fb20c743553428c085808fb088efef50f67313aceac15230350b68",
+        "1429a87374af44eb003bd3d045f0a81d6b0194d81e60cb1b5face62ad143a8b9",
+        "19e56a5a4aae54f4abbdbe3e4a8d599b2639777a1080b67158ca51c555504230",
+        "5848fff668b3a0e33c30ccfa8133d8a2bc8206714570f578d905fb0683d34fba",
+        "693fe1db1a1720281fbe45dcb023af351878fdf6d17b6a99754b69c4b991f4ed",
+        "71166c42bee3aac05f4f8db96a2e14b59c5ad819d12e4861172fbaee468b9dd3",
+        "7571548954ee4211eaa4ffd29370f1ff43b5420aaf958e18d812b6bf9870eb5f",
+        "8a501cdbcbb9a07e43060c17b5c1e86caa639cae30dfd7981766465f38a40b75",
+        "8c3f9f8cd1f4dd5ad031fc118b16676b83834ec7be71c887e43a7c0c48a70b0f",
+        "95ddd185d7812c19d0020048fce582487be5a0f38f2da30ab11e9eddb730f921",
+        "a54023317c5898791b03ae4228a8177fbec89e4aad5c0380309f21006565dd95",
+        "d44d115a13bcbb3862d109eff198b028f969ab69a86e2dfba597e3c72007ee32",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856",
+        "fa732aa95c0a6188c15bad485212fcedc19910209dbe7a6666ffb60b035b36af"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/creative-request.json": {
+      "file_sha256": "9761c48c364c54631bf0bb1a5323f6f963c88575f90ab15706324bb5e03ed7bb",
+      "allowed_hex": [
+        "0441567fb00f05d6fbbaeec8fdab7ed6504b3293ef8efa0b3e5ab36846e3a5a6",
+        "05b36f1235175cf3a50fc227bb05070d975b60de5df1a1b5a10c7adcb36667df",
+        "0dea3af0d9e08224f372baaf06d5a993ca2b44c02c2e8876af0995d864125f5c",
+        "1429a87374af44eb003bd3d045f0a81d6b0194d81e60cb1b5face62ad143a8b9",
+        "19e56a5a4aae54f4abbdbe3e4a8d599b2639777a1080b67158ca51c555504230",
+        "2b4cd442fd89b52859dc9fbdcbe3ba5c8a726becdd80fe2bd1829e9614a883ed",
+        "5848fff668b3a0e33c30ccfa8133d8a2bc8206714570f578d905fb0683d34fba",
+        "7571548954ee4211eaa4ffd29370f1ff43b5420aaf958e18d812b6bf9870eb5f",
+        "89b81f9704e5154bcebc73e81ae86f58cf8150018dbfff782025207d0dba8e4a",
+        "8c3f9f8cd1f4dd5ad031fc118b16676b83834ec7be71c887e43a7c0c48a70b0f",
+        "94cbe6bda5b7b2adac6d5124a273c606e308a163d2112f6ee455e3488e9bd421",
+        "94f81fc79528c35b1a903692886f558a82cc72d5d9e4e4c0e5b8d67920432c86",
+        "a2e02f7ac3a1113a15537c0680b9611ddc3156429bcfa50042823f7292e7d6e8",
+        "a54023317c5898791b03ae4228a8177fbec89e4aad5c0380309f21006565dd95",
+        "b0a89354740f6215b80cfd6d1cca5956121d1d03339d3947bdebacdc3f76f914",
+        "be85d85fcbeec09c3a0f3e260addb67ec683e3175a78cf8975276b98ca363dde",
+        "cad71d1c252762190861e6d0c7682b43dda89078751845fdbb84186233e178d5",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856",
+        "fa732aa95c0a6188c15bad485212fcedc19910209dbe7a6666ffb60b035b36af"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/kit-archive.json": {
+      "file_sha256": "7a66f54cbf4089b658a726f474cef5e577fddd88c8431bd057bf48b08b5bd0e7",
+      "allowed_hex": [
+        "2407122e541b30dbbf8de956f2b9f25ecbce2f29b53f56fd6548953e12de08ef",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "762542bd46884944660ae6e825ea1435ac2ed752393d200836648482522eb2ba",
+        "994486d72f1d56a975cfd15787344cb3db128bb1bbbb4a901818be569ab96c9b",
+        "c1054b403fe047a885a81b4026a85510f3ad40bff4836a89e967b63558a103cd",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/kit-file-set.json": {
+      "file_sha256": "b4f3fb59f1e2f944f1b0f001aa68986e80d04c0a2fce654dbc132564351d41db",
+      "allowed_hex": [
+        "2407122e541b30dbbf8de956f2b9f25ecbce2f29b53f56fd6548953e12de08ef",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "3ecc8a77b78f1b02a627b6221910a85ca36416da8d1b58d3e8fddd94d1245159",
+        "6634b040bd73176c7962d269458b0528b4e4bfe5429aafa2259f204d5266ac8c",
+        "673b047d7025884195046873da89c8dd3f6bca19d7219c2d9f20e8c282b823b3",
+        "762542bd46884944660ae6e825ea1435ac2ed752393d200836648482522eb2ba",
+        "957e331cec280bdf2af8840e1a9e83e78b7dd6e0f4e1eba43b5b1c04eb1322be",
+        "ab636c20973c8d837a80c1303136999ca4db061b2cd36a4143b204c77b3d41ed",
+        "c1054b403fe047a885a81b4026a85510f3ad40bff4836a89e967b63558a103cd",
+        "c928d91b4ff4fd07278329d6878fa71ca03f76fc908d5b0cd400dd7c7d5afa36",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/kit-shared-paths.json": {
+      "file_sha256": "773e3298511d6b85b815a4b15e3b3336e973b0096ed2a6b3801ccbb62ae38a7c",
+      "allowed_hex": [
+        "03fa25a227b68e0a6c54efdf21806db3c5cf0e6a87bc161c7bb1aa3069f1aadd",
+        "2407122e541b30dbbf8de956f2b9f25ecbce2f29b53f56fd6548953e12de08ef",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "6634b040bd73176c7962d269458b0528b4e4bfe5429aafa2259f204d5266ac8c",
+        "673b047d7025884195046873da89c8dd3f6bca19d7219c2d9f20e8c282b823b3",
+        "762542bd46884944660ae6e825ea1435ac2ed752393d200836648482522eb2ba",
+        "957e331cec280bdf2af8840e1a9e83e78b7dd6e0f4e1eba43b5b1c04eb1322be",
+        "acc00fe5b9564d01eb78241ed4bb5138c8ab18c8275610fdafb8935477414749",
+        "c1054b403fe047a885a81b4026a85510f3ad40bff4836a89e967b63558a103cd",
+        "c928d91b4ff4fd07278329d6878fa71ca03f76fc908d5b0cd400dd7c7d5afa36",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856",
+        "fa2c84d017e7793e4fc5775aedf52b86bee4f283835db69064e06851476c039f"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/listing-asn-associated-address.json": {
+      "file_sha256": "9be1c63684f4e1fa217054db2a5893d6aff5d7c88cb486c59103d5d3301dee6d",
+      "allowed_hex": [
+        "23107a0395edd30657d70e9d23a82f47c34de466715e029c0f8eea78bfb297bc",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "3ca7f0848ac0d34d237a15613d3ddf3756886a4354999283ace0f4adac430788",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/listing-covering-prefix.json": {
+      "file_sha256": "0cd4d2262c48d902467044ef46b47e3736afd1c8513217a9212fdde649686d5d",
+      "allowed_hex": [
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "37ba13e2564d8f0b63408bdb30afd4f2fa0cdc44c62d921db4f6bf80004739bb",
+        "8d35c97ca141cef73b792721ebe89313f426100213288442d47ad259ac371223",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/listing-explicit-asn.json": {
+      "file_sha256": "23a45832060547be46e726f5314e9dee3d70ea6af06c4d062b9546f2364e139e",
+      "allowed_hex": [
+        "2a2aaaa9314e67ec02ed88187a2b982ee1633fd9c4c05232ae6f281a6ba2a57a",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "6978f013ac7e7bd876eeb7447e55e8de70940d7aa1d918dd4cc4e13a4740f15d",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/listing-ip.json": {
+      "file_sha256": "63a75910cbb386b18a10c67373e6550d2ea6613d6be8c5f6b44da5dd5b695522",
+      "allowed_hex": [
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "37ba13e2564d8f0b63408bdb30afd4f2fa0cdc44c62d921db4f6bf80004739bb",
+        "8d35c97ca141cef73b792721ebe89313f426100213288442d47ad259ac371223",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/officer-direct.json": {
+      "file_sha256": "552ebf7adeeac1e86d807f7dd8802164fd93effde27be19fc5a6b38312f45e79",
+      "allowed_hex": [
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "601d8a109528f7cd88bcee6b40a5982b04cd809387b2391ab5e5ab9447e5dec2",
+        "6939e1d24a90d8631493c137663ddf8f9befc0d9e36f0d431b4c303181a27873",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/phase-contested.json": {
+      "file_sha256": "d62fdbd141e93e30454a71d3c78103f9684c0685da1ff60220d1ec29e881c4af",
+      "allowed_hex": [
+        "05ae49031fccb4e43b1c698cb17dc265d9af2f1af70d13ce4eb4a538582f1e51",
+        "15879f94b622cf9632f5d7228e63a19ba2b231a7158cb26865380b76ad70b3fb",
+        "1888df014ba0781bc882f95b6882864a4b7e6d8b1c70d64a2683fcd890f514b0",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "552bd3d3574a84d08e40833ab94cb447f13ff3662f739ea6e4d2277cbead767e",
+        "70ec820cdffa9f8786c9b255b352c918042dc51e6f68f9f9df9e8d32fc121143",
+        "7583668d8e34f3a25437b8244f8618cccf1d8338a73bd543b42c9c3cd71225de",
+        "cafb14e4c02f26b1f44029ad45f7740f2c2d73798d8c244519c337aa31078d86",
+        "d77157b8394bb4795bfacdda2933be7cd3bd2cc445c0f5a0378e88867f7712f3",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/result-bindings/cases/phase-mismatch.json": {
+      "file_sha256": "44605ac234397ca98be35a3ccdc5f36a872043cbfdcdcde7a816097383fd3f1f",
+      "allowed_hex": [
+        "05ae49031fccb4e43b1c698cb17dc265d9af2f1af70d13ce4eb4a538582f1e51",
+        "15879f94b622cf9632f5d7228e63a19ba2b231a7158cb26865380b76ad70b3fb",
+        "1888df014ba0781bc882f95b6882864a4b7e6d8b1c70d64a2683fcd890f514b0",
+        "2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4",
+        "552bd3d3574a84d08e40833ab94cb447f13ff3662f739ea6e4d2277cbead767e",
+        "70ec820cdffa9f8786c9b255b352c918042dc51e6f68f9f9df9e8d32fc121143",
+        "7583668d8e34f3a25437b8244f8618cccf1d8338a73bd543b42c9c3cd71225de",
+        "cafb14e4c02f26b1f44029ad45f7740f2c2d73798d8c244519c337aa31078d86",
+        "f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/asn-evidence.json": {
+      "file_sha256": "9a200cb2542aa7603805a0924616af7a4bd302827197c07d7c52fe9c3e500842",
+      "allowed_hex": [
+        "b55354c2be443103ab618f6a81d55e95b74090f422c7cf13f36b5caea984fdc3"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/bank-evidence.json": {
+      "file_sha256": "5eb7384e3ff69d8ee7e6195610532c335f27d47d1f8487c5be90e78f5624aab1",
+      "allowed_hex": [
+        "d93d1dc8faf682b2cb6d766e376612e3591a86c7d4a798a3c1ecda00f021507b"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/certificate-evidence.json": {
+      "file_sha256": "c97a2f195efafa17f3dbd5ef51b33f727714a6f0a431550466769aa4d64a499c",
+      "allowed_hex": [
+        "b1a295edfb35c29fa7c8e613fa9cf1bafba8bcd9572becf354c681da0154c270",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/certificate-historical-query.json": {
+      "file_sha256": "d1c6e41db220539b7bbc54e48cf68acc06f5cd93f0e1123a8aec440b116d3874",
+      "allowed_hex": [
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/certificate-retrospective-query.json": {
+      "file_sha256": "df7b051ea954739dfba25d271392d8ac72e320761caad3939100feec55896d21",
+      "allowed_hex": [
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/certificate-source.json": {
+      "file_sha256": "b1a295edfb35c29fa7c8e613fa9cf1bafba8bcd9572becf354c681da0154c270",
+      "allowed_hex": [
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/crypto-evidence.json": {
+      "file_sha256": "0a4c23f68330179828152291daa7c2504312353506356d15080ba46eddfb67f2",
+      "allowed_hex": [
+        "cd9a39ea375e94213a8a6c543c1af8f0efaab1a2fc2c9fc4a10395fe6a6fcd46"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/domain-evidence.json": {
+      "file_sha256": "4fcd2763a7b25945e3ccc11f47d5f6b2eade0ae5571efcf546628d3e365e9723",
+      "allowed_hex": [
+        "c2ecb8cab4b113d2d1638bc93cb1c73c26ffcc2690d01be78994818b9b02420c"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/owner-evidence.json": {
+      "file_sha256": "4e0f0f53cd21dcfb497c0156f754819f7e9cbfc873fe9e496b7f405b0cf792e3",
+      "allowed_hex": [
+        "a0c26ce682abdb6fb2876273bc71da6d232c4a37933cf330f77a34dda85e9d9c"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/parent-evidence.json": {
+      "file_sha256": "10e7e3fb28bcc69b4ed272918c3a0c05ad4c434c69af0913a46782282ca7e925",
+      "allowed_hex": [
+        "df1181c3f9756119629104cb1d41a9c670d249eb53123ac5cac20cbb41635d4a"
+      ]
+    },
+    "fixtures/semantic-families/sanctions/trade-evidence.json": {
+      "file_sha256": "1c30caeac094030be0d4d49eb2f30db04a59d96b33d4686030c824b4003e4743",
+      "allowed_hex": [
+        "4c7cd0bd36c205d9a45d681ce82836a2bcef174dc0587ec5dbcaad7e5024c766"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/apk-presence.json": {
+      "file_sha256": "7e63934e3a4b6d79beb43a256043c7d9df21cd632229a74604f88f036784cee1",
+      "allowed_hex": [
+        "2e8a7fc6315fe25bdde94eb6c2611d1af736c2e927f7740244e494fba400ff4e",
+        "35d9fbb181ea166d5cb0b98a2f5ca9a18fcd3cf50710530501fd1d95f0668c17",
+        "461e4868e0965ba50a5a6408bf0b6781b33872db61a6b17d49fcf4fb390afbdc",
+        "48eb0e9bd9c34f62e31de7868d646d1011fb440ae05678606865451dc9521bcf",
+        "494194fb0ae084ad2b20a6a2f7ee5c89a1ce29f6a1f15c4d8d023942d301dd14",
+        "5b55c676058f6af7fa762ec8b3e89136ab8c4fd77f8442b752e1d2eb6caa39ae",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "8778edd0b2e7c8a80007b020fdbf27023313e78f9dd740dbdee87738cad4703b",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "d10d6a99390615e0e6b08fce980d16e2c14034972e97d61c7106206fc78b11c5",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/authenticode-image.json": {
+      "file_sha256": "9eac76f6fcf4f4cf2f56e445b313a3d3aff9f0ddb95377ceaf302b4c9c15645e",
+      "allowed_hex": [
+        "031e1076eef2c8d1e54690b1924c79c6d64c376880c9cb1eb2525b7561816294",
+        "0fae5bdf84d72d62957ed1672d16f3627f8738593e65ec11c4d4af0c713523cb",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "633244ec78cd413b623bf147a78f3b11890f2d5f9ba8072d4fbcf76cdcb9c4e8",
+        "7ece7573da338614c47fb7a62fce75c7bf0424ee10ee0aebff7d52d1baa36365",
+        "8e36602debdd5971395c212d81d92a5ed3b458d662dd881dc1117370b342dbd6",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "ae7803bf20a1ffe6e72328fe41026bebfa747cda89c8fa3e251038f50d381457",
+        "e1a28307363b9ec0605f00c68732705bab6cacccb17ff223762bb1bb1518a0fc",
+        "e7d6cb70cea0ce065a0e3eeec6eab5e07e1cf1cedd2c906e182848fc15c9bcce",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/authenticode-old-reference.json": {
+      "file_sha256": "e7735df487ec1d52c219937e6c4e0a51d6e2fbfefc90947cd362d83350a5a0b9",
+      "allowed_hex": [
+        "1f28e1b2913274d44bd5e90fd81f899db1d94565732b2afca2ebfe6eb328320a",
+        "4299435ca07d6879084b06eeb5cd9641179190bcc53e0c867c16c15c18bfdb28",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "633244ec78cd413b623bf147a78f3b11890f2d5f9ba8072d4fbcf76cdcb9c4e8",
+        "68e7f12dc82541b4ea21e15fbd593e8ede577dc17a404bdd2f4b51beaa279e84",
+        "78cf1bfa1e47267fd554fde551d449b22758609726a622574f63cf2030224331",
+        "7ece7573da338614c47fb7a62fce75c7bf0424ee10ee0aebff7d52d1baa36365",
+        "8e36602debdd5971395c212d81d92a5ed3b458d662dd881dc1117370b342dbd6",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "ae7803bf20a1ffe6e72328fe41026bebfa747cda89c8fa3e251038f50d381457",
+        "b29adba63d3dc1131617c844eef35389988e44926e16f523a1d1b7ee65ef0a9c",
+        "b3d3cdc80dd1492a7578261e6acf71b3e2b2e35694eb71e4b0457e145ae59fa8",
+        "baecaecbeab6f007472a7fbf9fd039558b9fdec3b0849df9597353cb76e98cc5",
+        "e1a28307363b9ec0605f00c68732705bab6cacccb17ff223762bb1bb1518a0fc",
+        "e7d6cb70cea0ce065a0e3eeec6eab5e07e1cf1cedd2c906e182848fc15c9bcce",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/authenticode-timestamp-material.json": {
+      "file_sha256": "4fbdc715cdaf406d24159b58d4fcae7396c75895a0723ad098af057c1a5d154d",
+      "allowed_hex": [
+        "22799e4626f39322e9ac8eaf5af24b8671781afaca5f19c68c7865ed1883d7fa",
+        "2ea659668a2a8ab260c3149ae19e14489c7ae7834fb25de74d240c633d806b80",
+        "300c8e0b0130b47c1a779ecba4f997894773848815bee41f507961a5c6bd8c92",
+        "3e406a936290ad1ad0ad4136451694c7d0d41be5047e528ca648f1251e2cc6a2",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "8392a7fd19b9980a4f4ccc2e7e301a2729db8085dd61ec4f62e35fc3528c070c",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "b7e031bbb429b978848d0e04b20c3b4bff178b8ac40a4fda277c4251ebba9976",
+        "e1a28307363b9ec0605f00c68732705bab6cacccb17ff223762bb1bb1518a0fc",
+        "e667a7781aa9ba753ccaa8a6498549ff1f05fbfe0f61ce9394d198f216b1347f",
+        "e7d6cb70cea0ce065a0e3eeec6eab5e07e1cf1cedd2c906e182848fc15c9bcce",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/cti_apk_signing_cert_cluster.json": {
+      "file_sha256": "fd55f72fe84322d962e53aee1c547dabb0e80103cbfdb9389ad44da4f996f339",
+      "allowed_hex": [
+        "4560474548ebae08b34432721b33c2ba4c383e86577a59ecd95994181a747e01",
+        "461e4868e0965ba50a5a6408bf0b6781b33872db61a6b17d49fcf4fb390afbdc",
+        "48eb0e9bd9c34f62e31de7868d646d1011fb440ae05678606865451dc9521bcf",
+        "4df74ed142e6739911c3a01672d56256caf1b184220c5cb0c3e681a9aa29e0be",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "64302825ca38fe5fdac12f72d080e6114d95223d6f0a36ed348be4cfb381f8bd",
+        "6ed4b50c7c530d0b2fcc03ae4b7a9ff97bd89bb8c99e97ffc40b8ebdfbb0c095",
+        "75d724f7e15985b93e873a06c2ea9044bf411abc2b88feec3626af122a170c6f",
+        "8090b8cdd106809ea3ea6e8332b91df9f94ad27447bf8683bf948b0303812959",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "d10d6a99390615e0e6b08fce980d16e2c14034972e97d61c7106206fc78b11c5",
+        "effed21c41237f0476ac4044386ba16b3c6080275640ed9a25c421c7b3c9600f",
+        "f1e6aae6e11b0db89000c6df5d760ba405f2ec9f6c6a863d561c71751acd884a",
+        "f3fb2d26a1905cf61e8a310b5514def3cca4cf24282946fb15e998e3472f3a57",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/cti_authenticode_hash_cluster.json": {
+      "file_sha256": "f409eea7f5c47bc561b741b74b739910134edc16998214063bf0c8f16833b029",
+      "allowed_hex": [
+        "26fcc0d1b17da8ee9c2c070cd25b3d6f371991891721b43ccce69f326d5e5d0a",
+        "3251dd05e86c11bdba011e8780226cfc7e24e3142bf3b2376ce2472c69852f73",
+        "37733fc5fa5900a3edbd14aca1cbf305d5ee3a0c02b6211c14c55898536320a7",
+        "3a9fb8c57e4408969d45d34278fa828b8e9557f97b26f42ee4e219c21622f9d4",
+        "461e4868e0965ba50a5a6408bf0b6781b33872db61a6b17d49fcf4fb390afbdc",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "70ed04ce09590f92c3b8822ebe7d9e2bccbcbc05a2247e9fc29cd0abdefd894b",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "b6a8642ecfae37932009df47ef127ab03c8d07c2621fa01723b52fd9f88be982",
+        "ba204919dfb4cb168bfbdab9299daab2c8c1707a5c368376364c25f8fbd9d797",
+        "bda54efa62ec0dc3ce2b20e2be9ecf3a591ad76b30c0c06084fc2b22d9ae209d",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "e1a28307363b9ec0605f00c68732705bab6cacccb17ff223762bb1bb1518a0fc",
+        "e7d6cb70cea0ce065a0e3eeec6eab5e07e1cf1cedd2c906e182848fc15c9bcce",
+        "effed21c41237f0476ac4044386ba16b3c6080275640ed9a25c421c7b3c9600f",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/cti_codesign_cert_serial_issuer_cluster_strict.json": {
+      "file_sha256": "d14a1c9dcc82f2fe1cfb17170d337687d68645c36558fee7778d835fed60c608",
+      "allowed_hex": [
+        "06e28ed6c33e2f24f050b806295f8042f999029b8ced7834519faafd2aa7ed96",
+        "2b425127f37dac9970844ef57c7d483be0518bccc7ebd7c15cd991a10f4c6a8f",
+        "3251dd05e86c11bdba011e8780226cfc7e24e3142bf3b2376ce2472c69852f73",
+        "37733fc5fa5900a3edbd14aca1cbf305d5ee3a0c02b6211c14c55898536320a7",
+        "461e4868e0965ba50a5a6408bf0b6781b33872db61a6b17d49fcf4fb390afbdc",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "70ed04ce09590f92c3b8822ebe7d9e2bccbcbc05a2247e9fc29cd0abdefd894b",
+        "92102d9127fe8f08b01201fe3968f2777bde99245345dc1d1fca5f595745bc3a",
+        "9d9a78c47a635543f72095ce8a9e77168ca7df2f242d575672050902e9eae103",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "b6a8642ecfae37932009df47ef127ab03c8d07c2621fa01723b52fd9f88be982",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "e3eaa41de5df97230d6ee56109c2e1afe070206c033362bb675628399978b5a3",
+        "effed21c41237f0476ac4044386ba16b3c6080275640ed9a25c421c7b3c9600f",
+        "f4a78ac1e4d6554696045d5e48fb7283f8b780704c9bf80eb48545a2e14a51ba",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/cti_sample_codesign_cert_cluster.json": {
+      "file_sha256": "c04f42dc83bc3934ebcd521b4f2a0ac96ea91bf7f927e7248921145b8725bbb6",
+      "allowed_hex": [
+        "0b9f4520e180b0c66a875b6729c2684dce5a06e7b007e7e29d6120c894925afc",
+        "2b425127f37dac9970844ef57c7d483be0518bccc7ebd7c15cd991a10f4c6a8f",
+        "3251dd05e86c11bdba011e8780226cfc7e24e3142bf3b2376ce2472c69852f73",
+        "37733fc5fa5900a3edbd14aca1cbf305d5ee3a0c02b6211c14c55898536320a7",
+        "461e4868e0965ba50a5a6408bf0b6781b33872db61a6b17d49fcf4fb390afbdc",
+        "58e66ac78f666867d7b0da6e11af05d26b90e716f8d2b67ab0c37378cfe9335b",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "63764eaa0ec5a1b205629f6739e2338e5aabdf3f21cd0d1823b8a537aecae858",
+        "645b6319045b941f6843013e7efeaf3573bb6a9410a010f932b3f4b139a21a6a",
+        "6baf2f1ec1f6ec137cdc8bdfbbbe8ccef279ca770897da41175fc63af888cb31",
+        "70ed04ce09590f92c3b8822ebe7d9e2bccbcbc05a2247e9fc29cd0abdefd894b",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "b6a8642ecfae37932009df47ef127ab03c8d07c2621fa01723b52fd9f88be982",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "effed21c41237f0476ac4044386ba16b3c6080275640ed9a25c421c7b3c9600f",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/sample-scoped-check.json": {
+      "file_sha256": "98846e7a33cbffce788e4a6141d05ab062bcb0d6587b67ff6583e44bf7252e19",
+      "allowed_hex": [
+        "2149602385b26ee49bcc5f2ae6ad3ff46bf1a329f7465aea9050bc7337393cd1",
+        "2b425127f37dac9970844ef57c7d483be0518bccc7ebd7c15cd991a10f4c6a8f",
+        "3251dd05e86c11bdba011e8780226cfc7e24e3142bf3b2376ce2472c69852f73",
+        "37733fc5fa5900a3edbd14aca1cbf305d5ee3a0c02b6211c14c55898536320a7",
+        "43299d1710cf3e885e324ac7d54a40b3c10def9481216af267da5d4cc89b2ed3",
+        "461e4868e0965ba50a5a6408bf0b6781b33872db61a6b17d49fcf4fb390afbdc",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "645b6319045b941f6843013e7efeaf3573bb6a9410a010f932b3f4b139a21a6a",
+        "6d52e7c691a5ee87cd592452d456f4a14e924dc8b23dfd843bf53995e25f5779",
+        "70ed04ce09590f92c3b8822ebe7d9e2bccbcbc05a2247e9fc29cd0abdefd894b",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "b6a8642ecfae37932009df47ef127ab03c8d07c2621fa01723b52fd9f88be982",
+        "b9e9a0a7305f4122255f9d2f7ad9924b56dc3fb07a14c6f0073e5f53e53271cc",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "c63f89234b4d8058897905fdec505cc1db7cab655bf383becc8925f6424d1c93",
+        "effed21c41237f0476ac4044386ba16b3c6080275640ed9a25c421c7b3c9600f",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    },
+    "fixtures/semantic-families/signing/cases/supply_codesign_cert_to_packages.json": {
+      "file_sha256": "b7e47897849fdd42ed78acd60d51f66a427c491402248ed95934d91ce1da719e",
+      "allowed_hex": [
+        "0e5f5955ff94b6d80aa8e3cdece5acfe640148632f97bfbaef1df0947715a672",
+        "153b3063577771deec4161f5f025deae98b7807649d7f27c2509cebc5a8002f7",
+        "232d6d5bd3b69cfa0c531d6d2b55c972abf7491a41b33fab420dc4ac361727ec",
+        "2b425127f37dac9970844ef57c7d483be0518bccc7ebd7c15cd991a10f4c6a8f",
+        "3251dd05e86c11bdba011e8780226cfc7e24e3142bf3b2376ce2472c69852f73",
+        "37733fc5fa5900a3edbd14aca1cbf305d5ee3a0c02b6211c14c55898536320a7",
+        "38bbb48bb399d59d8e4a11b3cf2aca036b80402c0e8ada37884979db1498eb72",
+        "461e4868e0965ba50a5a6408bf0b6781b33872db61a6b17d49fcf4fb390afbdc",
+        "48bd1e11695d74317e8fde8b2b960a9badbe690c372eb73b0cc52b1c71dbca90",
+        "5e67bdddc9ac454a9fcafefa8f41367b7d7b33357e70dadc57de65e1dcedff29",
+        "62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899",
+        "70ed04ce09590f92c3b8822ebe7d9e2bccbcbc05a2247e9fc29cd0abdefd894b",
+        "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+        "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+        "b6a8642ecfae37932009df47ef127ab03c8d07c2621fa01723b52fd9f88be982",
+        "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "effed21c41237f0476ac4044386ba16b3c6080275640ed9a25c421c7b3c9600f",
+        "f48d6da71d78f68c67b3fc50cd0e74dd13535dcf50eb71d96643c296380eecb2",
+        "fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967"
+      ]
+    }
+  }
+}

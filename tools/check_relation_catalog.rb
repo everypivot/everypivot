@@ -3,8 +3,9 @@
 require 'pathname'
 require 'set'
 require 'yaml'
+require_relative 'utf8_text'
 
-repo_root = Pathname(__dir__).join('..').expand_path
+repo_root = Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path
 library_root = if ARGV[0] && !ARGV[0].start_with?('--')
   Pathname(ARGV.shift).expand_path
 else
@@ -56,7 +57,13 @@ snapshot_counts = {}
 current_inventory_section = nil
 current_deprecation_section = nil
 
-File.readlines(catalog_path).each do |line|
+begin
+  catalog_text = EveryPivot::Utf8Text.read(catalog_path)
+rescue EveryPivot::Utf8Text::Error => e
+  warn e.message
+  exit 2
+end
+catalog_text.each_line do |line|
   SNAPSHOT_COUNT_PATTERNS.each do |kind, pattern|
     match = line.match(pattern)
     snapshot_counts[kind] = match[:count].to_i if match
@@ -99,7 +106,10 @@ Dir.glob(library_root.join('**', '*.yaml').to_s).sort.each do |path|
   pattern_count += 1
 
   begin
-    data = YAML.safe_load(File.read(file), aliases: false)
+    data = YAML.safe_load(EveryPivot::Utf8Text.read(file), aliases: false)
+  rescue EveryPivot::Utf8Text::Error => e
+    observed[:parse_error] << e.message
+    next
   rescue StandardError => e
     observed[:parse_error] << "#{relative}: YAML parse failed: #{e.message}"
     next

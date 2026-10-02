@@ -1,0 +1,1910 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "FIN_ORG_OFFICER_SHARE_CLUSTER",
+    "version": "3.0.0"
+  },
+  "description": "Direct supported officer/director appointments of the selected person, including historical nonconcurrent service. No co-appointee expansion or shell/control inference.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-officerdirector-direct-appointment-organisation-results",
+  "parameters": {
+    "seed": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact source identity; labels alone cannot supply joins."
+    },
+    "scope": {
+      "type": "string",
+      "required": true,
+      "description": "default_3650_day_service or explicit_service_period",
+      "enum": [
+        "default_3650_day_service",
+        "explicit_service_period"
+      ]
+    },
+    "query_date": {
+      "type": "date",
+      "required": true,
+      "description": "Recorded UTC anchor for default 3650-day service scope."
+    },
+    "period": {
+      "type": "period",
+      "required": false,
+      "description": "Explicit analyst/case historical service range.",
+      "requires_when": {
+        "parameter": "scope",
+        "values": [
+          "explicit_service_period"
+        ]
+      }
+    },
+    "apply_exclusions": {
+      "type": "boolean",
+      "required": false,
+      "description": "Apply explicitly selected appointment-specific investigation rules.",
+      "enum": [
+        true,
+        false
+      ]
+    },
+    "exclusion_rules": {
+      "type": "string_array",
+      "required": false,
+      "description": "Explicit selected rule IDs; classifications alone are context.",
+      "requires_when": {
+        "parameter": "apply_exclusions",
+        "values": [
+          true
+        ]
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "default_3650_day_service_interval",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "person"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "appointment",
+          "kind": "assertion",
+          "types": [
+            "org:appointment"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "appointment.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "appointment.attributes.role"
+                },
+                "right": {
+                  "literal": [
+                    "officer",
+                    "director"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "organisation",
+          "kind": "entity",
+          "types": [
+            "org:org"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "organisation.id"
+            },
+            "right": {
+              "ref": "appointment.object"
+            }
+          }
+        },
+        {
+          "name": "service",
+          "kind": "assertion",
+          "types": [
+            "org:service_interval"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "service.subject"
+            },
+            "right": {
+              "ref": "appointment.id"
+            }
+          }
+        },
+        {
+          "name": "capacity",
+          "kind": "assertion",
+          "types": [
+            "org:appointment_capacity"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "capacity.subject"
+            },
+            "right": {
+              "ref": "appointment.id"
+            }
+          },
+          "optional": true
+        },
+        {
+          "name": "exclusion",
+          "kind": "assertion",
+          "types": [
+            "org:appointment_exclusion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.subject"
+                },
+                "right": {
+                  "ref": "appointment.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "exclusion.attributes.rule_id"
+                },
+                "right": {
+                  "param": "exclusion_rules"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.identity_scope"
+            },
+            "right": {
+              "ref": "appointment.attributes.person_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "seed.attributes.identity_scope"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "organisation.attributes.identity_scope"
+            },
+            "right": {
+              "ref": "appointment.attributes.organisation_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "organisation.attributes.identity_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "appointment.attributes.appointment_key"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "param": "scope"
+            },
+            "right": {
+              "literal": "default_3650_day_service"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "service.times.held"
+            },
+            "period": {
+              "calendar_period": {
+                "query_date": {
+                  "param": "query_date"
+                },
+                "days": {
+                  "literal": 3650
+                }
+              }
+            },
+            "quantifier": "some"
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "form": "org:org",
+        "identity": [
+          {
+            "ref": "organisation.id"
+          },
+          {
+            "ref": "appointment.attributes.appointment_key"
+          },
+          {
+            "ref": "service.id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "relationship": {
+            "literal": "direct_evidenced_appointment"
+          },
+          "person": {
+            "ref": "seed.id"
+          },
+          "appointment": {
+            "ref": "appointment.id"
+          },
+          "role": {
+            "ref": "appointment.attributes.role"
+          },
+          "service_evidence": {
+            "ref": "service.id"
+          },
+          "service_kind": {
+            "literal": "interval"
+          },
+          "requested_period": {
+            "calendar_period": {
+              "query_date": {
+                "param": "query_date"
+              },
+              "days": {
+                "literal": 3650
+              }
+            }
+          },
+          "capacity_context": {
+            "ref": "capacity.attributes.capacity"
+          },
+          "temporal_claim": {
+            "literal": "service evidenced within selected period; no currentness, continuity or concurrency inference"
+          }
+        },
+        "binding": "organisation"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "appointment.times.collection_available"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "appointment.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "organisation.times.collection_available"
+          },
+          "object": {
+            "ref": "organisation.id"
+          },
+          "occurrence": {
+            "ref": "organisation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.held"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "service.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "exclusion.times.applicable"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "exclusion.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "appointment.times.collection_available"
+        },
+        {
+          "ref": "organisation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        }
+      ],
+      "policies": [
+        {
+          "id": "explicit_appointment_investigation_exclusion",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "appointment.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "apply_exclusions",
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "exclude"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "calendar_period": {
+                    "query_date": {
+                      "param": "query_date"
+                    },
+                    "days": {
+                      "literal": 3650
+                    }
+                  }
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "retain"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "param": "exclusion_rules"
+                },
+                "right": {
+                  "ref": "exclusion.attributes.evaluated_rule_ids"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "calendar_period": {
+                    "query_date": {
+                      "param": "query_date"
+                    },
+                    "days": {
+                      "literal": 3650
+                    }
+                  }
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "calendar_period": {
+                    "query_date": {
+                      "param": "query_date"
+                    },
+                    "days": {
+                      "literal": 3650
+                    }
+                  }
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "reason": "Only selected supported appointment/capacity/period exclusion; professional or nominee labels alone never exclude the whole person."
+        }
+      ]
+    },
+    {
+      "id": "default_3650_day_service_status",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "person"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "appointment",
+          "kind": "assertion",
+          "types": [
+            "org:appointment"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "appointment.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "appointment.attributes.role"
+                },
+                "right": {
+                  "literal": [
+                    "officer",
+                    "director"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "organisation",
+          "kind": "entity",
+          "types": [
+            "org:org"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "organisation.id"
+            },
+            "right": {
+              "ref": "appointment.object"
+            }
+          }
+        },
+        {
+          "name": "service",
+          "kind": "assertion",
+          "types": [
+            "org:dated_active_status"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "service.subject"
+            },
+            "right": {
+              "ref": "appointment.id"
+            }
+          }
+        },
+        {
+          "name": "capacity",
+          "kind": "assertion",
+          "types": [
+            "org:appointment_capacity"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "capacity.subject"
+            },
+            "right": {
+              "ref": "appointment.id"
+            }
+          },
+          "optional": true
+        },
+        {
+          "name": "exclusion",
+          "kind": "assertion",
+          "types": [
+            "org:appointment_exclusion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.subject"
+                },
+                "right": {
+                  "ref": "appointment.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "exclusion.attributes.rule_id"
+                },
+                "right": {
+                  "param": "exclusion_rules"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.identity_scope"
+            },
+            "right": {
+              "ref": "appointment.attributes.person_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "seed.attributes.identity_scope"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "organisation.attributes.identity_scope"
+            },
+            "right": {
+              "ref": "appointment.attributes.organisation_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "organisation.attributes.identity_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "appointment.attributes.appointment_key"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "param": "scope"
+            },
+            "right": {
+              "literal": "default_3650_day_service"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "service.attributes.status"
+            },
+            "right": {
+              "literal": "active_at_evidenced_time"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "service.times.status_at"
+            },
+            "period": {
+              "calendar_period": {
+                "query_date": {
+                  "param": "query_date"
+                },
+                "days": {
+                  "literal": 3650
+                }
+              }
+            },
+            "quantifier": "contained"
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "service.times.status_at"
+            },
+            "right": {
+              "ref": "service.times.collection_available"
+            }
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "form": "org:org",
+        "identity": [
+          {
+            "ref": "organisation.id"
+          },
+          {
+            "ref": "appointment.attributes.appointment_key"
+          },
+          {
+            "ref": "service.id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "relationship": {
+            "literal": "direct_evidenced_appointment"
+          },
+          "person": {
+            "ref": "seed.id"
+          },
+          "appointment": {
+            "ref": "appointment.id"
+          },
+          "role": {
+            "ref": "appointment.attributes.role"
+          },
+          "service_evidence": {
+            "ref": "service.id"
+          },
+          "service_kind": {
+            "literal": "status"
+          },
+          "requested_period": {
+            "calendar_period": {
+              "query_date": {
+                "param": "query_date"
+              },
+              "days": {
+                "literal": 3650
+              }
+            }
+          },
+          "capacity_context": {
+            "ref": "capacity.attributes.capacity"
+          },
+          "temporal_claim": {
+            "literal": "service evidenced within selected period; no currentness, continuity or concurrency inference"
+          }
+        },
+        "binding": "organisation"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "appointment.times.collection_available"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "appointment.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "organisation.times.collection_available"
+          },
+          "object": {
+            "ref": "organisation.id"
+          },
+          "occurrence": {
+            "ref": "organisation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.status_at"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "service.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "exclusion.times.applicable"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "exclusion.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "appointment.times.collection_available"
+        },
+        {
+          "ref": "organisation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        }
+      ],
+      "policies": [
+        {
+          "id": "explicit_appointment_investigation_exclusion",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "appointment.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "apply_exclusions",
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "exclude"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "calendar_period": {
+                    "query_date": {
+                      "param": "query_date"
+                    },
+                    "days": {
+                      "literal": 3650
+                    }
+                  }
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "service.times.status_at"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "retain"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "param": "exclusion_rules"
+                },
+                "right": {
+                  "ref": "exclusion.attributes.evaluated_rule_ids"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "calendar_period": {
+                    "query_date": {
+                      "param": "query_date"
+                    },
+                    "days": {
+                      "literal": 3650
+                    }
+                  }
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "service.times.status_at"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "calendar_period": {
+                    "query_date": {
+                      "param": "query_date"
+                    },
+                    "days": {
+                      "literal": 3650
+                    }
+                  }
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "service.times.status_at"
+                }
+              }
+            ]
+          },
+          "reason": "Only selected supported appointment/capacity/period exclusion; professional or nominee labels alone never exclude the whole person."
+        }
+      ]
+    },
+    {
+      "id": "explicit_service_period_interval",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "person"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "appointment",
+          "kind": "assertion",
+          "types": [
+            "org:appointment"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "appointment.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "appointment.attributes.role"
+                },
+                "right": {
+                  "literal": [
+                    "officer",
+                    "director"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "organisation",
+          "kind": "entity",
+          "types": [
+            "org:org"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "organisation.id"
+            },
+            "right": {
+              "ref": "appointment.object"
+            }
+          }
+        },
+        {
+          "name": "service",
+          "kind": "assertion",
+          "types": [
+            "org:service_interval"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "service.subject"
+            },
+            "right": {
+              "ref": "appointment.id"
+            }
+          }
+        },
+        {
+          "name": "capacity",
+          "kind": "assertion",
+          "types": [
+            "org:appointment_capacity"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "capacity.subject"
+            },
+            "right": {
+              "ref": "appointment.id"
+            }
+          },
+          "optional": true
+        },
+        {
+          "name": "exclusion",
+          "kind": "assertion",
+          "types": [
+            "org:appointment_exclusion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.subject"
+                },
+                "right": {
+                  "ref": "appointment.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "exclusion.attributes.rule_id"
+                },
+                "right": {
+                  "param": "exclusion_rules"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.identity_scope"
+            },
+            "right": {
+              "ref": "appointment.attributes.person_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "seed.attributes.identity_scope"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "organisation.attributes.identity_scope"
+            },
+            "right": {
+              "ref": "appointment.attributes.organisation_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "organisation.attributes.identity_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "appointment.attributes.appointment_key"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "param": "scope"
+            },
+            "right": {
+              "literal": "explicit_service_period"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "service.times.held"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "some"
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "form": "org:org",
+        "identity": [
+          {
+            "ref": "organisation.id"
+          },
+          {
+            "ref": "appointment.attributes.appointment_key"
+          },
+          {
+            "ref": "service.id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "relationship": {
+            "literal": "direct_evidenced_appointment"
+          },
+          "person": {
+            "ref": "seed.id"
+          },
+          "appointment": {
+            "ref": "appointment.id"
+          },
+          "role": {
+            "ref": "appointment.attributes.role"
+          },
+          "service_evidence": {
+            "ref": "service.id"
+          },
+          "service_kind": {
+            "literal": "interval"
+          },
+          "requested_period": {
+            "param": "period"
+          },
+          "capacity_context": {
+            "ref": "capacity.attributes.capacity"
+          },
+          "temporal_claim": {
+            "literal": "service evidenced within selected period; no currentness, continuity or concurrency inference"
+          }
+        },
+        "binding": "organisation"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "appointment.times.collection_available"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "appointment.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "organisation.times.collection_available"
+          },
+          "object": {
+            "ref": "organisation.id"
+          },
+          "occurrence": {
+            "ref": "organisation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.held"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "service.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "exclusion.times.applicable"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "exclusion.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "appointment.times.collection_available"
+        },
+        {
+          "ref": "organisation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        }
+      ],
+      "policies": [
+        {
+          "id": "explicit_appointment_investigation_exclusion",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "appointment.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "apply_exclusions",
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "exclude"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "retain"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "param": "exclusion_rules"
+                },
+                "right": {
+                  "ref": "exclusion.attributes.evaluated_rule_ids"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "reason": "Only selected supported appointment/capacity/period exclusion; professional or nominee labels alone never exclude the whole person."
+        }
+      ]
+    },
+    {
+      "id": "explicit_service_period_status",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "person"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "appointment",
+          "kind": "assertion",
+          "types": [
+            "org:appointment"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "appointment.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "appointment.attributes.role"
+                },
+                "right": {
+                  "literal": [
+                    "officer",
+                    "director"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "organisation",
+          "kind": "entity",
+          "types": [
+            "org:org"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "organisation.id"
+            },
+            "right": {
+              "ref": "appointment.object"
+            }
+          }
+        },
+        {
+          "name": "service",
+          "kind": "assertion",
+          "types": [
+            "org:dated_active_status"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "service.subject"
+            },
+            "right": {
+              "ref": "appointment.id"
+            }
+          }
+        },
+        {
+          "name": "capacity",
+          "kind": "assertion",
+          "types": [
+            "org:appointment_capacity"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "capacity.subject"
+            },
+            "right": {
+              "ref": "appointment.id"
+            }
+          },
+          "optional": true
+        },
+        {
+          "name": "exclusion",
+          "kind": "assertion",
+          "types": [
+            "org:appointment_exclusion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.subject"
+                },
+                "right": {
+                  "ref": "appointment.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "exclusion.attributes.rule_id"
+                },
+                "right": {
+                  "param": "exclusion_rules"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.identity_scope"
+            },
+            "right": {
+              "ref": "appointment.attributes.person_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "seed.attributes.identity_scope"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "organisation.attributes.identity_scope"
+            },
+            "right": {
+              "ref": "appointment.attributes.organisation_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "organisation.attributes.identity_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "appointment.attributes.appointment_key"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "param": "scope"
+            },
+            "right": {
+              "literal": "explicit_service_period"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "service.attributes.status"
+            },
+            "right": {
+              "literal": "active_at_evidenced_time"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "service.times.status_at"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "service.times.status_at"
+            },
+            "right": {
+              "ref": "service.times.collection_available"
+            }
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "form": "org:org",
+        "identity": [
+          {
+            "ref": "organisation.id"
+          },
+          {
+            "ref": "appointment.attributes.appointment_key"
+          },
+          {
+            "ref": "service.id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "relationship": {
+            "literal": "direct_evidenced_appointment"
+          },
+          "person": {
+            "ref": "seed.id"
+          },
+          "appointment": {
+            "ref": "appointment.id"
+          },
+          "role": {
+            "ref": "appointment.attributes.role"
+          },
+          "service_evidence": {
+            "ref": "service.id"
+          },
+          "service_kind": {
+            "literal": "status"
+          },
+          "requested_period": {
+            "param": "period"
+          },
+          "capacity_context": {
+            "ref": "capacity.attributes.capacity"
+          },
+          "temporal_claim": {
+            "literal": "service evidenced within selected period; no currentness, continuity or concurrency inference"
+          }
+        },
+        "binding": "organisation"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "appointment.times.collection_available"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "appointment.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "organisation.times.collection_available"
+          },
+          "object": {
+            "ref": "organisation.id"
+          },
+          "occurrence": {
+            "ref": "organisation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.status_at"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "service.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "exclusion.times.applicable"
+          },
+          "object": {
+            "ref": "appointment.id"
+          },
+          "occurrence": {
+            "ref": "exclusion.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "appointment.times.collection_available"
+        },
+        {
+          "ref": "organisation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        }
+      ],
+      "policies": [
+        {
+          "id": "explicit_appointment_investigation_exclusion",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "appointment.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "apply_exclusions",
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "exclude"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "service.times.status_at"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "retain"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "param": "exclusion_rules"
+                },
+                "right": {
+                  "ref": "exclusion.attributes.evaluated_rule_ids"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "service.times.status_at"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "service.times.status_at"
+                }
+              }
+            ]
+          },
+          "reason": "Only selected supported appointment/capacity/period exclusion; professional or nominee labels alone never exclude the whole person."
+        }
+      ]
+    }
+  ]
+}

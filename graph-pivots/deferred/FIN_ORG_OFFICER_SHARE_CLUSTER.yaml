@@ -1,22 +1,33 @@
 id: FIN_ORG_OFFICER_SHARE_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'financial_records'
-  - 'identity_records'
+  - financial_records
+  - identity_records
+  - semantic_execution_contract_v1
+  - scoped_identity_correspondence
+  - source_qualified_appointment_service
+  - scoped_control_evaluation
   optional:
-  - 'officer_record_normalization'
-  - 'company_registry_context'
+  - officer_record_normalization
+  - company_registry_context
 hazards:
-- Common professional directors, formation agents, family names, and stale registry records can connect unrelated companies.
-- Officer data can be jurisdiction-limited and privacy-sensitive; corroborate with KYC, address, and temporal appointment evidence.
+- Common names, jurisdictional identifiers and stale registry data require exact person/organization/appointment
+  scope.
+- Professional, nominee and capacity classifications attach to the particular appointment;
+  they do not exclude the whole person.
+- Separate historical appointments need not overlap and do not establish shell companies,
+  beneficial ownership or control.
 name: Org Officer/Director → Cross‑Directorship Cluster
 category: FIN
-description: Cluster companies by shared officers/directors to identify shell networks.
+description: Find organizations connected by directly evidenced officer/director appointments
+  of the selected person within an explicit service scope. Preserve historical and
+  nonconcurrent appointments without co-appointee expansion, shell-network or control
+  inference.
 source: person
 target: org:org
 assessment_mode: evidence_only
@@ -24,40 +35,19 @@ hops:
 - via: officer_of|director_of
   direction: out
   form: org:org
-- via: officer_of|director_of
-  direction: in
-  form: person
 constraints:
-  temporal:
-    order:
-    - person.firstseen <= org.created
-    window_days: 3650
-  degree_caps:
-    person: 200
-  negative_nodes:
-  - form: person
-    list: nominee_directors_or_formation_agents
-  - form: person
-    list: mass_professional_officers
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - opencorp
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/FIN_ORG_OFFICER_SHARE_CLUSTER.json
+  sha256: 10ec7a3e7e89de84b2707f0867a5025556f460742bd9b2bbeabd7a131a98bd4d

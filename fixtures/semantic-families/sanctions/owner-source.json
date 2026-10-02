@@ -1,0 +1,117 @@
+{
+  "fixture_type": "independently_authored_synthetic_sanctions_case",
+  "family": "owner",
+  "scope": "Hypothetical normalized records, not actual payments, list designations, source truth or native runtime acceptance.",
+  "claims": {
+    "seed": {
+      "kind": "entity",
+      "type": "person",
+      "name": "Selected source"
+    },
+    "listed-subject": {
+      "kind": "entity",
+      "type": "org:org",
+      "name": "Actually identified list subject"
+    },
+    "relationship": {
+      "kind": "assertion",
+      "type": "org:reported_beneficial_owner",
+      "assertion_namespace": "owner:relationship",
+      "source_category": "beneficial_owner",
+      "category_mapping": "exact_source_category_v1",
+      "stated_basis": "reported_economic_interest",
+      "directness": "direct",
+      "amount": {
+        "value": 5,
+        "unit": "percent",
+        "rights_type": "economic_interest",
+        "denominator": "issued_ordinary_shares",
+        "share_class": "ordinary",
+        "calculation_basis": "source_reported"
+      },
+      "published": "2026-09-02T00:00:00Z",
+      "applicable": {
+        "start": "2024-01-01T00:00:00Z",
+        "end": "2024-12-31T23:59:59Z"
+      },
+      "subject": "seed",
+      "object": "listed-subject"
+    },
+    "entry": {
+      "kind": "entity",
+      "type": "sanction:entry",
+      "list_id": "synthetic-list",
+      "entry_id": "synthetic-entry-1",
+      "entry_revision": "revision-2026-09-02"
+    },
+    "entry-subject": {
+      "kind": "assertion",
+      "type": "sanction:entry_subject",
+      "assertion_namespace": "owner:entry-subject",
+      "role": "source_listed_subject",
+      "identity_basis": "exact_source_identifier",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "listed-subject",
+      "object": "entry"
+    },
+    "status": {
+      "kind": "assertion",
+      "type": "sanction:status",
+      "assertion_namespace": "owner:status",
+      "status": "listed",
+      "list_id": "synthetic-list",
+      "entry_revision": "revision-2026-09-02",
+      "published": "2026-09-02T00:00:00Z",
+      "applicable": {
+        "start": "2026-09-01T00:00:00Z",
+        "end": "2026-12-31T23:59:59Z"
+      },
+      "subject": "entry",
+      "object": "listed-subject"
+    },
+    "relationship-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "owner:relationship-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "relationship"
+    },
+    "entry-subject-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "owner:entry-subject-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "entry-subject"
+    },
+    "status-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "owner:status-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "status"
+    },
+    "source-class": {
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "assertion_namespace": "owner:source-class",
+      "class_id": "shared_provider",
+      "policy_basis": "selected_source_revision",
+      "membership": "member",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "seed"
+    },
+    "path-class": {
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "assertion_namespace": "owner:path-class",
+      "class_id": "shared_intermediary",
+      "policy_basis": "selected_source_revision",
+      "membership": "member",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "listed-subject"
+    }
+  }
+}

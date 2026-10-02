@@ -1,64 +1,58 @@
 id: CTI_PHISHKIT_TO_HOSTING_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'web_content_collection'
-  - 'phishing_kit_hashing'
+  - web_content_collection
+  - phishing_kit_hashing
+  - semantic_execution_contract_v1
+  - exact_content_hash_reproduction
+  - exact_file_set_manifest_v1
+  - source_qualified_deployment_correspondence
+  - scoped_control_evaluation
   optional:
-  - 'passive_dns'
-  - 'hosting_provider_classification'
+  - passive_dns
+  - hosting_provider_classification
 hazards:
-- Popular phishkits, copied path structures, and hosting panels can be shared across unrelated actors.
-- Corroborate kit or path matches with deployment timing, config values, and infrastructure ownership; hosting reuse is not attribution.
-- Promotion needs suppression for public kit distributions, shared hosting panels, default paths, and sinkhole or research deployments.
+- Public kits, generic paths and shared components can connect unrelated deployments;
+  actual correspondence must remain scoped.
+- A matching archive offered for download, bare request, DNS record or peer address
+  does not establish deployment of its contents.
+- Research/test/sinkhole controls apply to the evidenced occurrence; shared hosting
+  is context, not blanket exclusion.
+- Receipt and source-reported substantive derivation guide search only; copies do
+  not create deployment, novelty, independent origins or actor identity.
 name: Phish Kit → Hosting Domain/IP Cluster
 category: CTI
-description: Cluster infrastructure hosting the same phishing kit hash or path structure.
+description: Compare preserved kit representations, then require separately evidenced
+  deployment of the same candidate for infrastructure results. Preserve generic/component
+  clues and explicit baseline references; 180 days guides evidence search priority,
+  not activity eligibility.
 source: phish:kit
-target: inet:fqdn|inet:ipv4
+target: inet:fqdn|inet:ipv4|evidence:deployment_reference|evidence:kit_comparison_clue
 assessment_mode: evidence_only
 hops:
-- via: hosted_on
+- via: yields_evidence_for
   direction: out
-  form: inet:fqdn|inet:ipv4
-- via: same_kit_hash|similar_path
-  direction: in
-  form: phish:kit
+  form: inet:fqdn|inet:ipv4|evidence:deployment_reference|evidence:kit_comparison_clue
 constraints:
-  temporal:
-    order:
-    - kit.firstseen <= infra.seen
-    window_days: 180
-  degree_caps:
-    phish:kit: 10000
-  negative_nodes:
-  - form: inet:fqdn
-    list: shared_hosting_ranges
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - phishtank
 - abuse_ch
 - osint_web
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_PHISHKIT_TO_HOSTING_CLUSTER.json
+  sha256: 8a2928f2ac514e3242f3676e67052dc3cd6589e922a7569a457a7927c38b6784

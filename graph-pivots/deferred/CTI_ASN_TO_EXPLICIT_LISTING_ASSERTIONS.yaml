@@ -1,0 +1,53 @@
+id: CTI_ASN_TO_EXPLICIT_LISTING_ASSERTIONS
+version: 1.0.0
+pattern_schema_version: 1.6
+validation_state: deferred
+deferred_reason: needs_downstream_capability_mapping
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+capability_requirements:
+  required:
+  - semantic_execution_contract_v1
+  - source_revision_preservation
+  - explicit_claim_period
+  - scoped_amendment_history
+  optional:
+  - historical_network_association
+  - scoped_investigation_controls
+hazards:
+- List publication, claimed applicability and collection receipt are distinct times;
+  later receipt does not refresh historic activity.
+- Supplied corrections, withdrawals and disputes remain visible; complete source revision
+  history and current unwithdrawn status are not certified.
+- Shared hosting, one listed tenant or network association does not establish maliciousness,
+  ownership, control, liability or accepted assessment.
+name: ASN to explicit source listing assertions
+category: CTI
+description: Retrieve source assertions explicitly about the selected ASN during an
+  analyst/case period. Listed member infrastructure does not substitute for an ASN-wide
+  publisher assertion.
+source: net:asn
+target: reputation:assertion
+assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_ASN_TO_EXPLICIT_LISTING_ASSERTIONS.json
+  sha256: 221fd7e3a45b19355e2f1d4267a947bb18fb1e6cf354c264ae3db057e976ada0
+hops:
+- via: subject_of_listing_assertion
+  direction: out
+  form: reputation:assertion
+constraints:
+  provenance:
+    min_unique_sources: 1
+features: []
+outputs:
+  yield:
+  - source
+  - target
+  - evidence_paths
+datasets:
+- bgp
+- spamhaus
+- abuse_ch

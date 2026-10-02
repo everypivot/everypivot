@@ -1,0 +1,87 @@
+{
+  "contract": "everypivot.semantic_adapter",
+  "version": "1.0",
+  "id": "neo4j_semantic_evidence_v1",
+  "adapter_version": "0.1.0",
+  "mapping_version": "1.0",
+  "execution": "hybrid_normalized_evidence",
+  "backend": {
+    "product": "Neo4j Community",
+    "version": "5.26.0",
+    "transport": "transactional_http",
+    "database": "neo4j"
+  },
+  "inputs": {
+    "contract": "everypivot.semantic_evidence",
+    "version": "1.0"
+  },
+  "semantics": {
+    "contract": "everypivot.semantic_pattern",
+    "version": "1.0",
+    "executor": "tools/semantic_evaluator.rb"
+  },
+  "outputs": {
+    "contract": "everypivot.semantic_results",
+    "version": "1.0"
+  },
+  "mapping": {
+    "node_label": "EveryPivotSemanticItem",
+    "roles": [
+      "envelope",
+      "record",
+      "source",
+      "source_bytes"
+    ],
+    "payload": "canonical_json_v1_with_sha256",
+    "source_bytes": "strict_base64_with_declared_hash_verification_when_present",
+    "relationships": [
+      "EVIDENCE",
+      "SUBJECT",
+      "OBJECT",
+      "TIME_OBJECT",
+      "TIME_OCCURRENCE"
+    ],
+    "order": "zero_based_ordinal_preserves_sources_records_and_evidence_references",
+    "scope": "one_owned_import_batch_with_full_relationship_reconstruction"
+  },
+  "supported": [
+    "Lossless storage and readback of validated normalized evidence, nulls and nested time/selector envelopes",
+    "Native storage and readback of exact subject/object/source/time-binding relationships",
+    "Explicit source revisions, field pointers, source-byte hashes and witness multiplicity",
+    "Portable evaluation after graph identity and relationship consistency checks",
+    "Partial portable execution and separate unsupported, unknown, outside-scope and suppressed outcomes"
+  ],
+  "unsupported": [
+    "Native Cypher execution of the portable semantic expression language",
+    "Normalization or authentication of PCAP, server/client logs, OpenCTI, STIX or external feeds",
+    "Arbitrary pre-existing or user-owned Neo4j databases",
+    "Pattern or semantic-contract revisions absent from the admission manifest",
+    "Source independence, global completeness, ownership, actor attribution or assessment acceptance"
+  ],
+  "admissions": [
+    {
+      "pattern": {
+        "id": "OSINT_TLS_JA3_TO_FQDNS",
+        "version": "3.0.0"
+      },
+      "contract_sha256": "1bb2dc368c430bf327095176f8634677b50529afb55efc279c05b49f76b79ac2",
+      "hash_scope": "canonical_json_v1",
+      "independent_fixture": "fixtures/semantic-families/ja3/expected.json",
+      "family_oracle": "tools/test_semantic_ja3.rb",
+      "adapter_oracle": "tools/test_semantic_neo4j_adapter.rb",
+      "native_acceptance_runner": "tools/accept_semantic_neo4j.rb"
+    },
+    {
+      "pattern": {
+        "id": "OSINT_TLS_JA3S_TO_FQDNS",
+        "version": "1.0.0"
+      },
+      "contract_sha256": "5602adb8238e9cd3dbd28247dc957e61bf6524227aa5d4fa559861f2e5703bd1",
+      "hash_scope": "canonical_json_v1",
+      "independent_fixture": "fixtures/semantic-families/ja3/expected.json",
+      "family_oracle": "tools/test_semantic_ja3.rb",
+      "adapter_oracle": "tools/test_semantic_neo4j_adapter.rb",
+      "native_acceptance_runner": "tools/accept_semantic_neo4j.rb"
+    }
+  ]
+}

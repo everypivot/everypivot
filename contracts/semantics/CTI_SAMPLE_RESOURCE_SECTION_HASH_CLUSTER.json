@@ -1,0 +1,1226 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER",
+    "version": "3.0.0"
+  },
+  "description": "Source-qualified extraction findings over exact preserved content; 365-day inclusive UTC calendar lookback is applied to earliest complete finding in the supplied history, never to refreshed artifact sightings. Transformations are evidenced source reports, not extraction algorithms executed by this evaluator.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-sample-selector-temporal-model",
+  "parameters": {
+    "seed": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact supplied source entity; global discovery time is not per-artifact extraction time."
+    },
+    "history": {
+      "type": "record_id",
+      "required": true,
+      "description": "Preserved collection-scoped finding history covering the declared origin through snapshot; no global novelty claim."
+    },
+    "query_date": {
+      "type": "date",
+      "required": true,
+      "description": "Explicit inclusive UTC calendar end date for this pattern's retained complete-finding lookback."
+    },
+    "common_packer_or_icon_resource_hashes_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned common_packer_or_icon_resource_hashes revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    },
+    "common_benign_file_hashes_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned common_benign_file_hashes revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    }
+  },
+  "branches": [
+    {
+      "id": "particular_artifact",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "file:resource_section:hash"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:resource_section_extraction"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "file:hash"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "extraction.subject"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "evidence:extracted_value"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:selector_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_packer_or_icon_resource_hashes"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "common_packer_or_icon_resource_hashes_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.namespace"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.namespace"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.representation"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.profile"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.value"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.value"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector_context"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector_context"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_1",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_benign_file_hashes"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.revision"
+                },
+                "right": {
+                  "param": "common_benign_file_hashes_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.value"
+                    },
+                    "right": {
+                      "ref": "input.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "resource_section"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.namespace"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.namespace"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.representation"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.profile"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.profile"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.value"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.value"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.namespace"
+            },
+            "right": {
+              "literal": "file:resource_section:hash"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.profile"
+            },
+            "right": {
+              "literal": "literal_exact_v1"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "seed.attributes.selector.value"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "seed.attributes.selector.representation"
+            },
+            "right": {
+              "literal": [
+                "sha256_exact_section_bytes"
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.representation"
+            },
+            "right": {
+              "literal": "sha256_exact_section_bytes"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.value"
+            },
+            "right": {
+              "ref": "output.attributes.content.sha256"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.section_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.selection_recipe"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.hash_algorithm"
+            },
+            "right": {
+              "literal": "sha256"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_sample_resource_section_hash_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "resource_section"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "extraction.attributes.selector.namespace"
+          },
+          {
+            "ref": "extraction.attributes.selector.representation"
+          },
+          {
+            "ref": "extraction.attributes.selector.profile"
+          },
+          {
+            "ref": "extraction.attributes.selector.value"
+          }
+        ],
+        "support": [
+          "extraction",
+          "input",
+          "output"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 365
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "input",
+        "form": "file:hash",
+        "identity": [
+          {
+            "ref": "input.attributes.content.sha256"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "contains_extracted_selector"
+          },
+          "selector": {
+            "ref": "extraction.attributes.selector"
+          },
+          "extracted_bytes_sha256": {
+            "ref": "output.attributes.content.sha256"
+          },
+          "source_location": {
+            "ref": "extraction.attributes.source_location"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "common_packer_or_icon_resource_hashes",
+          "revision": "1.0",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.attributes.selector"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_packer_or_icon_resource_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_packer_or_icon_resource_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_packer_or_icon_resource_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "common_benign_file_hashes",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_file_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_file_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_file_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

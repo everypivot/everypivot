@@ -1,0 +1,91 @@
+{
+  "fixture_type": "independent_expected_outcomes",
+  "cases": [
+    {
+      "id": "client-before-midnight",
+      "contract": "OSINT_TLS_JA3_TO_FQDNS",
+      "query": "client-query.json",
+      "expected_domain": "alpha.example.test",
+      "expected_occurrence": "network-message-client",
+      "expected_state": "attempt_observed"
+    },
+    {
+      "id": "server-after-midnight",
+      "contract": "OSINT_TLS_JA3S_TO_FQDNS",
+      "query": "server-query.json",
+      "expected_domain": "alpha.example.test",
+      "expected_occurrence": "network-message-server",
+      "expected_state": "response_observed"
+    },
+    {
+      "id": "server-september",
+      "change": "Select September30 for server response",
+      "expected": "outside_scope"
+    },
+    {
+      "id": "client-october",
+      "change": "Select October1 for client attempt",
+      "expected": "outside_scope"
+    },
+    {
+      "id": "unknown-response",
+      "change": "Remove actual server message",
+      "expected": "no server result; client remains"
+    },
+    {
+      "id": "wrong-exchange-leg-message-or-name",
+      "change": "Break any explicit association join",
+      "expected": "no result through broken path"
+    },
+    {
+      "id": "dns-san-plan",
+      "change": "Use DNS/SAN/scan-plan basis alone",
+      "expected": "no qualifying exchange-domain result"
+    },
+    {
+      "id": "late-derivation",
+      "change": "Query known-by before October1 derivation/establishment receipts",
+      "expected": "no supported known-by result; no universal earlier-absence claim"
+    },
+    {
+      "id": "unknown-knowledge",
+      "change": "Remove derivation/receipt history",
+      "expected": "retrospective occurrence result; as-known unresolved"
+    },
+    {
+      "id": "wrong-source-revision",
+      "change": "Reported selector names a revision not supporting its carrier",
+      "expected": "no qualifying typed comparison"
+    },
+    {
+      "id": "source-filter",
+      "change": "Select scanner-profile filter with membership evidence",
+      "expected": "source-policy suppression for JA3 only"
+    },
+    {
+      "id": "classification-conflict",
+      "change": "Add opposing source assertion for same class and selector",
+      "expected": "retain with unresolved policy conflict; no winner"
+    },
+    {
+      "id": "purpose-conflict",
+      "change": "Add ordinary-client source assertion about same exchange leg",
+      "expected": "retain under conflicting scanner-exchange filter"
+    },
+    {
+      "id": "replay",
+      "change": "Duplicate retained occurrence with preserved canonical occurrence identity",
+      "expected": "no new network occurrence; preserve distinct supporting witnesses"
+    },
+    {
+      "id": "new-occurrence",
+      "change": "Add independently evidenced later network occurrence",
+      "expected": "distinct occurrence with its actual date"
+    },
+    {
+      "id": "resource-limit",
+      "change": "Bound max_bindings or max_results",
+      "expected": "partial execution, not exhaustive negative"
+    }
+  ]
+}

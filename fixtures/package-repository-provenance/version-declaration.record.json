@@ -1,0 +1,34 @@
+{
+  "contract": "everypivot.package_repository_provenance",
+  "contract_version": "1.0",
+  "pattern_id": "SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA",
+  "pattern_version": "3.0.0",
+  "evidence_mode": "evidence_only",
+  "build_provenance": "not_verified",
+  "package": {
+    "registry": "https://registry.example",
+    "name": "example-package",
+    "version": "1.4.0"
+  },
+  "repository_uri": "https://code.example/project/source",
+  "declaration": {
+    "kind": "version_source_repository",
+    "evidence": {
+      "publisher": "Synthetic example registry",
+      "collection": "synthetic-fixture",
+      "uri": "https://registry.example/evidence/version-declaration",
+      "revision": "synthetic-revision-1",
+      "sha256": "bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7",
+      "field": "/repository",
+      "acquired_at": "2026-09-14T08:00:00Z"
+    }
+  },
+  "revision_binding": {
+    "status": "unresolved",
+    "reason": "Synthetic registry declaration supplies no exact package-version source revision."
+  },
+  "snapshot": {
+    "status": "unresolved",
+    "reason": "Exact package-version source revision is unresolved."
+  }
+}

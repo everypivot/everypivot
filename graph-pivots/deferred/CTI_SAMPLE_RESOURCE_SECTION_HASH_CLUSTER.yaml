@@ -1,6 +1,6 @@
 id: CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -11,55 +11,42 @@ hazards:
 - 'The pivot should be paired with prevalence and negative controls for common toolchains before promotion.'
 capability_requirements:
   required:
-  - 'sample_static_analysis'
-  - 'resource_section_hashing'
+  - sample_static_analysis
+  - resource_section_hashing
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'packer_detection'
-  - 'sample_prevalence_enrichment'
-  - 'common_resource_suppression'
+  - packer_detection
+  - sample_prevalence_enrichment
 name: Sample Resource Section Hash Cluster
 category: CTI
-description: Cluster samples that share an exact or normalized hash of an embedded resource section.
+description: Find samples with the SHA-256 of actual preserved selected resource-section
+  bytes. The declared section and selection recipe remain evidence context; normalized
+  or fuzzy hashes require another explicit contract.
 source: file:resource_section:hash
 target: file:hash
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_SAMPLE_RESOURCE_SECTION_HASH_CLUSTER.json
+  sha256: ae6f23a5a0b4524d0fb530083868877715046cc6b3a829cd93b9ca747e298aa0
 hops:
 - via: resource_section_hash_of
   direction: in
   form: file:hash
 constraints:
-  temporal:
-    order:
-    - sample.observed >= resource_hash.extracted
-    window_days: 365
-  degree_caps:
-    file:resource_section:hash: 100000
-    file:hash: 1000000
-  negative_nodes:
-  - form: file:resource_section:hash
-    list: common_packer_or_icon_resource_hashes
-  - form: file:hash
-    list: common_benign_file_hashes
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- resource_type
-- packer_flag
-- prevalence
-- common_resource_penalty
-- temporal_consistency
-- novelty_flag
+features: []
 outputs:
-  top_paths: 5
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - malware_analysis
 - file_reputation

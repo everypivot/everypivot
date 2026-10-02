@@ -16,6 +16,7 @@ MATCH (source:EveryPivotNode {id: source_id})-[edge:OBSERVED_IN]->(target:EveryP
 WHERE source.form IN ['file:pe:imphash']
   AND target.form IN ['file:bytes']
   AND date(edge.seen) >= as_of - duration({days: 3650})
+  AND date(edge.seen) <= as_of
   AND (source.negative_node_list IS NULL OR NOT source.negative_node_list IN ['common_benign_imphashes', 'common_packer_imphashes'])
 RETURN {
   pattern_id: 'CTI_SAMPLE_IMPHASH_CLUSTER',

@@ -1,0 +1,177 @@
+{
+  "fixture_type": "independently_authored_synthetic_sanctions_case",
+  "family": "certificate",
+  "scope": "Hypothetical normalized records, not actual payments, list designations, source truth or native runtime acceptance.",
+  "claims": {
+    "seed": {
+      "kind": "entity",
+      "type": "x509:cert",
+      "certificate_selector": {
+        "kind": "certificate_sha256",
+        "algorithm": "sha256",
+        "representation": "der",
+        "normalization": "exact_der_v1",
+        "scope": "whole_certificate",
+        "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIC6jCCAdKgAwIBAgICA+kwDQYJKoZIhvcNAQELBQAwODEaMBgGA1UEAwwRYmV0\nYS5leGFtcGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMB4XDTI2\nMTAwMTAwMDAwMFoXDTI3MTAwMTAwMDAwMFowODEaMBgGA1UEAwwRYmV0YS5leGFt\ncGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzRWi+03jK5Htyuh8oZHnc00R7N+PogoEHskd\nXwIcbG5d9cAIqLSgNJkf17g2qLJ9wpzfDRi0FIxQ5s7umtMHPH5m6wxMId/AaNqD\n7vlu6+KjedMfVGWeNgKp3xreWhs1QgsO4sL143goWnyfB4pimIeHvM0KAueMdQFM\n7z9s1OrwAuY+t2/Xyg4wQJbesN6m48jwuaauCZm8H4me6gWdK2R6AjOkF7b7rEv/\nFVIg128k+g02e/a+um+ajqVJo8qHSig8edRy5XUEtFL/WdfoopJsh1Xg0LbQvRJM\nk751qMQ4TAPLQtHeQghM9o13hwvp2+WxgVdU2QFVGJbDyRarLwIDAQABMA0GCSqG\nSIb3DQEBCwUAA4IBAQBDHulXluq4rFoGhQT+RSREhdZMshEc+eiIBQS6dUo/5aOy\nWPt7jHKIKGjmetB8QDdhRTg6M+3R0vxq5JfqNB/y4i+nxx9mo76H2eoeCCFFXyhM\nWMiuAW2X1strdBa125e20SgISRjklEkku3ibYuXgAkHaseLQ1A9xw/llGG3MAU7X\nvQqGLyyoIMq0Ybf99fGk9yJcfwtUKJOeVgLhVsM/Qf8kzNV4XbdAYlMi9X5o+W9I\nBhhl5PUrGYU13fycpydbnxVH0O0APUUjk9LXWEouQvpyBEp+FVS04R1rX2nTdEAE\n0Xd0foPjXDnjSLPgrFQBTbzoj1nJyZL0uvTz45+1\n-----END CERTIFICATE-----\n",
+        "provenance": {
+          "source": "relationship-source",
+          "record_id": "seed",
+          "source_revision": "fixture-r1",
+          "field": "/claims/seed/certificate_selector",
+          "basis": "reported"
+        }
+      },
+      "not_before": "2026-10-01T00:00:00Z"
+    },
+    "listed-subject": {
+      "kind": "entity",
+      "type": "org:org",
+      "name": "Actually identified list subject"
+    },
+    "subject-field": {
+      "kind": "assertion",
+      "type": "x509:subject_organization",
+      "assertion_namespace": "certificate:subject-field",
+      "field_kind": "organizationName",
+      "raw_value": "Synthetic Fixture",
+      "certificate_selector": {
+        "kind": "certificate_sha256",
+        "algorithm": "sha256",
+        "representation": "der",
+        "normalization": "exact_der_v1",
+        "scope": "whole_certificate",
+        "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+        "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIC6jCCAdKgAwIBAgICA+kwDQYJKoZIhvcNAQELBQAwODEaMBgGA1UEAwwRYmV0\nYS5leGFtcGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMB4XDTI2\nMTAwMTAwMDAwMFoXDTI3MTAwMTAwMDAwMFowODEaMBgGA1UEAwwRYmV0YS5leGFt\ncGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzRWi+03jK5Htyuh8oZHnc00R7N+PogoEHskd\nXwIcbG5d9cAIqLSgNJkf17g2qLJ9wpzfDRi0FIxQ5s7umtMHPH5m6wxMId/AaNqD\n7vlu6+KjedMfVGWeNgKp3xreWhs1QgsO4sL143goWnyfB4pimIeHvM0KAueMdQFM\n7z9s1OrwAuY+t2/Xyg4wQJbesN6m48jwuaauCZm8H4me6gWdK2R6AjOkF7b7rEv/\nFVIg128k+g02e/a+um+ajqVJo8qHSig8edRy5XUEtFL/WdfoopJsh1Xg0LbQvRJM\nk751qMQ4TAPLQtHeQghM9o13hwvp2+WxgVdU2QFVGJbDyRarLwIDAQABMA0GCSqG\nSIb3DQEBCwUAA4IBAQBDHulXluq4rFoGhQT+RSREhdZMshEc+eiIBQS6dUo/5aOy\nWPt7jHKIKGjmetB8QDdhRTg6M+3R0vxq5JfqNB/y4i+nxx9mo76H2eoeCCFFXyhM\nWMiuAW2X1strdBa125e20SgISRjklEkku3ibYuXgAkHaseLQ1A9xw/llGG3MAU7X\nvQqGLyyoIMq0Ybf99fGk9yJcfwtUKJOeVgLhVsM/Qf8kzNV4XbdAYlMi9X5o+W9I\nBhhl5PUrGYU13fycpydbnxVH0O0APUUjk9LXWEouQvpyBEp+FVS04R1rX2nTdEAE\n0Xd0foPjXDnjSLPgrFQBTbzoj1nJyZL0uvTz45+1\n-----END CERTIFICATE-----\n",
+        "provenance": {
+          "source": "relationship-source",
+          "record_id": "subject-field",
+          "source_revision": "fixture-r1",
+          "field": "/claims/subject-field/certificate_selector",
+          "basis": "reported"
+        }
+      },
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "seed"
+    },
+    "entity-resolution": {
+      "kind": "assertion",
+      "type": "identity:legal_entity_correspondence",
+      "assertion_namespace": "certificate:entity-resolution",
+      "basis": "documented_entity_correspondence",
+      "claim": "same_legal_entity",
+      "reference_identifier": "fixture-registered-org-id",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "subject-field",
+      "object": "listed-subject"
+    },
+    "lei": {
+      "kind": "entity",
+      "type": "lei:record",
+      "identifier": "998800SYNTHETIC00321",
+      "issued": "2026-01-01"
+    },
+    "lei-identity": {
+      "kind": "assertion",
+      "type": "lei:entity_identity",
+      "assertion_namespace": "certificate:lei-identity",
+      "role": "identifies_same_legal_entity",
+      "basis": "documented_continuity",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "listed-subject",
+      "object": "lei"
+    },
+    "entry": {
+      "kind": "entity",
+      "type": "sanction:entry",
+      "list_id": "synthetic-list",
+      "entry_id": "synthetic-entry-1",
+      "entry_revision": "revision-2026-09-02"
+    },
+    "entry-subject": {
+      "kind": "assertion",
+      "type": "sanction:entry_subject",
+      "assertion_namespace": "certificate:entry-subject",
+      "role": "source_listed_subject",
+      "identity_basis": "exact_source_identifier",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "listed-subject",
+      "object": "entry"
+    },
+    "status": {
+      "kind": "assertion",
+      "type": "sanction:status",
+      "assertion_namespace": "certificate:status",
+      "status": "listed",
+      "list_id": "synthetic-list",
+      "entry_revision": "revision-2026-09-02",
+      "published": "2026-09-02T00:00:00Z",
+      "applicable": {
+        "start": "2026-09-01T00:00:00Z",
+        "end": "2026-12-31T23:59:59Z"
+      },
+      "subject": "entry",
+      "object": "listed-subject"
+    },
+    "subject-field-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "certificate:subject-field-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "subject-field"
+    },
+    "entity-resolution-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "certificate:entity-resolution-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "entity-resolution"
+    },
+    "lei-identity-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "certificate:lei-identity-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "lei-identity"
+    },
+    "entry-subject-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "certificate:entry-subject-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "entry-subject"
+    },
+    "status-receipt": {
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "assertion_namespace": "certificate:status-receipt",
+      "collection_id": "sanctions-case",
+      "received": "2026-09-03T00:00:00Z",
+      "subject": "status"
+    },
+    "source-class": {
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "assertion_namespace": "certificate:source-class",
+      "class_id": "shared_provider",
+      "policy_basis": "selected_source_revision",
+      "membership": "member",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "seed"
+    },
+    "path-class": {
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "assertion_namespace": "certificate:path-class",
+      "class_id": "shared_intermediary",
+      "policy_basis": "selected_source_revision",
+      "membership": "member",
+      "published": "2026-09-02T00:00:00Z",
+      "subject": "listed-subject"
+    }
+  }
+}

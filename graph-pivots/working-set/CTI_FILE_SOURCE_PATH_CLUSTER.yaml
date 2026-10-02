@@ -1,6 +1,6 @@
 id: CTI_FILE_SOURCE_PATH_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: working_set
 precision_tier: low
 robustness_class: enumeration
@@ -10,55 +10,43 @@ hazards:
 - 'A shared source path is build-context evidence, not actor attribution.'
 capability_requirements:
   required:
-  - 'file_metadata_extraction'
-  - 'path_normalization'
+  - file_metadata_extraction
+  - path_normalization
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'common_build_path_suppression'
-  - 'pdb_path_extraction'
-  - 'sample_prevalence_enrichment'
+  - pdb_path_extraction
+  - sample_prevalence_enrichment
 name: File Source Path Cluster
 category: CTI
-description: Cluster files that expose the same normalized source, build, or project path in metadata, debug records, strings, or extracted configuration.
+description: Find particular preserved files with a source-qualified extraction of
+  the selected path representation. The 365-day window uses first complete finding
+  availability; later analysis neither invents a new file sighting nor backdates path
+  knowledge.
 source: file:source_path
 target: file:hash
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_FILE_SOURCE_PATH_CLUSTER.json
+  sha256: 8c9d1c52d1e2cb557264cf3aaf72a52302998adfe05ce5242b76fcebd000857c
 hops:
 - via: embedded_in_file
   direction: in
   form: file:hash
 constraints:
-  temporal:
-    order:
-    - file.observed >= source_path.extracted
-    window_days: 365
-  degree_caps:
-    file:source_path: 5000
-    file:hash: 100000
-  negative_nodes:
-  - form: file:source_path
-    list: common_build_system_paths
-  - form: file:hash
-    list: common_benign_file_hashes
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- normalized_path_depth
-- basename_rarity
-- common_build_path_penalty
-- prevalence
-- temporal_consistency
-- novelty_flag
+features: []
 outputs:
-  top_paths: 10
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - malware_analysis
 - file_reputation

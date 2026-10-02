@@ -1,6 +1,6 @@
 id: ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE
-version: 0.2.0
-pattern_schema_version: 1.5
+version: 0.3.0
+pattern_schema_version: 1.6
 validation_state: working_set
 precision_tier: medium
 robustness_class: enumeration
@@ -10,21 +10,34 @@ hazards:
 - 'Shared SaaS vendors, CDNs, and common admin-route names can create false matches; corroborate with tenant-specific artifacts.'
 capability_requirements:
   required:
-  - 'web_fingerprinting'
-  - 'web_script_extraction'
+  - web_fingerprinting
+  - web_script_extraction
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'dynamic_rendering'
-  - 'route_recovery'
+  - dynamic_rendering
+  - route_recovery
 review:
   last_reviewed: '2026-05-26'
   review_cadence_days: 96
   next_review: '2026-08-30'
 name: Webapp Source Map -> Admin Surface
 category: ADTECH
-description: Pivot from exposed JavaScript bundles or source maps to recovered application routes, panel strings, and administration surfaces.
+description: Return source-qualified routes recovered from preserved artifacts, with
+  explicit bundle/map content correspondence for referenced artifacts. An administrative
+  surface additionally requires interface-role evidence; a route alone does not prove
+  reachability or administration.
 source: web:asset
-target: web:admin:surface
+target: web:route|web:admin:surface
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/ADTECH_WEBAPP_SOURCEMAP_TO_ADMIN_SURFACE.json
+  sha256: 03f4585892a9c7e7af7e18449dafbd61abbf7eca79b78ef56d9b6940c322b9c1
 hops:
 - via: references
   direction: out
@@ -36,37 +49,14 @@ hops:
   direction: out
   form: web:admin:surface
 constraints:
-  temporal:
-    order:
-    - asset.seen <= route.extracted
-    window_days: 30
-  degree_caps:
-    web:asset: 1000
-    web:route: 5000
-  negative_nodes:
-  - form: web:asset
-    list: common_frontend_framework_assets
-  - form: web:admin:surface
-    list: known_benign_saas_panels
   provenance:
     min_unique_sources: 1
-features:
-- sourcemap_present
-- route_count
-- admin_keyword_density
-- auth_surface_present
-- campaign_keyword_present
-- customer_admin_keyword_present
-- bundle_path_rarity
-- benign_saas_penalty
+features: []
 outputs:
-  top_paths: 5
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - osint_web
 - url_corpus

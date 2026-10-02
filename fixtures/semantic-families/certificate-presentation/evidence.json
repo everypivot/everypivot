@@ -1,0 +1,2014 @@
+{
+  "contract": "everypivot.semantic_evidence",
+  "version": "1.0",
+  "collection_id": "synthetic-cert-case",
+  "sources": [
+    {
+      "id": "cert-source",
+      "publisher": "Independent synthetic fixture authors",
+      "document": "fixtures/semantic-families/certificate-presentation/source.json",
+      "revision": "fixture-r1",
+      "collection": "synthetic-cert-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "78b8ac6eb76273c023d3d0d3eba34010498e9b812a6697836de8e95ae42d8ab2",
+        "scope": "Exact UTF-8 source.json bytes, including final LF"
+      }
+    }
+  ],
+  "records": [
+    {
+      "id": "cert-1",
+      "kind": "entity",
+      "type": "x509:cert",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cert-1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cert-1/certificate_selector",
+            "basis": "reported"
+          },
+          "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIC6jCCAdKgAwIBAgICA+kwDQYJKoZIhvcNAQELBQAwODEaMBgGA1UEAwwRYmV0\nYS5leGFtcGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMB4XDTI2\nMTAwMTAwMDAwMFoXDTI3MTAwMTAwMDAwMFowODEaMBgGA1UEAwwRYmV0YS5leGFt\ncGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzRWi+03jK5Htyuh8oZHnc00R7N+PogoEHskd\nXwIcbG5d9cAIqLSgNJkf17g2qLJ9wpzfDRi0FIxQ5s7umtMHPH5m6wxMId/AaNqD\n7vlu6+KjedMfVGWeNgKp3xreWhs1QgsO4sL143goWnyfB4pimIeHvM0KAueMdQFM\n7z9s1OrwAuY+t2/Xyg4wQJbesN6m48jwuaauCZm8H4me6gWdK2R6AjOkF7b7rEv/\nFVIg128k+g02e/a+um+ajqVJo8qHSig8edRy5XUEtFL/WdfoopJsh1Xg0LbQvRJM\nk751qMQ4TAPLQtHeQghM9o13hwvp2+WxgVdU2QFVGJbDyRarLwIDAQABMA0GCSqG\nSIb3DQEBCwUAA4IBAQBDHulXluq4rFoGhQT+RSREhdZMshEc+eiIBQS6dUo/5aOy\nWPt7jHKIKGjmetB8QDdhRTg6M+3R0vxq5JfqNB/y4i+nxx9mo76H2eoeCCFFXyhM\nWMiuAW2X1strdBa125e20SgISRjklEkku3ibYuXgAkHaseLQ1A9xw/llGG3MAU7X\nvQqGLyyoIMq0Ybf99fGk9yJcfwtUKJOeVgLhVsM/Qf8kzNV4XbdAYlMi9X5o+W9I\nBhhl5PUrGYU13fycpydbnxVH0O0APUUjk9LXWEouQvpyBEp+FVS04R1rX2nTdEAE\n0Xd0foPjXDnjSLPgrFQBTbzoj1nJyZL0uvTz45+1\n-----END CERTIFICATE-----\n"
+        },
+        "spki_selector": {
+          "kind": "spki_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "subject_public_key_info",
+          "value": "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cert-1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cert-1/spki_selector",
+            "basis": "reported"
+          },
+          "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIC6jCCAdKgAwIBAgICA+kwDQYJKoZIhvcNAQELBQAwODEaMBgGA1UEAwwRYmV0\nYS5leGFtcGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMB4XDTI2\nMTAwMTAwMDAwMFoXDTI3MTAwMTAwMDAwMFowODEaMBgGA1UEAwwRYmV0YS5leGFt\ncGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzRWi+03jK5Htyuh8oZHnc00R7N+PogoEHskd\nXwIcbG5d9cAIqLSgNJkf17g2qLJ9wpzfDRi0FIxQ5s7umtMHPH5m6wxMId/AaNqD\n7vlu6+KjedMfVGWeNgKp3xreWhs1QgsO4sL143goWnyfB4pimIeHvM0KAueMdQFM\n7z9s1OrwAuY+t2/Xyg4wQJbesN6m48jwuaauCZm8H4me6gWdK2R6AjOkF7b7rEv/\nFVIg128k+g02e/a+um+ajqVJo8qHSig8edRy5XUEtFL/WdfoopJsh1Xg0LbQvRJM\nk751qMQ4TAPLQtHeQghM9o13hwvp2+WxgVdU2QFVGJbDyRarLwIDAQABMA0GCSqG\nSIb3DQEBCwUAA4IBAQBDHulXluq4rFoGhQT+RSREhdZMshEc+eiIBQS6dUo/5aOy\nWPt7jHKIKGjmetB8QDdhRTg6M+3R0vxq5JfqNB/y4i+nxx9mo76H2eoeCCFFXyhM\nWMiuAW2X1strdBa125e20SgISRjklEkku3ibYuXgAkHaseLQ1A9xw/llGG3MAU7X\nvQqGLyyoIMq0Ybf99fGk9yJcfwtUKJOeVgLhVsM/Qf8kzNV4XbdAYlMi9X5o+W9I\nBhhl5PUrGYU13fycpydbnxVH0O0APUUjk9LXWEouQvpyBEp+FVS04R1rX2nTdEAE\n0Xd0foPjXDnjSLPgrFQBTbzoj1nJyZL0uvTz45+1\n-----END CERTIFICATE-----\n"
+        },
+        "artifact_role": "certificate",
+        "not_before": "2026-10-01T00:00:00Z",
+        "not_after": "2027-10-01T00:00:00Z",
+        "subject_common_name": "beta.example.test"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cert-1"
+        }
+      ]
+    },
+    {
+      "id": "p1",
+      "kind": "occurrence",
+      "type": "network:certificate_presentation",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "p1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/p1/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "address_selector": {
+          "kind": "ipv4",
+          "representation": "dotted_decimal",
+          "normalization": "strict_dotted_decimal_v1",
+          "value": "192.0.2.10",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "p1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/p1/address_selector",
+            "basis": "reported"
+          }
+        },
+        "service_context_id": "service-context-1",
+        "occurrence_id": "presentation-event-1",
+        "observed_state": "certificate_presented",
+        "certificate_role": "leaf",
+        "vantage": "synthetic-client-observer"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "p1",
+            "occurrence": "p1"
+          },
+          "field": "/claims/p1/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-17T12:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/p1"
+        }
+      ],
+      "subject": "cert-1",
+      "object": "s1"
+    },
+    {
+      "id": "s1",
+      "kind": "entity",
+      "type": "inet:service",
+      "attributes": {
+        "context_id": "service-context-1",
+        "address_record": "ip1",
+        "protocol": "tls",
+        "port": 443
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/s1"
+        }
+      ]
+    },
+    {
+      "id": "ip1",
+      "kind": "entity",
+      "type": "inet:ipv4",
+      "attributes": {
+        "selector": {
+          "kind": "ipv4",
+          "representation": "dotted_decimal",
+          "normalization": "strict_dotted_decimal_v1",
+          "value": "192.0.2.10",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "ip1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/ip1/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/ip1"
+        }
+      ]
+    },
+    {
+      "id": "d1",
+      "kind": "entity",
+      "type": "inet:fqdn",
+      "attributes": {
+        "selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "alpha.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "d1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/d1/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/d1"
+        }
+      ]
+    },
+    {
+      "id": "n1",
+      "kind": "assertion",
+      "type": "network:presentation_name",
+      "attributes": {
+        "service_record": "s1",
+        "service_context_id": "service-context-1",
+        "basis": "requested_sni",
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "alpha.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "n1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/n1/name_selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/n1"
+        }
+      ],
+      "subject": "p1",
+      "object": "d1"
+    },
+    {
+      "id": "md1-certificate_sha256",
+      "kind": "occurrence",
+      "type": "x509:material_derivation",
+      "attributes": {
+        "selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "md1-certificate_sha256",
+            "source_revision": "fixture-r1",
+            "field": "/claims/md1-certificate_sha256/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cert-1",
+            "occurrence": "md1-certificate_sha256"
+          },
+          "field": "/claims/md1-certificate_sha256/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/md1-certificate_sha256"
+        }
+      ],
+      "subject": "cert-1"
+    },
+    {
+      "id": "mr1-certificate_sha256",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "md1-certificate_sha256",
+            "occurrence": "mr1-certificate_sha256"
+          },
+          "field": "/claims/mr1-certificate_sha256/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T01:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/mr1-certificate_sha256"
+        }
+      ],
+      "subject": "md1-certificate_sha256"
+    },
+    {
+      "id": "md1-spki_sha256",
+      "kind": "occurrence",
+      "type": "x509:material_derivation",
+      "attributes": {
+        "selector": {
+          "kind": "spki_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "subject_public_key_info",
+          "value": "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "md1-spki_sha256",
+            "source_revision": "fixture-r1",
+            "field": "/claims/md1-spki_sha256/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cert-1",
+            "occurrence": "md1-spki_sha256"
+          },
+          "field": "/claims/md1-spki_sha256/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/md1-spki_sha256"
+        }
+      ],
+      "subject": "cert-1"
+    },
+    {
+      "id": "mr1-spki_sha256",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "md1-spki_sha256",
+            "occurrence": "mr1-spki_sha256"
+          },
+          "field": "/claims/mr1-spki_sha256/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T01:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/mr1-spki_sha256"
+        }
+      ],
+      "subject": "md1-spki_sha256"
+    },
+    {
+      "id": "pe1",
+      "kind": "occurrence",
+      "type": "network:presentation_establishment",
+      "attributes": {
+        "service_record": "s1"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "p1",
+            "occurrence": "pe1"
+          },
+          "field": "/claims/pe1/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-17T12:01:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/pe1"
+        }
+      ],
+      "subject": "p1",
+      "object": "cert-1"
+    },
+    {
+      "id": "pr1",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "pe1",
+            "occurrence": "pr1"
+          },
+          "field": "/claims/pr1/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-17T13:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/pr1"
+        }
+      ],
+      "subject": "pe1"
+    },
+    {
+      "id": "ne1",
+      "kind": "occurrence",
+      "type": "network:presentation_name_establishment",
+      "attributes": {},
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "n1",
+            "occurrence": "ne1"
+          },
+          "field": "/claims/ne1/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-17T12:02:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/ne1"
+        }
+      ],
+      "subject": "n1",
+      "object": "p1"
+    },
+    {
+      "id": "nr1",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "ne1",
+            "occurrence": "nr1"
+          },
+          "field": "/claims/nr1/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-17T13:01:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/nr1"
+        }
+      ],
+      "subject": "ne1"
+    },
+    {
+      "id": "cert-2",
+      "kind": "entity",
+      "type": "x509:cert",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "5668904af9ca6d3974b27a69ed0312193882e2b6aa96232c8fe6ea639593f89c",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cert-2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cert-2/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "spki_selector": {
+          "kind": "spki_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "subject_public_key_info",
+          "value": "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cert-2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cert-2/spki_selector",
+            "basis": "reported"
+          }
+        },
+        "artifact_role": "certificate",
+        "not_before": "2026-10-01T00:00:00Z",
+        "not_after": "2027-10-01T00:00:00Z",
+        "subject_common_name": "beta.example.test"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cert-2"
+        }
+      ]
+    },
+    {
+      "id": "p2",
+      "kind": "occurrence",
+      "type": "network:certificate_presentation",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "5668904af9ca6d3974b27a69ed0312193882e2b6aa96232c8fe6ea639593f89c",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "p2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/p2/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "address_selector": {
+          "kind": "ipv4",
+          "representation": "dotted_decimal",
+          "normalization": "strict_dotted_decimal_v1",
+          "value": "192.0.2.20",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "p2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/p2/address_selector",
+            "basis": "reported"
+          }
+        },
+        "service_context_id": "service-context-2",
+        "occurrence_id": "presentation-event-2",
+        "observed_state": "certificate_presented",
+        "certificate_role": "leaf",
+        "vantage": "synthetic-client-observer"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "p2",
+            "occurrence": "p2"
+          },
+          "field": "/claims/p2/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-18T12:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/p2"
+        }
+      ],
+      "subject": "cert-2",
+      "object": "s2"
+    },
+    {
+      "id": "s2",
+      "kind": "entity",
+      "type": "inet:service",
+      "attributes": {
+        "context_id": "service-context-2",
+        "address_record": "ip2",
+        "protocol": "tls",
+        "port": 443
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/s2"
+        }
+      ]
+    },
+    {
+      "id": "ip2",
+      "kind": "entity",
+      "type": "inet:ipv4",
+      "attributes": {
+        "selector": {
+          "kind": "ipv4",
+          "representation": "dotted_decimal",
+          "normalization": "strict_dotted_decimal_v1",
+          "value": "192.0.2.20",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "ip2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/ip2/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/ip2"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "kind": "entity",
+      "type": "inet:fqdn",
+      "attributes": {
+        "selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "renewed.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "d2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/d2/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/d2"
+        }
+      ]
+    },
+    {
+      "id": "n2",
+      "kind": "assertion",
+      "type": "network:presentation_name",
+      "attributes": {
+        "service_record": "s2",
+        "service_context_id": "service-context-2",
+        "basis": "requested_sni",
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "renewed.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "n2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/n2/name_selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/n2"
+        }
+      ],
+      "subject": "p2",
+      "object": "d2"
+    },
+    {
+      "id": "md2-certificate_sha256",
+      "kind": "occurrence",
+      "type": "x509:material_derivation",
+      "attributes": {
+        "selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "5668904af9ca6d3974b27a69ed0312193882e2b6aa96232c8fe6ea639593f89c",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "md2-certificate_sha256",
+            "source_revision": "fixture-r1",
+            "field": "/claims/md2-certificate_sha256/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cert-2",
+            "occurrence": "md2-certificate_sha256"
+          },
+          "field": "/claims/md2-certificate_sha256/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/md2-certificate_sha256"
+        }
+      ],
+      "subject": "cert-2"
+    },
+    {
+      "id": "mr2-certificate_sha256",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "md2-certificate_sha256",
+            "occurrence": "mr2-certificate_sha256"
+          },
+          "field": "/claims/mr2-certificate_sha256/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T01:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/mr2-certificate_sha256"
+        }
+      ],
+      "subject": "md2-certificate_sha256"
+    },
+    {
+      "id": "md2-spki_sha256",
+      "kind": "occurrence",
+      "type": "x509:material_derivation",
+      "attributes": {
+        "selector": {
+          "kind": "spki_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "subject_public_key_info",
+          "value": "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "md2-spki_sha256",
+            "source_revision": "fixture-r1",
+            "field": "/claims/md2-spki_sha256/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cert-2",
+            "occurrence": "md2-spki_sha256"
+          },
+          "field": "/claims/md2-spki_sha256/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/md2-spki_sha256"
+        }
+      ],
+      "subject": "cert-2"
+    },
+    {
+      "id": "mr2-spki_sha256",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "md2-spki_sha256",
+            "occurrence": "mr2-spki_sha256"
+          },
+          "field": "/claims/mr2-spki_sha256/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T01:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/mr2-spki_sha256"
+        }
+      ],
+      "subject": "md2-spki_sha256"
+    },
+    {
+      "id": "pe2",
+      "kind": "occurrence",
+      "type": "network:presentation_establishment",
+      "attributes": {
+        "service_record": "s2"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "p2",
+            "occurrence": "pe2"
+          },
+          "field": "/claims/pe2/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-18T12:01:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/pe2"
+        }
+      ],
+      "subject": "p2",
+      "object": "cert-2"
+    },
+    {
+      "id": "pr2",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "pe2",
+            "occurrence": "pr2"
+          },
+          "field": "/claims/pr2/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-18T13:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/pr2"
+        }
+      ],
+      "subject": "pe2"
+    },
+    {
+      "id": "ne2",
+      "kind": "occurrence",
+      "type": "network:presentation_name_establishment",
+      "attributes": {},
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "n2",
+            "occurrence": "ne2"
+          },
+          "field": "/claims/ne2/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-18T12:02:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/ne2"
+        }
+      ],
+      "subject": "n2",
+      "object": "p2"
+    },
+    {
+      "id": "nr2",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "ne2",
+            "occurrence": "nr2"
+          },
+          "field": "/claims/nr2/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-18T13:01:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/nr2"
+        }
+      ],
+      "subject": "ne2"
+    },
+    {
+      "id": "cert-3",
+      "kind": "entity",
+      "type": "x509:cert",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "49ec1dfe86c69aaa7474178ca2ef64e472842700782c1d9043a5bc53ceecce64",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cert-3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cert-3/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "spki_selector": {
+          "kind": "spki_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "subject_public_key_info",
+          "value": "e8bb9a6e0e1ec2b649a5e81be192c1ac81990b92c201c287454edfdcde70f280",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cert-3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cert-3/spki_selector",
+            "basis": "reported"
+          }
+        },
+        "artifact_role": "certificate",
+        "not_before": "2026-10-01T00:00:00Z",
+        "not_after": "2027-10-01T00:00:00Z",
+        "subject_common_name": "beta.example.test"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cert-3"
+        }
+      ]
+    },
+    {
+      "id": "p3",
+      "kind": "occurrence",
+      "type": "network:certificate_presentation",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "49ec1dfe86c69aaa7474178ca2ef64e472842700782c1d9043a5bc53ceecce64",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "p3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/p3/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "address_selector": {
+          "kind": "ipv4",
+          "representation": "dotted_decimal",
+          "normalization": "strict_dotted_decimal_v1",
+          "value": "192.0.2.30",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "p3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/p3/address_selector",
+            "basis": "reported"
+          }
+        },
+        "service_context_id": "service-context-3",
+        "occurrence_id": "presentation-event-3",
+        "observed_state": "certificate_presented",
+        "certificate_role": "leaf",
+        "vantage": "synthetic-client-observer"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "p3",
+            "occurrence": "p3"
+          },
+          "field": "/claims/p3/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-19T12:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/p3"
+        }
+      ],
+      "subject": "cert-3",
+      "object": "s3"
+    },
+    {
+      "id": "s3",
+      "kind": "entity",
+      "type": "inet:service",
+      "attributes": {
+        "context_id": "service-context-3",
+        "address_record": "ip3",
+        "protocol": "tls",
+        "port": 443
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/s3"
+        }
+      ]
+    },
+    {
+      "id": "ip3",
+      "kind": "entity",
+      "type": "inet:ipv4",
+      "attributes": {
+        "selector": {
+          "kind": "ipv4",
+          "representation": "dotted_decimal",
+          "normalization": "strict_dotted_decimal_v1",
+          "value": "192.0.2.30",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "ip3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/ip3/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/ip3"
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "kind": "entity",
+      "type": "inet:fqdn",
+      "attributes": {
+        "selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "rekeyed.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "d3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/d3/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/d3"
+        }
+      ]
+    },
+    {
+      "id": "n3",
+      "kind": "assertion",
+      "type": "network:presentation_name",
+      "attributes": {
+        "service_record": "s3",
+        "service_context_id": "service-context-3",
+        "basis": "requested_sni",
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "rekeyed.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "n3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/n3/name_selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/n3"
+        }
+      ],
+      "subject": "p3",
+      "object": "d3"
+    },
+    {
+      "id": "md3-certificate_sha256",
+      "kind": "occurrence",
+      "type": "x509:material_derivation",
+      "attributes": {
+        "selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "49ec1dfe86c69aaa7474178ca2ef64e472842700782c1d9043a5bc53ceecce64",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "md3-certificate_sha256",
+            "source_revision": "fixture-r1",
+            "field": "/claims/md3-certificate_sha256/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cert-3",
+            "occurrence": "md3-certificate_sha256"
+          },
+          "field": "/claims/md3-certificate_sha256/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/md3-certificate_sha256"
+        }
+      ],
+      "subject": "cert-3"
+    },
+    {
+      "id": "mr3-certificate_sha256",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "md3-certificate_sha256",
+            "occurrence": "mr3-certificate_sha256"
+          },
+          "field": "/claims/mr3-certificate_sha256/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T01:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/mr3-certificate_sha256"
+        }
+      ],
+      "subject": "md3-certificate_sha256"
+    },
+    {
+      "id": "md3-spki_sha256",
+      "kind": "occurrence",
+      "type": "x509:material_derivation",
+      "attributes": {
+        "selector": {
+          "kind": "spki_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "subject_public_key_info",
+          "value": "e8bb9a6e0e1ec2b649a5e81be192c1ac81990b92c201c287454edfdcde70f280",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "md3-spki_sha256",
+            "source_revision": "fixture-r1",
+            "field": "/claims/md3-spki_sha256/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cert-3",
+            "occurrence": "md3-spki_sha256"
+          },
+          "field": "/claims/md3-spki_sha256/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/md3-spki_sha256"
+        }
+      ],
+      "subject": "cert-3"
+    },
+    {
+      "id": "mr3-spki_sha256",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "md3-spki_sha256",
+            "occurrence": "mr3-spki_sha256"
+          },
+          "field": "/claims/mr3-spki_sha256/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T01:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/mr3-spki_sha256"
+        }
+      ],
+      "subject": "md3-spki_sha256"
+    },
+    {
+      "id": "pe3",
+      "kind": "occurrence",
+      "type": "network:presentation_establishment",
+      "attributes": {
+        "service_record": "s3"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "p3",
+            "occurrence": "pe3"
+          },
+          "field": "/claims/pe3/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-19T12:01:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/pe3"
+        }
+      ],
+      "subject": "p3",
+      "object": "cert-3"
+    },
+    {
+      "id": "pr3",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "pe3",
+            "occurrence": "pr3"
+          },
+          "field": "/claims/pr3/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-19T13:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/pr3"
+        }
+      ],
+      "subject": "pe3"
+    },
+    {
+      "id": "ne3",
+      "kind": "occurrence",
+      "type": "network:presentation_name_establishment",
+      "attributes": {},
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "n3",
+            "occurrence": "ne3"
+          },
+          "field": "/claims/ne3/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-19T12:02:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/ne3"
+        }
+      ],
+      "subject": "n3",
+      "object": "p3"
+    },
+    {
+      "id": "nr3",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "ne3",
+            "occurrence": "nr3"
+          },
+          "field": "/claims/nr3/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-19T13:01:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/nr3"
+        }
+      ],
+      "subject": "ne3"
+    },
+    {
+      "id": "class-c1",
+      "kind": "assertion",
+      "type": "x509:certificate_classification",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "class-c1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/class-c1/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "class_id": "mass_managed_certificate",
+        "policy_basis": "selected_source_revision",
+        "membership": "member"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/class-c1"
+        }
+      ],
+      "subject": "cert-1"
+    },
+    {
+      "id": "class-ip1",
+      "kind": "assertion",
+      "type": "network:ip_classification",
+      "attributes": {
+        "selector": {
+          "kind": "ipv4",
+          "representation": "dotted_decimal",
+          "normalization": "strict_dotted_decimal_v1",
+          "value": "192.0.2.10",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "class-ip1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/class-ip1/selector",
+            "basis": "reported"
+          }
+        },
+        "class_id": "cdn_edge",
+        "policy_basis": "selected_source_revision",
+        "membership": "member"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/class-ip1"
+        }
+      ],
+      "subject": "ip1"
+    },
+    {
+      "id": "d-beta",
+      "kind": "entity",
+      "type": "inet:fqdn",
+      "attributes": {
+        "selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "beta.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "d-beta",
+            "source_revision": "fixture-r1",
+            "field": "/claims/d-beta/selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/d-beta"
+        }
+      ]
+    },
+    {
+      "id": "cn1",
+      "kind": "assertion",
+      "type": "x509:certificate_name",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cn1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cn1/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "beta.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cn1",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cn1/name_selector",
+            "basis": "reported"
+          }
+        },
+        "field_kind": "subject_common_name",
+        "association_basis": "reported_certificate_field",
+        "raw_value": "beta.example.test"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cn1"
+        }
+      ],
+      "subject": "cert-1",
+      "object": "d-beta"
+    },
+    {
+      "id": "cne1",
+      "kind": "occurrence",
+      "type": "x509:certificate_name_establishment",
+      "attributes": {},
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cn1",
+            "occurrence": "cne1"
+          },
+          "field": "/claims/cne1/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T03:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cne1"
+        }
+      ],
+      "subject": "cn1",
+      "object": "cert-1"
+    },
+    {
+      "id": "cnr1",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "cne1",
+            "occurrence": "cnr1"
+          },
+          "field": "/claims/cnr1/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T03:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cnr1"
+        }
+      ],
+      "subject": "cne1"
+    },
+    {
+      "id": "cn2",
+      "kind": "assertion",
+      "type": "x509:certificate_name",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "5668904af9ca6d3974b27a69ed0312193882e2b6aa96232c8fe6ea639593f89c",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cn2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cn2/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "beta.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cn2",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cn2/name_selector",
+            "basis": "reported"
+          }
+        },
+        "field_kind": "subject_common_name",
+        "association_basis": "reported_certificate_field",
+        "raw_value": "beta.example.test"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cn2"
+        }
+      ],
+      "subject": "cert-2",
+      "object": "d-beta"
+    },
+    {
+      "id": "cne2",
+      "kind": "occurrence",
+      "type": "x509:certificate_name_establishment",
+      "attributes": {},
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cn2",
+            "occurrence": "cne2"
+          },
+          "field": "/claims/cne2/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T03:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cne2"
+        }
+      ],
+      "subject": "cn2",
+      "object": "cert-2"
+    },
+    {
+      "id": "cnr2",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "cne2",
+            "occurrence": "cnr2"
+          },
+          "field": "/claims/cnr2/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T03:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cnr2"
+        }
+      ],
+      "subject": "cne2"
+    },
+    {
+      "id": "cn3",
+      "kind": "assertion",
+      "type": "x509:certificate_name",
+      "attributes": {
+        "certificate_selector": {
+          "kind": "certificate_sha256",
+          "algorithm": "sha256",
+          "representation": "der",
+          "normalization": "exact_der_v1",
+          "scope": "whole_certificate",
+          "value": "49ec1dfe86c69aaa7474178ca2ef64e472842700782c1d9043a5bc53ceecce64",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cn3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cn3/certificate_selector",
+            "basis": "reported"
+          }
+        },
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "beta.example.test",
+          "provenance": {
+            "source": "cert-source",
+            "record_id": "cn3",
+            "source_revision": "fixture-r1",
+            "field": "/claims/cn3/name_selector",
+            "basis": "reported"
+          }
+        },
+        "field_kind": "subject_common_name",
+        "association_basis": "reported_certificate_field",
+        "raw_value": "beta.example.test"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cn3"
+        }
+      ],
+      "subject": "cert-3",
+      "object": "d-beta"
+    },
+    {
+      "id": "cne3",
+      "kind": "occurrence",
+      "type": "x509:certificate_name_establishment",
+      "attributes": {},
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "cn3",
+            "occurrence": "cne3"
+          },
+          "field": "/claims/cne3/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T03:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cne3"
+        }
+      ],
+      "subject": "cn3",
+      "object": "cert-3"
+    },
+    {
+      "id": "cnr3",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-cert-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "cne3",
+            "occurrence": "cnr3"
+          },
+          "field": "/claims/cnr3/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-reported-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-16T03:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "cert-source",
+          "field": "/claims/cnr3"
+        }
+      ],
+      "subject": "cne3"
+    }
+  ]
+}

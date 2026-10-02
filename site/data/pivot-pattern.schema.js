@@ -1,10 +1,10 @@
 window.__EVERYPIVOT_SCHEMA__ = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Pivot Pattern v1.5",
-  "$comment": "EveryPivot pivot-pattern schema. © 2026 EveryPivot Project. The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. This schema file is licensed under Apache-2.0 (see LICENSE-CODE). Pattern instances that conform to this schema (i.e. the corpus under graph-pivots/) are licensed under CC BY 4.0 (see LICENSE-DATA). EveryPivot is a trademark — see TRADEMARK.md.",
+  "title": "Pivot Pattern v1.6",
+  "$comment": "EveryPivot pivot-pattern schema. \u00a9 2026 EveryPivot Project. The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. This schema file is licensed under Apache-2.0 (see LICENSE-CODE). Pattern instances that conform to this schema (i.e. the corpus under graph-pivots/) are licensed under CC BY 4.0 (see LICENSE-DATA). EveryPivot is a trademark \u2014 see TRADEMARK.md.",
   "x-license": {
-    "copyright": "© 2026 EveryPivot Project",
-    "copyright_holder_notice": "The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. \"EveryPivot Project\" is the designated attribution party for redistribution under CC BY 4.0 §3(a)(1)(A)(i).",
+    "copyright": "\u00a9 2026 EveryPivot Project",
+    "copyright_holder_notice": "The named copyright holder and trademark owner is identified in LICENSE, NOTICE, and TRADEMARK.md. \"EveryPivot Project\" is the designated attribution party for redistribution under CC BY 4.0 \u00a73(a)(1)(A)(i).",
     "schema": {
       "spdx": "Apache-2.0",
       "url": "LICENSE-CODE"
@@ -77,6 +77,14 @@ window.__EVERYPIVOT_SCHEMA__ = {
         {
           "type": "number",
           "const": 1.5
+        },
+        {
+          "type": "string",
+          "const": "1.6"
+        },
+        {
+          "type": "number",
+          "const": 1.6
         }
       ]
     },
@@ -425,6 +433,35 @@ window.__EVERYPIVOT_SCHEMA__ = {
         "pattern": "\\S"
       },
       "description": "Documentary qualifying evidence required before considering the candidate assessment. These strings are not runtime evidence, confidence, or an acceptance decision."
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "contract",
+        "version",
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "contract": {
+          "type": "string",
+          "const": "everypivot.semantic_pattern"
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "(?<![\\s\\S])contracts/semantics/[A-Z][A-Z0-9_]*[.]json(?![\\s\\S])"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "(?<![\\s\\S])[0-9a-f]{64}(?![\\s\\S])"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Closed reference to a separately versioned portable semantic contract. v1.6 requires this reference; v1.1-v1.5 forbid it. Shape validation does not verify bytes, matching pattern identity/version, executable support, evidence or assessment acceptance. The semantic contract loader performs those reference checks."
     }
   },
   "allOf": [
@@ -534,7 +571,9 @@ window.__EVERYPIVOT_SCHEMA__ = {
           "pattern_schema_version": {
             "enum": [
               "1.5",
-              1.5
+              1.5,
+              "1.6",
+              1.6
             ]
           }
         },
@@ -608,6 +647,31 @@ window.__EVERYPIVOT_SCHEMA__ = {
         "properties": {
           "assessment_mode": false,
           "assessment_requirements": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pattern_schema_version": {
+            "enum": [
+              "1.6",
+              1.6
+            ]
+          }
+        },
+        "required": [
+          "pattern_schema_version"
+        ]
+      },
+      "then": {
+        "required": [
+          "execution"
+        ]
+      },
+      "else": {
+        "properties": {
+          "execution": false
         }
       }
     }

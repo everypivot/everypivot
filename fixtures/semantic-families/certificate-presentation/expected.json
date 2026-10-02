@@ -1,0 +1,55 @@
+{
+  "scope": "Independent expectations for normalized source-qualified evidence only; no native source or assessment acceptance.",
+  "cases": [
+    {
+      "id": "whole-cert-domains",
+      "certificates": [
+        "cert-1"
+      ],
+      "targets": [
+        "d1"
+      ],
+      "reason": "whole_certificate_identity"
+    },
+    {
+      "id": "spki-domains",
+      "certificates": [
+        "cert-1",
+        "cert-2"
+      ],
+      "targets": [
+        "d1",
+        "d2"
+      ],
+      "reason": "explicit_exact_spki_reuse"
+    },
+    {
+      "id": "whole-cert-servers",
+      "certificates": [
+        "cert-1",
+        "cert-1"
+      ],
+      "targets": [
+        "d1",
+        "ip1"
+      ],
+      "reason": "whole_certificate_identity"
+    },
+    {
+      "id": "spki-servers",
+      "certificates": [
+        "cert-1",
+        "cert-1",
+        "cert-2",
+        "cert-2"
+      ],
+      "targets": [
+        "d1",
+        "d2",
+        "ip1",
+        "ip2"
+      ],
+      "reason": "explicit_exact_spki_reuse"
+    }
+  ]
+}

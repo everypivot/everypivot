@@ -5,6 +5,16 @@ require 'json'
 require 'pathname'
 require 'rbconfig'
 require 'yaml'
+require_relative 'evidence_consistency'
+require_relative 'utf8_text'
+
+def load_yaml(path)
+  YAML.safe_load(EveryPivot::Utf8Text.read(path), aliases: false)
+rescue EveryPivot::Utf8Text::Error => e
+  abort e.message
+rescue Psych::Exception => e
+  abort "Invalid YAML in #{path}: #{e.message}"
+end
 
 EVIDENCE_FORMAT = 'everypivot.traversal_evidence_pack'
 FIXTURE_ROLES = %w[
@@ -20,7 +30,7 @@ BLOCKING_ROLES = %w[cautionary_negative negative suppression].freeze
 
 def pattern_ids(repo_root, lane)
   Dir.glob(repo_root.join('graph-pivots', lane, '*.yaml').to_s).each_with_object({}) do |path, ids|
-    data = YAML.safe_load(File.read(path), aliases: false)
+    data = load_yaml(path)
     ids[data['id']] = Pathname(path) if data.is_a?(Hash) && data['id']
   end
 end
@@ -121,7 +131,9 @@ def validate_evidence_examples(repo_root)
     data = nil
 
     begin
-      data = JSON.parse(File.read(file))
+      data = JSON.parse(EveryPivot::Utf8Text.read(file))
+    rescue EveryPivot::Utf8Text::Error => e
+      errors << e.message
     rescue JSON::ParserError => e
       errors << "JSON parse failed: #{e.message}"
     end
@@ -200,6 +212,10 @@ def validate_evidence_examples(repo_root)
     end
 
     traversal_roles = traversals.map { |traversal| traversal['role'] if traversal.is_a?(Hash) }.compact
+    if validated_patterns.key?(pattern_id)
+      pattern = load_yaml(validated_patterns[pattern_id])
+      errors.concat(EveryPivot::EvidenceConsistency.check(data, pattern))
+    end
     missing_traversal_roles = roles - traversal_roles
     if missing_traversal_roles.any?
       errors << "fixture_roles missing expected_traversals coverage: #{missing_traversal_roles.join(', ')}"
@@ -214,7 +230,7 @@ def validate_evidence_examples(repo_root)
     weak_corroboration_example ||= roles.include?('weak_positive') && assertion_text.match?(/corroborat/i)
 
     if errors.empty?
-      puts "PASS #{fixture_id}"
+      puts "PASS #{fixture_id} (structure + bounded one-hop consistency; policy execution untested)"
     else
       failures << { id: fixture_id.empty? ? relative_file.to_s : fixture_id, failures: errors, output: '' }
       puts "FAIL #{fixture_id.empty? ? relative_file : fixture_id}"
@@ -251,7 +267,7 @@ def validate_evidence_examples(repo_root)
   [failures, examples.length]
 end
 
-repo_root = Pathname(__dir__).join('..').expand_path
+repo_root = Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path
 manifest_path = if ARGV[0]
   Pathname(ARGV[0]).expand_path
 else
@@ -264,7 +280,7 @@ unless manifest_path.file?
 end
 
 validator_path = repo_root.join('tools', 'validate_pivots.rb')
-manifest = YAML.safe_load(File.read(manifest_path), aliases: false)
+manifest = load_yaml(manifest_path)
 cases = Array(manifest['cases'])
 
 failures = []
@@ -331,7 +347,8 @@ failures.concat(evidence_failures)
 if failures.empty?
   puts
   puts "Validated #{cases.length} fixture cases from #{manifest_path.relative_path_from(repo_root)}"
-  puts "Validated #{evidence_count} traversal evidence examples from fixtures/examples"
+  puts "Checked structure and bounded one-hop consistency for #{evidence_count} evidence examples from fixtures/examples"
+  puts 'Temporal/order, suppression policy, fan-out, source independence and assessment acceptance are not executed by evidence-pack checks.'
   exit 0
 end
 

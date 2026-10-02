@@ -1,0 +1,531 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:everypivot:schema:semantic-evidence:1.0",
+  "title": "EveryPivot semantic evidence v1.0",
+  "$comment": "Apache-2.0. See LICENSE-CODE and NOTICE. Shape validity is not provenance verification, corroboration, independence or assessment acceptance. tools/semantic_records.rb explicitly checks references, unique identities, JSON values and time semantics; do not validate this contract with the limited legacy JSON schema helper alone.",
+  "description": "Normalized supplied records and documentary source revisions. Null metadata explicitly means unknown. Missing temporal metadata is unresolved, malformed supplied time values are invalid, and unsupported clocks remain unsupported. Source IDs are documentary labels, not independent-source counts. Hashes identify the stated preserved byte scope, not source truth. No finding_history shortcut or precomputed qualification authority exists.",
+  "type": "object",
+  "properties": {
+    "contract": {
+      "const": "everypivot.semantic_evidence"
+    },
+    "version": {
+      "const": "1.0"
+    },
+    "collection_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
+  },
+  "required": [
+    "contract",
+    "version",
+    "collection_id",
+    "sources",
+    "records"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "publisher": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "document": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revision": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "collection": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "independent_origin": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content_hash": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "algorithm": {
+                  "const": "sha256"
+                },
+                "value": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$",
+                  "maxLength": 64
+                },
+                "scope": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": ".*\\S.*"
+                }
+              },
+              "required": [
+                "algorithm",
+                "value",
+                "scope"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "publisher",
+        "document",
+        "revision",
+        "collection",
+        "independent_origin"
+      ],
+      "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "kind": {
+          "enum": [
+            "entity",
+            "assertion",
+            "occurrence",
+            "finding"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Raw source facts, not execution or assessment authority. Only contract-declared predicates may interpret values."
+        },
+        "times": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/time"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": ".*\\S.*"
+              },
+              "field": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": ".*\\S.*"
+              }
+            },
+            "required": [
+              "source_id",
+              "field"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "object": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "type",
+        "attributes",
+        "times",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "binding": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "object": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": ".*\\S.*"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "occurrence": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": ".*\\S.*"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "field": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_revision": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clock": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": ".*\\S.*"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "reference": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": ".*\\S.*"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uncertainty_seconds": {
+                  "oneOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timezone": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "precision": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "interval_role": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "start": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "start_inclusive": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end_inclusive": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "original_value": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": ".*\\S.*"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/time"
+          },
+          "minItems": 2
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "alternatives"
+            ]
+          },
+          "then": {
+            "properties": {
+              "binding": false,
+              "field": false,
+              "source_revision": false,
+              "clock": false,
+              "timezone": false,
+              "precision": false,
+              "interval_role": false,
+              "value": false,
+              "start": false,
+              "end": false,
+              "start_inclusive": false,
+              "end_inclusive": false
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "precision": {
+                "const": "interval"
+              }
+            },
+            "required": [
+              "precision"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": false
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "precision": {
+                "enum": [
+                  "instant",
+                  "second",
+                  "minute",
+                  "day",
+                  "month",
+                  "year"
+                ]
+              }
+            },
+            "required": [
+              "precision"
+            ]
+          },
+          "then": {
+            "properties": {
+              "start": false,
+              "end": false,
+              "start_inclusive": false,
+              "end_inclusive": false
+            }
+          }
+        }
+      ]
+    }
+  }
+}

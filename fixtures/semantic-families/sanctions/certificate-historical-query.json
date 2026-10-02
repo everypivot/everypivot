@@ -1,0 +1,56 @@
+{
+  "parameters": {
+    "source": "seed",
+    "purpose": "historical_at",
+    "reference_sources": [
+      "relationship-source",
+      "list-source",
+      "correction-source",
+      "list-correction-source"
+    ],
+    "entry_revisions": [
+      "entry"
+    ],
+    "certificate_selector": {
+      "kind": "certificate_sha256",
+      "algorithm": "sha256",
+      "representation": "der",
+      "normalization": "exact_der_v1",
+      "scope": "whole_certificate",
+      "value": "c163b5ba9e96f9855f379000f732fbe5eb9d93e234acd7afd99adf1cca346ed1",
+      "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIC6jCCAdKgAwIBAgICA+kwDQYJKoZIhvcNAQELBQAwODEaMBgGA1UEAwwRYmV0\nYS5leGFtcGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMB4XDTI2\nMTAwMTAwMDAwMFoXDTI3MTAwMTAwMDAwMFowODEaMBgGA1UEAwwRYmV0YS5leGFt\ncGxlLnRlc3QxGjAYBgNVBAoMEVN5bnRoZXRpYyBGaXh0dXJlMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzRWi+03jK5Htyuh8oZHnc00R7N+PogoEHskd\nXwIcbG5d9cAIqLSgNJkf17g2qLJ9wpzfDRi0FIxQ5s7umtMHPH5m6wxMId/AaNqD\n7vlu6+KjedMfVGWeNgKp3xreWhs1QgsO4sL143goWnyfB4pimIeHvM0KAueMdQFM\n7z9s1OrwAuY+t2/Xyg4wQJbesN6m48jwuaauCZm8H4me6gWdK2R6AjOkF7b7rEv/\nFVIg128k+g02e/a+um+ajqVJo8qHSig8edRy5XUEtFL/WdfoopJsh1Xg0LbQvRJM\nk751qMQ4TAPLQtHeQghM9o13hwvp2+WxgVdU2QFVGJbDyRarLwIDAQABMA0GCSqG\nSIb3DQEBCwUAA4IBAQBDHulXluq4rFoGhQT+RSREhdZMshEc+eiIBQS6dUo/5aOy\nWPt7jHKIKGjmetB8QDdhRTg6M+3R0vxq5JfqNB/y4i+nxx9mo76H2eoeCCFFXyhM\nWMiuAW2X1strdBa125e20SgISRjklEkku3ibYuXgAkHaseLQ1A9xw/llGG3MAU7X\nvQqGLyyoIMq0Ybf99fGk9yJcfwtUKJOeVgLhVsM/Qf8kzNV4XbdAYlMi9X5o+W9I\nBhhl5PUrGYU13fycpydbnxVH0O0APUUjk9LXWEouQvpyBEp+FVS04R1rX2nTdEAE\n0Xd0foPjXDnjSLPgrFQBTbzoj1nJyZL0uvTz45+1\n-----END CERTIFICATE-----\n",
+      "provenance": {
+        "source": "case-selector",
+        "record_id": "selection",
+        "source_revision": "case-r1",
+        "field": "/selector",
+        "basis": "reported"
+      }
+    },
+    "period": {
+      "start": "2024-12-01",
+      "end": "2024-12-31"
+    },
+    "at": {
+      "binding": {
+        "object": "case-point",
+        "occurrence": "case-point"
+      },
+      "field": "/case/at",
+      "source_revision": "fixture-r1",
+      "clock": {
+        "id": "source-stated-utc",
+        "reference": "UTC",
+        "uncertainty_seconds": 0
+      },
+      "timezone": "UTC",
+      "precision": "instant",
+      "interval_role": "occurrence",
+      "value": "2024-12-03T12:00:00Z"
+    }
+  },
+  "limits": {
+    "max_bindings": 100000,
+    "max_results": 100
+  }
+}

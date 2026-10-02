@@ -6,13 +6,22 @@ require 'optparse'
 require 'pathname'
 require 'tempfile'
 require 'yaml'
+require_relative 'utf8_text'
 
 def load_yaml(path)
-  YAML.safe_load(path.read, aliases: false)
+  YAML.safe_load(EveryPivot::Utf8Text.read(path), aliases: false)
+rescue EveryPivot::Utf8Text::Error => e
+  abort e.message
+rescue Psych::Exception => e
+  abort "Invalid YAML in #{path}: #{e.message}"
 end
 
 def load_json(path)
-  JSON.parse(path.read)
+  JSON.parse(EveryPivot::Utf8Text.read(path))
+rescue EveryPivot::Utf8Text::Error => e
+  abort e.message
+rescue JSON::ParserError => e
+  abort "Invalid JSON in #{path}: #{e.message}"
 end
 
 def repo_path(repo_root, value)
@@ -59,7 +68,7 @@ def target_ids(entries)
 end
 
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path,
+  repo_root: Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path,
   cypher_shell: ENV.fetch('CYPHER_SHELL', 'cypher-shell'),
   profile: nil,
   pattern_ids: [],

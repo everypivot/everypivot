@@ -10,11 +10,49 @@ require 'yaml'
 require 'zlib'
 require_relative 'sail_bridge'
 require_relative 'json_schema_validator'
+require_relative 'pattern_identity'
+require_relative 'utf8_text'
+require_relative 'semantic_contract'
 
 def compact_text(value)
   return nil if value.nil?
 
   value.to_s.gsub(/\s+/, ' ').strip
+end
+
+def semantic_execution(data, contract)
+  checked_input = data.select { |key, _| %w[id version pattern_schema_version target execution].include?(key) }
+  valid = !contract.nil?
+  diagnostic = {
+    'status' => valid ? 'contract_valid' : 'not_declared',
+    'checked_input' => checked_input,
+    'runtime_acceptance' => 'not_evaluated',
+    'coverage' => {
+      'reference_digest_verified' => valid,
+      'pattern_identity_verified' => valid,
+      'contract_shape_and_bindings_validated' => valid,
+      'runtime_executed' => false,
+      'evidence_acceptance_evaluated' => false,
+      'assessment_acceptance_evaluated' => false
+    }
+  }
+  return diagnostic unless valid
+
+  diagnostic.merge!(
+    'contract_id' => contract['contract'], 'contract_version' => contract['version'],
+    'reference_sha256' => data['execution']['sha256'],
+    'summary' => {
+      'parameters' => contract['parameters'],
+      'branches' => contract['branches'].map do |branch|
+        item = branch.select { |key, _| %w[id description time_bindings knowledge knowledge_checks finding].include?(key) }
+        item['bindings'] = branch['bindings'].map { |binding| binding.select { |key, _| %w[name kind types optional].include?(key) } }
+        item['result'] = branch['result'].select { |key, _| %w[mode form binding identity].include?(key) }
+        item['policies'] = branch.fetch('policies', []).map { |policy| policy.select { |key, _| %w[id revision scope reason default_enabled enabled_parameter].include?(key) } }
+        item
+      end
+    }
+  )
+  diagnostic
 end
 
 HIGH_CARDINALITY_CAP_THRESHOLD = 100_000
@@ -232,9 +270,22 @@ def write_tar_gz(archive_path, repo_root, relative_paths)
   end
 end
 
+# Ruby's command-line strings can be ASCII-8BIT under the C locale. Paths and
+# release labels enter textual manifests, so validate their UTF-8 bytes before
+# deriving names or writing archives. Decoding does not transcode the bytes.
+begin
+  ARGV.replace(ARGV.each_with_index.map do |value, index|
+    EveryPivot::Utf8Text.decode(value, path: "command-line argument #{index + 1}")
+  end)
+  tool_directory = EveryPivot::Utf8Text.decode(__dir__, path: 'tool directory')
+rescue EveryPivot::Utf8Text::Error => e
+  warn "Registry argument error: #{e.message}"
+  exit 2
+end
+
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path,
-  release: 'v0.5.0',
+  repo_root: Pathname(tool_directory).join('..').expand_path,
+  release: 'v0.6.0',
   published_at: Time.now.utc.strftime('%F'),
   output: nil,
   site_data_root: nil,
@@ -296,14 +347,15 @@ lane_dirs = {
 
 patterns = []
 begin
-  schema = JSON.parse(schema_path.read)
+  schema_text = EveryPivot::Utf8Text.read(schema_path)
+  schema = JSON.parse(schema_text)
   unless schema.is_a?(Hash) && schema['type'] == 'object' &&
          schema['properties'].is_a?(Hash) && schema['required'].is_a?(Array) &&
          schema['required'].any? && schema['additionalProperties'] == false
     raise ArgumentError, 'pattern schema must declare its object properties, required fields, and additionalProperties: false'
   end
   schema_validator = EveryPivot::JsonSchemaValidator.new(schema)
-rescue SystemCallError, JSON::ParserError, ArgumentError => e
+rescue EveryPivot::Utf8Text::Error, SystemCallError, JSON::ParserError, ArgumentError => e
   warn "Pattern schema unavailable: #{e.message}"
   exit 2
 end
@@ -314,6 +366,7 @@ rescue EveryPivot::SailBridge::ContractError => e
   exit 2
 end
 validation_errors = []
+identity_validator = EveryPivot::PatternIdentity.new
 bridge_counts = Hash.new(0)
 pattern_sources = {}
 counts = {
@@ -338,8 +391,11 @@ lane_dirs.each do |folder, lane_name|
   Dir.glob(lane_path.join('*.yaml').to_s).sort.each do |path|
     rel_path = Pathname(path).relative_path_from(repo_root).to_s
     begin
-      raw_yaml = File.read(path)
+      raw_yaml = EveryPivot::Utf8Text.read(path)
       data = YAML.safe_load(raw_yaml, aliases: false)
+    rescue EveryPivot::Utf8Text::Error => e
+      validation_errors << "#{rel_path}: #{e.message}"
+      next
     rescue Psych::Exception, SystemCallError => e
       validation_errors << "#{rel_path}: YAML read/parse failed: #{e.message}"
       next
@@ -348,19 +404,37 @@ lane_dirs.each do |folder, lane_name|
       validation_errors << "#{rel_path}: top-level pattern must be a mapping"
       next
     end
+    validation_errors.concat(identity_validator.check(data, path: rel_path,
+      basename: Pathname(path).basename('.yaml').to_s, lane: lane_name))
+    bridge = bridge_validator.check(data, path: rel_path)
+    bridge['distribution']['errors'].each do |error|
+      validation_errors << "#{rel_path}: #{error['code']}: #{error['message']}"
+    end
     schema_errors = schema_validator.validate(data)
     unless schema_errors.empty?
       validation_errors.concat(schema_errors.map { |error| "#{rel_path}: #{error}" })
       next
     end
 
+    execution_contract = nil
+    if data['pattern_schema_version'].to_s == '1.6'
+      begin
+        execution_contract = EveryPivot::SemanticContract.load_reference(data['execution'], data, root: repo_root)
+      rescue EveryPivot::SemanticContract::InvalidContract, EveryPivot::SemanticContract::UnsupportedContract => e
+        validation_errors << "#{rel_path}: execution contract: #{e.message}"
+        next
+      end
+    end
+
     counts[lane_name] += 1
-    bridge = bridge_validator.check(data, path: rel_path)
-    bridge_counts[bridge['status']] += 1
-    unless %w[evidence_only candidate_compatible].include?(bridge['status'])
+    unless bridge['distribution']['eligible']
       validation_errors << "#{rel_path}: #{bridge['status']} assessment bridge"
+      (bridge['errors'] + bridge['warnings']).each do |error|
+        validation_errors << "#{rel_path}: #{error['code']}: #{error['message']}"
+      end
       next
     end
+    bridge_counts[bridge['status']] += 1
     summary = compact_text(data['description'])
 
     entry = {
@@ -379,7 +453,11 @@ lane_dirs.each do |folder, lane_name|
     entry['name'] = data['name'] if data['name']
     entry['description'] = summary if summary
     entry['source'] = compact_text(data['source']) if data['source']
-    entry['target'] = compact_text(data['target']) if data['target']
+    entry['target'] = data['target'] if data['target']
+    # Exact checked input must retain authoring bytes for fields that bind the
+    # semantic declaration; whitespace normalization would stale that check.
+    entry['execution'] = data['execution'] if execution_contract
+    entry['semantic_execution'] = semantic_execution(data, execution_contract)
     entry['datasets'] = data['datasets'] if data['datasets'].is_a?(Array)
     entry['hop_count'] = data['hops'].length if data['hops'].is_a?(Array)
     entry['assessment'] = data['assessment'] if data['assessment'].is_a?(Hash)
@@ -388,6 +466,8 @@ lane_dirs.each do |folder, lane_name|
     entry['assessment_compatibility'] = {
       'status' => bridge['status'],
       'contract_version' => bridge_validator.contract_info['version'],
+      'manifest_sha256' => bridge_validator.contract_info['manifest_sha256'],
+      'checked_input' => data.select { |key, _value| %w[pattern_schema_version assessment_mode assessment assessment_requirements].include?(key) },
       'coverage' => bridge['coverage'],
       'warnings' => bridge['warnings']
     }
@@ -414,7 +494,7 @@ legal_files_present = LEGAL_BUNDLE_FILES.select { |name| repo_root.join(name).fi
 write_tar_gz(
   patterns_bundle_path,
   repo_root,
-  legal_files_present + relative_tree_entries(repo_root, 'graph-pivots') + relative_tree_entries(repo_root, 'schemas')
+  legal_files_present + relative_tree_entries(repo_root, 'graph-pivots') + relative_tree_entries(repo_root, 'schemas') + relative_tree_entries(repo_root, 'contracts')
 )
 write_tar_gz(
   fixtures_bundle_path,
@@ -521,8 +601,6 @@ if options[:site_data_root]
     .write("window.__EVERYPIVOT_PATTERN_SOURCES__ = #{JSON.pretty_generate(pattern_sources)};\n")
 
   if schema_path.file?
-    schema_text = File.read(schema_path)
-
     site_data_root
       .join(schema_sidecar_json)
       .write(schema_text)

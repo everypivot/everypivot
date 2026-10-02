@@ -1,0 +1,1048 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "OSINT_TLS_JA3_TO_FQDNS",
+    "version": "3.0.0"
+  },
+  "description": "Evidence-only client TLS fingerprint-to-domain inquiry. Exchange/domain assertions are source-qualified; shared fingerprints identify no unique endpoint or actor. Known-by cutoffs require actual derivation, association establishment and collection receipt witnesses; later receipts do not prove universal earlier absence.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-separate-client-ja3-and-server-ja3s-companion-pivots",
+  "parameters": {
+    "selector": {
+      "type": "selector",
+      "required": true,
+      "description": "Explicit ja3 source selector with reported or derived provenance; no cross-kind fallback.",
+      "selector_kinds": [
+        "ja3"
+      ]
+    },
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Analyst or case-selected inclusive UTC calendar dates for the actual client message occurrence."
+    },
+    "exclude_scanner_exchange": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicitly exclude evidence-supported scanner-generated exchanges at this observed leg; never infer purpose from a JA3 class."
+    },
+    "exclude_common_client_profile": {
+      "type": "boolean",
+      "required": false,
+      "description": "Exclude selected JA3 source by explicit common_client_profile membership in the supplied source revision, not historical client purpose."
+    },
+    "exclude_scanner_profile": {
+      "type": "boolean",
+      "required": false,
+      "description": "Exclude selected JA3 source by explicit scanner_profile membership in the supplied source revision, not historical client purpose."
+    }
+  },
+  "branches": [
+    {
+      "id": "client_attempt",
+      "bindings": [
+        {
+          "name": "message",
+          "kind": "occurrence",
+          "types": [
+            "tls:client_hello"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "message.attributes.selector.kind"
+                },
+                "right": {
+                  "literal": "ja3"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "message.attributes.selector"
+                },
+                "right": {
+                  "param": "selector"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "message.attributes.message_role"
+                },
+                "right": {
+                  "literal": "client"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "message.attributes.observed_state"
+                },
+                "right": {
+                  "literal": [
+                    "attempt_observed",
+                    "responded",
+                    "completed"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "exchange",
+          "kind": "occurrence",
+          "types": [
+            "tls:exchange"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exchange.id"
+                },
+                "right": {
+                  "ref": "message.attributes.exchange_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exchange.attributes.leg_id"
+                },
+                "right": {
+                  "ref": "message.attributes.leg_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "association",
+          "kind": "assertion",
+          "types": [
+            "tls:exchange_domain"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "association.subject"
+                },
+                "right": {
+                  "ref": "exchange.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "association.attributes.associated_message_id"
+                },
+                "right": {
+                  "ref": "message.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "association.attributes.leg_id"
+                },
+                "right": {
+                  "ref": "message.attributes.leg_id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "association.attributes.basis"
+                },
+                "right": {
+                  "literal": [
+                    "same_exchange_sni",
+                    "joined_application_request",
+                    "observed_scan_exchange"
+                  ]
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "association.attributes.normalization"
+                },
+                "right": {
+                  "literal": "dns_ascii_lower_v1"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "association.attributes.name"
+                },
+                "right": {
+                  "ref": "association.attributes.name_selector.value"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "domain",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "domain.attributes.name_selector.kind"
+                },
+                "right": {
+                  "literal": "dns_name"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "domain.id"
+                },
+                "right": {
+                  "ref": "association.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "domain.attributes.normalization"
+                },
+                "right": {
+                  "ref": "association.attributes.normalization"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "domain.attributes.name_selector"
+                },
+                "right": {
+                  "ref": "association.attributes.name_selector"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "domain.attributes.value"
+                },
+                "right": {
+                  "ref": "domain.attributes.name_selector.value"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "fingerprint_derivation",
+          "kind": "occurrence",
+          "types": [
+            "tls:fingerprint_derivation"
+          ],
+          "optional": true,
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "fingerprint_derivation.subject"
+                },
+                "right": {
+                  "ref": "message.id"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "fingerprint_derivation.attributes.selector"
+                },
+                "right": {
+                  "ref": "message.attributes.selector"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "fingerprint_derivation.attributes.message_role"
+                },
+                "right": {
+                  "literal": "client"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "fingerprint_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "optional": true,
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "fingerprint_receipt.subject"
+                },
+                "right": {
+                  "ref": "fingerprint_derivation.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "fingerprint_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "name_establishment",
+          "kind": "occurrence",
+          "types": [
+            "tls:domain_association_establishment"
+          ],
+          "optional": true,
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_establishment.subject"
+                },
+                "right": {
+                  "ref": "association.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_establishment.object"
+                },
+                "right": {
+                  "ref": "message.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_establishment.attributes.exchange_id"
+                },
+                "right": {
+                  "ref": "exchange.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_establishment.attributes.leg_id"
+                },
+                "right": {
+                  "ref": "message.attributes.leg_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "name_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "optional": true,
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_receipt.subject"
+                },
+                "right": {
+                  "ref": "name_establishment.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "purpose",
+          "kind": "assertion",
+          "types": [
+            "tls:exchange_purpose"
+          ],
+          "optional": true,
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "purpose.subject"
+                },
+                "right": {
+                  "ref": "exchange.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "purpose.attributes.leg_id"
+                },
+                "right": {
+                  "ref": "message.attributes.leg_id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "tls:fingerprint_classification"
+          ],
+          "optional": true,
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.selector.kind"
+                },
+                "right": {
+                  "literal": "ja3"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "classification.attributes.selector"
+                },
+                "right": {
+                  "param": "selector"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.class"
+                },
+                "right": {
+                  "literal": [
+                    "common_client_profile",
+                    "scanner_profile"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "all",
+            "args": [
+              {
+                "op": "within",
+                "value": {
+                  "ref": "message.times.occurred"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "contained"
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "message.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exchange.attributes.occurrence_id"
+                }
+              }
+            ]
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "message.attributes.occurrence_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "exchange.attributes.occurrence_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "message.attributes.leg_id"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "message.times.occurred"
+        },
+        {
+          "ref": "fingerprint_derivation.times.occurred"
+        },
+        {
+          "ref": "fingerprint_receipt.times.received"
+        },
+        {
+          "ref": "name_establishment.times.occurred"
+        },
+        {
+          "ref": "name_receipt.times.received"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "message.times.occurred"
+          },
+          "right": {
+            "ref": "fingerprint_derivation.times.occurred"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "fingerprint_derivation.times.occurred"
+          },
+          "right": {
+            "ref": "fingerprint_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "message.times.occurred"
+          },
+          "right": {
+            "ref": "name_establishment.times.occurred"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "name_establishment.times.occurred"
+          },
+          "right": {
+            "ref": "name_receipt.times.received"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "message.times.occurred"
+          },
+          "object": {
+            "ref": "message.id"
+          },
+          "occurrence": {
+            "ref": "message.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "fingerprint_derivation.times.occurred"
+          },
+          "object": {
+            "ref": "message.id"
+          },
+          "occurrence": {
+            "ref": "fingerprint_derivation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "fingerprint_receipt.times.received"
+          },
+          "object": {
+            "ref": "fingerprint_derivation.id"
+          },
+          "occurrence": {
+            "ref": "fingerprint_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "name_establishment.times.occurred"
+          },
+          "object": {
+            "ref": "association.id"
+          },
+          "occurrence": {
+            "ref": "name_establishment.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "name_receipt.times.received"
+          },
+          "object": {
+            "ref": "name_establishment.id"
+          },
+          "occurrence": {
+            "ref": "name_receipt.id"
+          }
+        }
+      ],
+      "policies": [
+        {
+          "id": "scanner_exchange",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "message.attributes.occurrence_id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_scanner_exchange",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "purpose.attributes.purpose"
+            },
+            "right": {
+              "literal": "scanner_generated"
+            }
+          },
+          "conflict_when": {
+            "op": "in",
+            "left": {
+              "ref": "purpose.attributes.purpose"
+            },
+            "right": {
+              "literal": [
+                "mixed_purpose"
+              ]
+            }
+          },
+          "reason": "Selected exclusion of a source-reported scanner-generated exchange at the exact observed leg; no inference of harmlessness.",
+          "allow_when": {
+            "op": "in",
+            "left": {
+              "ref": "purpose.attributes.purpose"
+            },
+            "right": {
+              "literal": [
+                "ordinary_client"
+              ]
+            }
+          }
+        },
+        {
+          "id": "common_client_profile",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "param": "selector"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_common_client_profile",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "literal": "common_client_profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "literal": "common_client_profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source-class filter over reported membership in selected source revisions; no transfer to JA3S or inference about every client.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "literal": "common_client_profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "not_member"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "scanner_profile",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "param": "selector"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_scanner_profile",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "literal": "scanner_profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "literal": "scanner_profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source-class filter over reported membership in selected source revisions; no transfer to JA3S or inference about every client.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "literal": "scanner_profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "not_member"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "inet:fqdn",
+        "binding": "domain",
+        "identity": [
+          {
+            "ref": "domain.id"
+          },
+          {
+            "ref": "message.attributes.occurrence_id"
+          },
+          {
+            "ref": "exchange.attributes.occurrence_id"
+          },
+          {
+            "ref": "message.attributes.leg_id"
+          }
+        ],
+        "fields": {
+          "knowledge_scope": {
+            "literal": "selected named-message support, derivation, association establishment and collection receipt witnesses"
+          },
+          "context_knowledge_scope": {
+            "literal": "optional classification and purpose assertions are retained context, not certified as known at the cutoff; selected filters state their own source-revision basis"
+          },
+          "claim": {
+            "literal": "named_client_attempt"
+          },
+          "fingerprint_kind": {
+            "literal": "ja3"
+          },
+          "fingerprint": {
+            "ref": "message.attributes.selector"
+          },
+          "message_record": {
+            "ref": "message.id"
+          },
+          "occurrence_id": {
+            "ref": "message.attributes.occurrence_id"
+          },
+          "message_role": {
+            "ref": "message.attributes.message_role"
+          },
+          "observed_state": {
+            "ref": "message.attributes.observed_state"
+          },
+          "exchange_record": {
+            "ref": "exchange.id"
+          },
+          "exchange_occurrence": {
+            "ref": "exchange.attributes.occurrence_id"
+          },
+          "leg_id": {
+            "ref": "message.attributes.leg_id"
+          },
+          "client_endpoint": {
+            "ref": "exchange.attributes.client_endpoint"
+          },
+          "destination_endpoint": {
+            "ref": "exchange.attributes.destination_endpoint"
+          },
+          "responder_endpoint": {
+            "ref": "message.attributes.responder_endpoint"
+          },
+          "vantage": {
+            "ref": "exchange.attributes.vantage"
+          },
+          "domain_association": {
+            "ref": "association.id"
+          },
+          "domain_basis": {
+            "ref": "association.attributes.basis"
+          },
+          "named_domain": {
+            "ref": "domain.attributes.value"
+          },
+          "occurrence_time": {
+            "ref": "message.times.occurred"
+          },
+          "purpose_context": {
+            "ref": "purpose.attributes.purpose"
+          },
+          "fingerprint_derivation": {
+            "ref": "fingerprint_derivation.id"
+          },
+          "fingerprint_receipt": {
+            "ref": "fingerprint_receipt.id"
+          },
+          "name_establishment": {
+            "ref": "name_establishment.id"
+          },
+          "name_receipt": {
+            "ref": "name_receipt.id"
+          },
+          "source_class": {
+            "ref": "classification.attributes.class"
+          },
+          "source_class_membership": {
+            "ref": "classification.attributes.membership"
+          },
+          "source_class_basis": {
+            "ref": "classification.attributes.policy_basis"
+          }
+        }
+      }
+    }
+  ]
+}

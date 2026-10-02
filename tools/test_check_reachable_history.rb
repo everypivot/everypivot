@@ -21,9 +21,10 @@ require 'minitest/autorun'
 require 'open3'
 require 'pathname'
 require 'tmpdir'
+require_relative 'utf8_text'
 
 class CheckReachableHistoryTest < Minitest::Test
-  TOOL = Pathname(__dir__).join('check_reachable_history.rb').expand_path
+  TOOL = Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('check_reachable_history.rb').expand_path
   AKIA_LITERAL = 'AKIA' + 'ABCDEFGHIJKLMNOP'
   GITHUB_PAT_LITERAL = 'ghp_' + ('A' * 36)
   RSA_HEADER = '-----BEGIN RSA PRIVATE KEY-----'

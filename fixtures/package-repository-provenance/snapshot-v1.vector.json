@@ -1,0 +1,16 @@
+{
+  "method": "everypivot.git-tree-content.v1",
+  "synthetic": true,
+  "entries": [
+    {
+      "path_base64": "aGVsbG8udHh0",
+      "mode": "100644",
+      "size": 6,
+      "sha256": "5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03"
+    }
+  ],
+  "digest": "2b83ba6df9942b489462748a1fb2fe76dc81f4a6c13c8a2f25917233a45775e7",
+  "blob_utf8": "hello\n",
+  "empty_tree_digest": "01518c05d7c12fae3a119160900118fd814ad572d16547a7d3f2f251fc21ebe6",
+  "scope": "Independent fixed digest vector; not a real package provenance record or an accepted assessment."
+}

@@ -1,0 +1,367 @@
+{
+  "fixture_type": "independently_authored_synthetic_tls_evidence",
+  "revision": "fixture-r1",
+  "claims": {
+    "e1": {
+      "type": "tls:exchange",
+      "occurrence_id": "connection-17",
+      "leg_id": "observer-to-edge",
+      "client_endpoint": "192.0.2.11:54321",
+      "destination_endpoint": "192.0.2.20:443",
+      "vantage": "synthetic-pcap-vantage"
+    },
+    "d-alpha": {
+      "type": "inet:fqdn",
+      "value": "alpha.example.test",
+      "normalization": "dns_ascii_lower_v1",
+      "name_selector": {
+        "kind": "dns_name",
+        "representation": "ascii",
+        "normalization": "dns_ascii_lower_v1",
+        "value": "alpha.example.test",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "d-alpha",
+          "source_revision": "fixture-r1",
+          "field": "/claims/d-alpha/name_selector",
+          "basis": "reported"
+        }
+      }
+    },
+    "m-client": {
+      "type": "tls:client_hello",
+      "selector": {
+        "kind": "ja3",
+        "role": "client",
+        "algorithm": "md5",
+        "normalization": "hex_case_v1",
+        "method_version": "synthetic-ja3-extractor-v1",
+        "representation": "hex",
+        "scope": "client_hello",
+        "value": "0123456789abcdef0123456789abcdef",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "m-client",
+          "source_revision": "fixture-r1",
+          "field": "/claims/m-client/selector",
+          "basis": "reported"
+        }
+      },
+      "message_role": "client",
+      "observed_state": "attempt_observed",
+      "occurrence_id": "network-message-client",
+      "exchange_id": "e1",
+      "leg_id": "observer-to-edge",
+      "occurred": "2026-09-30T23:59:50Z"
+    },
+    "n-client": {
+      "type": "tls:exchange_domain",
+      "associated_message_id": "m-client",
+      "leg_id": "observer-to-edge",
+      "basis": "same_exchange_sni",
+      "name": "alpha.example.test",
+      "normalization": "dns_ascii_lower_v1",
+      "name_selector": {
+        "kind": "dns_name",
+        "representation": "ascii",
+        "normalization": "dns_ascii_lower_v1",
+        "value": "alpha.example.test",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "n-client",
+          "source_revision": "fixture-r1",
+          "field": "/claims/n-client/name_selector",
+          "basis": "reported"
+        }
+      }
+    },
+    "derive-client": {
+      "type": "tls:fingerprint_derivation",
+      "selector": {
+        "kind": "ja3",
+        "role": "client",
+        "algorithm": "md5",
+        "normalization": "hex_case_v1",
+        "method_version": "synthetic-ja3-extractor-v1",
+        "representation": "hex",
+        "scope": "client_hello",
+        "value": "0123456789abcdef0123456789abcdef",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "derive-client",
+          "source_revision": "fixture-r1",
+          "field": "/claims/derive-client/selector",
+          "basis": "reported"
+        }
+      },
+      "message_role": "client",
+      "method": "synthetic-reported-extractor",
+      "method_version": "1",
+      "run_id": "derive-run-client",
+      "occurred": "2026-10-01T00:01:00Z"
+    },
+    "receive-client": {
+      "type": "evidence:claim_receipt",
+      "collection_id": "synthetic-case-collection",
+      "received": "2026-10-01T00:02:00Z"
+    },
+    "establish-client": {
+      "type": "tls:domain_association_establishment",
+      "exchange_id": "e1",
+      "leg_id": "observer-to-edge",
+      "method": "synthetic-exchange-join",
+      "method_version": "1",
+      "occurred": "2026-10-01T00:03:00Z"
+    },
+    "receive-name-client": {
+      "type": "evidence:claim_receipt",
+      "collection_id": "synthetic-case-collection",
+      "received": "2026-10-01T00:04:00Z"
+    },
+    "m-server": {
+      "type": "tls:server_hello",
+      "selector": {
+        "kind": "ja3s",
+        "role": "server",
+        "algorithm": "md5",
+        "normalization": "hex_case_v1",
+        "method_version": "synthetic-ja3-extractor-v1",
+        "representation": "hex",
+        "scope": "server_hello",
+        "value": "0123456789abcdef0123456789abcdef",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "m-server",
+          "source_revision": "fixture-r1",
+          "field": "/claims/m-server/selector",
+          "basis": "reported"
+        }
+      },
+      "message_role": "server",
+      "observed_state": "response_observed",
+      "occurrence_id": "network-message-server",
+      "exchange_id": "e1",
+      "leg_id": "observer-to-edge",
+      "responder_endpoint": "192.0.2.20:443",
+      "occurred": "2026-10-01T00:00:10Z"
+    },
+    "n-server": {
+      "type": "tls:exchange_domain",
+      "associated_message_id": "m-server",
+      "leg_id": "observer-to-edge",
+      "basis": "same_exchange_sni",
+      "name": "alpha.example.test",
+      "normalization": "dns_ascii_lower_v1",
+      "name_selector": {
+        "kind": "dns_name",
+        "representation": "ascii",
+        "normalization": "dns_ascii_lower_v1",
+        "value": "alpha.example.test",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "n-server",
+          "source_revision": "fixture-r1",
+          "field": "/claims/n-server/name_selector",
+          "basis": "reported"
+        }
+      }
+    },
+    "derive-server": {
+      "type": "tls:fingerprint_derivation",
+      "selector": {
+        "kind": "ja3s",
+        "role": "server",
+        "algorithm": "md5",
+        "normalization": "hex_case_v1",
+        "method_version": "synthetic-ja3-extractor-v1",
+        "representation": "hex",
+        "scope": "server_hello",
+        "value": "0123456789abcdef0123456789abcdef",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "derive-server",
+          "source_revision": "fixture-r1",
+          "field": "/claims/derive-server/selector",
+          "basis": "reported"
+        }
+      },
+      "message_role": "server",
+      "method": "synthetic-reported-extractor",
+      "method_version": "1",
+      "run_id": "derive-run-server",
+      "occurred": "2026-10-01T00:01:00Z"
+    },
+    "receive-server": {
+      "type": "evidence:claim_receipt",
+      "collection_id": "synthetic-case-collection",
+      "received": "2026-10-01T00:02:00Z"
+    },
+    "establish-server": {
+      "type": "tls:domain_association_establishment",
+      "exchange_id": "e1",
+      "leg_id": "observer-to-edge",
+      "method": "synthetic-exchange-join",
+      "method_version": "1",
+      "occurred": "2026-10-01T00:03:00Z"
+    },
+    "receive-name-server": {
+      "type": "evidence:claim_receipt",
+      "collection_id": "synthetic-case-collection",
+      "received": "2026-10-01T00:04:00Z"
+    },
+    "purpose-scan": {
+      "type": "tls:exchange_purpose",
+      "leg_id": "observer-to-edge",
+      "purpose": "scanner_generated"
+    },
+    "class-scanner": {
+      "type": "tls:fingerprint_classification",
+      "selector": {
+        "kind": "ja3",
+        "role": "client",
+        "algorithm": "md5",
+        "normalization": "hex_case_v1",
+        "method_version": "synthetic-ja3-extractor-v1",
+        "representation": "hex",
+        "scope": "client_hello",
+        "value": "0123456789abcdef0123456789abcdef",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "class-scanner",
+          "source_revision": "fixture-r1",
+          "field": "/claims/class-scanner/selector",
+          "basis": "reported"
+        }
+      },
+      "class": "scanner_profile",
+      "membership": "member",
+      "policy_basis": "selected_source_revision"
+    },
+    "class-scanner-opposing": {
+      "type": "tls:fingerprint_classification",
+      "selector": {
+        "kind": "ja3",
+        "role": "client",
+        "algorithm": "md5",
+        "normalization": "hex_case_v1",
+        "method_version": "synthetic-ja3-extractor-v1",
+        "representation": "hex",
+        "scope": "client_hello",
+        "value": "0123456789abcdef0123456789abcdef",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "class-scanner-opposing",
+          "source_revision": "fixture-r1",
+          "field": "/claims/class-scanner-opposing/selector",
+          "basis": "reported"
+        }
+      },
+      "class": "scanner_profile",
+      "membership": "not_member",
+      "policy_basis": "selected_source_revision"
+    },
+    "purpose-ordinary": {
+      "type": "tls:exchange_purpose",
+      "leg_id": "observer-to-edge",
+      "purpose": "ordinary_client"
+    },
+    "m-client-reimport": {
+      "type": "tls:client_hello",
+      "selector": {
+        "kind": "ja3",
+        "role": "client",
+        "algorithm": "md5",
+        "normalization": "hex_case_v1",
+        "method_version": "synthetic-ja3-extractor-v1",
+        "representation": "hex",
+        "scope": "client_hello",
+        "value": "0123456789abcdef0123456789abcdef",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "m-client-reimport",
+          "source_revision": "fixture-r1",
+          "field": "/claims/m-client-reimport/selector",
+          "basis": "reported"
+        }
+      },
+      "message_role": "client",
+      "observed_state": "attempt_observed",
+      "occurrence_id": "network-message-client",
+      "exchange_id": "e1",
+      "leg_id": "observer-to-edge",
+      "occurred": "2026-09-30T23:59:50Z"
+    },
+    "n-client-reimport": {
+      "type": "tls:exchange_domain",
+      "associated_message_id": "m-client-reimport",
+      "leg_id": "observer-to-edge",
+      "basis": "same_exchange_sni",
+      "name": "alpha.example.test",
+      "normalization": "dns_ascii_lower_v1",
+      "name_selector": {
+        "kind": "dns_name",
+        "representation": "ascii",
+        "normalization": "dns_ascii_lower_v1",
+        "value": "alpha.example.test",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "n-client-reimport",
+          "source_revision": "fixture-r1",
+          "field": "/claims/n-client-reimport/name_selector",
+          "basis": "reported"
+        }
+      }
+    },
+    "m-client-later": {
+      "type": "tls:client_hello",
+      "selector": {
+        "kind": "ja3",
+        "role": "client",
+        "algorithm": "md5",
+        "normalization": "hex_case_v1",
+        "method_version": "synthetic-ja3-extractor-v1",
+        "representation": "hex",
+        "scope": "client_hello",
+        "value": "0123456789abcdef0123456789abcdef",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "m-client-later",
+          "source_revision": "fixture-r1",
+          "field": "/claims/m-client-later/selector",
+          "basis": "reported"
+        }
+      },
+      "message_role": "client",
+      "observed_state": "attempt_observed",
+      "occurrence_id": "network-message-client-later",
+      "exchange_id": "e1",
+      "leg_id": "observer-to-edge",
+      "occurred": "2026-10-01T02:00:00Z"
+    },
+    "n-client-later": {
+      "type": "tls:exchange_domain",
+      "associated_message_id": "m-client-later",
+      "leg_id": "observer-to-edge",
+      "basis": "same_exchange_sni",
+      "name": "alpha.example.test",
+      "normalization": "dns_ascii_lower_v1",
+      "name_selector": {
+        "kind": "dns_name",
+        "representation": "ascii",
+        "normalization": "dns_ascii_lower_v1",
+        "value": "alpha.example.test",
+        "provenance": {
+          "source": "synthetic-ja3-report",
+          "record_id": "n-client-later",
+          "source_revision": "fixture-r1",
+          "field": "/claims/n-client-later/name_selector",
+          "basis": "reported"
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Not a native TLS collector or parser acceptance result.",
+    "Dates and named values are hypothetical; source hashing identifies this exact fixture content."
+  ]
+}

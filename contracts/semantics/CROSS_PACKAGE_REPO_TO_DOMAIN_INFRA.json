@@ -1,0 +1,1211 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA",
+    "version": "3.0.0"
+  },
+  "description": "Preserved version-specific registry declaration plus an independently evidenced observation of this particular infrastructure relationship. UTC3650day scope dates the observation, not creation, publication, import or replay; snapshot provenance remains separate.",
+  "authority": "docs/PACKAGE_REPOSITORY_PROVENANCE.md",
+  "parameters": {
+    "seed": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact source package version or repository record."
+    },
+    "query_date": {
+      "type": "date",
+      "required": true,
+      "description": "Explicit inclusive UTC observation-window end date."
+    },
+    "policy_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned mass_fork_mirrors revision; required scoped eligibility is not inferred from absent list membership."
+    }
+  },
+  "branches": [
+    {
+      "id": "fqdn",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "code:repo"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "declaration",
+          "kind": "assertion",
+          "types": [
+            "package:repository_declaration"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "declaration.object"
+            },
+            "right": {
+              "ref": "seed.id"
+            }
+          }
+        },
+        {
+          "name": "package",
+          "kind": "entity",
+          "types": [
+            "it:prod:softver"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "package.id"
+            },
+            "right": {
+              "ref": "declaration.subject"
+            }
+          }
+        },
+        {
+          "name": "repository",
+          "kind": "entity",
+          "types": [
+            "code:repo"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "repository.id"
+            },
+            "right": {
+              "ref": "declaration.object"
+            }
+          }
+        },
+        {
+          "name": "sidecar",
+          "kind": "entity",
+          "types": [
+            "evidence:package_repository_provenance"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "sidecar.id"
+            },
+            "right": {
+              "ref": "declaration.attributes.sidecar_id"
+            }
+          }
+        },
+        {
+          "name": "metadata",
+          "kind": "entity",
+          "types": [
+            "evidence:registry_document"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "metadata.id"
+            },
+            "right": {
+              "ref": "declaration.attributes.metadata_id"
+            }
+          }
+        },
+        {
+          "name": "observation",
+          "kind": "occurrence",
+          "types": [
+            "package:infrastructure_observation"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "observation.subject"
+            },
+            "right": {
+              "ref": "package.id"
+            }
+          }
+        },
+        {
+          "name": "endpoint",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "endpoint.id"
+            },
+            "right": {
+              "ref": "observation.object"
+            }
+          }
+        },
+        {
+          "name": "control",
+          "kind": "assertion",
+          "types": [
+            "policy:repository_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.policy"
+                },
+                "right": {
+                  "literal": "mass_fork_mirrors"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.revision"
+                },
+                "right": {
+                  "param": "policy_revision"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "control.attributes.repository_uri"
+                },
+                "right": {
+                  "ref": "repository.attributes.uri"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "declaration.times.collection_available"
+          },
+          "object": {
+            "ref": "declaration.id"
+          },
+          "occurrence": {
+            "ref": "declaration.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "package.times.collection_available"
+          },
+          "object": {
+            "ref": "package.id"
+          },
+          "occurrence": {
+            "ref": "package.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "repository.times.collection_available"
+          },
+          "object": {
+            "ref": "repository.id"
+          },
+          "occurrence": {
+            "ref": "repository.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sidecar.times.collection_available"
+          },
+          "object": {
+            "ref": "sidecar.id"
+          },
+          "occurrence": {
+            "ref": "sidecar.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "metadata.times.collection_available"
+          },
+          "object": {
+            "ref": "metadata.id"
+          },
+          "occurrence": {
+            "ref": "metadata.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "observation.times.collection_available"
+          },
+          "object": {
+            "ref": "observation.id"
+          },
+          "occurrence": {
+            "ref": "observation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "endpoint.times.collection_available"
+          },
+          "object": {
+            "ref": "endpoint.id"
+          },
+          "occurrence": {
+            "ref": "endpoint.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "observation.times.observed"
+          },
+          "object": {
+            "ref": "package.id"
+          },
+          "occurrence": {
+            "ref": "observation.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "declaration.times.collection_available"
+        },
+        {
+          "ref": "package.times.collection_available"
+        },
+        {
+          "ref": "repository.times.collection_available"
+        },
+        {
+          "ref": "sidecar.times.collection_available"
+        },
+        {
+          "ref": "metadata.times.collection_available"
+        },
+        {
+          "ref": "observation.times.collection_available"
+        },
+        {
+          "ref": "endpoint.times.collection_available"
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "package_repository_declaration",
+            "declaration": {
+              "ref": "declaration.id"
+            },
+            "package": {
+              "ref": "package.id"
+            },
+            "repository": {
+              "ref": "repository.id"
+            },
+            "sidecar": {
+              "ref": "sidecar.id"
+            },
+            "metadata": {
+              "ref": "metadata.id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "observation.attributes.profile"
+            },
+            "right": {
+              "literal": "relationship_observation_v1"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "observation.attributes.relation"
+            },
+            "right": {
+              "literal": [
+                "distributed_from",
+                "referenced_by"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "observation.attributes.occurrence_key"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "observation.attributes.collector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "observation.attributes.basis"
+            },
+            "right": {
+              "literal": "direct_relationship_observation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "endpoint.attributes.selector.kind"
+            },
+            "right": {
+              "literal": "dns_name"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "endpoint.attributes.selector"
+            },
+            "right": {
+              "ref": "observation.attributes.endpoint_selector"
+            }
+          },
+          {
+            "op": "package_repository_observation",
+            "observation": {
+              "ref": "observation.id"
+            },
+            "period": {
+              "calendar_period": {
+                "query_date": {
+                  "param": "query_date"
+                },
+                "days": {
+                  "literal": 3650
+                }
+              }
+            }
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "endpoint",
+        "form": "inet:fqdn",
+        "identity": [
+          {
+            "ref": "package.attributes.package.registry"
+          },
+          {
+            "ref": "package.attributes.package.name"
+          },
+          {
+            "ref": "package.attributes.package.version"
+          },
+          {
+            "selector_identity": "repository.attributes.uri"
+          },
+          {
+            "ref": "observation.attributes.occurrence_key"
+          },
+          {
+            "ref": "observation.attributes.collector"
+          },
+          {
+            "ref": "observation.attributes.relation"
+          },
+          {
+            "selector_identity": "endpoint.attributes.selector"
+          }
+        ],
+        "fields": {
+          "relationship_observation": {
+            "ref": "observation.id"
+          },
+          "occurrence_key": {
+            "ref": "observation.attributes.occurrence_key"
+          },
+          "observation_time": {
+            "ref": "observation.times.observed"
+          },
+          "relation": {
+            "ref": "observation.attributes.relation"
+          },
+          "package": {
+            "ref": "package.attributes.package"
+          },
+          "repository_uri": {
+            "ref": "repository.attributes.uri"
+          },
+          "preserved_provenance": {
+            "ref": "sidecar.attributes.document"
+          },
+          "snapshot_scope": {
+            "literal": "source-reported sidecar; manifest self-consistency checked, local Git content reproduction separate"
+          },
+          "inference_boundary": {
+            "literal": "declaration and observed relationship only; no build provenance, ownership, continuous service, independence or accepted assessment"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "mass_fork_mirrors",
+          "revision": "1.0",
+          "scope": "source",
+          "subject": {
+            "selector_identity": "repository.attributes.uri"
+          },
+          "default_enabled": true,
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "content_matches",
+                "record": {
+                  "ref": "control.id"
+                },
+                "source": {
+                  "ref": "control.attributes.content.source_id"
+                },
+                "sha256": {
+                  "ref": "control.attributes.content.sha256"
+                },
+                "byte_length": {
+                  "ref": "control.attributes.content.byte_length"
+                },
+                "representation": {
+                  "ref": "control.attributes.content.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.profile"
+                },
+                "right": {
+                  "literal": "literal_uri_membership_v1"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.state"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "content_matches",
+                "record": {
+                  "ref": "control.id"
+                },
+                "source": {
+                  "ref": "control.attributes.content.source_id"
+                },
+                "sha256": {
+                  "ref": "control.attributes.content.sha256"
+                },
+                "byte_length": {
+                  "ref": "control.attributes.content.byte_length"
+                },
+                "representation": {
+                  "ref": "control.attributes.content.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.profile"
+                },
+                "right": {
+                  "literal": "literal_uri_membership_v1"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.state"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "content_matches",
+                "record": {
+                  "ref": "control.id"
+                },
+                "source": {
+                  "ref": "control.attributes.content.source_id"
+                },
+                "sha256": {
+                  "ref": "control.attributes.content.sha256"
+                },
+                "byte_length": {
+                  "ref": "control.attributes.content.byte_length"
+                },
+                "representation": {
+                  "ref": "control.attributes.content.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.profile"
+                },
+                "right": {
+                  "literal": "literal_uri_membership_v1"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.state"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          },
+          "reason": "Preserved legacy repository exclusion with explicit exact-URI applicability and selected list revision."
+        }
+      ]
+    },
+    {
+      "id": "ipv4",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "code:repo"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "declaration",
+          "kind": "assertion",
+          "types": [
+            "package:repository_declaration"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "declaration.object"
+            },
+            "right": {
+              "ref": "seed.id"
+            }
+          }
+        },
+        {
+          "name": "package",
+          "kind": "entity",
+          "types": [
+            "it:prod:softver"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "package.id"
+            },
+            "right": {
+              "ref": "declaration.subject"
+            }
+          }
+        },
+        {
+          "name": "repository",
+          "kind": "entity",
+          "types": [
+            "code:repo"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "repository.id"
+            },
+            "right": {
+              "ref": "declaration.object"
+            }
+          }
+        },
+        {
+          "name": "sidecar",
+          "kind": "entity",
+          "types": [
+            "evidence:package_repository_provenance"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "sidecar.id"
+            },
+            "right": {
+              "ref": "declaration.attributes.sidecar_id"
+            }
+          }
+        },
+        {
+          "name": "metadata",
+          "kind": "entity",
+          "types": [
+            "evidence:registry_document"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "metadata.id"
+            },
+            "right": {
+              "ref": "declaration.attributes.metadata_id"
+            }
+          }
+        },
+        {
+          "name": "observation",
+          "kind": "occurrence",
+          "types": [
+            "package:infrastructure_observation"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "observation.subject"
+            },
+            "right": {
+              "ref": "package.id"
+            }
+          }
+        },
+        {
+          "name": "endpoint",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "endpoint.id"
+            },
+            "right": {
+              "ref": "observation.object"
+            }
+          }
+        },
+        {
+          "name": "control",
+          "kind": "assertion",
+          "types": [
+            "policy:repository_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.policy"
+                },
+                "right": {
+                  "literal": "mass_fork_mirrors"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.revision"
+                },
+                "right": {
+                  "param": "policy_revision"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "control.attributes.repository_uri"
+                },
+                "right": {
+                  "ref": "repository.attributes.uri"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "declaration.times.collection_available"
+          },
+          "object": {
+            "ref": "declaration.id"
+          },
+          "occurrence": {
+            "ref": "declaration.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "package.times.collection_available"
+          },
+          "object": {
+            "ref": "package.id"
+          },
+          "occurrence": {
+            "ref": "package.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "repository.times.collection_available"
+          },
+          "object": {
+            "ref": "repository.id"
+          },
+          "occurrence": {
+            "ref": "repository.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sidecar.times.collection_available"
+          },
+          "object": {
+            "ref": "sidecar.id"
+          },
+          "occurrence": {
+            "ref": "sidecar.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "metadata.times.collection_available"
+          },
+          "object": {
+            "ref": "metadata.id"
+          },
+          "occurrence": {
+            "ref": "metadata.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "observation.times.collection_available"
+          },
+          "object": {
+            "ref": "observation.id"
+          },
+          "occurrence": {
+            "ref": "observation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "endpoint.times.collection_available"
+          },
+          "object": {
+            "ref": "endpoint.id"
+          },
+          "occurrence": {
+            "ref": "endpoint.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "observation.times.observed"
+          },
+          "object": {
+            "ref": "package.id"
+          },
+          "occurrence": {
+            "ref": "observation.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "declaration.times.collection_available"
+        },
+        {
+          "ref": "package.times.collection_available"
+        },
+        {
+          "ref": "repository.times.collection_available"
+        },
+        {
+          "ref": "sidecar.times.collection_available"
+        },
+        {
+          "ref": "metadata.times.collection_available"
+        },
+        {
+          "ref": "observation.times.collection_available"
+        },
+        {
+          "ref": "endpoint.times.collection_available"
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "package_repository_declaration",
+            "declaration": {
+              "ref": "declaration.id"
+            },
+            "package": {
+              "ref": "package.id"
+            },
+            "repository": {
+              "ref": "repository.id"
+            },
+            "sidecar": {
+              "ref": "sidecar.id"
+            },
+            "metadata": {
+              "ref": "metadata.id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "observation.attributes.profile"
+            },
+            "right": {
+              "literal": "relationship_observation_v1"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "observation.attributes.relation"
+            },
+            "right": {
+              "literal": [
+                "distributed_from",
+                "referenced_by"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "observation.attributes.occurrence_key"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "observation.attributes.collector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "observation.attributes.basis"
+            },
+            "right": {
+              "literal": "direct_relationship_observation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "endpoint.attributes.selector.kind"
+            },
+            "right": {
+              "literal": "ipv4"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "endpoint.attributes.selector"
+            },
+            "right": {
+              "ref": "observation.attributes.endpoint_selector"
+            }
+          },
+          {
+            "op": "package_repository_observation",
+            "observation": {
+              "ref": "observation.id"
+            },
+            "period": {
+              "calendar_period": {
+                "query_date": {
+                  "param": "query_date"
+                },
+                "days": {
+                  "literal": 3650
+                }
+              }
+            }
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "endpoint",
+        "form": "inet:ipv4",
+        "identity": [
+          {
+            "ref": "package.attributes.package.registry"
+          },
+          {
+            "ref": "package.attributes.package.name"
+          },
+          {
+            "ref": "package.attributes.package.version"
+          },
+          {
+            "selector_identity": "repository.attributes.uri"
+          },
+          {
+            "ref": "observation.attributes.occurrence_key"
+          },
+          {
+            "ref": "observation.attributes.collector"
+          },
+          {
+            "ref": "observation.attributes.relation"
+          },
+          {
+            "selector_identity": "endpoint.attributes.selector"
+          }
+        ],
+        "fields": {
+          "relationship_observation": {
+            "ref": "observation.id"
+          },
+          "occurrence_key": {
+            "ref": "observation.attributes.occurrence_key"
+          },
+          "observation_time": {
+            "ref": "observation.times.observed"
+          },
+          "relation": {
+            "ref": "observation.attributes.relation"
+          },
+          "package": {
+            "ref": "package.attributes.package"
+          },
+          "repository_uri": {
+            "ref": "repository.attributes.uri"
+          },
+          "preserved_provenance": {
+            "ref": "sidecar.attributes.document"
+          },
+          "snapshot_scope": {
+            "literal": "source-reported sidecar; manifest self-consistency checked, local Git content reproduction separate"
+          },
+          "inference_boundary": {
+            "literal": "declaration and observed relationship only; no build provenance, ownership, continuous service, independence or accepted assessment"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "mass_fork_mirrors",
+          "revision": "1.0",
+          "scope": "source",
+          "subject": {
+            "selector_identity": "repository.attributes.uri"
+          },
+          "default_enabled": true,
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "content_matches",
+                "record": {
+                  "ref": "control.id"
+                },
+                "source": {
+                  "ref": "control.attributes.content.source_id"
+                },
+                "sha256": {
+                  "ref": "control.attributes.content.sha256"
+                },
+                "byte_length": {
+                  "ref": "control.attributes.content.byte_length"
+                },
+                "representation": {
+                  "ref": "control.attributes.content.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.profile"
+                },
+                "right": {
+                  "literal": "literal_uri_membership_v1"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.state"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "content_matches",
+                "record": {
+                  "ref": "control.id"
+                },
+                "source": {
+                  "ref": "control.attributes.content.source_id"
+                },
+                "sha256": {
+                  "ref": "control.attributes.content.sha256"
+                },
+                "byte_length": {
+                  "ref": "control.attributes.content.byte_length"
+                },
+                "representation": {
+                  "ref": "control.attributes.content.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.profile"
+                },
+                "right": {
+                  "literal": "literal_uri_membership_v1"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.state"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "content_matches",
+                "record": {
+                  "ref": "control.id"
+                },
+                "source": {
+                  "ref": "control.attributes.content.source_id"
+                },
+                "sha256": {
+                  "ref": "control.attributes.content.sha256"
+                },
+                "byte_length": {
+                  "ref": "control.attributes.content.byte_length"
+                },
+                "representation": {
+                  "ref": "control.attributes.content.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.profile"
+                },
+                "right": {
+                  "literal": "literal_uri_membership_v1"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control.attributes.state"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          },
+          "reason": "Preserved legacy repository exclusion with explicit exact-URI applicability and selected list revision."
+        }
+      ]
+    }
+  ]
+}

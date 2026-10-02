@@ -8,11 +8,12 @@ require 'open3'
 require 'rbconfig'
 require 'tmpdir'
 require 'yaml'
+require_relative 'utf8_text'
 require_relative 'sail_bridge'
 require_relative 'json_schema_validator'
 
 class SailBridgeTest < Minitest::Test
-  ROOT = File.expand_path('..', __dir__)
+  ROOT = File.expand_path('..', EveryPivot::Utf8Text.decode(__dir__, path: 'test directory'))
 
   def setup
     @checker = EveryPivot::SailBridge.new(repo_root: ROOT)
@@ -25,7 +26,7 @@ class SailBridgeTest < Minitest::Test
 
   def pattern(assessment = hint, version: '1.5')
     row = {'id' => 'CTI_BRIDGE_TEST', 'pattern_schema_version' => version, 'assessment' => assessment}
-    if version.to_s == '1.5'
+    if %w[1.5 1.6].include?(version.to_s)
       row['assessment_mode'] = 'candidate_assessment'
       row['assessment_requirements'] = ['Corroborate the observation against a separately identified incident and review contradictions.']
     end
@@ -48,8 +49,42 @@ class SailBridgeTest < Minitest::Test
     refute result['coverage']['assessment_acceptance_evaluated']
   end
 
+  def test_v16_reuses_pinned_assessment_semantics_without_evaluating_execution
+    ['1.6', 1.6].each do |version|
+      candidate = pattern(hint, version: version)
+      result = @checker.check(candidate)
+      assert_equal 'candidate_compatible', result['status']
+      assert result['coverage']['complete']
+      refute result['coverage']['assessment_acceptance_evaluated']
+      refute_includes result['coverage']['checks_performed'], 'execution'
+      evidence = {'id' => 'CTI_EVIDENCE', 'pattern_schema_version' => version, 'assessment_mode' => 'evidence_only'}
+      assert_equal 'evidence_only', @checker.check(evidence)['status']
+      # Execution-reference shape and bytes belong to the separate authoring and
+      # semantic-contract validators; this bridge cannot certify either.
+      candidate['execution'] = {'unexamined' => true}
+      assert_equal 'candidate_compatible', @checker.check(candidate)['status']
+    end
+    assert_equal '0.4-draft', @checker.contract_info['version']
+    assert_equal '5416bf429a34afccb4e6657807c26b83491a39bdcbd6c9a313530cadbf032881', @checker.contract_info['manifest_sha256']
+  end
+
+  def test_v16_does_not_relax_mode_requirements_or_candidate_roles
+    row = pattern(hint, version: '1.6')
+    row.delete('assessment_requirements')
+    assert_includes error_codes(row), 'assessment_requirements_missing'
+    row = pattern(hint, version: '1.6')
+    row['assessment'].delete('subject_role')
+    assert_includes error_codes(row), 'complete_hint_required'
+    row = pattern(hint, version: '1.6')
+    row['assessment_mode'] = 'evidence_only'
+    assert_includes error_codes(row), 'evidence_only_has_assessment'
+    assert_includes error_codes(row), 'evidence_only_has_requirements'
+    row['assessment_mode'] = 'accepted'
+    assert_includes error_codes(row), 'assessment_mode_invalid'
+  end
+
   def test_every_canonical_legal_subject_scope_and_object_route
-    matrix = JSON.parse(File.read(File.join(ROOT, 'schemas/sail-v0.4-draft/predicate_type_matrix.v0.4.json')))
+    matrix = JSON.parse(EveryPivot::Utf8Text.read(File.join(ROOT, 'schemas/sail-v0.4-draft/predicate_type_matrix.v0.4.json')))
     matrix['predicates'].each do |predicate|
       objects = predicate['allowed_object_roles'].map { |role| {'object_role' => role} } +
                 predicate['allowed_object_kinds'].map { |kind| {'object_kind' => kind} }
@@ -147,7 +182,7 @@ class SailBridgeTest < Minitest::Test
 
   def test_native_validator_blocks_root_runtime_fields_and_strict_incomplete
     source = File.join(ROOT, 'fixtures/cases/valid_v12_minimal/working-set/OSINT_VALID_V12_MINIMAL.yaml')
-    row = YAML.safe_load(File.read(source), aliases: false)
+    row = YAML.safe_load(EveryPivot::Utf8Text.read(source), aliases: false)
     Dir.mktmpdir('everypivot-native-bridge-') do |tmp|
       filename = File.join(tmp, "#{row['id']}.yaml")
       File.write(filename, YAML.dump(row))
@@ -209,8 +244,8 @@ class SailBridgeTest < Minitest::Test
   end
 
   def test_narrow_v15_schema_and_local_validator_boolean_and_string_constraints
-    schema = EveryPivot::JsonSchemaValidator.new(JSON.parse(File.read(File.join(ROOT, 'schemas/pivot_pattern.schema.json'))))
-    row = YAML.safe_load(File.read(File.join(ROOT, 'fixtures/cases/valid_v14_minimal/deferred/OSINT_VALID_V14_MINIMAL.yaml')), aliases: false)
+    schema = EveryPivot::JsonSchemaValidator.new(JSON.parse(EveryPivot::Utf8Text.read(File.join(ROOT, 'schemas/pivot_pattern.schema.json'))))
+    row = YAML.safe_load(EveryPivot::Utf8Text.read(File.join(ROOT, 'fixtures/cases/valid_v14_minimal/deferred/OSINT_VALID_V14_MINIMAL.yaml')), aliases: false)
     row['pattern_schema_version'] = '1.5'
     row['assessment_mode'] = 'evidence_only'
     row.delete('assessment')

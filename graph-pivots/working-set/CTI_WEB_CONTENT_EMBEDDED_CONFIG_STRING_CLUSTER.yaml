@@ -1,6 +1,6 @@
 id: CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: working_set
 precision_tier: low
 robustness_class: multi_hop_inference
@@ -10,18 +10,30 @@ hazards:
 - 'A shared embedded config string is clustering evidence, not proof that the page owner controls malware infrastructure.'
 capability_requirements:
   required:
-  - 'web_content_collection'
-  - 'config_string_extraction'
+  - web_content_collection
+  - config_string_extraction
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'html_comment_extraction'
-  - 'script_body_hashing'
-  - 'benign_template_suppression'
+  - html_comment_extraction
+  - script_body_hashing
 name: Web Content Embedded Config String Cluster
 category: CTI
-description: Cluster URLs or hosted pages that expose the same distinctive embedded configuration string, comment token, or protocol marker.
+description: Find preserved resource captures containing the selected representation-qualified
+  token. Retain URI identity alongside an eligible URL view; an FQDN result requires
+  the actual DNS host component and its own qualification. Resource reuse does not
+  establish domain compromise or ownership.
 source: malware:config:string|web:content:token
-target: inet:url|inet:fqdn
+target: inet:url|evidence:resource_content|inet:fqdn
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json
+  sha256: bd530b4f78b13da623c3e1d71b7a5b3798c2518533826a4b62954279a4e25b2b
 hops:
 - via: embedded_in_web_content
   direction: in
@@ -30,38 +42,14 @@ hops:
   direction: out
   form: inet:fqdn
 constraints:
-  temporal:
-    order:
-    - token.extracted <= url.observed
-    window_days: 90
-  degree_caps:
-    web:content:token: 10000
-    inet:url: 100000
-  negative_nodes:
-  - form: web:content:token
-    list: common_framework_or_analytics_tokens
-  - form: inet:fqdn
-    list: common_hosting_or_cdn_domains
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- token_length
-- page_context
-- template_penalty
-- hosting_context
-- temporal_consistency
-- novelty_flag
+features: []
 outputs:
-  top_paths: 10
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - osint_web
 - internet_scan_archives

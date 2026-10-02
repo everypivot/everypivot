@@ -12,12 +12,15 @@ Current contents:
 - `cases/` library roots with pass/fail scenarios for schema, lane, and metadata validation
 - `examples/` traversal evidence packs for first-use and promotion examples
 - `query-profiles/` synthetic fixture graphs for adapter/query profile demos
+- `package-repository-provenance/` synthetic sidecars for the separately versioned package/repository provenance contract
 
 Run the suite with:
 
 ```bash
 ruby tools/check_fixture_suite.rb
 ruby tools/check_query_profile_suite.rb
+ruby tools/test_validation_boundaries.rb
+ruby tools/test_package_repository_provenance.rb
 ```
 
 The suite currently covers:
@@ -54,6 +57,23 @@ Evidence packs must include blocked assertions. Those statements are part of
 the fixture contract: they say what a consumer must not infer from the
 traversal, even when the raw edge exists.
 
+`check_fixture_suite.rb` checks structure and bounded one-hop consistency for
+the current four packs: unique node/traversal IDs, source/target forms,
+relation and direction, joins for declared included/suppressed targets,
+disconnected negative controls, disjoint result lists, and nonempty documentary
+source labels. Unsupported shapes fail with a request for a separate oracle.
+These checks do **not** execute temporal/order constraints, suppression policy,
+fan-out caps, dependence or assessment acceptance. Source labels are not resolved
+anchors and do not prove independent corroboration. Replayed/copied reporting,
+future/stale suppression, source-anchor resolution and policy-dependent cases
+need explicit downstream execution evidence. Only the separate query-profile
+suite executes its documented bounded date-window and negative-list rules.
+
+A structural or topology PASS must not be described as full traversal execution
+or sufficient promotion evidence. Promotions must identify the exact executed
+oracle and its limits, or retain the outstanding semantic expectations as
+unexecuted review requirements.
+
 ## Traversal Evidence Examples
 
 - [`examples/osint_ssh_hostkey_cluster.evidence.json`](examples/osint_ssh_hostkey_cluster.evidence.json)
@@ -66,6 +86,24 @@ traversal, even when the raw edge exists.
 
 All examples are synthetic. They use reserved example domains or documentation
 IP ranges and are not live observation data.
+
+## Package/Repository Provenance Fixtures
+
+[`package-repository-provenance/`](package-repository-provenance/) holds synthetic
+sidecars for `everypivot.package_repository_provenance` v1.0, independent of the
+pattern authoring v1.5 schema. `test_package_repository_provenance.rb` uses these
+records and temporary synthetic Git repositories to exercise declaration and
+exact committed-snapshot provenance. This suite runs separately from the
+bounded one-hop traversal evidence checker and is a named release-pack gate.
+
+An exact source binding requires a pinned commit and Git object algorithm;
+current `HEAD`, checkout contents and uncommitted files cannot substitute for
+that snapshot. Unsupported Git links or LFS content remain unresolved. A
+qualified result means registry-declared source evidence only, with
+`build_provenance: not_verified`; fixtures do not prove that a real package was
+built from the source, establish an accepted assessment or supply native adapter
+acceptance. The helper's `--check` mode validates supplied shape and
+self-consistency only, not external provenance.
 
 ## Query Profile Fixtures
 
@@ -91,3 +129,20 @@ IP ranges and are not live observation data.
 Query profile fixtures are synthetic graph and mapping fixtures. They are used
 to prove generated adapter output preserves caveats and blocked assertions
 without adding backend-specific fields to pattern YAML.
+
+
+## Focused semantic families
+
+`semantic-families/` contains independent normalized synthetic evidence and
+expected outcomes for package/repository, extraction, certificate presentation,
+certificate expansion, signing, JA3/JA3S, sanctions and result bindings. Each
+family README specifies actual source fields, roles, time/identity profiles,
+unknown states and inference limits. Run `ruby tools/check_semantic_suite.rb`;
+`--json` preserves commands, runtimes, counts and output hashes. Failures and
+skips cannot count as acceptance. Source fixtures are synthetic, including
+preserved hashes and collection/history assertions; they do not claim an actual
+external source, native parser, source authenticity or analyst review.
+
+The four earlier evidence packs retain their bounded one-hop scope and are not
+silently upgraded to semantic family acceptance. Lane/review metadata remains
+historical unless an actual separately recorded review changes it.

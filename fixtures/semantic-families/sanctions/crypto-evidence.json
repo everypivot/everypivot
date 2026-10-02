@@ -1,0 +1,481 @@
+{
+  "contract": "everypivot.semantic_evidence",
+  "version": "1.0",
+  "collection_id": "sanctions-case",
+  "sources": [
+    {
+      "id": "relationship-source",
+      "publisher": "Synthetic historical records",
+      "document": "crypto-source.json",
+      "revision": "fixture-r1",
+      "collection": "sanctions-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "cd9a39ea375e94213a8a6c543c1af8f0efaab1a2fc2c9fc4a10395fe6a6fcd46",
+        "scope": "exact_source_bytes"
+      }
+    },
+    {
+      "id": "list-source",
+      "publisher": "Synthetic list provider",
+      "document": "crypto-source.json",
+      "revision": "fixture-r1",
+      "collection": "sanctions-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "cd9a39ea375e94213a8a6c543c1af8f0efaab1a2fc2c9fc4a10395fe6a6fcd46",
+        "scope": "exact_source_bytes"
+      }
+    },
+    {
+      "id": "correction-source",
+      "publisher": "Synthetic historical records",
+      "document": "crypto-source.json",
+      "revision": "fixture-r1",
+      "collection": "sanctions-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "cd9a39ea375e94213a8a6c543c1af8f0efaab1a2fc2c9fc4a10395fe6a6fcd46",
+        "scope": "exact_source_bytes"
+      }
+    },
+    {
+      "id": "list-correction-source",
+      "publisher": "Synthetic list provider",
+      "document": "crypto-source.json",
+      "revision": "fixture-r1",
+      "collection": "sanctions-case",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "cd9a39ea375e94213a8a6c543c1af8f0efaab1a2fc2c9fc4a10395fe6a6fcd46",
+        "scope": "exact_source_bytes"
+      }
+    }
+  ],
+  "records": [
+    {
+      "id": "seed",
+      "kind": "entity",
+      "type": "crypto:address",
+      "attributes": {
+        "name": "Selected source"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/seed"
+        }
+      ]
+    },
+    {
+      "id": "listed-subject",
+      "kind": "entity",
+      "type": "crypto:address",
+      "attributes": {
+        "name": "Actually identified list subject"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/listed-subject"
+        }
+      ]
+    },
+    {
+      "id": "event",
+      "kind": "occurrence",
+      "type": "ledger:tx",
+      "attributes": {
+        "assertion_namespace": "crypto:event",
+        "transaction_id": "crypto-tx-1",
+        "environment": "reported_real_network",
+        "execution_state": "completed",
+        "record_kind": "individual_transfer",
+        "value": {
+          "amount": "5",
+          "unit": "illustrative_unit"
+        },
+        "purpose_context": "unknown",
+        "transfer_unit_id": "individual-transfer-unit-1"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "event",
+            "occurrence": "event"
+          },
+          "field": "/claims/event/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        },
+        "occurred": {
+          "binding": {
+            "object": "event",
+            "occurrence": "event"
+          },
+          "field": "/claims/event/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2024-12-03T12:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/event"
+        }
+      ],
+      "subject": "seed",
+      "object": "listed-subject"
+    },
+    {
+      "id": "entry",
+      "kind": "entity",
+      "type": "sanction:entry",
+      "attributes": {
+        "list_id": "synthetic-list",
+        "entry_id": "synthetic-entry-1",
+        "entry_revision": "revision-2026-09-02"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/entry"
+        }
+      ]
+    },
+    {
+      "id": "entry-subject",
+      "kind": "assertion",
+      "type": "sanction:entry_subject",
+      "attributes": {
+        "assertion_namespace": "crypto:entry-subject",
+        "role": "source_listed_subject",
+        "identity_basis": "exact_source_identifier"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "entry-subject",
+            "occurrence": "entry-subject"
+          },
+          "field": "/claims/entry-subject/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/entry-subject"
+        }
+      ],
+      "subject": "listed-subject",
+      "object": "entry"
+    },
+    {
+      "id": "status",
+      "kind": "assertion",
+      "type": "sanction:status",
+      "attributes": {
+        "assertion_namespace": "crypto:status",
+        "status": "listed",
+        "list_id": "synthetic-list",
+        "entry_revision": "revision-2026-09-02"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "status",
+            "occurrence": "status"
+          },
+          "field": "/claims/status/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        },
+        "applicable": {
+          "binding": {
+            "object": "entry",
+            "occurrence": "status"
+          },
+          "field": "/claims/status/applicable",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "interval",
+          "interval_role": "validity",
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-12-31T23:59:59Z",
+          "start_inclusive": true,
+          "end_inclusive": true
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/status"
+        }
+      ],
+      "subject": "entry",
+      "object": "listed-subject"
+    },
+    {
+      "id": "event-receipt",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "assertion_namespace": "crypto:event-receipt",
+        "collection_id": "sanctions-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "event",
+            "occurrence": "event-receipt"
+          },
+          "field": "/claims/event-receipt/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-03T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/event-receipt"
+        }
+      ],
+      "subject": "event"
+    },
+    {
+      "id": "entry-subject-receipt",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "assertion_namespace": "crypto:entry-subject-receipt",
+        "collection_id": "sanctions-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "entry-subject",
+            "occurrence": "entry-subject-receipt"
+          },
+          "field": "/claims/entry-subject-receipt/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-03T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/entry-subject-receipt"
+        }
+      ],
+      "subject": "entry-subject"
+    },
+    {
+      "id": "status-receipt",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "assertion_namespace": "crypto:status-receipt",
+        "collection_id": "sanctions-case"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "status",
+            "occurrence": "status-receipt"
+          },
+          "field": "/claims/status-receipt/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-03T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "list-source",
+          "field": "/claims/status-receipt"
+        }
+      ],
+      "subject": "status"
+    },
+    {
+      "id": "source-class",
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "attributes": {
+        "assertion_namespace": "crypto:source-class",
+        "class_id": "shared_provider",
+        "policy_basis": "selected_source_revision",
+        "membership": "member"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "source-class",
+            "occurrence": "source-class"
+          },
+          "field": "/claims/source-class/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/source-class"
+        }
+      ],
+      "subject": "seed"
+    },
+    {
+      "id": "path-class",
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "attributes": {
+        "assertion_namespace": "crypto:path-class",
+        "class_id": "shared_intermediary",
+        "policy_basis": "selected_source_revision",
+        "membership": "member"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "path-class",
+            "occurrence": "path-class"
+          },
+          "field": "/claims/path-class/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/path-class"
+        }
+      ],
+      "subject": "listed-subject"
+    },
+    {
+      "id": "event-class",
+      "kind": "assertion",
+      "type": "evidence:classification",
+      "attributes": {
+        "assertion_namespace": "crypto:event-class",
+        "class_id": "controlled_test",
+        "policy_basis": "selected_source_revision",
+        "membership": "member"
+      },
+      "times": {
+        "published": {
+          "binding": {
+            "object": "event-class",
+            "occurrence": "event-class"
+          },
+          "field": "/claims/event-class/published",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "source-stated-utc",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-02T00:00:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "relationship-source",
+          "field": "/claims/event-class"
+        }
+      ],
+      "subject": "event"
+    }
+  ]
+}

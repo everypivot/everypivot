@@ -1,11 +1,11 @@
 # Neo4j/Cypher Contract Review
 
 Date: 2026-05-26
-Status: accepted for EP-WP15 second-adapter planning
+Status: historical repository-local contract review
 
 ## Scope
 
-This review covers the current Neo4j/Cypher query-profile contract, not live
+This dated review covers the Neo4j/Cypher query-profile contract as it stood on 2026-05-26, not live
 Neo4j runtime correctness for arbitrary production graph models.
 
 Reviewed surface:
@@ -21,8 +21,7 @@ Reviewed surface:
 
 ## Acceptance Basis
 
-The contract is accepted for moving to the EP-WP15 second-adapter decision
-because the repository now has:
+The reviewed contract covered:
 
 - one outbound validated target;
 - one inbound working-set target;
@@ -32,7 +31,7 @@ because the repository now has:
   temporal-order enforcement, degree caps, and top-path limits;
 - documented adapter-versus-fixture license boundaries.
 
-Local verification passed:
+The historical record reports the following local checks passing:
 
 ```bash
 ruby tools/check_query_profile_suite.rb
@@ -52,12 +51,10 @@ Accepted residuals:
 - `temporal.order`, `degree_caps`, and `outputs.top_paths` remain documented
   downstream responsibilities.
 
-These residuals do not block the second-adapter decision because they are
-documented, checked where currently feasible, and outside the stated pilot
-contract.
+These limits bound the scope of this historical review. It is not a fresh
+execution record for a later revision.
 
-## Second-Adapter Gate
+## Related mapping profile
 
-With this review accepted, EP-WP15 may proceed to a second adapter decision.
-The next adapter work should be scoped as OpenCTI/STIX-side mapping coverage,
-not as a live OpenCTI connector or a new source of pattern semantics.
+The separate OpenCTI/STIX profile provides bounded object mapping. It does not
+supply live connector acceptance or define new pattern semantics.

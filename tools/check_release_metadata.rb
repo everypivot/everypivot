@@ -5,17 +5,23 @@ require 'net/http'
 require 'optparse'
 require 'pathname'
 require 'uri'
+require_relative 'utf8_text'
 
 def read_text(path)
-  path.read
+  EveryPivot::Utf8Text.read(path)
 rescue Errno::ENOENT
   nil
+rescue EveryPivot::Utf8Text::Error => e
+  abort e.message
 end
 
 def parse_json(path, errors)
-  JSON.parse(path.read)
+  JSON.parse(EveryPivot::Utf8Text.read(path))
 rescue Errno::ENOENT
   errors << "Missing #{path}"
+  {}
+rescue EveryPivot::Utf8Text::Error => e
+  errors << e.message
   {}
 rescue JSON::ParserError => e
   errors << "Invalid JSON in #{path}: #{e.message}"
@@ -88,7 +94,7 @@ def release_note_date(repo_root, release)
 end
 
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path,
+  repo_root: Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path,
   expected_release: ENV['EXPECTED_RELEASE'],
   print_release: false,
   print_published_at: false,

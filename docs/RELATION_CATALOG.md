@@ -10,15 +10,16 @@ portability scoring. v0.3 warning-only tooling may use this inventory to show
 vocabulary drift, but unknown values remain review warnings before any future
 schema or CI enforcement.
 
-Inventory date: 2026-06-01.
+Original inventory date: 2026-06-01. Package-declaration vocabulary amended
+2026-09-14; this inventory update is not a lifecycle review or promotion.
 
 Current corpus snapshot:
 
-- 176 patterns.
-- 112 distinct `source` values.
-- 65 distinct `target` values.
-- 203 distinct `hops[].via` values.
-- 94 distinct `hops[].form` values.
+- 180 patterns.
+- 111 distinct `source` values.
+- 69 distinct `target` values.
+- 212 distinct `hops[].via` values.
+- 98 distinct `hops[].form` values.
 
 ## Naming Rules
 
@@ -55,6 +56,47 @@ The check is intentionally advisory:
 - semantic families are not inferred;
 - portability classes are not assigned;
 - inverse and companion candidates are not treated as parent/child relations.
+
+## Package Registry Declarations
+
+`declares_source_repository` records that an identified registry metadata
+revision for an exact `it:prod:softver` names a `code:repo` as its source
+repository. Its stored direction is package version to repository. The package
+pattern traverses it outward; the repository pattern traverses it inward.
+Neither traversal establishes a build origin, ownership or accepted assessment.
+The remaining infrastructure hops differ, so these patterns are not exact
+inverses.
+
+The independently versioned evidence contract is defined in
+[`PACKAGE_REPOSITORY_PROVENANCE.md`](PACKAGE_REPOSITORY_PROVENANCE.md). It
+preserves declarations even when the source revision is unknown, and separates
+full commit identity from the SHA-256 of an explicitly bound source snapshot.
+This catalog remains guidance and vocabulary inventory; it does not implement
+the evidence contract or imply backend support. The `publishes` relation used
+by other patterns is not redefined by this package-specific change.
+
+## Named TLS exchange associations
+
+`named_client_attempt` links a typed `tls:ja3` selector to an `inet:fqdn`
+through an actual client message and source-supported name association in the
+same exchange and leg. `named_server_response` separately links `tls:ja3s`
+through an actual response and its evidenced name association. These are
+composed evidence relations, not assertions that a server presents a client
+fingerprint, that the application succeeded or that the responder controls the
+name. Their authoring 1.6 execution contracts make the intermediate witnesses
+and emitted domain explicit. Old untyped `observed_on` rows cannot be renamed
+into either relation without recovering the required role/exchange evidence.
+
+## Explicit result projections
+
+Authoring 1.6 patterns may summarize composed inquiries with `yields_evidence_for`,
+`subject_of_listing_assertion` or `associated_listed_infrastructure`. These names
+describe evidence projections, not assumed stored edges. Exact continuity,
+intermediate joins and result identity are defined only by the digest-bound
+execution contract. Constructed phase or reference records do not manufacture
+accepted assessments. The legacy broad SBL identifier is non-executable; its
+historical vocabulary is retained for compatibility, not inherited by the three
+explicit successors. This inventory update is not a lifecycle review.
 
 ## Entity Namespaces
 
@@ -209,7 +251,7 @@ Known cleanup pressure:
 
 ## Current Inventory
 
-Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
+Counts below describe the current working corpus on 2026-10-02. This inventory is not a release publication or lane promotion.
 
 <details>
 <summary>Source forms</summary>
@@ -225,7 +267,7 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `cloud:subscription:uid` (1)
 - `cloud:tenant:uid` (2)
 - `cloud:webapp|inet:fqdn|inet:url` (1)
-- `code:authenticode:hash` (1)
+- `code:authenticode:hash|code:signature:material|x509:cert` (1)
 - `code:repo` (3)
 - `crypto:address` (2)
 - `device:device` (2)
@@ -274,7 +316,7 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `inet:fqdn` (12)
 - `inet:fqdn:mx` (1)
 - `inet:fqdn:ns` (2)
-- `inet:ipv4` (5)
+- `inet:ipv4` (6)
 - `inet:ipv4|inet:fqdn` (1)
 - `inet:ipv4|inet:fqdn|inet:url` (1)
 - `inet:url` (3)
@@ -290,7 +332,7 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `mail:dkim:key` (1)
 - `mail:dmarc:rua` (1)
 - `malware:config:string|web:content:token` (1)
-- `net:asn` (2)
+- `net:asn` (4)
 - `network:fingerprint:hassh` (1)
 - `network:service:probe_response` (2)
 - `org:org` (3)
@@ -308,6 +350,7 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `tel:phone|fin:instrument` (1)
 - `telecom:msisdn` (1)
 - `tls:ja3` (1)
+- `tls:ja3s` (1)
 - `travel:pnr` (1)
 - `url:component_hash` (1)
 - `visual:qr_payload` (1)
@@ -323,16 +366,14 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `web:site` (1)
 - `web:tracking:id` (1)
 - `x509:cert` (9)
-- `x509:cert:lifetime_profile` (1)
-- `x509:cert:profile` (1)
-- `x509:subject` (1)
+- `x509:comparison_profile` (3)
 
 </details>
 
 <details>
 <summary>Target forms</summary>
 
-- `auth:event` (1)
+- `auth:event` (2)
 - `auth:session` (1)
 - `cloud:subscription:uid` (1)
 - `cloud:tenant:uid` (1)
@@ -345,9 +386,8 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `file:bytes` (9)
 - `file:bytes|endpoint:uid` (1)
 - `file:bytes|file:path|endpoint:uid` (1)
-- `file:hash` (8)
+- `file:hash` (9)
 - `file:hash|endpoint:file` (1)
-- `file:hash|x509:cert` (1)
 - `file:image|inet:url` (1)
 - `file:path` (1)
 - `fin:account` (1)
@@ -359,7 +399,8 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `identity:user:uid` (1)
 - `identity:user|email:message` (1)
 - `inet:fqdn` (30)
-- `inet:fqdn|inet:ipv4` (1)
+- `inet:fqdn|evidence:ct_wildcard_scope` (1)
+- `inet:fqdn|inet:ipv4|evidence:deployment_reference|evidence:kit_comparison_clue` (1)
 - `inet:fqdn|inet:ipv4|inet:url` (1)
 - `inet:fqdn|inet:url` (3)
 - `inet:ipv4` (6)
@@ -368,10 +409,13 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `inet:ipv4|inet:fqdn|network:connection` (1)
 - `inet:ipv4|inet:fqdn|network:service` (1)
 - `inet:ipv4|inet:fqdn|risk:campaign|threat:cluster` (1)
-- `inet:url` (3)
+- `inet:ipv4|inet:net4` (1)
+- `inet:url` (2)
 - `inet:url|email:message` (2)
+- `inet:url|evidence:creative_reference` (1)
+- `inet:url|evidence:resource_content|inet:fqdn` (1)
 - `inet:url|http:request` (1)
-- `inet:url|inet:fqdn` (4)
+- `inet:url|inet:fqdn` (3)
 - `inet:url|inet:fqdn|http:response` (2)
 - `inet:url|payment:address|identity:account|file:image` (1)
 - `inet:web:acct` (6)
@@ -388,15 +432,16 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `org:org|person` (2)
 - `person` (3)
 - `person|fin:account` (1)
+- `reputation:assertion` (2)
 - `risk:campaign` (3)
 - `risk:incident` (1)
-- `risk:observation` (1)
+- `risk:observation|evidence:phase_comparison` (1)
 - `risk:threat` (1)
 - `sanction:entry` (8)
 - `telecom:msisdn` (1)
 - `telemetry:sighting` (1)
-- `web:admin:surface` (1)
 - `web:client:uid` (1)
+- `web:route|web:admin:surface` (1)
 
 </details>
 
@@ -411,11 +456,13 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `appears_in` (1)
 - `appears_in_message_id` (1)
 - `associated_identity` (1)
+- `associated_listed_infrastructure` (1)
 - `associated_message` (2)
 - `associated_with` (2)
 - `attached_to` (3)
 - `attachment_cluster_hash` (1)
 - `attachment_named` (1)
+- `attributable_sample_encounter_or_declared_endpoint_lead` (1)
 - `authenticated_in` (1)
 - `authoritative_for` (2)
 - `behavior_observed_on_page` (1)
@@ -430,7 +477,6 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `carries_identifier` (1)
 - `cashed_out_via` (1)
 - `cdr_event` (1)
-- `classified_as` (1)
 - `clicked_by` (1)
 - `co_occurs_with` (1)
 - `collects_payments_via` (1)
@@ -449,12 +495,12 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `contains_url` (2)
 - `cookie_name_observed_on` (1)
 - `counterparty` (1)
-- `ct_subject_alt_name` (1)
-- `declares_role` (1)
+- `ct_name_scope_record` (1)
+- `declares_source_repository` (2)
 - `decoded_from_image` (1)
 - `decodes_to` (1)
 - `depended_on_by` (1)
-- `derived_from_certificate` (1)
+- `distributed_as` (1)
 - `distributed_by|attributed_to` (1)
 - `distributed_from|referenced_by` (1)
 - `distributes` (1)
@@ -465,10 +511,15 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `embedded_in_file` (1)
 - `embedded_in_page` (1)
 - `embedded_in_web_content` (1)
-- `embeds` (1)
 - `emitted_by` (1)
 - `employed_by|owns` (1)
 - `enumerated_subdomain` (1)
+- `evidenced_occurrence_endpoint` (5)
+- `evidenced_presentation_name` (1)
+- `explicit_certificate_name_association` (1)
+- `explicit_certificate_or_spki_comparison` (1)
+- `explicit_profile_matches` (3)
+- `explicit_typed_certificate_name` (1)
 - `exploited_by|mentioned_with` (1)
 - `exposes` (1)
 - `exposes_route` (1)
@@ -482,15 +533,16 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `has_lei` (3)
 - `has_mx` (1)
 - `has_query_param` (1)
+- `has_typed_comparison_finding` (1)
 - `has_user_agent` (1)
 - `hashes_to` (2)
 - `header_fingerprint_observed_on` (1)
 - `header_value_present` (1)
 - `held_by|used_by` (1)
 - `hosted` (1)
-- `hosted_at` (3)
-- `hosted_by` (6)
-- `hosted_on` (2)
+- `hosted_at` (2)
+- `hosted_by` (4)
+- `hosted_on` (1)
 - `hosted_on|used_by` (1)
 - `hosts` (3)
 - `hosts|resolves|pdns_resolves` (1)
@@ -498,32 +550,36 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `identified_by` (1)
 - `image_observed_on` (1)
 - `includes_passenger` (1)
+- `issuer_serial_witness_in_artifact` (1)
 - `links_to` (2)
 - `listed_as` (8)
 - `listed_by` (1)
 - `lists|offers` (1)
-- `loads` (1)
 - `maintained_by|authored_by` (1)
 - `maintains|publishes` (1)
 - `maps_to_device_uid` (1)
 - `matched_by` (1)
-- `matches_profile` (2)
 - `mx_for` (1)
+- `named_client_attempt` (1)
+- `named_in_certificate|presented_in_named_context` (1)
+- `named_server_response` (1)
 - `observed_as` (1)
 - `observed_as_name` (1)
 - `observed_at` (1)
 - `observed_at_path` (1)
+- `observed_certificate_presentation` (7)
 - `observed_in` (8)
 - `observed_in_auth_event` (1)
 - `observed_in_request` (4)
-- `observed_on` (7)
+- `observed_on` (6)
 - `observed_on_bssid` (2)
 - `observed_on_service` (1)
 - `observed_path` (1)
+- `observed_rdp_certificate_presentation` (1)
 - `observed_with` (1)
 - `observed_with_client` (1)
 - `ocr_text_extracted_from` (1)
-- `officer_of|director_of` (2)
+- `officer_of|director_of` (1)
 - `opened_connection` (1)
 - `operated_by` (1)
 - `operated_via|distributed_from` (1)
@@ -539,13 +595,10 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `posted_by|redirects_to` (1)
 - `posted_by|used_by` (1)
 - `present_on` (1)
-- `presented_at` (6)
-- `presented_by` (2)
+- `presented_by` (1)
 - `profile_matches_domain` (1)
 - `promoted_by|referenced_by` (1)
-- `published_from` (1)
-- `publishes` (2)
-- `rdp_presented_at` (1)
+- `publishes` (1)
 - `reaches` (1)
 - `received_payment_from` (1)
 - `receives_payout_for` (1)
@@ -572,30 +625,29 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `reverse_resolves` (1)
 - `routes_to` (1)
 - `same_cell_same_time` (1)
-- `same_kit_hash|similar_path` (1)
 - `same_segment_within_window` (1)
-- `sandbox_observed` (2)
+- `sandbox_observed` (1)
 - `section_observed_in` (1)
 - `seen_in` (1)
+- `selected_certificate_reference` (1)
+- `selected_reported_sale_domain` (1)
 - `sent_attachment` (1)
 - `served_by` (1)
 - `served_by_host` (1)
 - `services` (1)
 - `shares_officer|shares_address` (1)
 - `ships_to|registered_at` (1)
-- `signs` (4)
-- `signs_or_describes` (1)
 - `similar_to` (1)
-- `sold_domain|transacted_domain` (2)
+- `sold_domain|transacted_domain` (1)
 - `sourced_from` (2)
 - `status_of` (1)
 - `string_extracted_from` (1)
+- `subject_of_listing_assertion` (2)
 - `subject_org` (1)
 - `submitted_by|used_by` (1)
 - `submitted_for` (1)
 - `supported_by` (1)
 - `titled_page` (1)
-- `tls_cert` (3)
 - `touched_domain` (1)
 - `to|from` (1)
 - `trades_with` (1)
@@ -606,6 +658,8 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `uses_domain` (1)
 - `uses_email` (1)
 - `uses|delivers|exploits` (1)
+- `witnessed_in_artifact` (3)
+- `yields_evidence_for` (3)
 
 </details>
 
@@ -616,12 +670,10 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `adtech:bundle` (1)
 - `adtech:campaign:key` (2)
 - `adtech:identifier` (1)
-- `adtech:pipeline:phase` (1)
-- `adtech:platform:role` (1)
 - `app:mobile` (1)
 - `auth:event` (2)
-- `auth:session` (2)
-- `c2:endpoint` (2)
+- `auth:session` (1)
+- `c2:endpoint` (1)
 - `cloud:bucket|cloud:service` (1)
 - `cloud:subscription:uid` (1)
 - `cloud:tenant:uid` (1)
@@ -636,7 +688,7 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `email:message` (12)
 - `endpoint:file` (1)
 - `endpoint:uid` (3)
-- `file:bytes` (11)
+- `file:bytes` (12)
 - `file:hash` (11)
 - `file:image` (2)
 - `file:path` (1)
@@ -656,14 +708,19 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `http:user_agent` (2)
 - `identity:user` (1)
 - `identity:user:uid` (1)
-- `inet:fqdn` (44)
-- `inet:fqdn|inet:ipv4` (3)
+- `inet:fqdn` (42)
+- `inet:fqdn|evidence:ct_wildcard_scope` (1)
+- `inet:fqdn|inet:ipv4` (2)
+- `inet:fqdn|inet:ipv4|evidence:deployment_reference|evidence:kit_comparison_clue` (1)
 - `inet:fqdn|inet:ipv4|inet:url` (1)
 - `inet:ipv4` (9)
 - `inet:ipv4|inet:fqdn` (18)
 - `inet:ipv4|inet:fqdn|inet:url` (1)
 - `inet:ipv4|inet:fqdn|risk:campaign|threat:cluster` (1)
-- `inet:url` (20)
+- `inet:ipv4|inet:net4` (1)
+- `inet:service` (7)
+- `inet:url` (19)
+- `inet:url|evidence:creative_reference` (1)
 - `inet:url|inet:fqdn` (2)
 - `inet:url|payment:address|identity:account` (1)
 - `inet:web:acct` (6)
@@ -679,16 +736,17 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `net:asn` (3)
 - `net:wifi:bssid` (1)
 - `network:connection` (1)
-- `network:service` (4)
+- `network:service` (3)
 - `org:org` (13)
 - `org:org|person` (3)
-- `person` (6)
+- `person` (5)
 - `person|fin:account` (1)
-- `phish:kit` (1)
 - `phish:kit|message:template` (1)
+- `reputation:assertion` (2)
 - `reputation:list` (1)
 - `risk:campaign` (3)
 - `risk:incident` (1)
+- `risk:observation|evidence:phase_comparison` (1)
 - `risk:threat` (1)
 - `risk:tool:software|file:bytes` (1)
 - `sanction:entry` (8)
@@ -700,11 +758,11 @@ Counts below are exact for the v0.2.0-prep corpus on 2026-05-24.
 - `web:asset` (1)
 - `web:client:uid` (1)
 - `web:route` (1)
-- `web:script` (1)
 - `web:site` (2)
 - `web:url` (2)
 - `web:url|file:bytes` (1)
 - `web:url|message:channel` (1)
-- `x509:cert` (5)
+- `x509:cert` (6)
+- `x509:ct_record` (1)
 
 </details>

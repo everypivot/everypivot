@@ -16,6 +16,7 @@ Use this checklist when considering whether a pattern should move into `graph-pi
 - [ ] At least minimal fixtures or examples exist.
 - [ ] Fixture roles are explicit where traversal evidence exists.
 - [ ] Evidence examples include blocked assertions, not just happy-path edges.
+- [ ] Evidence distinguishes structure/topology checks from executed temporal, suppression, dependence and case-evidence policy; promotion claims cite the exact oracle and results, with unsupported expectations explicitly unexecuted.
 - [ ] Maintainer approval is explicit.
 - [ ] There is no unresolved credible challenge against the pattern.
 - [ ] Weighted heuristics, temporal scoring, and analyst triage have been kept out of the pattern and left to downstream profile or orchestration layers.

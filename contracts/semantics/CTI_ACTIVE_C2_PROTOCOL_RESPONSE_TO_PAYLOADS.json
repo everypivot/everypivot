@@ -1,0 +1,3834 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_ACTIVE_C2_PROTOCOL_RESPONSE_TO_PAYLOADS",
+    "version": "3.0.0"
+  },
+  "description": "Source-qualified extraction findings over exact preserved content; 30-day inclusive UTC calendar lookback is applied to earliest complete finding in the supplied history, never to refreshed artifact sightings. Transformations are evidenced source reports, not extraction algorithms executed by this evaluator.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-independently-supported-response-derived-outputs",
+  "parameters": {
+    "seed": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact supplied source entity; global discovery time is not per-artifact extraction time."
+    },
+    "history": {
+      "type": "record_id",
+      "required": true,
+      "description": "Preserved collection-scoped finding history covering the declared origin through snapshot; no global novelty claim."
+    },
+    "query_date": {
+      "type": "date",
+      "required": true,
+      "description": "Explicit inclusive UTC calendar end date for this pattern's retained complete-finding lookback."
+    },
+    "known_test_or_decoy_payloads_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned known_test_or_decoy_payloads revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    },
+    "common_benign_payload_hashes_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned common_benign_payload_hashes revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    }
+  },
+  "branches": [
+    {
+      "id": "payload",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "network:service:probe_response"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "network:service:probe_response"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "seed.id"
+            }
+          }
+        },
+        {
+          "name": "response",
+          "kind": "occurrence",
+          "types": [
+            "network:response_occurrence"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "response.id"
+            },
+            "right": {
+              "ref": "input.attributes.occurrence_id"
+            }
+          }
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:response_payload_extraction"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "malware:payload"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "known_test_or_decoy_payloads"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "known_test_or_decoy_payloads_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.value"
+                    },
+                    "right": {
+                      "ref": "output.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_1",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_benign_payload_hashes"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.revision"
+                },
+                "right": {
+                  "param": "common_benign_payload_hashes_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.value"
+                    },
+                    "right": {
+                      "ref": "output.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "payload"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "response.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.response_occurrence"
+            },
+            "right": {
+              "ref": "response.id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "response.attributes.occurrence_key"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "response.attributes.vantage"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.derivation_relation"
+            },
+            "right": {
+              "literal": "derived_from_exact_response_bytes"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.qualification_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.qualification_version"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "response.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.occurred"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "response.times.occurred"
+            },
+            "right": {
+              "ref": "response.times.collection_available"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "response.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "response.times.occurred"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "response.times.collection_available"
+          },
+          "object": {
+            "ref": "response.id"
+          },
+          "occurrence": {
+            "ref": "response.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "response.times.occurred"
+          },
+          "object": {
+            "ref": "response.subject"
+          },
+          "occurrence": {
+            "ref": "response.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_active_c2_protocol_response_to_payloads",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "response_payload"
+          },
+          {
+            "ref": "response.attributes.occurrence_key"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "output.attributes.content.sha256"
+          }
+        ],
+        "support": [
+          "input",
+          "response",
+          "extraction",
+          "output"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 30
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "output",
+        "form": "malware:payload",
+        "identity": [
+          {
+            "literal": "response_payload"
+          },
+          {
+            "ref": "response.attributes.occurrence_key"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "output.attributes.content.sha256"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "payload_from_particular_response"
+          },
+          "response_occurrence": {
+            "ref": "response.id"
+          },
+          "output_sha256": {
+            "ref": "output.attributes.content.sha256"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "known_test_or_decoy_payloads",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "output.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "common_benign_payload_hashes",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "output.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "payload_hash",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "network:service:probe_response"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "network:service:probe_response"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "seed.id"
+            }
+          }
+        },
+        {
+          "name": "response",
+          "kind": "occurrence",
+          "types": [
+            "network:response_occurrence"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "response.id"
+            },
+            "right": {
+              "ref": "input.attributes.occurrence_id"
+            }
+          }
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:response_payload_extraction"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "malware:payload"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "digest",
+          "kind": "entity",
+          "types": [
+            "file:hash"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "digest.attributes.sha256"
+            },
+            "right": {
+              "ref": "output.attributes.content.sha256"
+            }
+          }
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "known_test_or_decoy_payloads"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "known_test_or_decoy_payloads_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.value"
+                    },
+                    "right": {
+                      "ref": "output.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_1",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_benign_payload_hashes"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.revision"
+                },
+                "right": {
+                  "param": "common_benign_payload_hashes_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.value"
+                    },
+                    "right": {
+                      "ref": "output.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "payload"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "response.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.response_occurrence"
+            },
+            "right": {
+              "ref": "response.id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "response.attributes.occurrence_key"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "response.attributes.vantage"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.derivation_relation"
+            },
+            "right": {
+              "literal": "derived_from_exact_response_bytes"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.qualification_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.qualification_version"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "response.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.occurred"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "digest.attributes.algorithm"
+            },
+            "right": {
+              "literal": "sha256"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "response.times.occurred"
+            },
+            "right": {
+              "ref": "response.times.collection_available"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "response.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "digest.times.collection_available"
+        },
+        {
+          "ref": "response.times.occurred"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "response.times.collection_available"
+          },
+          "object": {
+            "ref": "response.id"
+          },
+          "occurrence": {
+            "ref": "response.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "digest.times.collection_available"
+          },
+          "object": {
+            "ref": "digest.id"
+          },
+          "occurrence": {
+            "ref": "digest.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "response.times.occurred"
+          },
+          "object": {
+            "ref": "response.subject"
+          },
+          "occurrence": {
+            "ref": "response.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_active_c2_protocol_response_to_payloads",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "response_payload"
+          },
+          {
+            "ref": "response.attributes.occurrence_key"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "output.attributes.content.sha256"
+          }
+        ],
+        "support": [
+          "input",
+          "response",
+          "extraction",
+          "output",
+          "digest"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 30
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "digest",
+        "form": "file:hash",
+        "identity": [
+          {
+            "literal": "response_payload"
+          },
+          {
+            "ref": "response.attributes.occurrence_key"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "output.attributes.content.sha256"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "hash_view_of_same_payload_finding"
+          },
+          "payload": {
+            "ref": "output.id"
+          },
+          "response_occurrence": {
+            "ref": "response.id"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "known_test_or_decoy_payloads",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "output.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "common_benign_payload_hashes",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "output.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "direct_config",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "network:service:probe_response"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "network:service:probe_response"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "seed.id"
+            }
+          }
+        },
+        {
+          "name": "response",
+          "kind": "occurrence",
+          "types": [
+            "network:response_occurrence"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "response.id"
+            },
+            "right": {
+              "ref": "input.attributes.occurrence_id"
+            }
+          }
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:response_config_extraction"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "malware:config"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "configuration"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "response.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.response_occurrence"
+            },
+            "right": {
+              "ref": "response.id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "response.attributes.occurrence_key"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "response.attributes.vantage"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.derivation_relation"
+            },
+            "right": {
+              "literal": "derived_from_exact_response_bytes"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.qualification_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.qualification_version"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "response.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.occurred"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "response.times.occurred"
+            },
+            "right": {
+              "ref": "response.times.collection_available"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "response.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "response.times.occurred"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "response.times.collection_available"
+          },
+          "object": {
+            "ref": "response.id"
+          },
+          "occurrence": {
+            "ref": "response.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "response.times.occurred"
+          },
+          "object": {
+            "ref": "response.subject"
+          },
+          "occurrence": {
+            "ref": "response.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_active_c2_protocol_response_to_payloads",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "response_config"
+          },
+          {
+            "ref": "response.attributes.occurrence_key"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "output.attributes.content.sha256"
+          }
+        ],
+        "support": [
+          "input",
+          "response",
+          "extraction",
+          "output"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 30
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "output",
+        "form": "malware:config",
+        "identity": [
+          {
+            "literal": "response_config"
+          },
+          {
+            "ref": "response.attributes.occurrence_key"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "output.attributes.content.sha256"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "configuration_from_particular_response"
+          },
+          "response_occurrence": {
+            "ref": "response.id"
+          },
+          "output_sha256": {
+            "ref": "output.attributes.content.sha256"
+          }
+        }
+      }
+    },
+    {
+      "id": "payload_config",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "network:service:probe_response"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "network:service:probe_response"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "seed.id"
+            }
+          }
+        },
+        {
+          "name": "response",
+          "kind": "occurrence",
+          "types": [
+            "network:response_occurrence"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "response.id"
+            },
+            "right": {
+              "ref": "input.attributes.occurrence_id"
+            }
+          }
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:response_payload_extraction"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "malware:payload"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "config_extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:payload_config_extraction"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "config_extraction.subject"
+            },
+            "right": {
+              "ref": "output.id"
+            }
+          }
+        },
+        {
+          "name": "config",
+          "kind": "entity",
+          "types": [
+            "malware:config"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "config.id"
+            },
+            "right": {
+              "ref": "config_extraction.object"
+            }
+          }
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "known_test_or_decoy_payloads"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "known_test_or_decoy_payloads_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.value"
+                    },
+                    "right": {
+                      "ref": "output.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_1",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_benign_payload_hashes"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.revision"
+                },
+                "right": {
+                  "param": "common_benign_payload_hashes_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.value"
+                    },
+                    "right": {
+                      "ref": "output.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "payload"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "response.subject"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.response_occurrence"
+            },
+            "right": {
+              "ref": "response.id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "response.attributes.occurrence_key"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "response.attributes.vantage"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.derivation_relation"
+            },
+            "right": {
+              "literal": "derived_from_exact_response_bytes"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.qualification_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.qualification_version"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "response.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.occurred"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "config.id"
+            },
+            "source": {
+              "ref": "config.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "config.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "config.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "config.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "config_extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "config_extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "configuration"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "config_extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "config_extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "config_extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "config_extraction.attributes.qualification_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "config_extraction.attributes.qualification_version"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "response.times.occurred"
+            },
+            "right": {
+              "ref": "response.times.collection_available"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "config_extraction.times.occurred"
+            },
+            "right": {
+              "ref": "config_extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "response.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "config_extraction.times.collection_available"
+        },
+        {
+          "ref": "config.times.collection_available"
+        },
+        {
+          "ref": "response.times.occurred"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        },
+        {
+          "ref": "config_extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "response.times.collection_available"
+          },
+          "object": {
+            "ref": "response.id"
+          },
+          "occurrence": {
+            "ref": "response.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "config_extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "config_extraction.id"
+          },
+          "occurrence": {
+            "ref": "config_extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "config.times.collection_available"
+          },
+          "object": {
+            "ref": "config.id"
+          },
+          "occurrence": {
+            "ref": "config.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "response.times.occurred"
+          },
+          "object": {
+            "ref": "response.subject"
+          },
+          "occurrence": {
+            "ref": "response.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "config_extraction.times.occurred"
+          },
+          "object": {
+            "ref": "config_extraction.subject"
+          },
+          "occurrence": {
+            "ref": "config_extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_active_c2_protocol_response_to_payloads",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "response_payload_config"
+          },
+          {
+            "ref": "response.attributes.occurrence_key"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "output.attributes.content.sha256"
+          },
+          {
+            "ref": "config.attributes.content.sha256"
+          }
+        ],
+        "support": [
+          "input",
+          "response",
+          "extraction",
+          "output",
+          "config_extraction",
+          "config"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 30
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "config",
+        "form": "malware:config",
+        "identity": [
+          {
+            "literal": "response_payload_config"
+          },
+          {
+            "ref": "response.attributes.occurrence_key"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "output.attributes.content.sha256"
+          },
+          {
+            "ref": "config.attributes.content.sha256"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "configuration_derived_from_particular_payload"
+          },
+          "payload": {
+            "ref": "output.id"
+          },
+          "config_extraction": {
+            "ref": "config_extraction.id"
+          },
+          "response_occurrence": {
+            "ref": "response.id"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "known_test_or_decoy_payloads",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "output.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "known_test_or_decoy_payloads"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "common_benign_payload_hashes",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "output.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_benign_payload_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "output.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "pattern_id": "OSINT_SSH_HOSTKEY_CLUSTER",
+  "pattern_path": "graph-pivots/validated/OSINT_SSH_HOSTKEY_CLUSTER.yaml",
+  "fixture_path": "fixtures/query-profiles/neo4j/osint_ssh_hostkey_cluster.graph.json",
+  "direction": "out",
+  "source_form": "ssh:hostkey",
+  "target_form": "inet:ipv4",
+  "relation": "presented_by",
+  "window_days": 730,
+  "suppression_side": "target",
+  "negative_lists": [
+    "known_scanner_asns",
+    "shared_hosting_ranges"
+  ],
+  "high_cardinality": 5001,
+  "caveats": [
+    "Golden images and failed key rotation can legitimately duplicate SSH host keys across unrelated environments.",
+    "Shared bastions or fronted services can hide the true endpoint population behind one observed key."
+  ],
+  "blocked_assertions": [
+    "Validated lifecycle state is not a runtime confidence score.",
+    "This fixture does not assert attribution, maliciousness, compromise, common ownership, or final assessment.",
+    "Suppression controls and stale-edge windows are part of the expected traversal behavior, not optional UI hints.",
+    "Do not infer common ownership, operator identity, maliciousness, compromise, or final confidence from this traversal alone.",
+    "Do not present shared-hosting or stale-edge targets as current cluster members without an explicit historical or suppression-bypass mode.",
+    "Do not cluster a host that only presented ssh-hostkey:sha256:example-rsa-912c with the ed25519 source key."
+  ]
+}

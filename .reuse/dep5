@@ -17,6 +17,7 @@ License: CC-BY-4.0
 
 Files: .github/**
  adapters/**
+ contracts/**
  docs/**
  schemas/**
  tools/**

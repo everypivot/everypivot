@@ -1,0 +1,53 @@
+id: CTI_ASN_TO_LISTED_INFRASTRUCTURE
+version: 1.0.0
+pattern_schema_version: 1.6
+validation_state: deferred
+deferred_reason: needs_downstream_capability_mapping
+precision_tier: exploratory
+robustness_class: multi_hop_inference
+capability_requirements:
+  required:
+  - semantic_execution_contract_v1
+  - source_revision_preservation
+  - explicit_claim_period
+  - scoped_amendment_history
+  optional:
+  - historical_network_association
+  - scoped_investigation_controls
+hazards:
+- List publication, claimed applicability and collection receipt are distinct times;
+  later receipt does not refresh historic activity.
+- Supplied corrections, withdrawals and disputes remain visible; complete source revision
+  history and current unwithdrawn status are not certified.
+- Shared hosting, one listed tenant or network association does not establish maliciousness,
+  ownership, control, liability or accepted assessment.
+name: ASN to associated listed infrastructure
+category: CTI
+description: Retrieve listed addresses or ranges whose independently supported ASN
+  association applies during the source claim. Preserve association role and period
+  without inferring an ASN-wide listing or individual observations for every address.
+source: net:asn
+target: inet:ipv4|inet:net4
+assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_ASN_TO_LISTED_INFRASTRUCTURE.json
+  sha256: aa981c698d8d3a20d41e96fb8504b45621064afcccc1399dbe6e2804ffa9bef0
+hops:
+- via: associated_listed_infrastructure
+  direction: out
+  form: inet:ipv4|inet:net4
+constraints:
+  provenance:
+    min_unique_sources: 1
+features: []
+outputs:
+  yield:
+  - source
+  - target
+  - evidence_paths
+datasets:
+- bgp
+- spamhaus
+- abuse_ch

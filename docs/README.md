@@ -16,6 +16,7 @@
 - [Registry index contract](REGISTRY_INDEX_SPEC.md)
 - [Repository publishing and versioning](REPO_PUBLISHING_AND_VERSIONING.md)
 - [Release playbook](RELEASE_PLAYBOOK.md)
+- [v0.6.0 release notes](releases/v0.6.0.md)
 - [v0.5.0 release notes](releases/v0.5.0.md)
 - [v0.4.3 release notes](releases/v0.4.3.md)
 - [v0.4.2 release notes](releases/v0.4.2.md)

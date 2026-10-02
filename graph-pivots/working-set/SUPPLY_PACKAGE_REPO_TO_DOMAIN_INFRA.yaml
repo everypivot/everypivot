@@ -1,15 +1,23 @@
 id: SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: working_set
 precision_tier: medium
 robustness_class: domain_expansion
 hazards:
+- 'A version-specific registry declaration establishes a declared source-repository association, not verified build provenance or repository ownership.'
+- 'Preserve the exact package version, registry metadata revision, source, acquisition time, and revision-link evidence; mirrors and current HEAD cannot replace an unresolved version-to-source binding.'
+- 'A repository commit ID and source-snapshot SHA-256 identify the recorded revision and content; neither proves that the package was built from that content.'
+- 'The explicit 3650-day UTC window dates the bound infrastructure observation. Replay and later ingestion do not supply another observation or independent source.'
 - 'Package-to-repository attribution can break across forks, mirrors, or vendored source releases.'
 - 'Distribution domains may be CDN or hosting intermediaries rather than developer-controlled infrastructure.'
 - 'Common registry CDNs and shared release infrastructure require corroboration with package ownership and version context.'
 capability_requirements:
   required:
+  - semantic_execution_contract_v1
+  - preserved_version_declaration
+  - explicit_relationship_observation
+  - scoped_repository_control_evaluation
   - 'package_metadata_collection'
   - 'repo_resolution'
   optional:
@@ -18,47 +26,31 @@ capability_requirements:
   - 'package_registry_history'
 name: Package -> Repo -> Domain or Infra
 category: SUPPLY
-description: Bridge software packages to their source repositories and the domains or infrastructure that distribute or operate them.
+description: Follow a version-specific package-registry declaration to its named source repository, then independently evidenced repository infrastructure; preserve the declaration and any exact source-snapshot binding.
 source: it:prod:softver
 target: inet:ipv4|inet:fqdn
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/SUPPLY_PACKAGE_REPO_TO_DOMAIN_INFRA.json
+  sha256: 12870a2606edfc6839297cdd95c23e071a86b42e83ea3e124c242c8299fdc954
 hops:
-- via: published_from
+- via: declares_source_repository
   direction: out
   form: code:repo
 - via: operated_via|distributed_from
   direction: out
   form: inet:ipv4|inet:fqdn
 constraints:
-  temporal:
-    order:
-    - package.created <= repo.created <= infra.seen
-    window_days: 3650
-  degree_caps:
-    it:prod:softver: 5000
-  negative_nodes:
-  - form: code:repo
-    list: mass_mirror_repositories
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - package_registry
 - osint_web

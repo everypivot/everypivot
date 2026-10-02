@@ -1,0 +1,4810 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CROSS_FQDN_TO_ORG_LEI_SANCTIONS",
+    "version": "3.0.0"
+  },
+  "description": "Source-qualified sanctions association and source-stated historical-status inquiries with explicit roles, selected reference revisions and amendment history. Matches never establish legal effect, status of another node, control, liability or accepted assessment.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-separate-retrospective-and-historical-status-sanctions-inquiries",
+  "parameters": {
+    "source": {
+      "type": "record_id",
+      "required": true,
+      "description": "Explicit source entity identity; source-qualified relations must independently establish every path."
+    },
+    "purpose": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "retrospective",
+        "historical_at",
+        "historical_some",
+        "historical_all"
+      ],
+      "description": "Retrospective retains dated source reports and attached corrections. Historical modes ask source-stated status and relevant applicability, never legal effect."
+    },
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Case-selected actual relationship applicability and/or status inquiry period; receipt and entity creation are not substitutes."
+    },
+    "reference_sources": {
+      "type": "string_array",
+      "required": true,
+      "min_items": 1,
+      "unique_items": true,
+      "description": "Exact supplied source revision IDs eligible for every required path record; no automatic all-history expansion.",
+      "item_reference": "source"
+    },
+    "entry_revisions": {
+      "type": "string_array",
+      "required": true,
+      "min_items": 1,
+      "unique_items": true,
+      "description": "Exact revision-specific sanction:entry record IDs selected as reference, independently of activity dates.",
+      "item_reference": "record"
+    },
+    "at": {
+      "type": "time",
+      "required": false,
+      "requires_when": {
+        "parameter": "purpose",
+        "values": [
+          "historical_at"
+        ]
+      },
+      "allowed_when": {
+        "parameter": "purpose",
+        "values": [
+          "historical_at"
+        ]
+      },
+      "description": "Explicit case-selected point for source-stated relationship/list status; not analyst knowledge."
+    },
+    "exclude_source_classes": {
+      "type": "boolean",
+      "required": false,
+      "enum": [
+        false,
+        true
+      ],
+      "description": "Explicit reusable source policy; disabled by default. Unknown or conflicting membership is retained."
+    },
+    "source_classes": {
+      "type": "string_array",
+      "required": false,
+      "min_items": 1,
+      "unique_items": true,
+      "requires_when": {
+        "parameter": "exclude_source_classes",
+        "values": [
+          true
+        ]
+      },
+      "allowed_when": {
+        "parameter": "exclude_source_classes",
+        "values": [
+          true
+        ]
+      },
+      "description": "Exact source-reported class IDs for a deliberately selected revision-based filter; neither historical membership nor universal clearance is inferred."
+    },
+    "exclude_path_classes": {
+      "type": "boolean",
+      "required": false,
+      "enum": [
+        false,
+        true
+      ],
+      "description": "Explicit reusable path policy; disabled by default. Unknown or conflicting membership is retained."
+    },
+    "path_classes": {
+      "type": "string_array",
+      "required": false,
+      "min_items": 1,
+      "unique_items": true,
+      "requires_when": {
+        "parameter": "exclude_path_classes",
+        "values": [
+          true
+        ]
+      },
+      "allowed_when": {
+        "parameter": "exclude_path_classes",
+        "values": [
+          true
+        ]
+      },
+      "description": "Exact source-reported class IDs for a deliberately selected revision-based filter; neither historical membership nor universal clearance is inferred."
+    }
+  },
+  "branches": [
+    {
+      "id": "retrospective",
+      "description": "Applicability of actual source-reported relationships; historical some requires a common supported state, not independent overlaps.",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "seed.id"
+                },
+                "right": {
+                  "param": "source"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "retrospective"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "relationship",
+          "kind": "assertion",
+          "types": [
+            "inet:domain_registration"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "relationship.attributes.role"
+                },
+                "right": {
+                  "literal": [
+                    "registrant_of_record"
+                  ]
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "relationship.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "registry_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "listed_subject",
+          "kind": "entity",
+          "types": [
+            "org:org"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "listed_subject.id"
+            },
+            "right": {
+              "ref": "relationship.object"
+            }
+          }
+        },
+        {
+          "name": "lei",
+          "kind": "entity",
+          "types": [
+            "lei:record"
+          ],
+          "where": {
+            "op": "present",
+            "value": {
+              "ref": "lei.attributes.identifier"
+            }
+          }
+        },
+        {
+          "name": "lei_identity",
+          "kind": "assertion",
+          "types": [
+            "lei:entity_identity"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.object"
+                },
+                "right": {
+                  "ref": "lei.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.attributes.role"
+                },
+                "right": {
+                  "literal": "identifies_same_legal_entity"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "lei_identity.attributes.basis"
+                },
+                "right": {
+                  "literal": [
+                    "registry_identifier",
+                    "documented_continuity"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "sanction:entry"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry.id"
+                },
+                "right": {
+                  "param": "entry_revisions"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry_subject",
+          "kind": "assertion",
+          "types": [
+            "sanction:entry_subject"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.object"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.attributes.role"
+                },
+                "right": {
+                  "literal": "source_listed_subject"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry_subject.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "exact_source_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "status",
+          "kind": "assertion",
+          "types": [
+            "sanction:status"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.subject"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.object"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.status"
+                },
+                "right": {
+                  "literal": "listed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.list_id"
+                },
+                "right": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.entry_revision"
+                },
+                "right": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "relationship_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship_receipt.subject"
+                },
+                "right": {
+                  "ref": "relationship.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "relationship_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "lei_identity_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity_receipt.subject"
+                },
+                "right": {
+                  "ref": "lei_identity.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "lei_identity_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "entry_subject_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.subject"
+                },
+                "right": {
+                  "ref": "entry_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "entry_subject_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "status_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.subject"
+                },
+                "right": {
+                  "ref": "status.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "status_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "source_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "source_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "path_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "path_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "retrospective"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "seed"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "relationship"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "listed_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "lei"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "lei_identity"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "status"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "relationship.times.applicable"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "some"
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "relationship.times.published"
+        },
+        {
+          "ref": "relationship_receipt.times.received"
+        },
+        {
+          "ref": "lei_identity.times.published"
+        },
+        {
+          "ref": "lei_identity_receipt.times.received"
+        },
+        {
+          "ref": "entry_subject.times.published"
+        },
+        {
+          "ref": "entry_subject_receipt.times.received"
+        },
+        {
+          "ref": "status.times.published"
+        },
+        {
+          "ref": "status_receipt.times.received"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "relationship.times.published"
+          },
+          "right": {
+            "ref": "relationship_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "lei_identity.times.published"
+          },
+          "right": {
+            "ref": "lei_identity_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "entry_subject.times.published"
+          },
+          "right": {
+            "ref": "entry_subject_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "status.times.published"
+          },
+          "right": {
+            "ref": "status_receipt.times.received"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "relationship.times.applicable"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.applicable"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "relationship.times.published"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "relationship_receipt.times.received"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "lei_identity.times.published"
+          },
+          "object": {
+            "ref": "lei_identity.id"
+          },
+          "occurrence": {
+            "ref": "lei_identity.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "lei_identity_receipt.times.received"
+          },
+          "object": {
+            "ref": "lei_identity.id"
+          },
+          "occurrence": {
+            "ref": "lei_identity_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject.times.published"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject_receipt.times.received"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.published"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status_receipt.times.received"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status_receipt.id"
+          }
+        }
+      ],
+      "amendments": {
+        "support": [
+          "relationship",
+          "lei_identity",
+          "entry_subject",
+          "status"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "retain_reports"
+      },
+      "policies": [
+        {
+          "id": "source_reported_class",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_source_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "source_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "path_reported_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "listed_subject.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_path_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit path classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "path_class.attributes.class_id"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "sanction:entry",
+        "binding": "entry",
+        "identity": [
+          {
+            "ref": "entry.id"
+          },
+          {
+            "ref": "seed.id"
+          },
+          {
+            "ref": "listed_subject.id"
+          },
+          {
+            "ref": "relationship.id"
+          },
+          {
+            "ref": "lei_identity.id"
+          },
+          {
+            "ref": "entry_subject.id"
+          },
+          {
+            "ref": "status.id"
+          },
+          {
+            "param": "purpose"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "source_reported_historical_association_with_amendment_context"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "source": {
+            "ref": "seed.id"
+          },
+          "listed_subject": {
+            "ref": "listed_subject.id"
+          },
+          "entry_record": {
+            "ref": "entry.id"
+          },
+          "list_id": {
+            "ref": "entry.attributes.list_id"
+          },
+          "entry_id": {
+            "ref": "entry.attributes.entry_id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "status_assertion": {
+            "ref": "status.id"
+          },
+          "status_applicability": {
+            "ref": "status.times.applicable"
+          },
+          "relationship_anchor": {
+            "ref": "relationship.id"
+          },
+          "time_meaning": {
+            "literal": "Applicability of actual source-reported relationships; historical some requires a common supported state, not independent overlaps."
+          },
+          "scope_statement": {
+            "literal": "Explicit supplied source/entry revisions; no exhaustive external history, list clearance, status propagation, legal conclusion, confidence or accepted assessment."
+          },
+          "source_class_context": {
+            "ref": "source_class.attributes"
+          },
+          "path_class_context": {
+            "ref": "path_class.attributes"
+          },
+          "relationship_context": {
+            "ref": "relationship.attributes"
+          },
+          "path_class_subject": {
+            "ref": "path_class.subject"
+          },
+          "classification_knowledge_scope": {
+            "literal": "Selected source-revision class policies are explicitly revision-based context; no historical class membership or class availability at a knowledge cutoff is inferred."
+          }
+        }
+      }
+    },
+    {
+      "id": "historical_at",
+      "description": "Applicability of actual source-reported relationships; historical some requires a common supported state, not independent overlaps.",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "seed.id"
+                },
+                "right": {
+                  "param": "source"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "historical_at"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "relationship",
+          "kind": "assertion",
+          "types": [
+            "inet:domain_registration"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "relationship.attributes.role"
+                },
+                "right": {
+                  "literal": [
+                    "registrant_of_record"
+                  ]
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "relationship.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "registry_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "listed_subject",
+          "kind": "entity",
+          "types": [
+            "org:org"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "listed_subject.id"
+            },
+            "right": {
+              "ref": "relationship.object"
+            }
+          }
+        },
+        {
+          "name": "lei",
+          "kind": "entity",
+          "types": [
+            "lei:record"
+          ],
+          "where": {
+            "op": "present",
+            "value": {
+              "ref": "lei.attributes.identifier"
+            }
+          }
+        },
+        {
+          "name": "lei_identity",
+          "kind": "assertion",
+          "types": [
+            "lei:entity_identity"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.object"
+                },
+                "right": {
+                  "ref": "lei.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.attributes.role"
+                },
+                "right": {
+                  "literal": "identifies_same_legal_entity"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "lei_identity.attributes.basis"
+                },
+                "right": {
+                  "literal": [
+                    "registry_identifier",
+                    "documented_continuity"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "sanction:entry"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry.id"
+                },
+                "right": {
+                  "param": "entry_revisions"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry_subject",
+          "kind": "assertion",
+          "types": [
+            "sanction:entry_subject"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.object"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.attributes.role"
+                },
+                "right": {
+                  "literal": "source_listed_subject"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry_subject.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "exact_source_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "status",
+          "kind": "assertion",
+          "types": [
+            "sanction:status"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.subject"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.object"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.status"
+                },
+                "right": {
+                  "literal": "listed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.list_id"
+                },
+                "right": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.entry_revision"
+                },
+                "right": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "relationship_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship_receipt.subject"
+                },
+                "right": {
+                  "ref": "relationship.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "relationship_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "lei_identity_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity_receipt.subject"
+                },
+                "right": {
+                  "ref": "lei_identity.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "lei_identity_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "entry_subject_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.subject"
+                },
+                "right": {
+                  "ref": "entry_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "entry_subject_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "status_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.subject"
+                },
+                "right": {
+                  "ref": "status.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "status_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "source_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "source_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "path_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "path_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "historical_at"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "seed"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "relationship"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "listed_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "lei"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "lei_identity"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "status"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "relationship.times.applicable"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "at",
+            "at": {
+              "param": "at"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "status.times.applicable"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "at",
+            "at": {
+              "param": "at"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "relationship.times.published"
+        },
+        {
+          "ref": "relationship_receipt.times.received"
+        },
+        {
+          "ref": "lei_identity.times.published"
+        },
+        {
+          "ref": "lei_identity_receipt.times.received"
+        },
+        {
+          "ref": "entry_subject.times.published"
+        },
+        {
+          "ref": "entry_subject_receipt.times.received"
+        },
+        {
+          "ref": "status.times.published"
+        },
+        {
+          "ref": "status_receipt.times.received"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "relationship.times.published"
+          },
+          "right": {
+            "ref": "relationship_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "lei_identity.times.published"
+          },
+          "right": {
+            "ref": "lei_identity_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "entry_subject.times.published"
+          },
+          "right": {
+            "ref": "entry_subject_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "status.times.published"
+          },
+          "right": {
+            "ref": "status_receipt.times.received"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "relationship.times.applicable"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.applicable"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "relationship.times.published"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "relationship_receipt.times.received"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "lei_identity.times.published"
+          },
+          "object": {
+            "ref": "lei_identity.id"
+          },
+          "occurrence": {
+            "ref": "lei_identity.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "lei_identity_receipt.times.received"
+          },
+          "object": {
+            "ref": "lei_identity.id"
+          },
+          "occurrence": {
+            "ref": "lei_identity_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject.times.published"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject_receipt.times.received"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.published"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status_receipt.times.received"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status_receipt.id"
+          }
+        }
+      ],
+      "amendments": {
+        "support": [
+          "relationship",
+          "lei_identity",
+          "entry_subject",
+          "status"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "require_unwithdrawn_in_scope"
+      },
+      "policies": [
+        {
+          "id": "source_reported_class",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_source_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "source_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "path_reported_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "listed_subject.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_path_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit path classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "path_class.attributes.class_id"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "sanction:entry",
+        "binding": "entry",
+        "identity": [
+          {
+            "ref": "entry.id"
+          },
+          {
+            "ref": "seed.id"
+          },
+          {
+            "ref": "listed_subject.id"
+          },
+          {
+            "ref": "relationship.id"
+          },
+          {
+            "ref": "lei_identity.id"
+          },
+          {
+            "ref": "entry_subject.id"
+          },
+          {
+            "ref": "status.id"
+          },
+          {
+            "param": "purpose"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "source_stated_list_status_with_declared_time_qualification"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "source": {
+            "ref": "seed.id"
+          },
+          "listed_subject": {
+            "ref": "listed_subject.id"
+          },
+          "entry_record": {
+            "ref": "entry.id"
+          },
+          "list_id": {
+            "ref": "entry.attributes.list_id"
+          },
+          "entry_id": {
+            "ref": "entry.attributes.entry_id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "status_assertion": {
+            "ref": "status.id"
+          },
+          "status_applicability": {
+            "ref": "status.times.applicable"
+          },
+          "relationship_anchor": {
+            "ref": "relationship.id"
+          },
+          "time_meaning": {
+            "literal": "Applicability of actual source-reported relationships; historical some requires a common supported state, not independent overlaps."
+          },
+          "scope_statement": {
+            "literal": "Explicit supplied source/entry revisions; no exhaustive external history, list clearance, status propagation, legal conclusion, confidence or accepted assessment."
+          },
+          "source_class_context": {
+            "ref": "source_class.attributes"
+          },
+          "path_class_context": {
+            "ref": "path_class.attributes"
+          },
+          "relationship_context": {
+            "ref": "relationship.attributes"
+          },
+          "path_class_subject": {
+            "ref": "path_class.subject"
+          },
+          "classification_knowledge_scope": {
+            "literal": "Selected source-revision class policies are explicitly revision-based context; no historical class membership or class availability at a knowledge cutoff is inferred."
+          }
+        }
+      }
+    },
+    {
+      "id": "historical_some",
+      "description": "Applicability of actual source-reported relationships; historical some requires a common supported state, not independent overlaps.",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "seed.id"
+                },
+                "right": {
+                  "param": "source"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "historical_some"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "relationship",
+          "kind": "assertion",
+          "types": [
+            "inet:domain_registration"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "relationship.attributes.role"
+                },
+                "right": {
+                  "literal": [
+                    "registrant_of_record"
+                  ]
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "relationship.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "registry_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "listed_subject",
+          "kind": "entity",
+          "types": [
+            "org:org"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "listed_subject.id"
+            },
+            "right": {
+              "ref": "relationship.object"
+            }
+          }
+        },
+        {
+          "name": "lei",
+          "kind": "entity",
+          "types": [
+            "lei:record"
+          ],
+          "where": {
+            "op": "present",
+            "value": {
+              "ref": "lei.attributes.identifier"
+            }
+          }
+        },
+        {
+          "name": "lei_identity",
+          "kind": "assertion",
+          "types": [
+            "lei:entity_identity"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.object"
+                },
+                "right": {
+                  "ref": "lei.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.attributes.role"
+                },
+                "right": {
+                  "literal": "identifies_same_legal_entity"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "lei_identity.attributes.basis"
+                },
+                "right": {
+                  "literal": [
+                    "registry_identifier",
+                    "documented_continuity"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "sanction:entry"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry.id"
+                },
+                "right": {
+                  "param": "entry_revisions"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry_subject",
+          "kind": "assertion",
+          "types": [
+            "sanction:entry_subject"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.object"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.attributes.role"
+                },
+                "right": {
+                  "literal": "source_listed_subject"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry_subject.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "exact_source_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "status",
+          "kind": "assertion",
+          "types": [
+            "sanction:status"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.subject"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.object"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.status"
+                },
+                "right": {
+                  "literal": "listed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.list_id"
+                },
+                "right": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.entry_revision"
+                },
+                "right": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "relationship_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship_receipt.subject"
+                },
+                "right": {
+                  "ref": "relationship.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "relationship_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "lei_identity_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity_receipt.subject"
+                },
+                "right": {
+                  "ref": "lei_identity.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "lei_identity_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "entry_subject_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.subject"
+                },
+                "right": {
+                  "ref": "entry_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "entry_subject_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "status_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.subject"
+                },
+                "right": {
+                  "ref": "status.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "status_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "source_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "source_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "path_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "path_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "historical_some"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "seed"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "relationship"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "listed_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "lei"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "lei_identity"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "status"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "coexists",
+            "values": [
+              {
+                "ref": "relationship.times.applicable"
+              },
+              {
+                "ref": "status.times.applicable"
+              }
+            ],
+            "period": {
+              "param": "period"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "relationship.times.published"
+        },
+        {
+          "ref": "relationship_receipt.times.received"
+        },
+        {
+          "ref": "lei_identity.times.published"
+        },
+        {
+          "ref": "lei_identity_receipt.times.received"
+        },
+        {
+          "ref": "entry_subject.times.published"
+        },
+        {
+          "ref": "entry_subject_receipt.times.received"
+        },
+        {
+          "ref": "status.times.published"
+        },
+        {
+          "ref": "status_receipt.times.received"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "relationship.times.published"
+          },
+          "right": {
+            "ref": "relationship_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "lei_identity.times.published"
+          },
+          "right": {
+            "ref": "lei_identity_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "entry_subject.times.published"
+          },
+          "right": {
+            "ref": "entry_subject_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "status.times.published"
+          },
+          "right": {
+            "ref": "status_receipt.times.received"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "relationship.times.applicable"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.applicable"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "relationship.times.published"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "relationship_receipt.times.received"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "lei_identity.times.published"
+          },
+          "object": {
+            "ref": "lei_identity.id"
+          },
+          "occurrence": {
+            "ref": "lei_identity.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "lei_identity_receipt.times.received"
+          },
+          "object": {
+            "ref": "lei_identity.id"
+          },
+          "occurrence": {
+            "ref": "lei_identity_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject.times.published"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject_receipt.times.received"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.published"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status_receipt.times.received"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status_receipt.id"
+          }
+        }
+      ],
+      "amendments": {
+        "support": [
+          "relationship",
+          "lei_identity",
+          "entry_subject",
+          "status"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "require_unwithdrawn_in_scope"
+      },
+      "policies": [
+        {
+          "id": "source_reported_class",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_source_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "source_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "path_reported_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "listed_subject.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_path_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit path classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "path_class.attributes.class_id"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "sanction:entry",
+        "binding": "entry",
+        "identity": [
+          {
+            "ref": "entry.id"
+          },
+          {
+            "ref": "seed.id"
+          },
+          {
+            "ref": "listed_subject.id"
+          },
+          {
+            "ref": "relationship.id"
+          },
+          {
+            "ref": "lei_identity.id"
+          },
+          {
+            "ref": "entry_subject.id"
+          },
+          {
+            "ref": "status.id"
+          },
+          {
+            "param": "purpose"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "source_stated_list_status_with_declared_time_qualification"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "source": {
+            "ref": "seed.id"
+          },
+          "listed_subject": {
+            "ref": "listed_subject.id"
+          },
+          "entry_record": {
+            "ref": "entry.id"
+          },
+          "list_id": {
+            "ref": "entry.attributes.list_id"
+          },
+          "entry_id": {
+            "ref": "entry.attributes.entry_id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "status_assertion": {
+            "ref": "status.id"
+          },
+          "status_applicability": {
+            "ref": "status.times.applicable"
+          },
+          "relationship_anchor": {
+            "ref": "relationship.id"
+          },
+          "time_meaning": {
+            "literal": "Applicability of actual source-reported relationships; historical some requires a common supported state, not independent overlaps."
+          },
+          "scope_statement": {
+            "literal": "Explicit supplied source/entry revisions; no exhaustive external history, list clearance, status propagation, legal conclusion, confidence or accepted assessment."
+          },
+          "source_class_context": {
+            "ref": "source_class.attributes"
+          },
+          "path_class_context": {
+            "ref": "path_class.attributes"
+          },
+          "relationship_context": {
+            "ref": "relationship.attributes"
+          },
+          "path_class_subject": {
+            "ref": "path_class.subject"
+          },
+          "classification_knowledge_scope": {
+            "literal": "Selected source-revision class policies are explicitly revision-based context; no historical class membership or class availability at a knowledge cutoff is inferred."
+          }
+        }
+      }
+    },
+    {
+      "id": "historical_all",
+      "description": "Applicability of actual source-reported relationships; historical some requires a common supported state, not independent overlaps.",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "seed.id"
+                },
+                "right": {
+                  "param": "source"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "historical_all"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "relationship",
+          "kind": "assertion",
+          "types": [
+            "inet:domain_registration"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "relationship.attributes.role"
+                },
+                "right": {
+                  "literal": [
+                    "registrant_of_record"
+                  ]
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "relationship.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "registry_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "listed_subject",
+          "kind": "entity",
+          "types": [
+            "org:org"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "listed_subject.id"
+            },
+            "right": {
+              "ref": "relationship.object"
+            }
+          }
+        },
+        {
+          "name": "lei",
+          "kind": "entity",
+          "types": [
+            "lei:record"
+          ],
+          "where": {
+            "op": "present",
+            "value": {
+              "ref": "lei.attributes.identifier"
+            }
+          }
+        },
+        {
+          "name": "lei_identity",
+          "kind": "assertion",
+          "types": [
+            "lei:entity_identity"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.object"
+                },
+                "right": {
+                  "ref": "lei.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity.attributes.role"
+                },
+                "right": {
+                  "literal": "identifies_same_legal_entity"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "lei_identity.attributes.basis"
+                },
+                "right": {
+                  "literal": [
+                    "registry_identifier",
+                    "documented_continuity"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "sanction:entry"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry.id"
+                },
+                "right": {
+                  "param": "entry_revisions"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_id"
+                }
+              },
+              {
+                "op": "present",
+                "value": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry_subject",
+          "kind": "assertion",
+          "types": [
+            "sanction:entry_subject"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.object"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject.attributes.role"
+                },
+                "right": {
+                  "literal": "source_listed_subject"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "entry_subject.attributes.identity_basis"
+                },
+                "right": {
+                  "literal": [
+                    "exact_source_identifier",
+                    "documented_entity_correspondence"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "status",
+          "kind": "assertion",
+          "types": [
+            "sanction:status"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.subject"
+                },
+                "right": {
+                  "ref": "entry.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.object"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.status"
+                },
+                "right": {
+                  "literal": "listed"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.list_id"
+                },
+                "right": {
+                  "ref": "entry.attributes.list_id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status.attributes.entry_revision"
+                },
+                "right": {
+                  "ref": "entry.attributes.entry_revision"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "relationship_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship_receipt.subject"
+                },
+                "right": {
+                  "ref": "relationship.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "relationship_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "relationship_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "lei_identity_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity_receipt.subject"
+                },
+                "right": {
+                  "ref": "lei_identity.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "lei_identity_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "lei_identity_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "entry_subject_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.subject"
+                },
+                "right": {
+                  "ref": "entry_subject.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "entry_subject_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "entry_subject_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "status_receipt",
+          "kind": "occurrence",
+          "types": [
+            "evidence:claim_receipt"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.subject"
+                },
+                "right": {
+                  "ref": "status.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "status_receipt.attributes.collection_id"
+                },
+                "right": {
+                  "context": "collection_id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "status_receipt"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "source_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "source_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "path_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.subject"
+                },
+                "right": {
+                  "ref": "listed_subject.id"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "path_class"
+                },
+                "right": {
+                  "param": "reference_sources"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "param": "purpose"
+            },
+            "right": {
+              "literal": "historical_all"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "seed"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "relationship"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "listed_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "lei"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "lei_identity"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "entry_subject"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "status"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "relationship.times.applicable"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "all"
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "status.times.applicable"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "all"
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "relationship.times.published"
+        },
+        {
+          "ref": "relationship_receipt.times.received"
+        },
+        {
+          "ref": "lei_identity.times.published"
+        },
+        {
+          "ref": "lei_identity_receipt.times.received"
+        },
+        {
+          "ref": "entry_subject.times.published"
+        },
+        {
+          "ref": "entry_subject_receipt.times.received"
+        },
+        {
+          "ref": "status.times.published"
+        },
+        {
+          "ref": "status_receipt.times.received"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "relationship.times.published"
+          },
+          "right": {
+            "ref": "relationship_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "lei_identity.times.published"
+          },
+          "right": {
+            "ref": "lei_identity_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "entry_subject.times.published"
+          },
+          "right": {
+            "ref": "entry_subject_receipt.times.received"
+          }
+        },
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "status.times.published"
+          },
+          "right": {
+            "ref": "status_receipt.times.received"
+          }
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "relationship.times.applicable"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.applicable"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "relationship.times.published"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "relationship_receipt.times.received"
+          },
+          "object": {
+            "ref": "relationship.id"
+          },
+          "occurrence": {
+            "ref": "relationship_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "lei_identity.times.published"
+          },
+          "object": {
+            "ref": "lei_identity.id"
+          },
+          "occurrence": {
+            "ref": "lei_identity.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "lei_identity_receipt.times.received"
+          },
+          "object": {
+            "ref": "lei_identity.id"
+          },
+          "occurrence": {
+            "ref": "lei_identity_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject.times.published"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry_subject_receipt.times.received"
+          },
+          "object": {
+            "ref": "entry_subject.id"
+          },
+          "occurrence": {
+            "ref": "entry_subject_receipt.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status.times.published"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "status_receipt.times.received"
+          },
+          "object": {
+            "ref": "status.id"
+          },
+          "occurrence": {
+            "ref": "status_receipt.id"
+          }
+        }
+      ],
+      "amendments": {
+        "support": [
+          "relationship",
+          "lei_identity",
+          "entry_subject",
+          "status"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "require_unwithdrawn_in_scope"
+      },
+      "policies": [
+        {
+          "id": "source_reported_class",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_source_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit source classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "source_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "source_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "source_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "source_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "source_class.attributes.class_id"
+            }
+          ]
+        },
+        {
+          "id": "path_reported_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "listed_subject.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_path_classes",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit path classification policy over selected report revisions; no historical class membership, clearance or truth inferred.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "in",
+                    "left": {
+                      "ref": "path_class.attributes.class_id"
+                    },
+                    "right": {
+                      "param": "path_classes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "path_class.attributes.policy_basis"
+                    },
+                    "right": {
+                      "literal": "selected_source_revision"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "path_class.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          },
+          "partition_by": [
+            {
+              "ref": "path_class.attributes.class_id"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "sanction:entry",
+        "binding": "entry",
+        "identity": [
+          {
+            "ref": "entry.id"
+          },
+          {
+            "ref": "seed.id"
+          },
+          {
+            "ref": "listed_subject.id"
+          },
+          {
+            "ref": "relationship.id"
+          },
+          {
+            "ref": "lei_identity.id"
+          },
+          {
+            "ref": "entry_subject.id"
+          },
+          {
+            "ref": "status.id"
+          },
+          {
+            "param": "purpose"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "source_stated_list_status_with_declared_time_qualification"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "source": {
+            "ref": "seed.id"
+          },
+          "listed_subject": {
+            "ref": "listed_subject.id"
+          },
+          "entry_record": {
+            "ref": "entry.id"
+          },
+          "list_id": {
+            "ref": "entry.attributes.list_id"
+          },
+          "entry_id": {
+            "ref": "entry.attributes.entry_id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "status_assertion": {
+            "ref": "status.id"
+          },
+          "status_applicability": {
+            "ref": "status.times.applicable"
+          },
+          "relationship_anchor": {
+            "ref": "relationship.id"
+          },
+          "time_meaning": {
+            "literal": "Applicability of actual source-reported relationships; historical some requires a common supported state, not independent overlaps."
+          },
+          "scope_statement": {
+            "literal": "Explicit supplied source/entry revisions; no exhaustive external history, list clearance, status propagation, legal conclusion, confidence or accepted assessment."
+          },
+          "source_class_context": {
+            "ref": "source_class.attributes"
+          },
+          "path_class_context": {
+            "ref": "path_class.attributes"
+          },
+          "relationship_context": {
+            "ref": "relationship.attributes"
+          },
+          "path_class_subject": {
+            "ref": "path_class.subject"
+          },
+          "classification_knowledge_scope": {
+            "literal": "Selected source-revision class policies are explicitly revision-based context; no historical class membership or class availability at a knowledge cutoff is inferred."
+          }
+        }
+      }
+    }
+  ]
+}

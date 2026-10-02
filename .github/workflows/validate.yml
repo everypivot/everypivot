@@ -95,16 +95,24 @@ jobs:
         run: ruby tools/validate_pivots.rb --strict-metadata --strict-bridge
 
       - name: Validate complete assessment compatibility
-        run: ruby tools/check_sail_bridge.rb --strict-incomplete
+        run: ruby tools/check_sail_bridge.rb --strict-incomplete --current-distribution
 
       - name: Test assessment contract and exports
         run: |
           ruby tools/test_sail_bridge.rb
           ruby tools/test_registry_assessment.rb
+          ruby tools/test_distribution_eligibility.rb
+          ruby tools/test_utf8_text.rb
+          ruby tools/test_build_release_pack.rb
+          ruby tools/test_validation_boundaries.rb
+          ruby tools/test_package_repository_provenance.rb
           node tools/test_site_assessment.js
 
       - name: Run fixture suite
         run: ruby tools/check_fixture_suite.rb
+
+      - name: Test explicit portable semantic contracts
+        run: ruby tools/check_semantic_suite.rb
 
       - name: Run CTI promotion lint
         run: ruby tools/check_cti_promotion_lint.rb

@@ -1,62 +1,56 @@
 id: CTI_SAMPLE_CODESIGN_CERT_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_SAMPLE_CODESIGN_CERT_CLUSTER.json
+  sha256: 12ed8ebde892e0f9db6cfbe7ebe400e9098ecf4efcbe9da6dc421f7962448d02
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
 hazards:
-- 'Shared signing infrastructure can reflect outsourced build or release services rather than common operator ownership.'
-- 'Signer reuse alone should not be treated as final campaign attribution without supporting code, infra, or behavioural overlap.'
+- 'Shared signing and release services can link unrelated products, while compromised or reused credentials do not identify their current operator.'
+- 'Certificate presence, reported signer association and a scoped source-reported check are distinct claims; this evaluator does not perform cryptographic signature verification.'
+- 'Whole-artifact, scheme-covered content, whole-certificate, SPKI and issuer/serial identities are distinct. Reuse establishes neither publisher trust, control, common ownership nor accepted assessment.'
+- 'Only an actual complete-finding establishment in the supplied collection history is dated. Reprocessing, receipt, validity dates and new sightings do not renew an older finding.'
+- 'Credential class is retained as context by default. Explicit selected class policies preserve unknown and conflicting evidence; a public certificate does not establish public access to its private key.'
+- 'Correction and withdrawal context is retained without replacing or refreshing the historical finding; absence of a supplied amendment does not establish maintained current support.'
 capability_requirements:
   required:
-  - 'codesign_certificate_parsing'
-  - 'sample_collection'
+  - 'semantic_evidence_v1'
+  - 'typed_artifact_and_material_identity'
+  - 'source_qualified_signing_or_digest_evidence'
+  - 'collection_finding_history'
+  - 'scoped_amendment_context'
   optional:
-  - 'publisher_allowlists'
+  - 'codesign_certificate_parsing'
+  - 'scoped_signature_verification_reports'
+  - 'credential_classification_with_revision'
+  - 'collection_knowledge_witnesses'
 review:
   last_reviewed: '2026-04-04'
   review_cadence_days: 90
   next_review: '2026-07-03'
-name: Code-signing Certificate → Signed Samples
+name: Certificate Identity or Explicit SPKI → Sample Findings
 category: CTI
-description: Cluster samples signed with the same code-signing certificate (issuer+serial or SPKI).
+description: 'Return case-period complete findings connecting exact sample bytes to certificate presence, a reported signer, or a scoped source-reported verification check. Select whole-certificate or SPKI comparison explicitly and retain the particular signature, role and covered-content scope required by that purpose.'
 source: x509:cert
 target: file:bytes
 assessment_mode: evidence_only
 hops:
-- via: signs
+- via: witnessed_in_artifact
   direction: out
   form: file:bytes
 constraints:
-  temporal:
-    order:
-    - cert.not_before <= sample.firstseen
-    window_days: 3650
-  degree_caps:
-    x509:cert: 10000
-  negative_nodes:
-  - form: x509:cert
-    list: known_mass_developer_certs
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - sandbox
 - osint_web

@@ -1,0 +1,895 @@
+{
+  "pattern": "FIN_ORG_OFFICER_SHARE_CLUSTER",
+  "evidence": {
+    "contract": "everypivot.semantic_evidence",
+    "version": "1.0",
+    "collection_id": "fixture-collection",
+    "sources": [
+      {
+        "id": "report",
+        "publisher": "synthetic laboratory fixture",
+        "document": "report",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null
+      },
+      {
+        "id": "manifest",
+        "publisher": "synthetic laboratory fixture",
+        "document": "manifest",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "601d8a109528f7cd88bcee6b40a5982b04cd809387b2391ab5e5ab9447e5dec2",
+          "scope": "exact_source_bytes"
+        }
+      }
+    ],
+    "records": [
+      {
+        "id": "origin",
+        "kind": "occurrence",
+        "type": "collection:origin",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+          "origin": {
+            "binding": {
+              "object": "origin",
+              "occurrence": "origin"
+            },
+            "field": "/records/origin/origin",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2020-01-01T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/origin"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/origin/origin"
+          }
+        ]
+      },
+      {
+        "id": "snapshot",
+        "kind": "occurrence",
+        "type": "collection:history_snapshot",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+          "through": {
+            "binding": {
+              "object": "snapshot",
+              "occurrence": "snapshot"
+            },
+            "field": "/records/snapshot/through",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-14T23:59:59Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/snapshot"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/snapshot/through"
+          }
+        ]
+      },
+      {
+        "id": "history",
+        "kind": "assertion",
+        "type": "finding:history",
+        "attributes": {
+          "manifest_source_id": "manifest",
+          "manifest_field": "/history"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "manifest",
+            "field": "/history"
+          }
+        ]
+      },
+      {
+        "id": "seed",
+        "kind": "entity",
+        "type": "person",
+        "attributes": {
+          "identity_scope": "registry-person-Alice"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/seed"
+          }
+        ]
+      },
+      {
+        "id": "bob",
+        "kind": "entity",
+        "type": "person",
+        "attributes": {
+          "identity_scope": "registry-person-Bob"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/bob"
+          }
+        ]
+      },
+      {
+        "id": "receipt-A",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-A"
+          }
+        ]
+      },
+      {
+        "id": "A",
+        "kind": "entity",
+        "type": "org:org",
+        "attributes": {
+          "identity_scope": "registry-company-A",
+          "availability_occurrence": "receipt-A"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "A",
+              "occurrence": "receipt-A"
+            },
+            "field": "/records/A/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/A"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/A/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-B",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-B"
+          }
+        ]
+      },
+      {
+        "id": "B",
+        "kind": "entity",
+        "type": "org:org",
+        "attributes": {
+          "identity_scope": "registry-company-B",
+          "availability_occurrence": "receipt-B"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "B",
+              "occurrence": "receipt-B"
+            },
+            "field": "/records/B/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/B"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/B/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-C",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-C"
+          }
+        ]
+      },
+      {
+        "id": "C",
+        "kind": "entity",
+        "type": "org:org",
+        "attributes": {
+          "identity_scope": "registry-company-C",
+          "availability_occurrence": "receipt-C"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "C",
+              "occurrence": "receipt-C"
+            },
+            "field": "/records/C/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/C"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/C/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-Alice-A",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-Alice-A"
+          }
+        ]
+      },
+      {
+        "id": "Alice-A",
+        "kind": "assertion",
+        "type": "org:appointment",
+        "attributes": {
+          "role": "director",
+          "person_scope": "registry-person-Alice",
+          "organisation_scope": "registry-company-A",
+          "appointment_key": "Alice-A",
+          "availability_occurrence": "receipt-Alice-A"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "Alice-A",
+              "occurrence": "receipt-Alice-A"
+            },
+            "field": "/records/Alice-A/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/Alice-A"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Alice-A/available"
+          }
+        ],
+        "subject": "seed",
+        "object": "A"
+      },
+      {
+        "id": "receipt-Alice-A-service",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-Alice-A-service"
+          }
+        ]
+      },
+      {
+        "id": "Alice-A-service",
+        "kind": "assertion",
+        "type": "org:service_interval",
+        "attributes": {
+          "availability_occurrence": "receipt-Alice-A-service"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "Alice-A-service",
+              "occurrence": "receipt-Alice-A-service"
+            },
+            "field": "/records/Alice-A-service/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          },
+          "held": {
+            "binding": {
+              "object": "Alice-A",
+              "occurrence": "Alice-A-service"
+            },
+            "field": "/records/Alice-A-service/held",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "interval",
+            "interval_role": "service",
+            "start": "2018-01-01T00:00:00Z",
+            "end": "2020-01-01T00:00:00Z",
+            "start_inclusive": true,
+            "end_inclusive": true
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/Alice-A-service"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Alice-A-service/available"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Alice-A-service/held"
+          }
+        ],
+        "subject": "Alice-A"
+      },
+      {
+        "id": "receipt-Alice-B",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-Alice-B"
+          }
+        ]
+      },
+      {
+        "id": "Alice-B",
+        "kind": "assertion",
+        "type": "org:appointment",
+        "attributes": {
+          "role": "director",
+          "person_scope": "registry-person-Alice",
+          "organisation_scope": "registry-company-B",
+          "appointment_key": "Alice-B",
+          "availability_occurrence": "receipt-Alice-B"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "Alice-B",
+              "occurrence": "receipt-Alice-B"
+            },
+            "field": "/records/Alice-B/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/Alice-B"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Alice-B/available"
+          }
+        ],
+        "subject": "seed",
+        "object": "B"
+      },
+      {
+        "id": "receipt-Alice-B-service",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-Alice-B-service"
+          }
+        ]
+      },
+      {
+        "id": "Alice-B-service",
+        "kind": "assertion",
+        "type": "org:service_interval",
+        "attributes": {
+          "availability_occurrence": "receipt-Alice-B-service"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "Alice-B-service",
+              "occurrence": "receipt-Alice-B-service"
+            },
+            "field": "/records/Alice-B-service/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          },
+          "held": {
+            "binding": {
+              "object": "Alice-B",
+              "occurrence": "Alice-B-service"
+            },
+            "field": "/records/Alice-B-service/held",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "interval",
+            "interval_role": "service",
+            "start": "2024-01-01T00:00:00Z",
+            "end": "2026-01-01T00:00:00Z",
+            "start_inclusive": true,
+            "end_inclusive": true
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/Alice-B-service"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Alice-B-service/available"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Alice-B-service/held"
+          }
+        ],
+        "subject": "Alice-B"
+      },
+      {
+        "id": "receipt-Bob-A",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-Bob-A"
+          }
+        ]
+      },
+      {
+        "id": "Bob-A",
+        "kind": "assertion",
+        "type": "org:appointment",
+        "attributes": {
+          "role": "director",
+          "person_scope": "registry-person-Bob",
+          "organisation_scope": "registry-company-A",
+          "appointment_key": "Bob-A",
+          "availability_occurrence": "receipt-Bob-A"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "Bob-A",
+              "occurrence": "receipt-Bob-A"
+            },
+            "field": "/records/Bob-A/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/Bob-A"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Bob-A/available"
+          }
+        ],
+        "subject": "bob",
+        "object": "A"
+      },
+      {
+        "id": "receipt-Bob-A-service",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-Bob-A-service"
+          }
+        ]
+      },
+      {
+        "id": "Bob-A-service",
+        "kind": "assertion",
+        "type": "org:service_interval",
+        "attributes": {
+          "availability_occurrence": "receipt-Bob-A-service"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "Bob-A-service",
+              "occurrence": "receipt-Bob-A-service"
+            },
+            "field": "/records/Bob-A-service/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          },
+          "held": {
+            "binding": {
+              "object": "Bob-A",
+              "occurrence": "Bob-A-service"
+            },
+            "field": "/records/Bob-A-service/held",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "interval",
+            "interval_role": "service",
+            "start": "2023-01-01T00:00:00Z",
+            "end": "2026-01-01T00:00:00Z",
+            "start_inclusive": true,
+            "end_inclusive": true
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/Bob-A-service"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Bob-A-service/available"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Bob-A-service/held"
+          }
+        ],
+        "subject": "Bob-A"
+      },
+      {
+        "id": "receipt-Bob-C",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-Bob-C"
+          }
+        ]
+      },
+      {
+        "id": "Bob-C",
+        "kind": "assertion",
+        "type": "org:appointment",
+        "attributes": {
+          "role": "director",
+          "person_scope": "registry-person-Bob",
+          "organisation_scope": "registry-company-C",
+          "appointment_key": "Bob-C",
+          "availability_occurrence": "receipt-Bob-C"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "Bob-C",
+              "occurrence": "receipt-Bob-C"
+            },
+            "field": "/records/Bob-C/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/Bob-C"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Bob-C/available"
+          }
+        ],
+        "subject": "bob",
+        "object": "C"
+      },
+      {
+        "id": "receipt-Bob-C-service",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-Bob-C-service"
+          }
+        ]
+      },
+      {
+        "id": "Bob-C-service",
+        "kind": "assertion",
+        "type": "org:service_interval",
+        "attributes": {
+          "availability_occurrence": "receipt-Bob-C-service"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "Bob-C-service",
+              "occurrence": "receipt-Bob-C-service"
+            },
+            "field": "/records/Bob-C-service/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          },
+          "held": {
+            "binding": {
+              "object": "Bob-C",
+              "occurrence": "Bob-C-service"
+            },
+            "field": "/records/Bob-C-service/held",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "interval",
+            "interval_role": "service",
+            "start": "2024-01-01T00:00:00Z",
+            "end": "2026-01-01T00:00:00Z",
+            "start_inclusive": true,
+            "end_inclusive": true
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/Bob-C-service"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Bob-C-service/available"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/Bob-C-service/held"
+          }
+        ],
+        "subject": "Bob-C"
+      }
+    ]
+  },
+  "query": {
+    "parameters": {
+      "seed": "seed",
+      "query_date": "2026-09-14",
+      "scope": "default_3650_day_service"
+    },
+    "limits": {
+      "max_bindings": 20000,
+      "max_results": 100
+    }
+  },
+  "preserved_source_bytes": {
+    "manifest": "{\"history\":{\"contract\":\"everypivot.finding_history\",\"version\":\"1.0\",\"history_id\":\"history\",\"revision\":\"r1\",\"collection_id\":\"fixture-collection\",\"scope_id\":\"synthetic-declared-origin-through-snapshot\",\"origin_id\":\"origin\",\"origin_sha256\":\"f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856\",\"through_id\":\"snapshot\",\"through_sha256\":\"2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4\",\"coverage\":\"complete_declared_scope\",\"qualification\":{\"id\":\"fin_org_officer_share_cluster\",\"revision\":\"1.0\",\"contract_sha256\":\"6939e1d24a90d8631493c137663ddf8f9befc0d9e36f0d431b4c303181a27873\"},\"establishments\":[]}}"
+  },
+  "claims": [
+
+  ],
+  "contract_path": "contracts/semantics/FIN_ORG_OFFICER_SHARE_CLUSTER.json",
+  "expected": {
+    "forms": [
+      "org:org"
+    ],
+    "bound_ids": [
+      "A",
+      "B"
+    ],
+    "execution_status": "complete",
+    "assessment_acceptance": "not_evaluated"
+  }
+}

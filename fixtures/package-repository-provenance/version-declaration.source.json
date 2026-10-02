@@ -1,0 +1,11 @@
+{
+  "synthetic": true,
+  "package": {
+    "registry": "https://registry.example",
+    "name": "example-package",
+    "version": "1.4.0"
+  },
+  "repository": "https://code.example/project/source",
+  "reference_kind": "version_source_repository",
+  "source_revision": "synthetic-revision-1"
+}

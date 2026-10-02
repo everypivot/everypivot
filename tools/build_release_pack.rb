@@ -8,28 +8,16 @@ require 'optparse'
 require 'pathname'
 require 'rbconfig'
 require 'time'
+require 'tmpdir'
+require_relative 'utf8_text'
 
 module EveryPivot
   module BuildReleasePack
     class BuildError < StandardError; end
 
-    REPO_ROOT = Pathname(__dir__).join('..').expand_path
+    REPO_ROOT = Pathname(Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path
     PACK_NAME = 'everypivot-release-pack'
-    DEFAULT_RELEASE = 'v0.5.0'
-    # Default to the published_at pinned in the committed release manifest so
-    # ad-hoc developer builds match the canonical release date. Falls back to
-    # today's UTC date only when the manifest is unavailable (fresh clone,
-    # pre-release-prep state). CI release jobs pass --published-at explicitly.
-    DEFAULT_PUBLISHED_AT = begin
-      manifest_path = REPO_ROOT.join('artifacts', 'release-manifest.json')
-      if manifest_path.file?
-        JSON.parse(manifest_path.read).fetch('published_at') { Time.now.utc.strftime('%F') }
-      else
-        Time.now.utc.strftime('%F')
-      end
-    rescue StandardError
-      Time.now.utc.strftime('%F')
-    end
+    DEFAULT_RELEASE = 'v0.6.0'
     DEFAULT_ARTIFACT_MODE = 'stable'
     DEFAULT_AUTHORITY_STATUS = 'canonical'
     ROOT_FILES = %w[
@@ -43,6 +31,7 @@ module EveryPivot
       LICENSE-DATA
       NOTICE
       TRADEMARK.md
+      VALIDATION_SEMANTICS.md
       .reachable-history-allowlist
     ].freeze
     # Dotfiles that survive the should_include_file? filter when discovered
@@ -57,6 +46,7 @@ module EveryPivot
     ].freeze
     ROOT_DIRECTORIES = %w[
       adapters
+      contracts
       docs
       graph-pivots
       schemas
@@ -69,6 +59,9 @@ module EveryPivot
       tools/README.md
       tools/build_registry_index.rb
       tools/build_release_pack.rb
+      tools/utf8_text.rb
+      tools/test_utf8_text.rb
+      tools/test_distribution_eligibility.rb
       tools/check_generated_freshness.rb
       tools/check_reachable_history.rb
       tools/check_relation_catalog.rb
@@ -83,14 +76,62 @@ module EveryPivot
       tools/test_cti_promotion_lint.rb
       tools/check_query_profile_suite.rb
       tools/smoke_neo4j_query_profiles.rb
+      tools/accept_neo4j_query_profiles.py
+      tools/test_accept_neo4j_query_profiles.py
       tools/generate_query_profile_demo.rb
       tools/generate_stix_mapping_profile_demo.rb
+      tools/stix_mapping_validation.rb
+      tools/test_stix_mapping_validation.rb
       tools/json_schema_validator.rb
       tools/sail_bridge.rb
       tools/check_sail_bridge.rb
       tools/test_sail_bridge.rb
       tools/test_registry_assessment.rb
       tools/test_site_assessment.js
+      tools/pattern_identity.rb
+      tools/evidence_consistency.rb
+      tools/query_profile_traversal.rb
+      tools/test_validation_boundaries.rb
+      tools/package_repository_provenance.rb
+      tools/test_package_repository_provenance.rb
+      tools/semantic_contract.rb
+      tools/semantic_records.rb
+      tools/semantic_identity.rb
+      tools/semantic_time.rb
+      tools/semantic_finding.rb
+      tools/semantic_amendments.rb
+      tools/semantic_result_primitives.rb
+      tools/semantic_package_repository.rb
+      tools/test_semantic_package_repository.rb
+      tools/semantic_certificate_profiles.rb
+      tools/test_semantic_certificate_profiles.rb
+      tools/semantic_evaluator.rb
+      tools/evaluate_semantic_pattern.rb
+      tools/test_semantic_contract.rb
+      tools/test_semantic_records.rb
+      tools/test_semantic_identity.rb
+      tools/test_semantic_time.rb
+      tools/test_semantic_finding.rb
+      tools/test_semantic_amendments.rb
+      tools/test_semantic_result_primitives.rb
+      tools/test_semantic_result_bindings.rb
+      tools/test_semantic_signing.rb
+      tools/test_semantic_certificate_expansion.rb
+      tools/check_semantic_fixture_hashes.rb
+      tools/data/reviewed_semantic_fixture_hashes.json
+      tools/test_semantic_sanctions.rb
+      tools/test_semantic_extraction.rb
+      tools/test_semantic_finding_integration.rb
+      tools/test_semantic_evaluator.rb
+      tools/test_semantic_execution_primitives.rb
+      tools/test_semantic_certificate_presentation.rb
+      tools/semantic_neo4j_adapter.rb
+      tools/test_semantic_neo4j_adapter.rb
+      tools/accept_semantic_neo4j.rb
+      tools/test_semantic_authoring_schema.rb
+      tools/test_semantic_foundation_adversarial.rb
+      tools/check_semantic_suite.rb
+      tools/test_semantic_ja3.rb
     ].freeze
     STABLE_SITE_GENERATED_FILES = %w[
       site/data/registry-index.json
@@ -100,6 +141,17 @@ module EveryPivot
       site/data/pivot-pattern.schema.js
     ].freeze
     module_function
+
+    # A missing manifest permits a fresh-build date. Malformed declared text
+    # remains an input error, rather than silently selecting a different date.
+    def default_published_at
+      manifest_path = REPO_ROOT.join('artifacts', 'release-manifest.json')
+      return Time.now.utc.strftime('%F') unless manifest_path.file?
+
+      JSON.parse(Utf8Text.read(manifest_path)).fetch('published_at') { Time.now.utc.strftime('%F') }
+    rescue JSON::ParserError => e
+      raise BuildError, "Invalid JSON in #{manifest_path}: #{e.message}"
+    end
 
     def slugify(text)
       text.downcase.gsub(/[^a-z0-9]+/, '-').gsub(/\A-+|-+\z/, '')
@@ -228,11 +280,33 @@ module EveryPivot
     end
 
     def build_release_pack(output_dir:, release:, published_at:, force:, artifact_mode:, authority_status:, check_fixtures:)
-      if output_dir.exist?
-        raise BuildError, "Output directory already exists: #{output_dir}" unless force
-
-        FileUtils.remove_entry(output_dir)
+      if output_dir.exist? && !force
+        raise BuildError, "Output directory already exists: #{output_dir}"
       end
+
+      # All copied-input gates and generation complete before replacing an
+      # existing pack. A refusal, including --force, preserves its bytes.
+      output_dir.parent.mkpath
+      Dir.mktmpdir('.everypivot-pack-', output_dir.parent.to_s) do |temporary|
+        staging_dir = Pathname(temporary).join('pack')
+        manifest = assemble_release_pack(
+          output_dir: staging_dir, release: release, published_at: published_at,
+          artifact_mode: artifact_mode, authority_status: authority_status,
+          check_fixtures: check_fixtures
+        )
+        backup = Pathname(temporary).join('previous-pack')
+        File.rename(output_dir, backup) if output_dir.exist?
+        begin
+          File.rename(staging_dir, output_dir)
+        rescue SystemCallError
+          File.rename(backup, output_dir) if backup.exist?
+          raise
+        end
+        manifest
+      end
+    end
+
+    def assemble_release_pack(output_dir:, release:, published_at:, artifact_mode:, authority_status:, check_fixtures:)
       output_dir.mkpath
 
       copied_source_files = []
@@ -241,7 +315,7 @@ module EveryPivot
       end
 
       run_pack_gate!(output_dir, 'tools/validate_pivots.rb', output_dir.join('graph-pivots').to_s)
-      run_pack_gate!(output_dir, 'tools/check_sail_bridge.rb', '--strict-incomplete')
+      run_pack_gate!(output_dir, 'tools/check_sail_bridge.rb', '--strict-incomplete', '--current-distribution')
       run_pack_gate!(output_dir, 'tools/check_cti_promotion_lint.rb')
 
       fixture_status = 'not_run'
@@ -251,6 +325,9 @@ module EveryPivot
       end
 
       run_pack_gate!(output_dir, 'tools/check_query_profile_suite.rb')
+      run_pack_gate!(output_dir, 'tools/test_validation_boundaries.rb')
+      run_pack_gate!(output_dir, 'tools/test_package_repository_provenance.rb')
+      run_pack_gate!(output_dir, 'tools/check_semantic_suite.rb')
       relation_catalog_status = 'not_run'
       site_gate_status = 'not_applicable'
 
@@ -291,8 +368,8 @@ module EveryPivot
         derived_variant_name(artifact_output.basename.to_s, 'fixtures', '.tar.gz')
       )
 
-      registry_index = JSON.parse(artifact_output.read)
-      release_manifest = JSON.parse(release_manifest_path.read)
+      registry_index = JSON.parse(Utf8Text.read(artifact_output))
+      release_manifest = JSON.parse(Utf8Text.read(release_manifest_path))
 
       stable_site_generated_paths = STABLE_SITE_GENERATED_FILES.map { |relative_path| output_dir.join(relative_path) }
       copied_source_files -= stable_site_generated_paths if artifact_mode == 'stable'
@@ -315,6 +392,13 @@ module EveryPivot
           'fixture_suite' => 'tools/check_fixture_suite.rb',
           'cti_promotion_lint' => 'tools/check_cti_promotion_lint.rb',
           'query_profile_suite' => 'tools/check_query_profile_suite.rb',
+          'neo4j_native_acceptance' => 'tools/accept_neo4j_query_profiles.py',
+          'neo4j_acceptance_tests' => 'tools/test_accept_neo4j_query_profiles.py',
+          'validation_boundaries' => 'tools/test_validation_boundaries.rb',
+          'package_repository_provenance' => 'tools/package_repository_provenance.rb',
+          'package_repository_provenance_tests' => 'tools/test_package_repository_provenance.rb',
+          'semantic_evaluator' => 'tools/evaluate_semantic_pattern.rb',
+          'semantic_synthetic_suite' => 'tools/check_semantic_suite.rb',
           'release_metadata' => 'tools/check_release_metadata.rb',
           'generated_freshness' => 'tools/check_generated_freshness.rb',
           'relation_catalog' => 'tools/check_relation_catalog.rb',
@@ -330,8 +414,12 @@ module EveryPivot
         'quality_gates' => {
           'validator' => 'passed',
           'assessment_bridge' => 'passed',
+          'current_distribution' => 'passed',
           'cti_promotion_lint' => 'passed',
           'fixture_suite' => fixture_status,
+          'validation_boundaries' => 'passed',
+          'package_repository_provenance' => 'passed',
+          'semantic_synthetic_suite' => 'passed',
           'query_profile_suite' => 'passed',
           'relation_catalog' => relation_catalog_status,
           'release_metadata' => artifact_mode == 'stable' ? 'passed' : 'not_applicable',
@@ -360,9 +448,10 @@ module EveryPivot
     end
 
     def parse_args(argv)
+      argv = argv.map { |argument| Utf8Text.decode(argument, path: 'command line argument') }
       options = {
         release: DEFAULT_RELEASE,
-        published_at: DEFAULT_PUBLISHED_AT,
+        published_at: nil,
         artifact_mode: DEFAULT_ARTIFACT_MODE,
         authority_status: DEFAULT_AUTHORITY_STATUS,
         force: false,
@@ -400,13 +489,15 @@ module EveryPivot
           options[:check_fixtures] = false
         end
 
-        opt.on('--force', 'Overwrite the output directory if it already exists') do
+        opt.on('--force', 'Replace an existing pack only after the staged build passes') do
           options[:force] = true
         end
       end
 
       parser.parse!(argv)
+      options[:published_at] ||= default_published_at
       options[:output_dir] ||= default_output_dir(options[:release], options[:artifact_mode])
+      options[:output_dir] = Pathname(Utf8Text.decode(options[:output_dir].to_s, path: '--output-dir'))
       [options, parser]
     end
 
@@ -434,7 +525,7 @@ module EveryPivot
         }
       )
       0
-    rescue BuildError => e
+    rescue BuildError, Utf8Text::Error, SystemCallError => e
       warn e.message
       2
     end

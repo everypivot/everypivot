@@ -1,71 +1,58 @@
 id: ADTECH_CREATIVE_SCRIPT_TO_DELIVERY_ENDPOINT
-version: 0.2.0
-pattern_schema_version: 1.5
+version: 0.3.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'web_content_collection'
-  - 'web_script_extraction'
+  - web_content_collection
+  - web_script_extraction
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'dynamic_rendering'
-  - 'web_fingerprinting'
+  - dynamic_rendering
+  - web_fingerprinting
 robustness_class: multi_hop_inference
 hazards:
-- 'Third-party creative scripts, verification pixels, and measurement tags are normal in programmatic advertising.'
-- 'A delivery endpoint can be advertiser-controlled without being malicious.'
-- 'Shared vendors, CDNs, redirectors, and tracking services can make common scripts appear across unrelated advertisers; corroborate before clustering.'
+- Third-party scripts, verification pixels and measurement requests are common and
+  require scoped controls.
+- A qualified reference does not establish a request; an attempted request does not
+  establish completed delivery.
+- Shared scripts and endpoints do not transfer creative correspondence or establish
+  advertiser control, maliciousness or accepted assessment.
 name: Creative Script -> Delivery Endpoint
 category: ADTECH
-description: Pivot from ad creative HTML, script tags, iframe insertion, or tracking pixel markup to advertiser-controlled delivery, click-log, impression, NOAS, or dynamic CDN endpoints.
+description: Find distinct source-qualified creative URI references or actual creative-associated
+  requests, directly or through an exactly corresponding script. Preserve request
+  stage, generic URI and suitable URL views without inferring advertiser control or
+  delivery success.
 source: web:creative
-target: inet:url
+target: inet:url|evidence:creative_reference
 assessment_mode: evidence_only
 hops:
-- via: embeds
+- via: yields_evidence_for
   direction: out
-  form: web:script
-- via: loads
-  direction: out
-  form: inet:url
-- via: hosted_by
-  direction: out
-  form: inet:fqdn
+  form: inet:url|evidence:creative_reference
 constraints:
-  temporal:
-    order:
-    - creative.seen <= url.requested
-    window_days: 30
-  degree_caps:
-    web:creative: 1000
-    inet:url: 5000
-  negative_nodes:
-  - form: inet:fqdn
-    list: commodity_ad_verification_pixels
-  - form: inet:fqdn
-    list: known_cdn_static_assets
   provenance:
     min_unique_sources: 1
-features:
-- script_tag_present
-- iframe_creation_present
-- noas_endpoint_present
-- click_log_endpoint_present
-- impression_endpoint_present
-- dynamic_cdn_endpoint_present
-- third_party_domain_count
-- verification_pixel_penalty
+features: []
 outputs:
-  top_paths: 5
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - browser_telemetry
 - proxy_logs
 - osint_web
 - adtech_logs
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/ADTECH_CREATIVE_SCRIPT_TO_DELIVERY_ENDPOINT.json
+  sha256: 84f5e7ab3ba6b8bb787434942b5a79f22e4d2fb1a54e4d7fe1759275a47a09b9

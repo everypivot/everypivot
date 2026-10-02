@@ -1,0 +1,46 @@
+id: OSINT_TLS_JA3S_TO_FQDNS
+version: 1.0.0
+pattern_schema_version: 1.6
+validation_state: working_set
+precision_tier: low
+robustness_class: enumeration
+name: Server JA3S → Domains Associated with Observed Responses
+category: OSINT
+description: Find domains explicitly associated with actual server TLS responses matching a selected JA3S, retaining the exact observed exchange and leg. A named response is not proof of application success, origin-server identity, control or ownership.
+hazards:
+- 'Shared server TLS configurations and interception proxies can produce the same JA3S across unrelated services and observed legs.'
+- 'JA3 client classes cannot classify JA3S responses, including when their hexadecimal values happen to agree.'
+- 'A request, planned scan, DNS co-occurrence or certificate SAN cannot supply a missing server response or its domain association.'
+- 'Reported fingerprints, clocks and source assertions retain their provenance limitations. Matches establish no unique endpoint, maliciousness, corroboration or accepted assessment.'
+capability_requirements:
+  required:
+  - 'observed_server_tls_response_evidence'
+  - 'typed_ja3s_selector_and_source_revision'
+  - 'exchange_leg_domain_correspondence'
+  - 'semantic_execution_contract_v1'
+  optional:
+  - 'explicit_response_occurrence_filters'
+  - 'derivation_and_collection_receipt_history'
+source: tls:ja3s
+target: inet:fqdn
+assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/OSINT_TLS_JA3S_TO_FQDNS.json
+  sha256: bd010cfeca032a048a79642cee84b1db6991138562499e0726e1cf632e414e13
+hops:
+- via: named_server_response
+  direction: out
+  form: inet:fqdn
+constraints:
+  provenance:
+    min_unique_sources: 1
+features: []
+outputs:
+  yield:
+  - source
+  - target
+  - evidence_paths
+datasets:
+- tls

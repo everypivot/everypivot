@@ -1,27 +1,48 @@
 id: CROSS_CERT_SUBJECT_TO_LEI_SANCTIONS
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: missing_negative_controls
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'certificate_normalization'
-  - 'lei_resolution'
-  - 'sanctions_list_access'
+  - certificate_normalization
+  - lei_resolution
+  - sanctions_list_access
+  - semantic_execution_contract_v1
+  - source_revision_scoped_relations
+  - explicit_temporal_applicability
+  - amendment_context
   optional:
-  - 'certificate_subject_normalization'
-  - 'entity_normalization'
+  - certificate_subject_normalization
+  - entity_normalization
 hazards:
-- Certificate subject organization fields are free-form, CA-normalized, common, or attacker-controlled and can collide with same-name legal entities.
-- Sanctions and LEI joins are temporal and entity-resolution sensitive; corroborate current legal records and certificate ownership before risk scoring.
-- Suppress generic, same-name, and CA-normalized certificate subjects before treating a certificate subject as a sanctioned legal entity.
-name: Cert Subject Org → LEI → Sanctions
+- Certificate subject organization fields are free-form, CA-normalized, common, or
+  attacker-controlled and can collide with same-name legal entities.
+- Sanctions and LEI joins are temporal and entity-resolution sensitive; corroborate
+  current legal records and certificate ownership before risk scoring.
+- Suppress generic, same-name, and CA-normalized certificate subjects before treating
+  a certificate subject as a sanctioned legal entity.
+- Source-reported identity, relationship and list status require separate evidence;
+  no traversal supplies legal exposure, liability, control, source independence or
+  accepted assessment status.
+- A selected historical-status inquiry requires the actual applicable relationship
+  and list intervals. Later publication, receipt and correction do not backdate analyst
+  knowledge or refresh activity.
+name: Certificate Subject → Evidenced Legal Entity → Sanctions Entries
 category: CROSS
-description: Extract certificate subject/organization, map to LEI, and screen against sanctions.
+description: Follow a preserved certificate subject assertion through evidenced legal-entity
+  correspondence to selected sanctions entry revisions. A certificate name alone supplies
+  no entity resolution, ownership or control; retrospective material reference has
+  no invented activity date.
 source: x509:cert
 target: sanction:entry
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CROSS_CERT_SUBJECT_TO_LEI_SANCTIONS.json
+  sha256: 368d9ec8a2ae34424e9e8d0c31ac1891dc49658eb2bc031b43146d7a14f9b5d2
 hops:
 - via: subject_org
   direction: out
@@ -33,37 +54,14 @@ hops:
   direction: out
   form: sanction:entry
 constraints:
-  temporal:
-    order:
-    - cert.not_before <= sanction.listed
-    window_days: 3650
-  degree_caps:
-    x509:cert: 10000
-  negative_nodes:
-  - form: x509:cert
-    list: free_or_shared_ca_default_subjects
-  - form: x509:cert
-    list: generic_certificate_subject_orgs
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - ct
 - lei

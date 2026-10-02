@@ -1,0 +1,29 @@
+{
+  "parameters": {
+    "source_certificate": "cert-1",
+    "selector": {
+      "kind": "spki_sha256",
+      "algorithm": "sha256",
+      "representation": "der",
+      "normalization": "exact_der_v1",
+      "scope": "subject_public_key_info",
+      "value": "a3c46b6076502c5fdc43ef80921cdcf865da018ab69a2b54be1302da522924b3",
+      "provenance": {
+        "source": "case-selection",
+        "record_id": "case-selected-certificate",
+        "source_revision": "case-r1",
+        "field": "/selected_spki_sha256",
+        "basis": "reported"
+      }
+    },
+    "period": {
+      "start": "2026-09-17",
+      "end": "2026-09-19"
+    },
+    "purpose": "observed_presentation"
+  },
+  "limits": {
+    "max_bindings": 10000,
+    "max_results": 100
+  }
+}

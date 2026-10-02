@@ -1,14 +1,17 @@
 #!/usr/bin/env ruby
 
+require 'digest'
 require 'ipaddr'
+require 'json'
 require 'optparse'
 require 'pathname'
 require 'set'
 require 'yaml'
+require_relative 'utf8_text'
 
 module EveryPivot
   module CtiPromotionLint
-    REPO_ROOT = Pathname(__dir__).join('..').expand_path
+    REPO_ROOT = Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path
 
     CATALOG_SECTIONS = {
       'Source forms' => :source,
@@ -30,6 +33,37 @@ module EveryPivot
       'fixtures/validator_suite.yml',
       %r{\Afixtures/cases/}
     ].freeze
+
+    # These five SHA-256 values identify retained synthetic source documents or
+    # independently fixed snapshot vectors. Each exception requires both the
+    # exact repository-relative file path and its complete reviewed bytes.
+    # Editing or relocating a fixture revokes its exception. The same relative
+    # paths remain usable in portable release packs; no other scanner is skipped.
+    REVIEWED_FIXTURE_HASHES = {
+      'fixtures/package-repository-provenance/version-declaration.record.json' => {
+        file_sha256: '8ec71f9e26ce40b6b4ffd7c3697f486a4e1b599a4c42405ef44a38cbc4c5838e',
+        allowed_hex: Set.new(%w[bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7]).freeze
+      }.freeze,
+      'fixtures/package-repository-provenance/mirror-reference.record.json' => {
+        file_sha256: '85ba7710979aeaf93a85aed9ae7ccb0288306c6ff869338438c21591d1dcaf0e',
+        allowed_hex: Set.new(%w[f96c6933f45b26ec7985ac72536747a7ce5906b6f61f80607b17df0688ffe339]).freeze
+      }.freeze,
+      'fixtures/package-repository-provenance/snapshot-v1.vector.json' => {
+        file_sha256: '1b2347907f66c8dcb6a3ff1e72627361c7c0606fd4bb5a5bca3bbdd806930cc0',
+        allowed_hex: Set.new(%w[
+          5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03
+          2b83ba6df9942b489462748a1fb2fe76dc81f4a6c13c8a2f25917233a45775e7
+          01518c05d7c12fae3a119160900118fd814ad572d16547a7d3f2f251fc21ebe6
+        ]).freeze
+      }.freeze
+    }.freeze
+    NO_REVIEWED_HASHES = Set.new.freeze
+    # Separate, byte-pinned review data keeps the explicit synthetic derivation
+    # record portable without widening the scanner's path exclusions. This is
+    # NOT regenerated from lint output. See check_semantic_fixture_hashes.rb and
+    # fixtures/semantic-families/HASH_REVIEW.md for the independent recipes.
+    SEMANTIC_FIXTURE_REVIEW_PATH = Pathname(__dir__).join('data', 'reviewed_semantic_fixture_hashes.json').freeze
+    SEMANTIC_FIXTURE_REVIEW_SHA256 = 'e60da077a5b02447d7a275e302b2e4606d1a34ac4e96f6dbbf3ce9301f0f5d7c'.freeze
 
     BANNED_REVIEW_RELATIONS = [
       /\bsupports_[a-z0-9_]*\b/i,
@@ -164,7 +198,7 @@ module EveryPivot
       deprecated_values = Hash.new { |hash, key| hash[key] = Set.new }
       current_deprecated_section = nil
 
-      path.readlines.each do |line|
+      Utf8Text.read(path).each_line do |line|
         if line =~ %r{<summary>([^<]+)</summary>}
           summary = Regexp.last_match(1)
           current_section = CATALOG_SECTIONS[summary]
@@ -298,7 +332,7 @@ module EveryPivot
 
     def check_pattern_file(file, catalog_values, deprecated_values, namespace_set)
       errors = []
-      data = YAML.safe_load(file.read, aliases: false)
+      data = YAML.safe_load(Utf8Text.read(file), aliases: false)
       unless data.is_a?(Hash)
         add_error(errors, file, 'top-level YAML document must be a mapping')
         return errors
@@ -358,6 +392,8 @@ module EveryPivot
       end
 
       errors
+    rescue Utf8Text::Error => e
+      [e.message]
     rescue StandardError => e
       ["#{file}: YAML parse failed: #{e.message}"]
     end
@@ -410,7 +446,29 @@ module EveryPivot
       value.to_s.match?(/example|synthetic|placeholder|redacted|dummy|fake/i)
     end
 
-    def scan_fixture_line(file, line, number, errors)
+    def semantic_fixture_hashes
+      @semantic_fixture_hashes ||= begin
+        bytes = SEMANTIC_FIXTURE_REVIEW_PATH.binread
+        raise 'Synthetic fixture hash review data changed; explicit re-review required' unless Digest::SHA256.hexdigest(bytes) == SEMANTIC_FIXTURE_REVIEW_SHA256
+        review = JSON.parse(Utf8Text.decode(bytes, path: SEMANTIC_FIXTURE_REVIEW_PATH))
+        raise 'Unexpected synthetic fixture hash review contract' unless review['contract'] == 'everypivot.reviewed_synthetic_fixture_hashes' && review['version'] == '1.0'
+        review.fetch('files').each_with_object({}) do |(path, entry), out|
+          out[path] = {file_sha256: entry.fetch('file_sha256'), allowed_hex: Set.new(entry.fetch('allowed_hex')).freeze}.freeze
+        end.freeze
+      end
+    end
+
+    def reviewed_fixture_hashes(file, content, repo_root)
+      relative = file.expand_path.relative_path_from(repo_root.expand_path).to_s
+      reviewed = REVIEWED_FIXTURE_HASHES[relative] || semantic_fixture_hashes[relative]
+      return NO_REVIEWED_HASHES unless reviewed && Digest::SHA256.hexdigest(content) == reviewed[:file_sha256]
+
+      reviewed[:allowed_hex]
+    rescue ArgumentError
+      NO_REVIEWED_HASHES
+    end
+
+    def scan_fixture_line(file, line, number, errors, allowed_hex = NO_REVIEWED_HASHES)
       location = "#{file}:#{number}"
 
       if review_relation_match(line)
@@ -423,7 +481,9 @@ module EveryPivot
         add_error(errors, location, "contains non-documentation IPv4 address `#{ip}`")
       end
 
-      line.scan(%r{\bhttps?://[^\s"'<>]+}) do |url|
+      # A backslash before an escaped JSON quote is a token delimiter, not part
+      # of the host. Domains elsewhere in the line still receive their own scan.
+      line.scan(%r{\bhttps?://[^\s"'<>\\]+}) do |url|
         next if special_domain?(url)
 
         add_error(errors, location, "contains non-example URL `#{url}`")
@@ -443,7 +503,7 @@ module EveryPivot
       end
 
       line.scan(/\b[a-f0-9]{32}\b|\b[a-f0-9]{40}\b|\b[a-f0-9]{64}\b/i) do |hex|
-        next if placeholder_hex?(hex)
+        next if placeholder_hex?(hex) || allowed_hex.include?(hex)
 
         add_error(errors, location, "contains plausible real hash `#{hex}`")
       end
@@ -471,10 +531,13 @@ module EveryPivot
       end
     end
 
-    def check_fixture_file(file)
+    def check_fixture_file(file, repo_root = REPO_ROOT)
       errors = []
-      file.readlines.each_with_index do |line, index|
-        scan_fixture_line(file, line, index + 1, errors)
+      # Match the raw bytes to the reviewed digest, then scan the same UTF-8 bytes.
+      content = file.binread
+      allowed_hex = reviewed_fixture_hashes(file, content, repo_root)
+      Utf8Text.decode(content, path: file).each_line.with_index do |line, index|
+        scan_fixture_line(file, line, index + 1, errors, allowed_hex)
       end
       errors
     rescue StandardError => e
@@ -493,7 +556,7 @@ module EveryPivot
 
       errors = []
       pattern_files.each { |file| errors.concat(check_pattern_file(file, catalog_values, deprecated_values, namespace_set)) }
-      fixture_files.each { |file| errors.concat(check_fixture_file(file)) }
+      fixture_files.each { |file| errors.concat(check_fixture_file(file, options[:repo_root])) }
 
       if errors.empty?
         puts "CTI promotion lint passed for #{pattern_files.length} pattern files and #{fixture_files.length} fixture files"

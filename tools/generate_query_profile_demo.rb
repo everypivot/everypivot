@@ -4,6 +4,24 @@ require 'json'
 require 'optparse'
 require 'pathname'
 require 'yaml'
+require_relative 'json_schema_validator'
+require_relative 'utf8_text'
+
+def load_yaml(path)
+  YAML.safe_load(EveryPivot::Utf8Text.read(path), aliases: false)
+rescue EveryPivot::Utf8Text::Error => e
+  abort e.message
+rescue Psych::Exception => e
+  abort "Invalid YAML in #{path}: #{e.message}"
+end
+
+def load_json(path)
+  JSON.parse(EveryPivot::Utf8Text.read(path))
+rescue EveryPivot::Utf8Text::Error => e
+  abort e.message
+rescue JSON::ParserError => e
+  abort "Invalid JSON in #{path}: #{e.message}"
+end
 
 def array_value(value)
   value.is_a?(Array) ? value : []
@@ -91,7 +109,7 @@ def find_profile_target(repo_root, pattern_id, requested_profile_path)
   matches = []
 
   profile_paths.each do |profile_path|
-    profile = YAML.safe_load(profile_path.read, aliases: false)
+    profile = load_yaml(profile_path)
     next unless profile.dig('backend', 'name') == 'neo4j' && profile.dig('backend', 'query_language') == 'cypher'
 
     profile_targets(profile).each do |target|
@@ -114,7 +132,7 @@ def find_profile_target(repo_root, pattern_id, requested_profile_path)
 end
 
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path,
+  repo_root: Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path,
   pattern_id: 'OSINT_SSH_HOSTKEY_CLUSTER',
   profile: nil,
   fixture_graph: nil,
@@ -157,8 +175,8 @@ unless pattern_path
   exit 2
 end
 
-fixture = JSON.parse(fixture_path.read)
-pattern = YAML.safe_load(Pathname(pattern_path).read, aliases: false)
+fixture = load_json(fixture_path)
+pattern = load_yaml(pattern_path)
 
 unless profile.dig('backend', 'name') == 'neo4j' && profile.dig('backend', 'query_language') == 'cypher'
   warn "Unsupported profile backend/query language: #{profile_path}"
@@ -196,10 +214,11 @@ end
 
 constraints = hash_value(pattern['constraints'])
 window_days = hash_value(constraints['temporal'])['window_days']
-if shape['temporal_window_required'] && !(window_days.is_a?(Integer) && window_days.positive?)
+if shape['temporal_window_required'] && !(EveryPivot::JsonSchemaValidator.integer?(window_days) && window_days.positive?)
   warn "Target #{target_label} requires constraints.temporal.window_days"
   exit 2
 end
+window_days = window_days.to_i
 source_forms = form_list(pattern['source'])
 target_forms = form_list(hop['form'].to_s.empty? ? pattern['target'] : hop['form'])
 negative_nodes = array_value(constraints['negative_nodes'])
@@ -246,11 +265,16 @@ lines << match_clause
 lines << "WHERE source.#{form_property} IN #{cypher_list(source_forms)}"
 lines << "  AND target.#{form_property} IN #{cypher_list(target_forms)}"
 lines << "  AND date(edge.#{seen_property}) >= as_of - duration({days: #{window_days}})"
-if source_negative_lists.any?
-  lines << "  AND (source.#{negative_node_list_property} IS NULL OR NOT source.#{negative_node_list_property} IN #{cypher_list(source_negative_lists)})"
-end
-if target_negative_lists.any?
-  lines << "  AND (target.#{negative_node_list_property} IS NULL OR NOT target.#{negative_node_list_property} IN #{cypher_list(target_negative_lists)})"
+lines << "  AND date(edge.#{seen_property}) <= as_of"
+[['source', source_forms], ['target', target_forms]].each do |variable, forms|
+  forms.each do |form|
+    lists = negative_lists_for_forms(negative_nodes, [form])
+    next if lists.empty?
+
+    # Exclusions are scoped to their declared node form, not a union of forms.
+    guard = forms.length > 1 ? "#{variable}.#{form_property} <> #{cypher_string(form)} OR " : ''
+    lines << "  AND (#{guard}#{variable}.#{negative_node_list_property} IS NULL OR NOT #{variable}.#{negative_node_list_property} IN #{cypher_list(lists)})"
+  end
 end
 lines << 'RETURN {'
 lines << "  pattern_id: #{cypher_string(pattern['id'])},"

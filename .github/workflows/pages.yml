@@ -13,8 +13,18 @@ on:
       - "tools/build_registry_index.rb"
       - "tools/validate_pivots.rb"
       - "tools/sail_bridge.rb"
+      - "tools/utf8_text.rb"
+      - "tools/test_utf8_text.rb"
+      - "tools/test_distribution_eligibility.rb"
       - "tools/check_sail_bridge.rb"
       - "tools/check_fixture_suite.rb"
+      - "tools/pattern_identity.rb"
+      - "tools/json_schema_validator.rb"
+      - "tools/evidence_consistency.rb"
+      - "tools/query_profile_traversal.rb"
+      - "tools/test_validation_boundaries.rb"
+      - "tools/package_repository_provenance.rb"
+      - "tools/test_package_repository_provenance.rb"
       - "tools/check_generated_freshness.rb"
       - "tools/check_release_metadata.rb"
       - "tools/check_site_links.rb"
@@ -60,10 +70,13 @@ jobs:
       - name: Validate schema and complete assessment compatibility
         run: |
           ruby tools/validate_pivots.rb --strict-metadata --strict-bridge
-          ruby tools/check_sail_bridge.rb --strict-incomplete
+          ruby tools/check_sail_bridge.rb --strict-incomplete --current-distribution
 
       - name: Run fixture suite
-        run: ruby tools/check_fixture_suite.rb
+        run: |
+          ruby tools/check_fixture_suite.rb
+          ruby tools/test_validation_boundaries.rb
+          ruby tools/test_package_repository_provenance.rb
 
       - name: Check generated data freshness
         run: ruby tools/check_generated_freshness.rb

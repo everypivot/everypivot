@@ -1,0 +1,27 @@
+{
+  "pattern_id": "CTI_SAMPLE_IMPHASH_CLUSTER",
+  "pattern_path": "graph-pivots/validated/CTI_SAMPLE_IMPHASH_CLUSTER.yaml",
+  "fixture_path": "fixtures/query-profiles/neo4j/cti_sample_imphash_cluster_source_suppression.graph.json",
+  "direction": "out",
+  "source_form": "file:pe:imphash",
+  "target_form": "file:bytes",
+  "relation": "observed_in",
+  "window_days": 3650,
+  "suppression_side": "source",
+  "negative_lists": [
+    "common_benign_imphashes",
+    "common_packer_imphashes"
+  ],
+  "high_cardinality": 10001,
+  "caveats": [
+    "Common packers, frameworks, malware builders, and benign software families can share import hashes without shared operation.",
+    "Import hashes can change with minor build changes and can be distorted by packing, import reconstruction, or damaged PE metadata."
+  ],
+  "blocked_assertions": [
+    "Validated lifecycle state is not a runtime confidence score.",
+    "A shared import hash is feature evidence, not proof of common operator identity, authorship, ownership, or attribution.",
+    "This fixture proves source-side suppression for common packer import hashes; it does not assert maliciousness, compromise, family membership, or final assessment.",
+    "Do not present samples connected only through a common packer import hash as ordinary cluster members.",
+    "Do not cluster a sample that only points to file:pe:imphash:example-other-91ac with the suppressed source import hash."
+  ]
+}

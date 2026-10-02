@@ -1,62 +1,52 @@
 id: OSINT_CERT_SHA_TO_DOMAINS
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/OSINT_CERT_SHA_TO_DOMAINS.json
+  sha256: 68ef8f8110867bef1d0e8153fe064b19a4a8c230ebe72fdf180b6b0cf24fe30f
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
 hazards:
 - 'Managed certificates and shared web hosts can create benign overlap between unrelated domains.'
 - 'Scanner lag and historical cert retention can preserve stale domain relationships after rotation.'
+- 'Certificate name fields and CT/precertificate records do not establish network presentation; supplied source assertions remain source-qualified.'
+- 'Presentation inquiries require case-selected UTC dates. Certificate validity, receipt and reprocessing do not refresh presentation time.'
+- 'Source and address class exclusions are explicit contract query policies; missing or conflicting classification is not clearance.'
 capability_requirements:
   required:
-  - 'tls_scanning'
   - 'certificate_normalization'
+  - 'semantic_evidence_v1'
   optional:
+  - 'tls_scanning'
   - 'ct_history'
+  - 'presentation_occurrence_and_name_correspondence'
+  - 'collection_knowledge_witnesses'
 review:
   last_reviewed: '2026-05-14'
   review_cadence_days: 90
   next_review: '2026-08-12'
-name: Cert SHA/SPKI → Domains
+name: Certificate Identity or Explicit SPKI Reuse → Named Domains
 category: OSINT
-description: Pivot by identical certificate hash/SPKI to enumerate domains presenting the same cert.
+description: Return explicitly selected certificate/CT name associations or observed presentation in a named service context. Whole-certificate identity and deliberately selected SPKI reuse have distinct match reasons; neither implies endpoint identity, ownership or control.
 source: x509:cert
 target: inet:fqdn
 assessment_mode: evidence_only
 hops:
-- via: presented_at
+- via: named_in_certificate|presented_in_named_context
   direction: out
   form: inet:fqdn
 constraints:
-  temporal:
-    order:
-    - cert.not_before <= fqdn.seen
-    window_days: 825
-  degree_caps:
-    x509:cert: 10000
-  negative_nodes:
-  - form: x509:cert
-    list: letsencrypt_mass_certificates
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - ct
 - tls

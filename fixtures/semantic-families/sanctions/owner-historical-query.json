@@ -1,0 +1,40 @@
+{
+  "parameters": {
+    "source": "seed",
+    "purpose": "historical_at",
+    "reference_sources": [
+      "relationship-source",
+      "list-source",
+      "correction-source",
+      "list-correction-source"
+    ],
+    "entry_revisions": [
+      "entry"
+    ],
+    "period": {
+      "start": "2024-12-01",
+      "end": "2024-12-31"
+    },
+    "at": {
+      "binding": {
+        "object": "case-point",
+        "occurrence": "case-point"
+      },
+      "field": "/case/at",
+      "source_revision": "fixture-r1",
+      "clock": {
+        "id": "source-stated-utc",
+        "reference": "UTC",
+        "uncertainty_seconds": 0
+      },
+      "timezone": "UTC",
+      "precision": "instant",
+      "interval_role": "occurrence",
+      "value": "2024-12-03T12:00:00Z"
+    }
+  },
+  "limits": {
+    "max_bindings": 100000,
+    "max_results": 100
+  }
+}

@@ -1,63 +1,55 @@
 id: CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
 capability_requirements:
   required:
+  - semantic_execution_contract_v1
+  - preserved_version_declaration
+  - explicit_relationship_observation
+  - scoped_repository_control_evaluation
   - 'package_metadata_collection'
   - 'repo_resolution'
   optional:
   - 'dns_public_lookup'
   - 'passive_dns'
 hazards:
+- 'A version-specific registry declaration establishes a declared source-repository association, not verified build provenance or repository ownership.'
+- 'Preserve the exact package version, registry metadata revision, source, acquisition time, and revision-link evidence; mirrors and current HEAD cannot replace an unresolved version-to-source binding.'
+- 'A repository commit ID and source-snapshot SHA-256 identify the recorded revision and content; neither proves that the package was built from that content.'
+- 'The explicit 3650-day UTC window dates the bound infrastructure observation. Replay and later ingestion do not supply another observation or independent source.'
 - Package registries, mirrors, CDNs, and abandoned repositories can link unrelated projects to shared distribution infrastructure.
 - Corroborate repository ownership with signed releases, maintainer history, and current DNS or hosting control before clustering.
 - Promotion requires negative controls for registry, CDN, provider-owned infrastructure, abandoned repositories, and fork or mirror relationships.
 name: Repo -> Package -> Domain or Infra
 category: CROSS
-description: Bridge repository identity through published packages or release endpoints to the domains or infrastructure serving them.
+description: Find package versions whose registry metadata declares the source repository, then follow independently evidenced package distribution or reference infrastructure; preserve the declaration and any exact source-snapshot binding.
 source: code:repo
 target: inet:ipv4|inet:fqdn
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA.json
+  sha256: bc4e9390d01ded7bcbe28c6940b32964fd363a1f12125d52081a9370d88777f6
 hops:
-- via: publishes
-  direction: out
+- via: declares_source_repository
+  direction: in
   form: it:prod:softver
 - via: distributed_from|referenced_by
   direction: out
   form: inet:ipv4|inet:fqdn
 constraints:
-  temporal:
-    order:
-    - repo.created <= package.created <= infra.seen
-    window_days: 3650
-  degree_caps:
-    code:repo: 10000
-  negative_nodes:
-  - form: code:repo
-    list: mass_fork_mirrors
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - package_registry
 - osint_web

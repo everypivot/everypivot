@@ -1,6 +1,6 @@
 id: CTI_SAMPLE_UNIQUE_STRING_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -11,55 +11,41 @@ hazards:
 - 'String pivots require rarity, context, and negative controls before they should influence analyst conclusions.'
 capability_requirements:
   required:
-  - 'sample_string_extraction'
-  - 'string_normalization'
+  - sample_string_extraction
+  - string_normalization
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'common_string_suppression'
-  - 'library_string_filtering'
-  - 'sample_prevalence_enrichment'
+  - sample_prevalence_enrichment
 name: Sample Unique String Cluster
 category: CTI
-description: Cluster samples that share a rare normalized string extracted from static or decoded content.
+description: Find preserved samples with an evidenced extraction of the exact representation-qualified
+  string. A rare or incongruent string is a candidate clue; reuse alone does not establish
+  common control or attribution.
 source: file:feature:string
 target: file:hash
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_SAMPLE_UNIQUE_STRING_CLUSTER.json
+  sha256: a0e0478b5d89a59a76aa232fe2fdcba203cbb1a7d50566baa6b4c289433ec619
 hops:
 - via: string_extracted_from
   direction: in
   form: file:hash
 constraints:
-  temporal:
-    order:
-    - sample.observed >= string.extracted
-    window_days: 365
-  degree_caps:
-    file:feature:string: 100000
-    file:hash: 1000000
-  negative_nodes:
-  - form: file:feature:string
-    list: common_library_or_compiler_strings
-  - form: file:hash
-    list: common_benign_file_hashes
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- string_length
-- string_entropy
-- encoding_type
-- common_string_penalty
-- prevalence
-- novelty_flag
+features: []
 outputs:
-  top_paths: 5
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - malware_analysis
 - file_reputation

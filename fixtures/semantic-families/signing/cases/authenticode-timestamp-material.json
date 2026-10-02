@@ -1,0 +1,535 @@
+{
+  "pattern": "CTI_AUTHENTICODE_HASH_CLUSTER",
+  "evidence": {
+    "contract": "everypivot.semantic_evidence",
+    "version": "1.0",
+    "collection_id": "signing-fixture-collection",
+    "sources": [
+      {
+        "id": "report",
+        "publisher": "independent synthetic signing fixture",
+        "document": "fixture:report",
+        "revision": "r1",
+        "collection": "signing-fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "22799e4626f39322e9ac8eaf5af24b8671781afaca5f19c68c7865ed1883d7fa",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "manifest",
+        "publisher": "independent synthetic signing fixture",
+        "document": "fixture:manifest",
+        "revision": "r1",
+        "collection": "signing-fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "e667a7781aa9ba753ccaa8a6498549ff1f05fbfe0f61ce9394d198f216b1347f",
+          "scope": "exact_source_bytes"
+        }
+      }
+    ],
+    "records": [
+      {
+        "id": "origin",
+        "kind": "occurrence",
+        "type": "collection:origin",
+        "attributes": {
+          "collection_id": "signing-fixture-collection"
+        },
+        "times": {
+          "origin": {
+            "binding": {
+              "object": "origin",
+              "occurrence": "origin"
+            },
+            "field": "/records/origin/origin",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2020-01-01T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/origin"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/origin/origin"
+          }
+        ]
+      },
+      {
+        "id": "snapshot",
+        "kind": "occurrence",
+        "type": "collection:history_snapshot",
+        "attributes": {
+          "collection_id": "signing-fixture-collection"
+        },
+        "times": {
+          "through": {
+            "binding": {
+              "object": "snapshot",
+              "occurrence": "snapshot"
+            },
+            "field": "/records/snapshot/through",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-10-02T23:59:59Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/snapshot"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/snapshot/through"
+          }
+        ]
+      },
+      {
+        "id": "history",
+        "kind": "assertion",
+        "type": "finding:history",
+        "attributes": {
+          "manifest_source_id": "manifest",
+          "manifest_field": "/history"
+        },
+        "times": {},
+        "evidence": [
+          {
+            "source_id": "manifest",
+            "field": "/history"
+          }
+        ]
+      },
+      {
+        "id": "receipt-artifact",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "signing-fixture-collection"
+        },
+        "times": {},
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-artifact"
+          }
+        ]
+      },
+      {
+        "id": "artifact",
+        "kind": "entity",
+        "type": "file:hash",
+        "attributes": {
+          "identity": {
+            "kind": "artifact_sha256",
+            "algorithm": "sha256",
+            "representation": "bytes",
+            "normalization": "exact_bytes_v1",
+            "scope": "whole_artifact",
+            "value": "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+            "provenance": {
+              "source": "report",
+              "record_id": "artifact",
+              "source_revision": "r1",
+              "field": "/records/artifact/attributes/identity",
+              "basis": "reported"
+            }
+          },
+          "format": "pe",
+          "capture_context": "original endpoint Dec 2024",
+          "availability_occurrence": "receipt-artifact"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "artifact",
+              "occurrence": "receipt-artifact"
+            },
+            "field": "/records/artifact/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2024-12-16T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/artifact"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/artifact/available"
+          }
+        ]
+      },
+      {
+        "id": "sighting",
+        "kind": "occurrence",
+        "type": "artifact:sighting",
+        "attributes": {
+          "location": "original endpoint"
+        },
+        "times": {
+          "observed": {
+            "binding": {
+              "object": "artifact",
+              "occurrence": "sighting"
+            },
+            "field": "/records/sighting/observed",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2024-12-15T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/sighting"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/sighting/observed"
+          }
+        ],
+        "subject": "artifact"
+      },
+      {
+        "id": "receipt-signature",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "signing-fixture-collection"
+        },
+        "times": {},
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-signature"
+          }
+        ]
+      },
+      {
+        "id": "signature",
+        "kind": "entity",
+        "type": "code:signature:material",
+        "attributes": {
+          "identity": {
+            "kind": "signature_material_digest",
+            "algorithm": "sha256",
+            "representation": "digest_hex",
+            "normalization": "exact_selected_blob_bytes_v1",
+            "scope": "selected_signature_blob",
+            "method_version": "fixture-recipe-1",
+            "value": "2ea659668a2a8ab260c3149ae19e14489c7ae7834fb25de74d240c633d806b80",
+            "provenance": {
+              "source": "report",
+              "record_id": "signature",
+              "source_revision": "r1",
+              "field": "/records/signature/attributes/identity",
+              "basis": "reported"
+            },
+            "signature_role": "timestamp"
+          },
+          "role": "timestamp",
+          "availability_occurrence": "receipt-signature"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "signature",
+              "occurrence": "receipt-signature"
+            },
+            "field": "/records/signature/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/signature"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/signature/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-analysis",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "signing-fixture-collection"
+        },
+        "times": {},
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-analysis"
+          }
+        ]
+      },
+      {
+        "id": "analysis",
+        "kind": "occurrence",
+        "type": "analysis:signature_material_digest",
+        "attributes": {
+          "selector": {
+            "kind": "signature_material_digest",
+            "algorithm": "sha256",
+            "representation": "digest_hex",
+            "normalization": "exact_selected_blob_bytes_v1",
+            "scope": "selected_signature_blob",
+            "method_version": "fixture-recipe-1",
+            "value": "2ea659668a2a8ab260c3149ae19e14489c7ae7834fb25de74d240c633d806b80",
+            "provenance": {
+              "source": "report",
+              "record_id": "analysis",
+              "source_revision": "r1",
+              "field": "/records/analysis/attributes/selector",
+              "basis": "reported"
+            },
+            "signature_role": "timestamp"
+          },
+          "artifact_identity": {
+            "kind": "artifact_sha256",
+            "algorithm": "sha256",
+            "representation": "bytes",
+            "normalization": "exact_bytes_v1",
+            "scope": "whole_artifact",
+            "value": "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2",
+            "provenance": {
+              "source": "report",
+              "record_id": "analysis",
+              "source_revision": "r1",
+              "field": "/records/analysis/attributes/artifact_identity",
+              "basis": "reported"
+            }
+          },
+          "source_location": "selected container blob 0",
+          "method": "reported selected-material extraction",
+          "method_version": "1",
+          "input_status": "selected_material_and_digest_established",
+          "assertion_namespace": "synthetic-signing-reports",
+          "availability_occurrence": "receipt-analysis"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "analysis",
+              "occurrence": "receipt-analysis"
+            },
+            "field": "/records/analysis/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/analysis"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/analysis/available"
+          }
+        ],
+        "subject": "artifact",
+        "object": "signature"
+      },
+      {
+        "id": "established",
+        "kind": "occurrence",
+        "type": "finding:establishment",
+        "attributes": {
+          "claim_key": "3e406a936290ad1ad0ad4136451694c7d0d41be5047e528ca648f1251e2cc6a2",
+          "collection_id": "signing-fixture-collection",
+          "history_id": "history",
+          "qualification": {
+            "id": "cti_authenticode_hash_cluster",
+            "revision": "1.0",
+            "contract_sha256": "e1a28307363b9ec0605f00c68732705bab6cacccb17ff223762bb1bb1518a0fc"
+          },
+          "support": [
+            {
+              "record_id": "analysis",
+              "sha256": "8392a7fd19b9980a4f4ccc2e7e301a2729db8085dd61ec4f62e35fc3528c070c"
+            },
+            {
+              "record_id": "artifact",
+              "sha256": "e7d6cb70cea0ce065a0e3eeec6eab5e07e1cf1cedd2c906e182848fc15c9bcce"
+            },
+            {
+              "record_id": "signature",
+              "sha256": "b7e031bbb429b978848d0e04b20c3b4bff178b8ac40a4fda277c4251ebba9976"
+            }
+          ]
+        },
+        "times": {
+          "established": {
+            "binding": {
+              "object": "established",
+              "occurrence": "established"
+            },
+            "field": "/records/established/established",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-11T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/established"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/established/established"
+          }
+        ]
+      }
+    ]
+  },
+  "query": {
+    "parameters": {
+      "purpose": "signature_material",
+      "period": {
+        "start": "2026-09-01",
+        "end": "2026-09-30"
+      },
+      "history": "history",
+      "amendment_sources": [
+        "report"
+      ],
+      "role": "timestamp",
+      "material_selector": {
+        "kind": "signature_material_digest",
+        "algorithm": "sha256",
+        "representation": "digest_hex",
+        "normalization": "exact_selected_blob_bytes_v1",
+        "scope": "selected_signature_blob",
+        "method_version": "fixture-recipe-1",
+        "value": "2ea659668a2a8ab260c3149ae19e14489c7ae7834fb25de74d240c633d806b80",
+        "provenance": {
+          "source": "report",
+          "record_id": "analysis",
+          "source_revision": "r1",
+          "field": "/records/analysis/attributes/selector",
+          "basis": "reported"
+        },
+        "signature_role": "timestamp"
+      },
+      "reference_mode": "selector_only"
+    },
+    "limits": {
+      "max_bindings": 50000,
+      "max_results": 100
+    }
+  },
+  "preserved_source_bytes": {
+    "manifest": "{\"history\":{\"contract\":\"everypivot.finding_history\",\"version\":\"1.0\",\"history_id\":\"history\",\"revision\":\"r1\",\"collection_id\":\"signing-fixture-collection\",\"scope_id\":\"synthetic-origin-through-snapshot\",\"origin_id\":\"origin\",\"origin_sha256\":\"fae8369b71341e6c8381b8e5ce77fb680c608bd267a4152415befe227bdee967\",\"through_id\":\"snapshot\",\"through_sha256\":\"62ce600a28365d853f54b64b6d913ca48a83cf4f511e52361f8dacc3021a9899\",\"coverage\":\"complete_declared_scope\",\"qualification\":{\"id\":\"cti_authenticode_hash_cluster\",\"revision\":\"1.0\",\"contract_sha256\":\"e1a28307363b9ec0605f00c68732705bab6cacccb17ff223762bb1bb1518a0fc\"},\"establishments\":[{\"record_id\":\"established\",\"sha256\":\"300c8e0b0130b47c1a779ecba4f997894773848815bee41f507961a5c6bd8c92\"}]}}",
+    "report": "{\"records\":{\"origin\":{\"id\":\"origin\",\"kind\":\"occurrence\",\"type\":\"collection:origin\",\"attributes\":{\"collection_id\":\"signing-fixture-collection\"},\"times\":{\"origin\":{\"binding\":{\"object\":\"origin\",\"occurrence\":\"origin\"},\"field\":\"/records/origin/origin\",\"source_revision\":\"r1\",\"clock\":{\"id\":\"fixture-utc\",\"reference\":\"UTC\",\"uncertainty_seconds\":0},\"timezone\":\"UTC\",\"precision\":\"instant\",\"interval_role\":\"occurrence\",\"value\":\"2020-01-01T00:00:00Z\"}},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/origin\"},{\"source_id\":\"report\",\"field\":\"/records/origin/origin\"}]},\"snapshot\":{\"id\":\"snapshot\",\"kind\":\"occurrence\",\"type\":\"collection:history_snapshot\",\"attributes\":{\"collection_id\":\"signing-fixture-collection\"},\"times\":{\"through\":{\"binding\":{\"object\":\"snapshot\",\"occurrence\":\"snapshot\"},\"field\":\"/records/snapshot/through\",\"source_revision\":\"r1\",\"clock\":{\"id\":\"fixture-utc\",\"reference\":\"UTC\",\"uncertainty_seconds\":0},\"timezone\":\"UTC\",\"precision\":\"instant\",\"interval_role\":\"occurrence\",\"value\":\"2026-10-02T23:59:59Z\"}},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/snapshot\"},{\"source_id\":\"report\",\"field\":\"/records/snapshot/through\"}]},\"history\":{\"id\":\"history\",\"kind\":\"assertion\",\"type\":\"finding:history\",\"attributes\":{\"manifest_source_id\":\"manifest\",\"manifest_field\":\"/history\"},\"times\":{},\"evidence\":[{\"source_id\":\"manifest\",\"field\":\"/history\"}]},\"receipt-artifact\":{\"id\":\"receipt-artifact\",\"kind\":\"occurrence\",\"type\":\"evidence:availability\",\"attributes\":{\"collection_id\":\"signing-fixture-collection\"},\"times\":{},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/receipt-artifact\"}]},\"artifact\":{\"id\":\"artifact\",\"kind\":\"entity\",\"type\":\"file:hash\",\"attributes\":{\"identity\":{\"kind\":\"artifact_sha256\",\"algorithm\":\"sha256\",\"representation\":\"bytes\",\"normalization\":\"exact_bytes_v1\",\"scope\":\"whole_artifact\",\"value\":\"a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2\",\"provenance\":{\"source\":\"report\",\"record_id\":\"artifact\",\"source_revision\":\"r1\",\"field\":\"/records/artifact/attributes/identity\",\"basis\":\"reported\"}},\"format\":\"pe\",\"capture_context\":\"original endpoint Dec 2024\",\"availability_occurrence\":\"receipt-artifact\"},\"times\":{\"collection_available\":{\"binding\":{\"object\":\"artifact\",\"occurrence\":\"receipt-artifact\"},\"field\":\"/records/artifact/available\",\"source_revision\":\"r1\",\"clock\":{\"id\":\"fixture-utc\",\"reference\":\"UTC\",\"uncertainty_seconds\":0},\"timezone\":\"UTC\",\"precision\":\"instant\",\"interval_role\":\"occurrence\",\"value\":\"2024-12-16T00:00:00Z\"}},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/artifact\"},{\"source_id\":\"report\",\"field\":\"/records/artifact/available\"}]},\"sighting\":{\"id\":\"sighting\",\"kind\":\"occurrence\",\"type\":\"artifact:sighting\",\"attributes\":{\"location\":\"original endpoint\"},\"times\":{\"observed\":{\"binding\":{\"object\":\"artifact\",\"occurrence\":\"sighting\"},\"field\":\"/records/sighting/observed\",\"source_revision\":\"r1\",\"clock\":{\"id\":\"fixture-utc\",\"reference\":\"UTC\",\"uncertainty_seconds\":0},\"timezone\":\"UTC\",\"precision\":\"instant\",\"interval_role\":\"occurrence\",\"value\":\"2024-12-15T00:00:00Z\"}},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/sighting\"},{\"source_id\":\"report\",\"field\":\"/records/sighting/observed\"}],\"subject\":\"artifact\"},\"receipt-signature\":{\"id\":\"receipt-signature\",\"kind\":\"occurrence\",\"type\":\"evidence:availability\",\"attributes\":{\"collection_id\":\"signing-fixture-collection\"},\"times\":{},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/receipt-signature\"}]},\"signature\":{\"id\":\"signature\",\"kind\":\"entity\",\"type\":\"code:signature:material\",\"attributes\":{\"identity\":{\"kind\":\"signature_material_digest\",\"algorithm\":\"sha256\",\"representation\":\"digest_hex\",\"normalization\":\"exact_selected_blob_bytes_v1\",\"scope\":\"selected_signature_blob\",\"method_version\":\"fixture-recipe-1\",\"value\":\"2ea659668a2a8ab260c3149ae19e14489c7ae7834fb25de74d240c633d806b80\",\"provenance\":{\"source\":\"report\",\"record_id\":\"signature\",\"source_revision\":\"r1\",\"field\":\"/records/signature/attributes/identity\",\"basis\":\"reported\"},\"signature_role\":\"timestamp\"},\"role\":\"timestamp\",\"availability_occurrence\":\"receipt-signature\"},\"times\":{\"collection_available\":{\"binding\":{\"object\":\"signature\",\"occurrence\":\"receipt-signature\"},\"field\":\"/records/signature/available\",\"source_revision\":\"r1\",\"clock\":{\"id\":\"fixture-utc\",\"reference\":\"UTC\",\"uncertainty_seconds\":0},\"timezone\":\"UTC\",\"precision\":\"instant\",\"interval_role\":\"occurrence\",\"value\":\"2026-09-10T00:00:00Z\"}},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/signature\"},{\"source_id\":\"report\",\"field\":\"/records/signature/available\"}]},\"receipt-analysis\":{\"id\":\"receipt-analysis\",\"kind\":\"occurrence\",\"type\":\"evidence:availability\",\"attributes\":{\"collection_id\":\"signing-fixture-collection\"},\"times\":{},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/receipt-analysis\"}]},\"analysis\":{\"id\":\"analysis\",\"kind\":\"occurrence\",\"type\":\"analysis:signature_material_digest\",\"attributes\":{\"selector\":{\"kind\":\"signature_material_digest\",\"algorithm\":\"sha256\",\"representation\":\"digest_hex\",\"normalization\":\"exact_selected_blob_bytes_v1\",\"scope\":\"selected_signature_blob\",\"method_version\":\"fixture-recipe-1\",\"value\":\"2ea659668a2a8ab260c3149ae19e14489c7ae7834fb25de74d240c633d806b80\",\"provenance\":{\"source\":\"report\",\"record_id\":\"analysis\",\"source_revision\":\"r1\",\"field\":\"/records/analysis/attributes/selector\",\"basis\":\"reported\"},\"signature_role\":\"timestamp\"},\"artifact_identity\":{\"kind\":\"artifact_sha256\",\"algorithm\":\"sha256\",\"representation\":\"bytes\",\"normalization\":\"exact_bytes_v1\",\"scope\":\"whole_artifact\",\"value\":\"a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2\",\"provenance\":{\"source\":\"report\",\"record_id\":\"analysis\",\"source_revision\":\"r1\",\"field\":\"/records/analysis/attributes/artifact_identity\",\"basis\":\"reported\"}},\"source_location\":\"selected container blob 0\",\"method\":\"reported selected-material extraction\",\"method_version\":\"1\",\"input_status\":\"selected_material_and_digest_established\",\"assertion_namespace\":\"synthetic-signing-reports\",\"availability_occurrence\":\"receipt-analysis\"},\"times\":{\"collection_available\":{\"binding\":{\"object\":\"analysis\",\"occurrence\":\"receipt-analysis\"},\"field\":\"/records/analysis/available\",\"source_revision\":\"r1\",\"clock\":{\"id\":\"fixture-utc\",\"reference\":\"UTC\",\"uncertainty_seconds\":0},\"timezone\":\"UTC\",\"precision\":\"instant\",\"interval_role\":\"occurrence\",\"value\":\"2026-09-10T00:00:00Z\"}},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/analysis\"},{\"source_id\":\"report\",\"field\":\"/records/analysis/available\"}],\"subject\":\"artifact\",\"object\":\"signature\"},\"established\":{\"id\":\"established\",\"kind\":\"occurrence\",\"type\":\"finding:establishment\",\"attributes\":{\"claim_key\":\"3e406a936290ad1ad0ad4136451694c7d0d41be5047e528ca648f1251e2cc6a2\",\"collection_id\":\"signing-fixture-collection\",\"history_id\":\"history\",\"qualification\":{\"id\":\"cti_authenticode_hash_cluster\",\"revision\":\"1.0\",\"contract_sha256\":\"e1a28307363b9ec0605f00c68732705bab6cacccb17ff223762bb1bb1518a0fc\"},\"support\":[{\"record_id\":\"analysis\",\"sha256\":\"8392a7fd19b9980a4f4ccc2e7e301a2729db8085dd61ec4f62e35fc3528c070c\"},{\"record_id\":\"artifact\",\"sha256\":\"e7d6cb70cea0ce065a0e3eeec6eab5e07e1cf1cedd2c906e182848fc15c9bcce\"},{\"record_id\":\"signature\",\"sha256\":\"b7e031bbb429b978848d0e04b20c3b4bff178b8ac40a4fda277c4251ebba9976\"}]},\"times\":{\"established\":{\"binding\":{\"object\":\"established\",\"occurrence\":\"established\"},\"field\":\"/records/established/established\",\"source_revision\":\"r1\",\"clock\":{\"id\":\"fixture-utc\",\"reference\":\"UTC\",\"uncertainty_seconds\":0},\"timezone\":\"UTC\",\"precision\":\"instant\",\"interval_role\":\"occurrence\",\"value\":\"2026-09-11T00:00:00Z\"}},\"evidence\":[{\"source_id\":\"report\",\"field\":\"/records/established\"},{\"source_id\":\"report\",\"field\":\"/records/established/established\"}]}}}"
+  },
+  "claims": [
+    {
+      "identity": [
+        "signature_material",
+        {
+          "kind": "artifact_sha256",
+          "comparison": [
+            "sha256",
+            "bytes",
+            "exact_bytes_v1",
+            "whole_artifact"
+          ],
+          "value": "a23b1d196c4da00da4e3a49aaa93ace32d26b3791cddf5060a426d932a7117a2"
+        },
+        {
+          "kind": "signature_material_digest",
+          "comparison": [
+            "sha256",
+            "digest_hex",
+            "exact_selected_blob_bytes_v1",
+            "selected_signature_blob",
+            "fixture-recipe-1",
+            "timestamp"
+          ],
+          "value": "2ea659668a2a8ab260c3149ae19e14489c7ae7834fb25de74d240c633d806b80"
+        },
+        "timestamp"
+      ],
+      "support": [
+        "analysis",
+        "artifact",
+        "signature"
+      ],
+      "event": "established",
+      "at": "2026-09-11T00:00:00Z"
+    }
+  ],
+  "contract_path": "../../../contracts/semantics/CTI_AUTHENTICODE_HASH_CLUSTER.json",
+  "expected_result_ids": [
+    "artifact"
+  ]
+}

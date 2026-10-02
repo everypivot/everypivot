@@ -1,25 +1,44 @@
 id: FIN_BANK_TXN_TO_SANCTIONED_COUNTERPART
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: restricted_data_access
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'financial_records'
-  - 'sanctions_list_access'
+  - financial_records
+  - sanctions_list_access
+  - semantic_execution_contract_v1
+  - source_revision_scoped_relations
+  - explicit_temporal_applicability
+  - amendment_context
   optional:
-  - 'kyc_context'
-  - 'payment_chain_context'
+  - kyc_context
+  - payment_chain_context
 hazards:
-- Sanctions screening and transaction data are sensitive, regulated, and time-dependent; list membership can change after the transaction date.
-- Shared accounts, correspondents, and intermediaries can create false positives; corroborate with KYC and payment-chain context.
-name: Bank Account → Transactions → Sanctioned Counterparty
+- Sanctions screening and transaction data are sensitive, regulated, and time-dependent;
+  list membership can change after the transaction date.
+- Shared accounts, correspondents, and intermediaries can create false positives;
+  corroborate with KYC and payment-chain context.
+- Source-reported identity, relationship and list status require separate evidence;
+  no traversal supplies legal exposure, liability, control, source independence or
+  accepted assessment status.
+- A selected historical-status inquiry requires the actual applicable relationship
+  and list intervals. Later publication, receipt and correction do not backdate analyst
+  knowledge or refresh activity.
+name: Bank Transaction → Counterparty Sanctions Entries
 category: FIN
-description: Flag accounts transacting with sanctioned entities or intermediaries.
+description: Follow the reported counterparty of an individual bank transaction to
+  selected sanctions entry revisions. Preserve party direction, actual event time,
+  identity correspondence and corrections; the traversal makes no legal determination.
 source: fin:account
 target: sanction:entry
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/FIN_BANK_TXN_TO_SANCTIONED_COUNTERPART.json
+  sha256: 5b9bea0d53b5db19efcfbc9ddb3e7edf100889f2b7372c69d44c354f1c0f6772
 hops:
 - via: transfers_to|transfers_from
   direction: out
@@ -31,37 +50,14 @@ hops:
   direction: out
   form: sanction:entry
 constraints:
-  temporal:
-    order:
-    - txn.ts <= sanction.listed
-    window_days: 3650
-  degree_caps:
-    fin:transaction: 100000
-  negative_nodes:
-  - form: fin:account
-    list: correspondent_or_intermediary_bank_accounts
-  - form: fin:transaction
-    list: batch_or_test_payment_records
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - bank_txn
 - sanctions

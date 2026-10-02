@@ -1,0 +1,2903 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_IMAGE_TEXT_REUSE_CLUSTER",
+    "version": "3.0.0"
+  },
+  "description": "Source-qualified extraction findings over exact preserved content; 365-day inclusive UTC calendar lookback is applied to earliest complete finding in the supplied history, never to refreshed artifact sightings. Transformations are evidenced source reports, not extraction algorithms executed by this evaluator.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-independently-supported-ocr-image-results",
+  "parameters": {
+    "seed": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact supplied source entity; global discovery time is not per-artifact extraction time."
+    },
+    "history": {
+      "type": "record_id",
+      "required": true,
+      "description": "Preserved collection-scoped finding history covering the declared origin through snapshot; no global novelty claim."
+    },
+    "query_date": {
+      "type": "date",
+      "required": true,
+      "description": "Explicit inclusive UTC calendar end date for this pattern's retained complete-finding lookback."
+    },
+    "common_logo_boilerplate_or_template_text_hashes_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned common_logo_boilerplate_or_template_text_hashes revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    },
+    "stock_image_or_meme_assets_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned stock_image_or_meme_assets revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    },
+    "common_hosting_or_cdn_domains_revision": {
+      "type": "string",
+      "required": true,
+      "description": "Pinned common_hosting_or_cdn_domains revision for this evaluation. A different selected revision is a new evaluation, not new finding availability."
+    }
+  },
+  "branches": [
+    {
+      "id": "image",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "image:ocr:text_hash"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:ocr_extraction"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "file:image"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "extraction.subject"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "evidence:extracted_value"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:selector_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_logo_boilerplate_or_template_text_hashes"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "common_logo_boilerplate_or_template_text_hashes_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.namespace"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.namespace"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.representation"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.profile"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.value"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.value"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector_context"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector_context"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_1",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.policy"
+                },
+                "right": {
+                  "literal": "stock_image_or_meme_assets"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.revision"
+                },
+                "right": {
+                  "param": "stock_image_or_meme_assets_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.value"
+                    },
+                    "right": {
+                      "ref": "input.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "ocr_text"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.namespace"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.namespace"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.representation"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.profile"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.profile"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.value"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.value"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.namespace"
+            },
+            "right": {
+              "literal": "image:ocr:text_hash"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.profile"
+            },
+            "right": {
+              "literal": "literal_exact_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.representation"
+            },
+            "right": {
+              "literal": "sha256_exact_ocr_output_bytes"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.value"
+            },
+            "right": {
+              "ref": "output.attributes.content.sha256"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "input.attributes.image_role"
+            },
+            "right": {
+              "literal": [
+                "original",
+                "crop",
+                "render"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_image_text_reuse_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "ocr_image"
+          },
+          {
+            "ref": "input.attributes.capture_id"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "extraction.attributes.selector.namespace"
+          },
+          {
+            "ref": "extraction.attributes.selector.representation"
+          },
+          {
+            "ref": "extraction.attributes.selector.profile"
+          },
+          {
+            "ref": "extraction.attributes.selector.value"
+          }
+        ],
+        "support": [
+          "extraction",
+          "input",
+          "output"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 365
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "input",
+        "form": "file:image",
+        "identity": [
+          {
+            "ref": "input.attributes.capture_id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "ocr_selector_in_actual_input_image"
+          },
+          "image_role": {
+            "ref": "input.attributes.image_role"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "common_logo_boilerplate_or_template_text_hashes",
+          "revision": "1.0",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.attributes.selector"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_logo_boilerplate_or_template_text_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_logo_boilerplate_or_template_text_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_logo_boilerplate_or_template_text_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "stock_image_or_meme_assets",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "stock_image_or_meme_assets"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "stock_image_or_meme_assets"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "stock_image_or_meme_assets"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "page",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "image:ocr:text_hash"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "extraction",
+          "kind": "occurrence",
+          "types": [
+            "analysis:ocr_extraction"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.namespace"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.namespace"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.representation"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.representation"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.profile"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "extraction.attributes.selector.value"
+                },
+                "right": {
+                  "ref": "seed.attributes.selector.value"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "input",
+          "kind": "entity",
+          "types": [
+            "file:image"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "input.id"
+            },
+            "right": {
+              "ref": "extraction.subject"
+            }
+          }
+        },
+        {
+          "name": "output",
+          "kind": "entity",
+          "types": [
+            "evidence:extracted_value"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "output.id"
+            },
+            "right": {
+              "ref": "extraction.object"
+            }
+          }
+        },
+        {
+          "name": "association",
+          "kind": "assertion",
+          "types": [
+            "capture:page_image"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "association.object"
+            },
+            "right": {
+              "ref": "input.id"
+            }
+          }
+        },
+        {
+          "name": "page",
+          "kind": "entity",
+          "types": [
+            "web:page:capture"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "page.id"
+            },
+            "right": {
+              "ref": "association.subject"
+            }
+          }
+        },
+        {
+          "name": "url",
+          "kind": "entity",
+          "types": [
+            "inet:url"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "url.id"
+            },
+            "right": {
+              "ref": "page.attributes.url_id"
+            }
+          }
+        },
+        {
+          "name": "control_0",
+          "kind": "assertion",
+          "types": [
+            "policy:selector_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_logo_boilerplate_or_template_text_hashes"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.revision"
+                },
+                "right": {
+                  "param": "common_logo_boilerplate_or_template_text_hashes_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.namespace"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.namespace"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.representation"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.profile"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.profile"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector.value"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector.value"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.selector_context"
+                    },
+                    "right": {
+                      "ref": "seed.attributes.selector_context"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_1",
+          "kind": "assertion",
+          "types": [
+            "policy:membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.policy"
+                },
+                "right": {
+                  "literal": "stock_image_or_meme_assets"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.revision"
+                },
+                "right": {
+                  "param": "stock_image_or_meme_assets_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "content_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.value"
+                    },
+                    "right": {
+                      "ref": "input.attributes.content.sha256"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "page_host",
+          "kind": "assertion",
+          "types": [
+            "uri:dns_host"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "page_host.subject"
+                },
+                "right": {
+                  "ref": "url.id"
+                }
+              },
+              {
+                "op": "uri_component_equal",
+                "uri": {
+                  "ref": "page.attributes.uri"
+                },
+                "component": "dns_host",
+                "right": {
+                  "ref": "page_host.attributes.selector"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "control_2",
+          "kind": "assertion",
+          "types": [
+            "policy:dns_membership"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_2.attributes.policy"
+                },
+                "right": {
+                  "literal": "common_hosting_or_cdn_domains"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_2.attributes.revision"
+                },
+                "right": {
+                  "param": "common_hosting_or_cdn_domains_revision"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_2.attributes.subject_kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "control_2.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "page_host.attributes.selector"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.profile"
+            },
+            "right": {
+              "literal": "preserved_extraction_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "extraction.attributes.output_semantics"
+            },
+            "right": {
+              "literal": "ocr_text"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.run_id"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.normalization_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "extraction.attributes.source_location"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "input.id"
+            },
+            "source": {
+              "ref": "input.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "input.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "input.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "input.attributes.content.representation"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "output.id"
+            },
+            "source": {
+              "ref": "output.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "output.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "output.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "output.attributes.content.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.namespace"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.namespace"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.representation"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.representation"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.profile"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.profile"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "output.attributes.selector.value"
+            },
+            "right": {
+              "ref": "extraction.attributes.selector.value"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.namespace"
+            },
+            "right": {
+              "literal": "image:ocr:text_hash"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.profile"
+            },
+            "right": {
+              "literal": "literal_exact_v1"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.representation"
+            },
+            "right": {
+              "literal": "sha256_exact_ocr_output_bytes"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.selector.value"
+            },
+            "right": {
+              "ref": "output.attributes.content.sha256"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "input.attributes.image_role"
+            },
+            "right": {
+              "literal": [
+                "original",
+                "crop",
+                "render"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "content_matches",
+            "record": {
+              "ref": "page.id"
+            },
+            "source": {
+              "ref": "page.attributes.content.source_id"
+            },
+            "sha256": {
+              "ref": "page.attributes.content.sha256"
+            },
+            "byte_length": {
+              "ref": "page.attributes.content.byte_length"
+            },
+            "representation": {
+              "ref": "page.attributes.content.representation"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "page.attributes.capture_id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.image_capture_id"
+            },
+            "right": {
+              "ref": "input.attributes.capture_id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.page_capture_id"
+            },
+            "right": {
+              "ref": "page.attributes.capture_id"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "association.attributes.basis"
+            },
+            "right": {
+              "literal": [
+                "embedded_content_bytes",
+                "preserved_render_trace",
+                "exact_capture_resource_trace"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.source_location"
+            }
+          },
+          {
+            "op": "uri_component_equal",
+            "uri": {
+              "ref": "page.attributes.uri"
+            },
+            "component": "url",
+            "right": {
+              "ref": "url.attributes.value"
+            }
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "extraction.times.occurred"
+            },
+            "right": {
+              "ref": "extraction.times.collection_available"
+            }
+          }
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "extraction.times.collection_available"
+        },
+        {
+          "ref": "input.times.collection_available"
+        },
+        {
+          "ref": "output.times.collection_available"
+        },
+        {
+          "ref": "association.times.collection_available"
+        },
+        {
+          "ref": "page.times.collection_available"
+        },
+        {
+          "ref": "url.times.collection_available"
+        },
+        {
+          "ref": "extraction.times.occurred"
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "extraction.times.collection_available"
+          },
+          "object": {
+            "ref": "extraction.id"
+          },
+          "occurrence": {
+            "ref": "extraction.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "input.times.collection_available"
+          },
+          "object": {
+            "ref": "input.id"
+          },
+          "occurrence": {
+            "ref": "input.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "output.times.collection_available"
+          },
+          "object": {
+            "ref": "output.id"
+          },
+          "occurrence": {
+            "ref": "output.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "association.times.collection_available"
+          },
+          "object": {
+            "ref": "association.id"
+          },
+          "occurrence": {
+            "ref": "association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "page.times.collection_available"
+          },
+          "object": {
+            "ref": "page.id"
+          },
+          "occurrence": {
+            "ref": "page.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "url.times.collection_available"
+          },
+          "object": {
+            "ref": "url.id"
+          },
+          "occurrence": {
+            "ref": "url.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "extraction.times.occurred"
+          },
+          "object": {
+            "ref": "extraction.subject"
+          },
+          "occurrence": {
+            "ref": "extraction.id"
+          }
+        }
+      ],
+      "finding": {
+        "id": "cti_image_text_reuse_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "ocr_page"
+          },
+          {
+            "ref": "page.attributes.capture_id"
+          },
+          {
+            "ref": "page.attributes.content.sha256"
+          },
+          {
+            "ref": "input.attributes.capture_id"
+          },
+          {
+            "ref": "input.attributes.content.sha256"
+          },
+          {
+            "ref": "extraction.attributes.selector.namespace"
+          },
+          {
+            "ref": "extraction.attributes.selector.representation"
+          },
+          {
+            "ref": "extraction.attributes.selector.profile"
+          },
+          {
+            "ref": "extraction.attributes.selector.value"
+          }
+        ],
+        "support": [
+          "extraction",
+          "input",
+          "output",
+          "association",
+          "page",
+          "url"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "calendar_period": {
+            "query_date": {
+              "param": "query_date"
+            },
+            "days": {
+              "literal": 365
+            }
+          }
+        }
+      },
+      "result": {
+        "mode": "bound",
+        "binding": "url",
+        "form": "inet:url",
+        "identity": [
+          {
+            "ref": "url.attributes.value"
+          },
+          {
+            "ref": "page.attributes.capture_id"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "extraction": {
+            "ref": "extraction.id"
+          },
+          "original_context": {
+            "ref": "input.attributes.original_context"
+          },
+          "content_sha256": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "method": {
+            "ref": "extraction.attributes.method"
+          },
+          "method_version": {
+            "ref": "extraction.attributes.method_version"
+          },
+          "relationship": {
+            "literal": "exact_captured_page_contains_ocr_image"
+          },
+          "page_capture": {
+            "ref": "page.id"
+          },
+          "image": {
+            "ref": "input.id"
+          },
+          "association": {
+            "ref": "association.id"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "common_logo_boilerplate_or_template_text_hashes",
+          "revision": "1.0",
+          "scope": "source",
+          "subject": {
+            "ref": "seed.attributes.selector"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_logo_boilerplate_or_template_text_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_logo_boilerplate_or_template_text_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_0.id"
+                    },
+                    "source": {
+                      "ref": "control_0.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_0.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_0.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_0.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_logo_boilerplate_or_template_text_hashes"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_0.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.namespace"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.namespace"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.representation"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.representation"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.profile"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.profile"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector.value"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector.value"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_0.attributes.selector_context"
+                        },
+                        "right": {
+                          "ref": "seed.attributes.selector_context"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_0.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "stock_image_or_meme_assets",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "input.attributes.content.sha256"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "stock_image_or_meme_assets"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "stock_image_or_meme_assets"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_1.id"
+                    },
+                    "source": {
+                      "ref": "control_1.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_1.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_1.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_1.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "stock_image_or_meme_assets"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_1.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "content_sha256"
+                        }
+                      },
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_1.attributes.value"
+                        },
+                        "right": {
+                          "ref": "input.attributes.content.sha256"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_1.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "common_hosting_or_cdn_domains",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "selector_identity": "page_host.attributes.selector"
+          },
+          "required_evaluation": true,
+          "default_enabled": true,
+          "reason": "Source-qualified membership in the exact preserved selected revision; scope is explicit and supplies no maliciousness or clearance.",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_2.id"
+                    },
+                    "source": {
+                      "ref": "control_2.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_2.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_2.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_2.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_2.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_hosting_or_cdn_domains"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_2.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_2.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "dns_name"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "control_2.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "page_host.attributes.selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_2.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_2.id"
+                    },
+                    "source": {
+                      "ref": "control_2.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_2.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_2.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_2.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_2.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_hosting_or_cdn_domains"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_2.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_2.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "dns_name"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "control_2.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "page_host.attributes.selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_2.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_2.attributes.coverage"
+                },
+                "right": {
+                  "literal": "complete_for_evaluated_subject"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "content_matches",
+                    "record": {
+                      "ref": "control_2.id"
+                    },
+                    "source": {
+                      "ref": "control_2.attributes.content.source_id"
+                    },
+                    "sha256": {
+                      "ref": "control_2.attributes.content.sha256"
+                    },
+                    "byte_length": {
+                      "ref": "control_2.attributes.content.byte_length"
+                    },
+                    "representation": {
+                      "ref": "control_2.attributes.content.representation"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_2.attributes.list_id"
+                    },
+                    "right": {
+                      "literal": "common_hosting_or_cdn_domains"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "control_2.attributes.matching_profile"
+                    },
+                    "right": {
+                      "literal": "exact_subject_v1"
+                    }
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "control_2.attributes.subject_kind"
+                        },
+                        "right": {
+                          "literal": "dns_name"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "control_2.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "page_host.attributes.selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "control_2.attributes.membership"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              }
+            ]
+          },
+          "applies_when": {
+            "op": "uri_component_equal",
+            "uri": {
+              "ref": "page.attributes.uri"
+            },
+            "component": "host_kind",
+            "right": {
+              "literal": "dns"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

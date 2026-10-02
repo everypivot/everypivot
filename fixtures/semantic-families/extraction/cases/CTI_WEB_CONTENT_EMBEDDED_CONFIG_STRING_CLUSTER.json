@@ -1,0 +1,690 @@
+{
+  "pattern": "CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER",
+  "evidence": {
+    "contract": "everypivot.semantic_evidence",
+    "version": "1.0",
+    "collection_id": "fixture-collection",
+    "sources": [
+      {
+        "id": "report",
+        "publisher": "synthetic laboratory fixture",
+        "document": "report",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null
+      },
+      {
+        "id": "manifest",
+        "publisher": "synthetic laboratory fixture",
+        "document": "manifest",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "a5e496412b235029dfa61bc624087720d11ac0d4c60f2b0a4fe4c6c914079d66",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "bytes-input",
+        "publisher": "synthetic laboratory fixture",
+        "document": "bytes-input",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "4d8633a776c2b87afe84c870d7b197bcb966e4b0796a69d3f3b92ff523a6c30f",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "bytes-output",
+        "publisher": "synthetic laboratory fixture",
+        "document": "bytes-output",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "bytes-clear-selector",
+        "publisher": "synthetic laboratory fixture",
+        "document": "bytes-clear-selector",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "017f9df3a345091d94077a60510164aac01de1b9678f7360cde95998f9ffb238",
+          "scope": "exact_source_bytes"
+        }
+      }
+    ],
+    "records": [
+      {
+        "id": "origin",
+        "kind": "occurrence",
+        "type": "collection:origin",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+          "origin": {
+            "binding": {
+              "object": "origin",
+              "occurrence": "origin"
+            },
+            "field": "/records/origin/origin",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2020-01-01T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/origin"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/origin/origin"
+          }
+        ]
+      },
+      {
+        "id": "snapshot",
+        "kind": "occurrence",
+        "type": "collection:history_snapshot",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+          "through": {
+            "binding": {
+              "object": "snapshot",
+              "occurrence": "snapshot"
+            },
+            "field": "/records/snapshot/through",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-14T23:59:59Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/snapshot"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/snapshot/through"
+          }
+        ]
+      },
+      {
+        "id": "history",
+        "kind": "assertion",
+        "type": "finding:history",
+        "attributes": {
+          "manifest_source_id": "manifest",
+          "manifest_field": "/history"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "manifest",
+            "field": "/history"
+          }
+        ]
+      },
+      {
+        "id": "seed",
+        "kind": "entity",
+        "type": "web:content:token",
+        "attributes": {
+          "selector": {
+            "namespace": "web:content:token",
+            "representation": "utf8_literal",
+            "profile": "literal_exact_v1",
+            "value": "distinct-fixture-token"
+          },
+          "selector_context": "contained_value"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/seed"
+          }
+        ]
+      },
+      {
+        "id": "receipt-input",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-input"
+          }
+        ]
+      },
+      {
+        "id": "input",
+        "kind": "entity",
+        "type": "evidence:resource_content",
+        "attributes": {
+          "capture_id": "resource-capture",
+          "availability_occurrence": "receipt-input",
+          "content": {
+            "source_id": "bytes-input",
+            "sha256": "4d8633a776c2b87afe84c870d7b197bcb966e4b0796a69d3f3b92ff523a6c30f",
+            "byte_length": 52,
+            "representation": "exact_source_bytes",
+            "locator": "fixture:input"
+          }
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "input",
+              "occurrence": "receipt-input"
+            },
+            "field": "/records/input/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/input"
+          },
+          {
+            "source_id": "bytes-input",
+            "field": "/"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/input/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-output",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-output"
+          }
+        ]
+      },
+      {
+        "id": "output",
+        "kind": "entity",
+        "type": "evidence:extracted_value",
+        "attributes": {
+          "selector": {
+            "namespace": "web:content:token",
+            "representation": "utf8_literal",
+            "profile": "literal_exact_v1",
+            "value": "distinct-fixture-token"
+          },
+          "availability_occurrence": "receipt-output",
+          "content": {
+            "source_id": "bytes-output",
+            "sha256": "e59d2c6376fa01656d84bcdf7d684ecc5bcf55f6aa6313903f3a0e09417479ba",
+            "byte_length": 22,
+            "representation": "exact_source_bytes",
+            "locator": "fixture:output"
+          }
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "output",
+              "occurrence": "receipt-output"
+            },
+            "field": "/records/output/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/output"
+          },
+          {
+            "source_id": "bytes-output",
+            "field": "/"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/output/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-extraction",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-extraction"
+          }
+        ]
+      },
+      {
+        "id": "extraction",
+        "kind": "occurrence",
+        "type": "analysis:web_token_extraction",
+        "attributes": {
+          "profile": "preserved_extraction_v1",
+          "output_semantics": "contained_token",
+          "run_id": "run-original",
+          "method": "fixture-source-reported-analysis",
+          "method_version": "1",
+          "source_location": "bytes:0..15",
+          "normalization_method": "retain-declared-output-bytes",
+          "normalization_version": "1",
+          "selector": {
+            "namespace": "web:content:token",
+            "representation": "utf8_literal",
+            "profile": "literal_exact_v1",
+            "value": "distinct-fixture-token"
+          },
+          "availability_occurrence": "receipt-extraction"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "extraction",
+              "occurrence": "receipt-extraction"
+            },
+            "field": "/records/extraction/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          },
+          "occurred": {
+            "binding": {
+              "object": "input",
+              "occurrence": "extraction"
+            },
+            "field": "/records/extraction/occurred",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-09T12:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/extraction"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/extraction/available"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/extraction/occurred"
+          }
+        ],
+        "subject": "input",
+        "object": "output"
+      },
+      {
+        "id": "receipt-identifier",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-identifier"
+          }
+        ]
+      },
+      {
+        "id": "identifier",
+        "kind": "assertion",
+        "type": "capture:resource_identifier",
+        "attributes": {
+          "capture_id": "resource-capture",
+          "uri": {
+            "kind": "uri",
+            "normalization": "literal_rfc3986_v1",
+            "value": "https://fixture.example/path",
+            "provenance": {
+              "source": "report",
+              "record_id": "identifier",
+              "source_revision": "r1",
+              "field": "/records/identifier/selector",
+              "basis": "reported"
+            }
+          },
+          "availability_occurrence": "receipt-identifier"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "identifier",
+              "occurrence": "receipt-identifier"
+            },
+            "field": "/records/identifier/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/identifier"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/identifier/available"
+          }
+        ],
+        "subject": "input",
+        "object": "url"
+      },
+      {
+        "id": "receipt-url",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-url"
+          }
+        ]
+      },
+      {
+        "id": "url",
+        "kind": "entity",
+        "type": "inet:url",
+        "attributes": {
+          "value": "https://fixture.example/path",
+          "availability_occurrence": "receipt-url"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "url",
+              "occurrence": "receipt-url"
+            },
+            "field": "/records/url/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/url"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/url/available"
+          }
+        ]
+      },
+      {
+        "id": "clear-selector",
+        "kind": "assertion",
+        "type": "policy:selector_membership",
+        "attributes": {
+          "policy": "common_framework_or_analytics_tokens",
+          "list_id": "common_framework_or_analytics_tokens",
+          "matching_profile": "exact_subject_v1",
+          "coverage": "complete_for_evaluated_subject",
+          "revision": "policy-r1",
+          "membership": "not_member",
+          "selector": {
+            "namespace": "web:content:token",
+            "representation": "utf8_literal",
+            "profile": "literal_exact_v1",
+            "value": "distinct-fixture-token"
+          },
+          "selector_context": "contained_value",
+          "content": {
+            "source_id": "bytes-clear-selector",
+            "sha256": "017f9df3a345091d94077a60510164aac01de1b9678f7360cde95998f9ffb238",
+            "byte_length": 422,
+            "representation": "exact_source_bytes",
+            "locator": "fixture:clear-selector"
+          }
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/clear-selector"
+          },
+          {
+            "source_id": "bytes-clear-selector",
+            "field": "/"
+          }
+        ],
+        "subject": "seed"
+      },
+      {
+        "id": "resource-established",
+        "kind": "occurrence",
+        "type": "finding:establishment",
+        "attributes": {
+          "claim_key": "e3fdae2e8cf8728fec5ef29307c73630af4b6c359d76c2ff0ea9f35afe868af4",
+          "collection_id": "fixture-collection",
+          "history_id": "history",
+          "qualification": {
+            "id": "cti_web_content_embedded_config_string_cluster",
+            "revision": "1.0",
+            "contract_sha256": "ebb0a02415130b5edc58d5961ac5a68a10b64d4ea224353384bcd33e467d3e88"
+          },
+          "support": [
+            {
+              "record_id": "extraction",
+              "sha256": "1153f52bdb1336677056594d26611fd0c62d0705365e265db2dd81a64cf672aa"
+            },
+            {
+              "record_id": "input",
+              "sha256": "68472f32f2a08386269de3fbbdc6651e3cf930295a800a23197e528970228c66"
+            },
+            {
+              "record_id": "output",
+              "sha256": "0e3988e4970f921aacee464539ea6cb5c2a44d8486aa8bdae39918836e568ea2"
+            },
+            {
+              "record_id": "identifier",
+              "sha256": "f7705316d2550d8778579cfa0291540cb4850a5c44603a474cb577d70451428c"
+            },
+            {
+              "record_id": "url",
+              "sha256": "ff74ebd625b3c64abedcdbaf87dd0b2f14a54911e8ae1dab74bf0480ca132ec0"
+            }
+          ]
+        },
+        "times": {
+          "established": {
+            "binding": {
+              "object": "resource-established",
+              "occurrence": "resource-established"
+            },
+            "field": "/records/resource-established/established",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-11T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/resource-established"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/resource-established/established"
+          }
+        ]
+      }
+    ]
+  },
+  "query": {
+    "parameters": {
+      "seed": "seed",
+      "history": "history",
+      "query_date": "2026-09-14",
+      "common_framework_or_analytics_tokens_revision": "policy-r1",
+      "common_hosting_or_cdn_domains_revision": "policy-r1"
+    },
+    "limits": {
+      "max_bindings": 20000,
+      "max_results": 100
+    }
+  },
+  "preserved_source_bytes": {
+    "bytes-input": "this resource itself contains distinct-fixture-token",
+    "bytes-output": "distinct-fixture-token",
+    "bytes-clear-selector": "{\"policy\":\"common_framework_or_analytics_tokens\",\"list_id\":\"common_framework_or_analytics_tokens\",\"matching_profile\":\"exact_subject_v1\",\"coverage\":\"complete_for_evaluated_subject\",\"revision\":\"policy-r1\",\"membership\":\"not_member\",\"selector\":{\"namespace\":\"web:content:token\",\"representation\":\"utf8_literal\",\"profile\":\"literal_exact_v1\",\"value\":\"distinct-fixture-token\"},\"selector_context\":\"contained_value\",\"subject\":\"seed\"}",
+    "manifest": "{\"history\":{\"contract\":\"everypivot.finding_history\",\"version\":\"1.0\",\"history_id\":\"history\",\"revision\":\"r1\",\"collection_id\":\"fixture-collection\",\"scope_id\":\"synthetic-declared-origin-through-snapshot\",\"origin_id\":\"origin\",\"origin_sha256\":\"f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856\",\"through_id\":\"snapshot\",\"through_sha256\":\"2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4\",\"coverage\":\"complete_declared_scope\",\"qualification\":{\"id\":\"cti_web_content_embedded_config_string_cluster\",\"revision\":\"1.0\",\"contract_sha256\":\"ebb0a02415130b5edc58d5961ac5a68a10b64d4ea224353384bcd33e467d3e88\"},\"establishments\":[{\"record_id\":\"resource-established\",\"sha256\":\"9c707dd1c0339fd8f75bb554b05e37f8a782e560451434895551632b6e71559f\"}]}}"
+  },
+  "claims": [
+    {
+      "identity": [
+        "resource_token",
+        "resource-capture",
+        "4d8633a776c2b87afe84c870d7b197bcb966e4b0796a69d3f3b92ff523a6c30f",
+        {
+          "kind": "uri",
+          "comparison": [
+            "literal_rfc3986_v1"
+          ],
+          "value": "https://fixture.example/path"
+        },
+        "web:content:token",
+        "utf8_literal",
+        "literal_exact_v1",
+        "distinct-fixture-token"
+      ],
+      "support": [
+        "extraction",
+        "input",
+        "output",
+        "identifier",
+        "url"
+      ],
+      "event": "resource-established",
+      "at": "2026-09-11T00:00:00Z"
+    }
+  ],
+  "contract_path": "../../../contracts/semantics/CTI_WEB_CONTENT_EMBEDDED_CONFIG_STRING_CLUSTER.json",
+  "expected_result_ids": [
+    "url"
+  ]
+}

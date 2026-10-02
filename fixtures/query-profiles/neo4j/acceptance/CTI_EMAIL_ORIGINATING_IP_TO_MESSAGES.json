@@ -1,0 +1,29 @@
+{
+  "pattern_id": "CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES",
+  "pattern_path": "graph-pivots/working-set/CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES.yaml",
+  "fixture_path": "fixtures/query-profiles/neo4j/cti_email_originating_ip_to_messages.graph.json",
+  "direction": "in",
+  "source_form": "inet:ipv4",
+  "target_form": "email:message",
+  "relation": "originating_ip_for",
+  "window_days": 30,
+  "suppression_side": "source",
+  "negative_lists": [
+    "common_vpn_proxy_egress",
+    "common_bulk_mail_relays"
+  ],
+  "high_cardinality": 50001,
+  "caveats": [
+    "Originating IP headers can be spoofed, stripped, rewritten, or unavailable depending on the mail path and privacy controls.",
+    "VPNs, proxies, NAT, compromised hosts, and shared senders can connect unrelated messages to one IP.",
+    "An originating IP match is delivery-path evidence, not proof of sender identity."
+  ],
+  "blocked_assertions": [
+    "Working-set lifecycle state is not validated status or a runtime confidence score.",
+    "An originating-IP match is mailflow evidence, not proof of sender identity, operator identity, authorship, ownership, or attribution.",
+    "This fixture does not assert maliciousness, compromise, common ownership, campaign membership, or final assessment.",
+    "VPN, proxy, NAT, and bulk-relay suppression remains part of the expected traversal boundary.",
+    "Do not present stale messages outside the temporal window as current related messages.",
+    "Do not cluster a message that only points to inet:ipv4:198.51.100.210 with the 203.0.113.45 source IP."
+  ]
+}

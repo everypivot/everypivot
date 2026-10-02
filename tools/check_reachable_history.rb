@@ -33,10 +33,11 @@ require 'json'
 require 'optparse'
 require 'pathname'
 require 'set'
+require_relative 'utf8_text'
 
 module EveryPivot
   module CheckReachableHistory
-    REPO_ROOT = Pathname(__dir__).join('..').expand_path
+    REPO_ROOT = Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path
     VERSION = '1.0.0'
 
     # Each pattern names the format it detects. Patterns are intentionally
@@ -124,7 +125,7 @@ module EveryPivot
 
     def load_allow_list(path)
       return [] unless path && File.exist?(path)
-      File.read(path).each_line.map do |raw|
+      Utf8Text.read(path).each_line.map do |raw|
         line = raw.strip
         next nil if line.empty? || line.start_with?('#')
         line
@@ -219,10 +220,12 @@ module EveryPivot
     def load_patterns(path)
       return DEFAULT_PATTERNS unless path
       raise InvocationError, "patterns file not found: #{path}" unless File.exist?(path)
-      data = JSON.parse(File.read(path))
+      data = JSON.parse(Utf8Text.read(path))
       data.each_with_object({}) do |(name, regex_source), patterns|
         patterns[name] = Regexp.new(regex_source)
       end
+    rescue JSON::ParserError => e
+      raise InvocationError, "Invalid JSON in #{path}: #{e.message}"
     end
 
     def render_text(result)
@@ -264,7 +267,7 @@ module EveryPivot
       end
 
       result['blocking'].empty? ? 0 : 1
-    rescue InvocationError => e
+    rescue InvocationError, Utf8Text::Error => e
       warn "check_reachable_history.rb: #{e.message}"
       2
     end

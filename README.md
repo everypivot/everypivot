@@ -13,18 +13,21 @@ The repository publishes:
 
 ## Current Release
 
-- Release: `v0.5.0`
-- Release date: `2026-09-10`
-- Corpus: 176 patterns
-- Lanes: 21 `validated`, 76 `working_set`, 79 `deferred`
-- Schema target: `pivot-pattern` v1.5
+- Release: `v0.6.0`
+- Release date: `2026-10-02`
+- Corpus: 180 patterns
+- Lanes: 21 `validated`, 77 `working_set`, 82 `deferred`
+- Schema target: `pivot-pattern` v1.6; v1.5 remains distributable during the focused migration
 
 ## Assessment Contract
 
 Schema v1.5 requires an explicit evidence-only or conditional candidate mode.
-All 176 patterns have reviewed defaults: 175 provide evidence without an
-assessment hint; one retains a conditional hint with qualifying-evidence
-requirements. Traversals, hazards, controls and lifecycle lanes are preserved.
+The corpus has 179 evidence-only definitions and one conditional
+candidate hint with qualifying-evidence requirements. Explicit execution
+contracts cover 45 definitions; the retained legacy SBL identifier is explicitly
+non-executable. Contract coverage does not renew review dates or promote
+lifecycle lanes. See
+[semantic execution status](docs/SEMANTIC_EXECUTION_CONTRACT.md).
 
 Validation checks the pinned SAIL v0.4 DRAFT contracts. A compatible hint does
 not establish runtime truth or an accepted conclusion. Consumers must update
@@ -62,7 +65,7 @@ systems own execution, corroboration, scoring, and case-specific judgment.
 
 ```bash
 ruby tools/validate_pivots.rb --strict-metadata --strict-bridge
-ruby tools/check_sail_bridge.rb --strict-incomplete
+ruby tools/check_sail_bridge.rb --strict-incomplete --current-distribution
 ruby tools/check_fixture_suite.rb
 ruby tools/check_query_profile_suite.rb
 ruby tools/check_cti_promotion_lint.rb
@@ -73,8 +76,8 @@ ruby tools/check_cti_promotion_lint.rb
 ```bash
 ruby tools/build_registry_index.rb \
   --repo-root . \
-  --release v0.5.0 \
-  --published-at 2026-09-10 \
+  --release v0.6.0 \
+  --published-at 2026-10-02 \
   --output artifacts/registry-index.json \
   --site-data-root site/data
 ```
@@ -109,6 +112,7 @@ Then open `http://localhost:4173/site/index.html`.
 - [Adapter and query profiles](docs/ADAPTER_QUERY_PROFILES.md)
 - [Contributing and promotion](docs/CONTRIBUTING_AND_PROMOTION.md)
 - [Relation catalog](docs/RELATION_CATALOG.md)
+- [Package/repository provenance](docs/PACKAGE_REPOSITORY_PROVENANCE.md)
 - [CTI promotion boundaries](docs/CTI_PROMOTION_BOUNDARIES.md)
 - [License FAQ](LICENSE-FAQ.md)
 - [Governance](GOVERNANCE.md)

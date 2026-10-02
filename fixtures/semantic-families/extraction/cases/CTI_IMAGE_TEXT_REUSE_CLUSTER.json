@@ -1,0 +1,602 @@
+{
+  "pattern": "CTI_IMAGE_TEXT_REUSE_CLUSTER",
+  "evidence": {
+    "contract": "everypivot.semantic_evidence",
+    "version": "1.0",
+    "collection_id": "fixture-collection",
+    "sources": [
+      {
+        "id": "report",
+        "publisher": "synthetic laboratory fixture",
+        "document": "report",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null
+      },
+      {
+        "id": "manifest",
+        "publisher": "synthetic laboratory fixture",
+        "document": "manifest",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "fe62cc5078fea4da5ade0866d847b70673e05cfe528fecd5285e85f86909e515",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "bytes-input",
+        "publisher": "synthetic laboratory fixture",
+        "document": "bytes-input",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "011c177f8eebc9b0e835878e35913814398d5eea3fece834d0ad9a69c53e5576",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "bytes-output",
+        "publisher": "synthetic laboratory fixture",
+        "document": "bytes-output",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "bytes-clear-selector",
+        "publisher": "synthetic laboratory fixture",
+        "document": "bytes-clear-selector",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "aa4ab2d852690a4829e5124fadd41be43fbf88761d3a1c627931571e090ca0f1",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "bytes-clear-image",
+        "publisher": "synthetic laboratory fixture",
+        "document": "bytes-clear-image",
+        "revision": "r1",
+        "collection": "fixture-collection",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "ff3108382fa5f0b7c21cc875114ff365f54f3442a659dec4f2b91cabba670e10",
+          "scope": "exact_source_bytes"
+        }
+      }
+    ],
+    "records": [
+      {
+        "id": "origin",
+        "kind": "occurrence",
+        "type": "collection:origin",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+          "origin": {
+            "binding": {
+              "object": "origin",
+              "occurrence": "origin"
+            },
+            "field": "/records/origin/origin",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2020-01-01T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/origin"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/origin/origin"
+          }
+        ]
+      },
+      {
+        "id": "snapshot",
+        "kind": "occurrence",
+        "type": "collection:history_snapshot",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+          "through": {
+            "binding": {
+              "object": "snapshot",
+              "occurrence": "snapshot"
+            },
+            "field": "/records/snapshot/through",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-14T23:59:59Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/snapshot"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/snapshot/through"
+          }
+        ]
+      },
+      {
+        "id": "history",
+        "kind": "assertion",
+        "type": "finding:history",
+        "attributes": {
+          "manifest_source_id": "manifest",
+          "manifest_field": "/history"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "manifest",
+            "field": "/history"
+          }
+        ]
+      },
+      {
+        "id": "seed",
+        "kind": "entity",
+        "type": "image:ocr:text_hash",
+        "attributes": {
+          "selector": {
+            "namespace": "image:ocr:text_hash",
+            "representation": "sha256_exact_ocr_output_bytes",
+            "profile": "literal_exact_v1",
+            "value": "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7"
+          },
+          "selector_context": "contained_value"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/seed"
+          }
+        ]
+      },
+      {
+        "id": "receipt-input",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-input"
+          }
+        ]
+      },
+      {
+        "id": "input",
+        "kind": "entity",
+        "type": "file:image",
+        "attributes": {
+          "image_role": "crop",
+          "capture_id": "image-capture",
+          "availability_occurrence": "receipt-input",
+          "content": {
+            "source_id": "bytes-input",
+            "sha256": "011c177f8eebc9b0e835878e35913814398d5eea3fece834d0ad9a69c53e5576",
+            "byte_length": 27,
+            "representation": "exact_source_bytes",
+            "locator": "fixture:input"
+          }
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "input",
+              "occurrence": "receipt-input"
+            },
+            "field": "/records/input/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/input"
+          },
+          {
+            "source_id": "bytes-input",
+            "field": "/"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/input/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-output",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-output"
+          }
+        ]
+      },
+      {
+        "id": "output",
+        "kind": "entity",
+        "type": "evidence:extracted_value",
+        "attributes": {
+          "selector": {
+            "namespace": "image:ocr:text_hash",
+            "representation": "sha256_exact_ocr_output_bytes",
+            "profile": "literal_exact_v1",
+            "value": "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7"
+          },
+          "availability_occurrence": "receipt-output",
+          "content": {
+            "source_id": "bytes-output",
+            "sha256": "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7",
+            "byte_length": 16,
+            "representation": "exact_source_bytes",
+            "locator": "fixture:output"
+          }
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "output",
+              "occurrence": "receipt-output"
+            },
+            "field": "/records/output/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/output"
+          },
+          {
+            "source_id": "bytes-output",
+            "field": "/"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/output/available"
+          }
+        ]
+      },
+      {
+        "id": "receipt-extraction",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "fixture-collection"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/receipt-extraction"
+          }
+        ]
+      },
+      {
+        "id": "extraction",
+        "kind": "occurrence",
+        "type": "analysis:ocr_extraction",
+        "attributes": {
+          "profile": "preserved_extraction_v1",
+          "output_semantics": "ocr_text",
+          "run_id": "run-original",
+          "method": "fixture-source-reported-analysis",
+          "method_version": "1",
+          "source_location": "bytes:0..15",
+          "normalization_method": "retain-declared-output-bytes",
+          "normalization_version": "1",
+          "selector": {
+            "namespace": "image:ocr:text_hash",
+            "representation": "sha256_exact_ocr_output_bytes",
+            "profile": "literal_exact_v1",
+            "value": "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7"
+          },
+          "availability_occurrence": "receipt-extraction"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "extraction",
+              "occurrence": "receipt-extraction"
+            },
+            "field": "/records/extraction/available",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-10T00:00:00Z"
+          },
+          "occurred": {
+            "binding": {
+              "object": "input",
+              "occurrence": "extraction"
+            },
+            "field": "/records/extraction/occurred",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-09T12:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/extraction"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/extraction/available"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/extraction/occurred"
+          }
+        ],
+        "subject": "input",
+        "object": "output"
+      },
+      {
+        "id": "clear-selector",
+        "kind": "assertion",
+        "type": "policy:selector_membership",
+        "attributes": {
+          "policy": "common_logo_boilerplate_or_template_text_hashes",
+          "list_id": "common_logo_boilerplate_or_template_text_hashes",
+          "matching_profile": "exact_subject_v1",
+          "coverage": "complete_for_evaluated_subject",
+          "revision": "policy-r1",
+          "membership": "not_member",
+          "selector": {
+            "namespace": "image:ocr:text_hash",
+            "representation": "sha256_exact_ocr_output_bytes",
+            "profile": "literal_exact_v1",
+            "value": "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7"
+          },
+          "selector_context": "contained_value",
+          "content": {
+            "source_id": "bytes-clear-selector",
+            "sha256": "aa4ab2d852690a4829e5124fadd41be43fbf88761d3a1c627931571e090ca0f1",
+            "byte_length": 505,
+            "representation": "exact_source_bytes",
+            "locator": "fixture:clear-selector"
+          }
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/clear-selector"
+          },
+          {
+            "source_id": "bytes-clear-selector",
+            "field": "/"
+          }
+        ],
+        "subject": "seed"
+      },
+      {
+        "id": "clear-image",
+        "kind": "assertion",
+        "type": "policy:membership",
+        "attributes": {
+          "policy": "stock_image_or_meme_assets",
+          "list_id": "stock_image_or_meme_assets",
+          "matching_profile": "exact_subject_v1",
+          "coverage": "complete_for_evaluated_subject",
+          "revision": "policy-r1",
+          "membership": "not_member",
+          "subject_kind": "content_sha256",
+          "value": "011c177f8eebc9b0e835878e35913814398d5eea3fece834d0ad9a69c53e5576",
+          "content": {
+            "source_id": "bytes-clear-image",
+            "sha256": "ff3108382fa5f0b7c21cc875114ff365f54f3442a659dec4f2b91cabba670e10",
+            "byte_length": 334,
+            "representation": "exact_source_bytes",
+            "locator": "fixture:clear-image"
+          }
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/clear-image"
+          },
+          {
+            "source_id": "bytes-clear-image",
+            "field": "/"
+          }
+        ],
+        "subject": "input"
+      },
+      {
+        "id": "image-established",
+        "kind": "occurrence",
+        "type": "finding:establishment",
+        "attributes": {
+          "claim_key": "6c7a5406490f6e4ce0e6ba96e932d006e1d744d9ba3c3193b8a652c9ad761fe2",
+          "collection_id": "fixture-collection",
+          "history_id": "history",
+          "qualification": {
+            "id": "cti_image_text_reuse_cluster",
+            "revision": "1.0",
+            "contract_sha256": "d8b1d548bbf30c6d0ae839f993c034101701ba001a8b21c89ac03e2de1acc8c6"
+          },
+          "support": [
+            {
+              "record_id": "extraction",
+              "sha256": "6495225b85f2be698c81d5e30bbf466f43fc869fca31cbe4515552c925404d19"
+            },
+            {
+              "record_id": "input",
+              "sha256": "a135dc0555d1fa4c3829760a56ccebaac3b49cf6ba493f30b938602a4d944d55"
+            },
+            {
+              "record_id": "output",
+              "sha256": "56c1ec021cc6a16aacbf8a3a175d2cc480f6ac9f63d80bff196e4434284bfda8"
+            }
+          ]
+        },
+        "times": {
+          "established": {
+            "binding": {
+              "object": "image-established",
+              "occurrence": "image-established"
+            },
+            "field": "/records/image-established/established",
+            "source_revision": "r1",
+            "clock": {
+              "id": "fixture-utc",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-11T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "report",
+            "field": "/records/image-established"
+          },
+          {
+            "source_id": "report",
+            "field": "/records/image-established/established"
+          }
+        ]
+      }
+    ]
+  },
+  "query": {
+    "parameters": {
+      "seed": "seed",
+      "history": "history",
+      "query_date": "2026-09-14",
+      "common_logo_boilerplate_or_template_text_hashes_revision": "policy-r1",
+      "stock_image_or_meme_assets_revision": "policy-r1",
+      "common_hosting_or_cdn_domains_revision": "policy-r1"
+    },
+    "limits": {
+      "max_bindings": 20000,
+      "max_results": 100
+    }
+  },
+  "preserved_source_bytes": {
+    "bytes-input": "synthetic image input bytes",
+    "bytes-output": "OCR fixture text",
+    "bytes-clear-selector": "{\"policy\":\"common_logo_boilerplate_or_template_text_hashes\",\"list_id\":\"common_logo_boilerplate_or_template_text_hashes\",\"matching_profile\":\"exact_subject_v1\",\"coverage\":\"complete_for_evaluated_subject\",\"revision\":\"policy-r1\",\"membership\":\"not_member\",\"selector\":{\"namespace\":\"image:ocr:text_hash\",\"representation\":\"sha256_exact_ocr_output_bytes\",\"profile\":\"literal_exact_v1\",\"value\":\"280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7\"},\"selector_context\":\"contained_value\",\"subject\":\"seed\"}",
+    "bytes-clear-image": "{\"policy\":\"stock_image_or_meme_assets\",\"list_id\":\"stock_image_or_meme_assets\",\"matching_profile\":\"exact_subject_v1\",\"coverage\":\"complete_for_evaluated_subject\",\"revision\":\"policy-r1\",\"membership\":\"not_member\",\"subject_kind\":\"content_sha256\",\"value\":\"011c177f8eebc9b0e835878e35913814398d5eea3fece834d0ad9a69c53e5576\",\"subject\":\"input\"}",
+    "manifest": "{\"history\":{\"contract\":\"everypivot.finding_history\",\"version\":\"1.0\",\"history_id\":\"history\",\"revision\":\"r1\",\"collection_id\":\"fixture-collection\",\"scope_id\":\"synthetic-declared-origin-through-snapshot\",\"origin_id\":\"origin\",\"origin_sha256\":\"f8886db7dc878caeb7e655c7bdc8490cf4e7e282813dd3fbac2dc329e8c54856\",\"through_id\":\"snapshot\",\"through_sha256\":\"2dd405119ec84b7f335ef924235296da32146fcfef4d1c80295ae9f83dcfd2b4\",\"coverage\":\"complete_declared_scope\",\"qualification\":{\"id\":\"cti_image_text_reuse_cluster\",\"revision\":\"1.0\",\"contract_sha256\":\"d8b1d548bbf30c6d0ae839f993c034101701ba001a8b21c89ac03e2de1acc8c6\"},\"establishments\":[{\"record_id\":\"image-established\",\"sha256\":\"fc9b266605d4db8a4c8ea54fbceecab11d58022d1440c89cd95f430f83b3699a\"}]}}"
+  },
+  "claims": [
+    {
+      "identity": [
+        "ocr_image",
+        "image-capture",
+        "011c177f8eebc9b0e835878e35913814398d5eea3fece834d0ad9a69c53e5576",
+        "image:ocr:text_hash",
+        "sha256_exact_ocr_output_bytes",
+        "literal_exact_v1",
+        "280c7d6146325b7f3310e828839142f4ea636fa8a0695d4b02ec6ee5f84007c7"
+      ],
+      "support": [
+        "extraction",
+        "input",
+        "output"
+      ],
+      "event": "image-established",
+      "at": "2026-09-11T00:00:00Z"
+    }
+  ],
+  "contract_path": "../../../contracts/semantics/CTI_IMAGE_TEXT_REUSE_CLUSTER.json",
+  "expected_result_ids": [
+    "input"
+  ]
+}

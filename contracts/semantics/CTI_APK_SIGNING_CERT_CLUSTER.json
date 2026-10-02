@@ -1,0 +1,6068 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_APK_SIGNING_CERT_CLUSTER",
+    "version": "3.0.0"
+  },
+  "description": "Source-qualified, purpose-specific complete findings over exact artifacts and selected certificate, key or material identities. Explicit case period dates earliest complete finding in the named preserved history. No local extraction, cryptographic verification, trust, ownership, signing-time, novelty outside the declared collection, or accepted assessment is supplied.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-certificate-presence-reported-signer-and-verified-signing-distinctions",
+  "parameters": {
+    "purpose": {
+      "type": "string",
+      "required": true,
+      "description": "Explicit relationship or comparison question.",
+      "enum": [
+        "certificate_presence",
+        "reported_signer",
+        "scoped_verified_signature"
+      ]
+    },
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Explicit analyst/case-selected complete-finding interval; no inherited duration."
+    },
+    "history": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact source-backed collection-scoped complete finding history."
+    },
+    "role": {
+      "type": "string",
+      "required": true,
+      "description": "Actual signature/material role; never inferred from container presence.",
+      "enum": [
+        "primary_signer",
+        "timestamp",
+        "chain_member",
+        "other",
+        "unknown"
+      ]
+    },
+    "certificate_selector": {
+      "type": "selector",
+      "required": true,
+      "selector_kinds": [
+        "certificate_sha256",
+        "spki_sha256"
+      ],
+      "description": "Selected typed certificate/key/issuer tuple, no fallback."
+    },
+    "exclude_selected_credentials": {
+      "type": "boolean",
+      "required": false,
+      "enum": [
+        true,
+        false
+      ],
+      "description": "Explicit applicable credential-class exclusion; default retain."
+    },
+    "classification_class": {
+      "type": "string",
+      "required": false,
+      "requires_when": {
+        "parameter": "exclude_selected_credentials",
+        "values": [
+          true
+        ]
+      },
+      "description": "Exact source classification name selected by this policy; different classes are not contradictory assertions."
+    },
+    "classification_records": {
+      "type": "string_array",
+      "required": false,
+      "requires_when": {
+        "parameter": "exclude_selected_credentials",
+        "values": [
+          true
+        ]
+      },
+      "min_items": 1,
+      "unique_items": true,
+      "item_reference": "record",
+      "description": "Exact evidenced classification records selected for exclusion."
+    },
+    "classification_revision": {
+      "type": "string",
+      "required": false,
+      "requires_when": {
+        "parameter": "exclude_selected_credentials",
+        "values": [
+          true
+        ]
+      },
+      "description": "Pinned classification policy revision."
+    },
+    "classification_period": {
+      "type": "period",
+      "required": false,
+      "requires_when": {
+        "parameter": "exclude_selected_credentials",
+        "values": [
+          true
+        ]
+      },
+      "description": "Independent class applicability period, explicitly not assumed actual signing time."
+    },
+    "amendment_sources": {
+      "type": "string_array",
+      "required": true,
+      "min_items": 1,
+      "unique_items": true,
+      "item_reference": "source",
+      "description": "Explicit source scope for retained correction/withdrawal context; no claim of universal absence."
+    },
+    "seed": {
+      "type": "record_id",
+      "required": true,
+      "description": "Selected certificate entity; matching selected identity needs its actual source-backed field."
+    }
+  },
+  "branches": [
+    {
+      "id": "certificate_presence_certificate_sha256_certificate_seed",
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "certificate_presence"
+        ]
+      },
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "certificate_presence"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector.kind"
+                },
+                "right": {
+                  "literal": "certificate_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector"
+                },
+                "right": {
+                  "param": "certificate_selector"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "association",
+          "kind": "assertion",
+          "types": [
+            "artifact:certificate_presence"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "association.object"
+            },
+            "right": {
+              "ref": "certificate.id"
+            }
+          }
+        },
+        {
+          "name": "artifact",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "artifact.id"
+                },
+                "right": {
+                  "ref": "association.subject"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "literal": true
+                },
+                "right": {
+                  "literal": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "policy:signing_credential"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.role"
+                },
+                "right": {
+                  "param": "role"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "certificate_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.certificate_selector"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "spki_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.spki_selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "seed.times.collection_available"
+          },
+          "object": {
+            "ref": "seed.id"
+          },
+          "occurrence": {
+            "ref": "seed.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "association.times.collection_available"
+          },
+          "object": {
+            "ref": "association.id"
+          },
+          "occurrence": {
+            "ref": "association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "artifact.times.collection_available"
+          },
+          "object": {
+            "ref": "artifact.id"
+          },
+          "occurrence": {
+            "ref": "artifact.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "classification.times.applicable"
+          },
+          "object": {
+            "ref": "classification.subject"
+          },
+          "occurrence": {
+            "ref": "classification.id"
+          }
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.basis"
+            },
+            "right": {
+              "literal": "reported_extraction_from_exact_artifact"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.source_location"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method_version"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.certificate_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.artifact_identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.artifact_identity"
+            },
+            "right": {
+              "ref": "artifact.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "seed.attributes.certificate_selector"
+            },
+            "right": {
+              "param": "certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          }
+        ]
+      },
+      "finding": {
+        "id": "cti_apk_signing_cert_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "certificate_presence"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "param": "role"
+          }
+        ],
+        "support": [
+          "certificate",
+          "association",
+          "artifact"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "amendments": {
+        "support": [
+          "association"
+        ],
+        "sources": {
+          "param": "amendment_sources"
+        },
+        "mode": "retain_reports"
+      },
+      "knowledge": [
+        {
+          "ref": "seed.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "association.times.collection_available"
+        },
+        {
+          "ref": "artifact.times.collection_available"
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "artifact",
+        "identity": [
+          {
+            "literal": "certificate_presence"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "param": "role"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "finding_scope": {
+            "literal": "earliest complete supported claim in supplied source-declared collection history"
+          },
+          "artifact_identity": {
+            "ref": "artifact.attributes.identity"
+          },
+          "certificate_identity": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "selected_comparison": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "signature_role": {
+            "param": "role"
+          },
+          "relationship_report": {
+            "ref": "association.attributes"
+          },
+          "artifact_context": {
+            "ref": "artifact.attributes"
+          },
+          "credential_classification": {
+            "ref": "classification"
+          },
+          "certificate_context": {
+            "ref": "certificate.attributes"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "selected_signing_credential_class",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_selected_credentials",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "dual_purpose",
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit selected credential classification over its own selected context period; no artifact purpose, trust or actor inference.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "certificate_presence_spki_sha256_certificate_seed",
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "certificate_presence"
+        ]
+      },
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "certificate_presence"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector.kind"
+                },
+                "right": {
+                  "literal": "spki_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector"
+                },
+                "right": {
+                  "param": "certificate_selector"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "association",
+          "kind": "assertion",
+          "types": [
+            "artifact:certificate_presence"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "association.object"
+            },
+            "right": {
+              "ref": "certificate.id"
+            }
+          }
+        },
+        {
+          "name": "artifact",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "artifact.id"
+                },
+                "right": {
+                  "ref": "association.subject"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "literal": true
+                },
+                "right": {
+                  "literal": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "policy:signing_credential"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.role"
+                },
+                "right": {
+                  "param": "role"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "certificate_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.certificate_selector"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "spki_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.spki_selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "seed.times.collection_available"
+          },
+          "object": {
+            "ref": "seed.id"
+          },
+          "occurrence": {
+            "ref": "seed.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "association.times.collection_available"
+          },
+          "object": {
+            "ref": "association.id"
+          },
+          "occurrence": {
+            "ref": "association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "artifact.times.collection_available"
+          },
+          "object": {
+            "ref": "artifact.id"
+          },
+          "occurrence": {
+            "ref": "artifact.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "classification.times.applicable"
+          },
+          "object": {
+            "ref": "classification.subject"
+          },
+          "occurrence": {
+            "ref": "classification.id"
+          }
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.basis"
+            },
+            "right": {
+              "literal": "reported_extraction_from_exact_artifact"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.source_location"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method_version"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.certificate_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.artifact_identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.artifact_identity"
+            },
+            "right": {
+              "ref": "artifact.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "seed.attributes.spki_selector"
+            },
+            "right": {
+              "param": "certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          }
+        ]
+      },
+      "finding": {
+        "id": "cti_apk_signing_cert_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "certificate_presence"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "param": "role"
+          }
+        ],
+        "support": [
+          "certificate",
+          "association",
+          "artifact"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "amendments": {
+        "support": [
+          "association"
+        ],
+        "sources": {
+          "param": "amendment_sources"
+        },
+        "mode": "retain_reports"
+      },
+      "knowledge": [
+        {
+          "ref": "seed.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "association.times.collection_available"
+        },
+        {
+          "ref": "artifact.times.collection_available"
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "artifact",
+        "identity": [
+          {
+            "literal": "certificate_presence"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "param": "role"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "finding_scope": {
+            "literal": "earliest complete supported claim in supplied source-declared collection history"
+          },
+          "artifact_identity": {
+            "ref": "artifact.attributes.identity"
+          },
+          "certificate_identity": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "selected_comparison": {
+            "ref": "certificate.attributes.spki_selector"
+          },
+          "signature_role": {
+            "param": "role"
+          },
+          "relationship_report": {
+            "ref": "association.attributes"
+          },
+          "artifact_context": {
+            "ref": "artifact.attributes"
+          },
+          "credential_classification": {
+            "ref": "classification"
+          },
+          "certificate_context": {
+            "ref": "certificate.attributes"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "selected_signing_credential_class",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_selected_credentials",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "dual_purpose",
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit selected credential classification over its own selected context period; no artifact purpose, trust or actor inference.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "reported_signer_certificate_sha256_certificate_seed",
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "reported_signer"
+        ]
+      },
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "reported_signer"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector.kind"
+                },
+                "right": {
+                  "literal": "certificate_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector"
+                },
+                "right": {
+                  "param": "certificate_selector"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
+          "kind": "assertion",
+          "types": [
+            "signature:signer_binding"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "signer.object"
+            },
+            "right": {
+              "ref": "certificate.id"
+            }
+          }
+        },
+        {
+          "name": "signature",
+          "kind": "entity",
+          "types": [
+            "code:signature:material"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "signature.id"
+            },
+            "right": {
+              "ref": "signer.subject"
+            }
+          }
+        },
+        {
+          "name": "association",
+          "kind": "assertion",
+          "types": [
+            "signature:artifact_binding"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "association.object"
+            },
+            "right": {
+              "ref": "signature.id"
+            }
+          }
+        },
+        {
+          "name": "artifact",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "artifact.id"
+                },
+                "right": {
+                  "ref": "association.subject"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "literal": true
+                },
+                "right": {
+                  "literal": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "verification",
+          "kind": "occurrence",
+          "types": [
+            "signature:verification_check"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "verification.subject"
+                },
+                "right": {
+                  "ref": "artifact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "verification.object"
+                },
+                "right": {
+                  "ref": "signature.id"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "policy:signing_credential"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.role"
+                },
+                "right": {
+                  "param": "role"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "certificate_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.certificate_selector"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "spki_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.spki_selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "seed.times.collection_available"
+          },
+          "object": {
+            "ref": "seed.id"
+          },
+          "occurrence": {
+            "ref": "seed.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "signer.times.collection_available"
+          },
+          "object": {
+            "ref": "signer.id"
+          },
+          "occurrence": {
+            "ref": "signer.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "signature.times.collection_available"
+          },
+          "object": {
+            "ref": "signature.id"
+          },
+          "occurrence": {
+            "ref": "signature.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "association.times.collection_available"
+          },
+          "object": {
+            "ref": "association.id"
+          },
+          "occurrence": {
+            "ref": "association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "artifact.times.collection_available"
+          },
+          "object": {
+            "ref": "artifact.id"
+          },
+          "occurrence": {
+            "ref": "artifact.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "classification.times.applicable"
+          },
+          "object": {
+            "ref": "classification.subject"
+          },
+          "occurrence": {
+            "ref": "classification.id"
+          }
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "in",
+            "left": {
+              "param": "role"
+            },
+            "right": {
+              "literal": [
+                "primary_signer",
+                "timestamp"
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.identity.signature_role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "signer.attributes.certificate_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "signer.attributes.spki_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.spki_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.basis"
+            },
+            "right": {
+              "literal": "reported_selected_signature_signer"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "signer.attributes.source_location"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.artifact_identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.artifact_identity"
+            },
+            "right": {
+              "ref": "artifact.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.signature_selector.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.signature_selector"
+            },
+            "right": {
+              "ref": "signature.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.covered_content.kind"
+            },
+            "right": {
+              "literal": "scheme_content_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.covered_content"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.scheme"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content.scheme"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "association.attributes.correspondence"
+            },
+            "right": {
+              "literal": [
+                "embedded_signature_exact_artifact",
+                "detached_signature_exact_artifact",
+                "catalog_member_covered_digest",
+                "manifest_member_covered_digest"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.covered_object"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.source_location"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.scheme"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.format"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "seed.attributes.certificate_selector"
+            },
+            "right": {
+              "param": "certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          }
+        ]
+      },
+      "finding": {
+        "id": "cti_apk_signing_cert_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "reported_signer"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "param": "role"
+          },
+          {
+            "selector_identity": "signature.attributes.identity"
+          },
+          {
+            "selector_identity": "association.attributes.covered_content"
+          },
+          {
+            "ref": "association.attributes.scheme"
+          },
+          {
+            "ref": "association.attributes.correspondence"
+          },
+          {
+            "ref": "association.attributes.covered_object"
+          }
+        ],
+        "support": [
+          "certificate",
+          "signer",
+          "signature",
+          "association",
+          "artifact"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "amendments": {
+        "support": [
+          "signer",
+          "association"
+        ],
+        "sources": {
+          "param": "amendment_sources"
+        },
+        "mode": "retain_reports"
+      },
+      "knowledge": [
+        {
+          "ref": "seed.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "signer.times.collection_available"
+        },
+        {
+          "ref": "signature.times.collection_available"
+        },
+        {
+          "ref": "association.times.collection_available"
+        },
+        {
+          "ref": "artifact.times.collection_available"
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "artifact",
+        "identity": [
+          {
+            "literal": "reported_signer"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "param": "role"
+          },
+          {
+            "selector_identity": "signature.attributes.identity"
+          },
+          {
+            "selector_identity": "association.attributes.covered_content"
+          },
+          {
+            "ref": "association.attributes.scheme"
+          },
+          {
+            "ref": "association.attributes.correspondence"
+          },
+          {
+            "ref": "association.attributes.covered_object"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "finding_scope": {
+            "literal": "earliest complete supported claim in supplied source-declared collection history"
+          },
+          "artifact_identity": {
+            "ref": "artifact.attributes.identity"
+          },
+          "certificate_identity": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "selected_comparison": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "signature_role": {
+            "param": "role"
+          },
+          "relationship_report": {
+            "ref": "association.attributes"
+          },
+          "signer_report": {
+            "ref": "signer.attributes"
+          },
+          "signature_identity": {
+            "ref": "signature.attributes.identity"
+          },
+          "verification_report": {
+            "ref": "verification.attributes"
+          },
+          "verification_scope": {
+            "literal": "optional_source_report_no_verification_required"
+          },
+          "artifact_context": {
+            "ref": "artifact.attributes"
+          },
+          "credential_classification": {
+            "ref": "classification"
+          },
+          "certificate_context": {
+            "ref": "certificate.attributes"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "selected_signing_credential_class",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_selected_credentials",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "dual_purpose",
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit selected credential classification over its own selected context period; no artifact purpose, trust or actor inference.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "reported_signer_spki_sha256_certificate_seed",
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "reported_signer"
+        ]
+      },
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "reported_signer"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector.kind"
+                },
+                "right": {
+                  "literal": "spki_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector"
+                },
+                "right": {
+                  "param": "certificate_selector"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
+          "kind": "assertion",
+          "types": [
+            "signature:signer_binding"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "signer.object"
+            },
+            "right": {
+              "ref": "certificate.id"
+            }
+          }
+        },
+        {
+          "name": "signature",
+          "kind": "entity",
+          "types": [
+            "code:signature:material"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "signature.id"
+            },
+            "right": {
+              "ref": "signer.subject"
+            }
+          }
+        },
+        {
+          "name": "association",
+          "kind": "assertion",
+          "types": [
+            "signature:artifact_binding"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "association.object"
+            },
+            "right": {
+              "ref": "signature.id"
+            }
+          }
+        },
+        {
+          "name": "artifact",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "artifact.id"
+                },
+                "right": {
+                  "ref": "association.subject"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "literal": true
+                },
+                "right": {
+                  "literal": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "verification",
+          "kind": "occurrence",
+          "types": [
+            "signature:verification_check"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "verification.subject"
+                },
+                "right": {
+                  "ref": "artifact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "verification.object"
+                },
+                "right": {
+                  "ref": "signature.id"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "policy:signing_credential"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.role"
+                },
+                "right": {
+                  "param": "role"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "certificate_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.certificate_selector"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "spki_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.spki_selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "seed.times.collection_available"
+          },
+          "object": {
+            "ref": "seed.id"
+          },
+          "occurrence": {
+            "ref": "seed.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "signer.times.collection_available"
+          },
+          "object": {
+            "ref": "signer.id"
+          },
+          "occurrence": {
+            "ref": "signer.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "signature.times.collection_available"
+          },
+          "object": {
+            "ref": "signature.id"
+          },
+          "occurrence": {
+            "ref": "signature.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "association.times.collection_available"
+          },
+          "object": {
+            "ref": "association.id"
+          },
+          "occurrence": {
+            "ref": "association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "artifact.times.collection_available"
+          },
+          "object": {
+            "ref": "artifact.id"
+          },
+          "occurrence": {
+            "ref": "artifact.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "classification.times.applicable"
+          },
+          "object": {
+            "ref": "classification.subject"
+          },
+          "occurrence": {
+            "ref": "classification.id"
+          }
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "in",
+            "left": {
+              "param": "role"
+            },
+            "right": {
+              "literal": [
+                "primary_signer",
+                "timestamp"
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.identity.signature_role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "signer.attributes.certificate_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "signer.attributes.spki_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.spki_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.basis"
+            },
+            "right": {
+              "literal": "reported_selected_signature_signer"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "signer.attributes.source_location"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.artifact_identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.artifact_identity"
+            },
+            "right": {
+              "ref": "artifact.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.signature_selector.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.signature_selector"
+            },
+            "right": {
+              "ref": "signature.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.covered_content.kind"
+            },
+            "right": {
+              "literal": "scheme_content_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.covered_content"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.scheme"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content.scheme"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "association.attributes.correspondence"
+            },
+            "right": {
+              "literal": [
+                "embedded_signature_exact_artifact",
+                "detached_signature_exact_artifact",
+                "catalog_member_covered_digest",
+                "manifest_member_covered_digest"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.covered_object"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.source_location"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.scheme"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.format"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "seed.attributes.spki_selector"
+            },
+            "right": {
+              "param": "certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          }
+        ]
+      },
+      "finding": {
+        "id": "cti_apk_signing_cert_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "reported_signer"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "param": "role"
+          },
+          {
+            "selector_identity": "signature.attributes.identity"
+          },
+          {
+            "selector_identity": "association.attributes.covered_content"
+          },
+          {
+            "ref": "association.attributes.scheme"
+          },
+          {
+            "ref": "association.attributes.correspondence"
+          },
+          {
+            "ref": "association.attributes.covered_object"
+          }
+        ],
+        "support": [
+          "certificate",
+          "signer",
+          "signature",
+          "association",
+          "artifact"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "amendments": {
+        "support": [
+          "signer",
+          "association"
+        ],
+        "sources": {
+          "param": "amendment_sources"
+        },
+        "mode": "retain_reports"
+      },
+      "knowledge": [
+        {
+          "ref": "seed.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "signer.times.collection_available"
+        },
+        {
+          "ref": "signature.times.collection_available"
+        },
+        {
+          "ref": "association.times.collection_available"
+        },
+        {
+          "ref": "artifact.times.collection_available"
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "artifact",
+        "identity": [
+          {
+            "literal": "reported_signer"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "param": "role"
+          },
+          {
+            "selector_identity": "signature.attributes.identity"
+          },
+          {
+            "selector_identity": "association.attributes.covered_content"
+          },
+          {
+            "ref": "association.attributes.scheme"
+          },
+          {
+            "ref": "association.attributes.correspondence"
+          },
+          {
+            "ref": "association.attributes.covered_object"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "finding_scope": {
+            "literal": "earliest complete supported claim in supplied source-declared collection history"
+          },
+          "artifact_identity": {
+            "ref": "artifact.attributes.identity"
+          },
+          "certificate_identity": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "selected_comparison": {
+            "ref": "certificate.attributes.spki_selector"
+          },
+          "signature_role": {
+            "param": "role"
+          },
+          "relationship_report": {
+            "ref": "association.attributes"
+          },
+          "signer_report": {
+            "ref": "signer.attributes"
+          },
+          "signature_identity": {
+            "ref": "signature.attributes.identity"
+          },
+          "verification_report": {
+            "ref": "verification.attributes"
+          },
+          "verification_scope": {
+            "literal": "optional_source_report_no_verification_required"
+          },
+          "artifact_context": {
+            "ref": "artifact.attributes"
+          },
+          "credential_classification": {
+            "ref": "classification"
+          },
+          "certificate_context": {
+            "ref": "certificate.attributes"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "selected_signing_credential_class",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_selected_credentials",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "dual_purpose",
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit selected credential classification over its own selected context period; no artifact purpose, trust or actor inference.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "scoped_verified_signature_certificate_sha256_certificate_seed",
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "scoped_verified_signature"
+        ]
+      },
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "scoped_verified_signature"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector.kind"
+                },
+                "right": {
+                  "literal": "certificate_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.certificate_selector"
+                },
+                "right": {
+                  "param": "certificate_selector"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
+          "kind": "assertion",
+          "types": [
+            "signature:signer_binding"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "signer.object"
+            },
+            "right": {
+              "ref": "certificate.id"
+            }
+          }
+        },
+        {
+          "name": "signature",
+          "kind": "entity",
+          "types": [
+            "code:signature:material"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "signature.id"
+            },
+            "right": {
+              "ref": "signer.subject"
+            }
+          }
+        },
+        {
+          "name": "association",
+          "kind": "assertion",
+          "types": [
+            "signature:artifact_binding"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "association.object"
+            },
+            "right": {
+              "ref": "signature.id"
+            }
+          }
+        },
+        {
+          "name": "artifact",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "artifact.id"
+                },
+                "right": {
+                  "ref": "association.subject"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "literal": true
+                },
+                "right": {
+                  "literal": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "verification",
+          "kind": "occurrence",
+          "types": [
+            "signature:verification_check"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "verification.subject"
+                },
+                "right": {
+                  "ref": "artifact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "verification.object"
+                },
+                "right": {
+                  "ref": "signature.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "policy:signing_credential"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.role"
+                },
+                "right": {
+                  "param": "role"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "certificate_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.certificate_selector"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "spki_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.spki_selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "verification.times.checked"
+          },
+          "object": {
+            "ref": "artifact.id"
+          },
+          "occurrence": {
+            "ref": "verification.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "seed.times.collection_available"
+          },
+          "object": {
+            "ref": "seed.id"
+          },
+          "occurrence": {
+            "ref": "seed.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "signer.times.collection_available"
+          },
+          "object": {
+            "ref": "signer.id"
+          },
+          "occurrence": {
+            "ref": "signer.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "signature.times.collection_available"
+          },
+          "object": {
+            "ref": "signature.id"
+          },
+          "occurrence": {
+            "ref": "signature.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "association.times.collection_available"
+          },
+          "object": {
+            "ref": "association.id"
+          },
+          "occurrence": {
+            "ref": "association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "artifact.times.collection_available"
+          },
+          "object": {
+            "ref": "artifact.id"
+          },
+          "occurrence": {
+            "ref": "artifact.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "verification.times.collection_available"
+          },
+          "object": {
+            "ref": "verification.id"
+          },
+          "occurrence": {
+            "ref": "verification.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "classification.times.applicable"
+          },
+          "object": {
+            "ref": "classification.subject"
+          },
+          "occurrence": {
+            "ref": "classification.id"
+          }
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "in",
+            "left": {
+              "param": "role"
+            },
+            "right": {
+              "literal": [
+                "primary_signer",
+                "timestamp"
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.identity.signature_role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "signer.attributes.certificate_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "signer.attributes.spki_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.spki_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.basis"
+            },
+            "right": {
+              "literal": "reported_selected_signature_signer"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "signer.attributes.source_location"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.artifact_identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.artifact_identity"
+            },
+            "right": {
+              "ref": "artifact.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.signature_selector.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.signature_selector"
+            },
+            "right": {
+              "ref": "signature.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.covered_content.kind"
+            },
+            "right": {
+              "literal": "scheme_content_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.covered_content"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.scheme"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content.scheme"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "association.attributes.correspondence"
+            },
+            "right": {
+              "literal": [
+                "embedded_signature_exact_artifact",
+                "detached_signature_exact_artifact",
+                "catalog_member_covered_digest",
+                "manifest_member_covered_digest"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.covered_object"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.source_location"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.scheme"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.format"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.check_status"
+            },
+            "right": {
+              "literal": "success"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.basis"
+            },
+            "right": {
+              "literal": "source_reported_scoped_check"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.artifact_identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.artifact_identity"
+            },
+            "right": {
+              "ref": "artifact.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.signature_selector.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.signature_selector"
+            },
+            "right": {
+              "ref": "signature.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.certificate_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.spki_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.spki_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.covered_content.kind"
+            },
+            "right": {
+              "literal": "scheme_content_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.covered_content"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.scheme"
+            },
+            "right": {
+              "ref": "association.attributes.scheme"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.format"
+            },
+            "right": {
+              "ref": "association.attributes.format"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.verifier"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.limitations"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "verification.attributes.crypto_check"
+            },
+            "right": {
+              "literal": [
+                "selected_signature_over_declared_content"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.report_location"
+            }
+          },
+          {
+            "op": "time_compare",
+            "left": {
+              "ref": "verification.times.checked"
+            },
+            "right": {
+              "ref": "verification.times.collection_available"
+            },
+            "operator": "lte"
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "seed.attributes.certificate_selector"
+            },
+            "right": {
+              "param": "certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          }
+        ]
+      },
+      "finding": {
+        "id": "cti_apk_signing_cert_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "scoped_verified_signature"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "param": "role"
+          },
+          {
+            "selector_identity": "signature.attributes.identity"
+          },
+          {
+            "selector_identity": "association.attributes.covered_content"
+          },
+          {
+            "ref": "association.attributes.scheme"
+          },
+          {
+            "ref": "association.attributes.correspondence"
+          },
+          {
+            "ref": "association.attributes.covered_object"
+          }
+        ],
+        "support": [
+          "certificate",
+          "signer",
+          "signature",
+          "association",
+          "artifact",
+          "verification"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "amendments": {
+        "support": [
+          "signer",
+          "association",
+          "verification"
+        ],
+        "sources": {
+          "param": "amendment_sources"
+        },
+        "mode": "retain_reports"
+      },
+      "knowledge": [
+        {
+          "ref": "seed.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "signer.times.collection_available"
+        },
+        {
+          "ref": "signature.times.collection_available"
+        },
+        {
+          "ref": "association.times.collection_available"
+        },
+        {
+          "ref": "artifact.times.collection_available"
+        },
+        {
+          "ref": "verification.times.collection_available"
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "artifact",
+        "identity": [
+          {
+            "literal": "scoped_verified_signature"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "param": "role"
+          },
+          {
+            "selector_identity": "signature.attributes.identity"
+          },
+          {
+            "selector_identity": "association.attributes.covered_content"
+          },
+          {
+            "ref": "association.attributes.scheme"
+          },
+          {
+            "ref": "association.attributes.correspondence"
+          },
+          {
+            "ref": "association.attributes.covered_object"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "finding_scope": {
+            "literal": "earliest complete supported claim in supplied source-declared collection history"
+          },
+          "artifact_identity": {
+            "ref": "artifact.attributes.identity"
+          },
+          "certificate_identity": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "selected_comparison": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "signature_role": {
+            "param": "role"
+          },
+          "relationship_report": {
+            "ref": "association.attributes"
+          },
+          "signer_report": {
+            "ref": "signer.attributes"
+          },
+          "signature_identity": {
+            "ref": "signature.attributes.identity"
+          },
+          "verification_report": {
+            "ref": "verification.attributes"
+          },
+          "verification_scope": {
+            "literal": "source_reported_scoped_check_no_local_reproduction"
+          },
+          "artifact_context": {
+            "ref": "artifact.attributes"
+          },
+          "credential_classification": {
+            "ref": "classification"
+          },
+          "certificate_context": {
+            "ref": "certificate.attributes"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "selected_signing_credential_class",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_selected_credentials",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "dual_purpose",
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit selected credential classification over its own selected context period; no artifact purpose, trust or actor inference.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "scoped_verified_signature_spki_sha256_certificate_seed",
+      "select_when": {
+        "parameter": "purpose",
+        "values": [
+          "scoped_verified_signature"
+        ]
+      },
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "param": "purpose"
+                },
+                "right": {
+                  "literal": "scoped_verified_signature"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector.kind"
+                },
+                "right": {
+                  "literal": "spki_sha256"
+                }
+              },
+              {
+                "op": "typed_equal",
+                "left": {
+                  "ref": "certificate.attributes.spki_selector"
+                },
+                "right": {
+                  "param": "certificate_selector"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
+          "kind": "assertion",
+          "types": [
+            "signature:signer_binding"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "signer.object"
+            },
+            "right": {
+              "ref": "certificate.id"
+            }
+          }
+        },
+        {
+          "name": "signature",
+          "kind": "entity",
+          "types": [
+            "code:signature:material"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "signature.id"
+            },
+            "right": {
+              "ref": "signer.subject"
+            }
+          }
+        },
+        {
+          "name": "association",
+          "kind": "assertion",
+          "types": [
+            "signature:artifact_binding"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "association.object"
+            },
+            "right": {
+              "ref": "signature.id"
+            }
+          }
+        },
+        {
+          "name": "artifact",
+          "kind": "entity",
+          "types": [
+            "file:bytes"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "artifact.id"
+                },
+                "right": {
+                  "ref": "association.subject"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "literal": true
+                },
+                "right": {
+                  "literal": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "verification",
+          "kind": "occurrence",
+          "types": [
+            "signature:verification_check"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "verification.subject"
+                },
+                "right": {
+                  "ref": "artifact.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "verification.object"
+                },
+                "right": {
+                  "ref": "signature.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "policy:signing_credential"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.role"
+                },
+                "right": {
+                  "param": "role"
+                }
+              },
+              {
+                "op": "any",
+                "args": [
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "certificate_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.certificate_selector"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "all",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "left": {
+                          "ref": "classification.attributes.selector.kind"
+                        },
+                        "right": {
+                          "literal": "spki_sha256"
+                        }
+                      },
+                      {
+                        "op": "typed_equal",
+                        "left": {
+                          "ref": "classification.attributes.selector"
+                        },
+                        "right": {
+                          "ref": "certificate.attributes.spki_selector"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "verification.times.checked"
+          },
+          "object": {
+            "ref": "artifact.id"
+          },
+          "occurrence": {
+            "ref": "verification.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "seed.times.collection_available"
+          },
+          "object": {
+            "ref": "seed.id"
+          },
+          "occurrence": {
+            "ref": "seed.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "signer.times.collection_available"
+          },
+          "object": {
+            "ref": "signer.id"
+          },
+          "occurrence": {
+            "ref": "signer.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "signature.times.collection_available"
+          },
+          "object": {
+            "ref": "signature.id"
+          },
+          "occurrence": {
+            "ref": "signature.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "association.times.collection_available"
+          },
+          "object": {
+            "ref": "association.id"
+          },
+          "occurrence": {
+            "ref": "association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "artifact.times.collection_available"
+          },
+          "object": {
+            "ref": "artifact.id"
+          },
+          "occurrence": {
+            "ref": "artifact.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "verification.times.collection_available"
+          },
+          "object": {
+            "ref": "verification.id"
+          },
+          "occurrence": {
+            "ref": "verification.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "classification.times.applicable"
+          },
+          "object": {
+            "ref": "classification.subject"
+          },
+          "occurrence": {
+            "ref": "classification.id"
+          }
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "in",
+            "left": {
+              "param": "role"
+            },
+            "right": {
+              "literal": [
+                "primary_signer",
+                "timestamp"
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.identity.signature_role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signature.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "signer.attributes.certificate_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "signer.attributes.spki_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.spki_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "signer.attributes.basis"
+            },
+            "right": {
+              "literal": "reported_selected_signature_signer"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "signer.attributes.source_location"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.artifact_identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.artifact_identity"
+            },
+            "right": {
+              "ref": "artifact.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.signature_selector.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.signature_selector"
+            },
+            "right": {
+              "ref": "signature.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.covered_content.kind"
+            },
+            "right": {
+              "literal": "scheme_content_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "association.attributes.covered_content"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.scheme"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content.scheme"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "association.attributes.correspondence"
+            },
+            "right": {
+              "literal": [
+                "embedded_signature_exact_artifact",
+                "detached_signature_exact_artifact",
+                "catalog_member_covered_digest",
+                "manifest_member_covered_digest"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.covered_object"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.source_location"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.scheme"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "association.attributes.format"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "association.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.check_status"
+            },
+            "right": {
+              "literal": "success"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.basis"
+            },
+            "right": {
+              "literal": "source_reported_scoped_check"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.artifact_identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.artifact_identity"
+            },
+            "right": {
+              "ref": "artifact.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.signature_selector.kind"
+            },
+            "right": {
+              "literal": "signature_material_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.signature_selector"
+            },
+            "right": {
+              "ref": "signature.attributes.identity"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.certificate_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.spki_selector"
+            },
+            "right": {
+              "ref": "certificate.attributes.spki_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.covered_content.kind"
+            },
+            "right": {
+              "literal": "scheme_content_digest"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "verification.attributes.covered_content"
+            },
+            "right": {
+              "ref": "association.attributes.covered_content"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.scheme"
+            },
+            "right": {
+              "ref": "association.attributes.scheme"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.format"
+            },
+            "right": {
+              "ref": "association.attributes.format"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "verification.attributes.role"
+            },
+            "right": {
+              "param": "role"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.verifier"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.method"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.method_version"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.limitations"
+            }
+          },
+          {
+            "op": "in",
+            "left": {
+              "ref": "verification.attributes.crypto_check"
+            },
+            "right": {
+              "literal": [
+                "selected_signature_over_declared_content"
+              ]
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "verification.attributes.report_location"
+            }
+          },
+          {
+            "op": "time_compare",
+            "left": {
+              "ref": "verification.times.checked"
+            },
+            "right": {
+              "ref": "verification.times.collection_available"
+            },
+            "operator": "lte"
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.identity.kind"
+            },
+            "right": {
+              "literal": "artifact_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "certificate.attributes.certificate_selector.kind"
+            },
+            "right": {
+              "literal": "certificate_sha256"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "seed.attributes.spki_selector.kind"
+            },
+            "right": {
+              "literal": "spki_sha256"
+            }
+          },
+          {
+            "op": "typed_equal",
+            "left": {
+              "ref": "seed.attributes.spki_selector"
+            },
+            "right": {
+              "param": "certificate_selector"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "artifact.attributes.format"
+            },
+            "right": {
+              "literal": "apk"
+            }
+          }
+        ]
+      },
+      "finding": {
+        "id": "cti_apk_signing_cert_cluster",
+        "revision": "1.0",
+        "identity": [
+          {
+            "literal": "scoped_verified_signature"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "param": "role"
+          },
+          {
+            "selector_identity": "signature.attributes.identity"
+          },
+          {
+            "selector_identity": "association.attributes.covered_content"
+          },
+          {
+            "ref": "association.attributes.scheme"
+          },
+          {
+            "ref": "association.attributes.correspondence"
+          },
+          {
+            "ref": "association.attributes.covered_object"
+          }
+        ],
+        "support": [
+          "certificate",
+          "signer",
+          "signature",
+          "association",
+          "artifact",
+          "verification"
+        ],
+        "history": {
+          "param": "history"
+        },
+        "period": {
+          "param": "period"
+        }
+      },
+      "amendments": {
+        "support": [
+          "signer",
+          "association",
+          "verification"
+        ],
+        "sources": {
+          "param": "amendment_sources"
+        },
+        "mode": "retain_reports"
+      },
+      "knowledge": [
+        {
+          "ref": "seed.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "signer.times.collection_available"
+        },
+        {
+          "ref": "signature.times.collection_available"
+        },
+        {
+          "ref": "association.times.collection_available"
+        },
+        {
+          "ref": "artifact.times.collection_available"
+        },
+        {
+          "ref": "verification.times.collection_available"
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "form": "file:bytes",
+        "binding": "artifact",
+        "identity": [
+          {
+            "literal": "scoped_verified_signature"
+          },
+          {
+            "selector_identity": "artifact.attributes.identity"
+          },
+          {
+            "selector_identity": "certificate.attributes.certificate_selector"
+          },
+          {
+            "selector_identity": "certificate.attributes.spki_selector"
+          },
+          {
+            "param": "role"
+          },
+          {
+            "selector_identity": "signature.attributes.identity"
+          },
+          {
+            "selector_identity": "association.attributes.covered_content"
+          },
+          {
+            "ref": "association.attributes.scheme"
+          },
+          {
+            "ref": "association.attributes.correspondence"
+          },
+          {
+            "ref": "association.attributes.covered_object"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "purpose": {
+            "param": "purpose"
+          },
+          "finding_scope": {
+            "literal": "earliest complete supported claim in supplied source-declared collection history"
+          },
+          "artifact_identity": {
+            "ref": "artifact.attributes.identity"
+          },
+          "certificate_identity": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "selected_comparison": {
+            "ref": "certificate.attributes.spki_selector"
+          },
+          "signature_role": {
+            "param": "role"
+          },
+          "relationship_report": {
+            "ref": "association.attributes"
+          },
+          "signer_report": {
+            "ref": "signer.attributes"
+          },
+          "signature_identity": {
+            "ref": "signature.attributes.identity"
+          },
+          "verification_report": {
+            "ref": "verification.attributes"
+          },
+          "verification_scope": {
+            "literal": "source_reported_scoped_check_no_local_reproduction"
+          },
+          "artifact_context": {
+            "ref": "artifact.attributes"
+          },
+          "credential_classification": {
+            "ref": "classification"
+          },
+          "certificate_context": {
+            "ref": "certificate.attributes"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "selected_signing_credential_class",
+          "revision": "1.0",
+          "scope": "result",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_selected_credentials",
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "member"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": [
+                    "dual_purpose",
+                    "contested"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": "Explicit selected credential classification over its own selected context period; no artifact purpose, trust or actor inference.",
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "contains",
+                    "left": {
+                      "param": "classification_records"
+                    },
+                    "right": {
+                      "ref": "classification.id"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.revision"
+                    },
+                    "right": {
+                      "param": "classification_revision"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.class"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.class"
+                    },
+                    "right": {
+                      "param": "classification_class"
+                    }
+                  },
+                  {
+                    "op": "nonblank_text",
+                    "value": {
+                      "ref": "classification.attributes.basis"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "classification.attributes.basis_mode"
+                    },
+                    "right": {
+                      "literal": "selected_period_context_not_signing_time"
+                    }
+                  },
+                  {
+                    "op": "within",
+                    "value": {
+                      "ref": "classification.times.applicable"
+                    },
+                    "period": {
+                      "param": "classification_period"
+                    },
+                    "quantifier": "all"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "classification.attributes.membership"
+                },
+                "right": {
+                  "literal": "not_member"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

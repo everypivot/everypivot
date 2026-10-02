@@ -16,6 +16,7 @@ MATCH (source:EveryPivotNode {id: source_id})<-[edge:ORIGINATING_IP_FOR]-(target
 WHERE source.form IN ['inet:ipv4']
   AND target.form IN ['email:message']
   AND date(edge.seen) >= as_of - duration({days: 30})
+  AND date(edge.seen) <= as_of
   AND (source.negative_node_list IS NULL OR NOT source.negative_node_list IN ['common_vpn_proxy_egress', 'common_bulk_mail_relays'])
 RETURN {
   pattern_id: 'CTI_EMAIL_ORIGINATING_IP_TO_MESSAGES',

@@ -1,68 +1,70 @@
 id: CTI_TLS_CERT_SUBJECT_PROFILE_TO_INFRA
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_TLS_CERT_SUBJECT_PROFILE_TO_INFRA.json
+  sha256: 390a1d45491538848dfe2f16dc3cd8e049116aa701520feb35c6f204057182d8
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
 robustness_class: multi_hop_inference
 hazards:
-- 'TLS subject profiles are weaker than certificate fingerprints because subject fields can be copied, templated, self-signed, or auto-generated.'
-- 'Shared hosting, reverse proxies, captive portals, and security products can expose certificates unrelated to the investigated service.'
-- 'Subject-profile matches require negative controls for commodity certificate templates and default organizational strings.'
+- The preserved identified profile declares every compared field, exact value or inclusive
+  range and definition revision. A sparse search does not authorize silent broadening
+  or a similarity fallback.
+- Matching subject or issuer labels and declared validity duration do not establish
+  certificate/key identity, actual issuer identity, ACME issuance, deployment lifetime,
+  maliciousness or common control.
+- The same identified matching certificate must be carried into an actual service
+  presentation. CT-only names, copied fields or nearby endpoints do not supply the
+  join.
+- The analyst/case-selected UTC presentation period is independent of profile duration
+  criteria, profile creation, receipt and analytical knowledge. Presentation outside
+  declared certificate validity is retained.
+- Common/default/managed and infrastructure classifications are separate source-qualified
+  context. Exclusions require explicit scoped policies; unknown or conflicting evidence
+  is not clearance.
 capability_requirements:
   required:
-  - 'tls_certificate_collection'
-  - 'certificate_subject_normalization'
+  - semantic_evidence_v1
+  - certificate_normalization
+  - preserved_certificate_profile_v1
+  - source_bound_certificate_fields
+  - presentation_occurrence_and_endpoint_correspondence
   optional:
-  - 'certificate_fingerprint_extraction'
-  - 'spki_hashing'
-  - 'common_subject_template_suppression'
-name: TLS Certificate Subject Profile -> Infrastructure
+  - collection_knowledge_witnesses
+  - source_classification_evidence
+  - tls_scanning
+  - certificate_transparency
+name: Explicit Subject Profile → Certificate Presentations
 category: CTI
-description: Pivot from a normalized TLS certificate subject profile to infrastructure observed presenting certificates with that profile.
-source: x509:subject
+description: Presentation of an actual identified certificate meeting an explicitly
+  preserved subject profile; profile revision, field criteria and candidate occurrence
+  period remain distinct.
+source: x509:comparison_profile
 target: inet:ipv4|inet:fqdn
 assessment_mode: evidence_only
 hops:
-- via: presented_by
-  direction: in
-  form: network:service
-- via: hosted_at
+- via: explicit_profile_matches
+  direction: out
+  form: x509:cert
+- via: observed_certificate_presentation
+  direction: out
+  form: inet:service
+- via: evidenced_occurrence_endpoint
   direction: out
   form: inet:ipv4|inet:fqdn
 constraints:
-  temporal:
-    order:
-    - certificate.valid_from <= service.observed
-    window_days: 365
-  degree_caps:
-    x509:subject: 50000
-    inet:ipv4: 100000
-  negative_nodes:
-  - form: x509:subject
-    list: common_self_signed_or_default_subjects
-  - form: inet:fqdn
-    list: shared_tls_termination_hosts
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- subject_field_specificity
-- issuer_context
-- validity_window
-- common_subject_penalty
-- temporal_consistency
-- novelty_flag
+features: []
 outputs:
-  top_paths: 5
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - certificate_transparency
 - internet_scan_archives

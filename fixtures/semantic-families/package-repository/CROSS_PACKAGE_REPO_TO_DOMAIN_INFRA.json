@@ -1,0 +1,644 @@
+{
+  "evidence": {
+    "contract": "everypivot.semantic_evidence",
+    "version": "1.0",
+    "collection_id": "package-case",
+    "sources": [
+      {
+        "id": "mapping",
+        "revision": "mapping-v1",
+        "document": "mapping",
+        "collection": "package-case",
+        "publisher": "Synthetic mapper",
+        "independent_origin": null
+      },
+      {
+        "id": "sidecar-bytes",
+        "revision": "content-v1",
+        "document": "sidecar-bytes",
+        "collection": "package-case",
+        "publisher": "Synthetic mapper",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "fe4ca213f6654c405d994685184fb5b4247723650386921d2cf81bd4e7d3f0b9",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "registry",
+        "revision": "synthetic-revision-1",
+        "document": "https://registry.example/evidence/version-declaration",
+        "collection": "synthetic-fixture",
+        "publisher": "Synthetic example registry",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7",
+          "scope": "exact_source_bytes"
+        }
+      },
+      {
+        "id": "control-bytes",
+        "revision": "content-v1",
+        "document": "control-bytes",
+        "collection": "package-case",
+        "publisher": "Synthetic mapper",
+        "independent_origin": null,
+        "content_hash": {
+          "algorithm": "sha256",
+          "value": "f6c72fe8f9b15352ce3b4f9eacd2a49ed66757bfdeefa9680d4205319cacf2d2",
+          "scope": "exact_source_bytes"
+        }
+      }
+    ],
+    "records": [
+      {
+        "id": "package",
+        "kind": "entity",
+        "type": "it:prod:softver",
+        "attributes": {
+          "package": {
+            "registry": "https://registry.example",
+            "name": "example-package",
+            "version": "1.4.0"
+          },
+          "creation_context": "2019-03-01",
+          "publication_context": "2026-08-10",
+          "availability_occurrence": "package-available"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "package",
+              "occurrence": "package-available"
+            },
+            "field": "/records/package",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-20T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/package"
+          }
+        ]
+      },
+      {
+        "id": "repo",
+        "kind": "entity",
+        "type": "code:repo",
+        "attributes": {
+          "uri": {
+            "kind": "uri",
+            "value": "https://code.example/project/source",
+            "normalization": "literal_rfc3986_v1",
+            "provenance": {
+              "source": "mapping",
+              "record_id": "repo",
+              "source_revision": "mapping-v1",
+              "field": "/records/repo/uri",
+              "basis": "reported"
+            }
+          },
+          "creation_context": "2010-03-01",
+          "availability_occurrence": "repo-available"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "repo",
+              "occurrence": "repo-available"
+            },
+            "field": "/records/repo",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-20T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/repo"
+          }
+        ]
+      },
+      {
+        "id": "declaration",
+        "kind": "assertion",
+        "type": "package:repository_declaration",
+        "attributes": {
+          "sidecar_id": "sidecar",
+          "metadata_id": "metadata",
+          "availability_occurrence": "declaration-available"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "declaration",
+              "occurrence": "declaration-available"
+            },
+            "field": "/records/declaration",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-20T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/declaration"
+          },
+          {
+            "source_id": "registry",
+            "field": "/repository"
+          }
+        ],
+        "subject": "package",
+        "object": "repo"
+      },
+      {
+        "id": "sidecar",
+        "kind": "entity",
+        "type": "evidence:package_repository_provenance",
+        "attributes": {
+          "document": {
+            "contract": "everypivot.package_repository_provenance",
+            "contract_version": "1.0",
+            "pattern_id": "CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA",
+            "pattern_version": "3.0.0",
+            "evidence_mode": "evidence_only",
+            "build_provenance": "not_verified",
+            "package": {
+              "registry": "https://registry.example",
+              "name": "example-package",
+              "version": "1.4.0"
+            },
+            "repository_uri": "https://code.example/project/source",
+            "declaration": {
+              "kind": "version_source_repository",
+              "evidence": {
+                "publisher": "Synthetic example registry",
+                "collection": "synthetic-fixture",
+                "uri": "https://registry.example/evidence/version-declaration",
+                "revision": "synthetic-revision-1",
+                "sha256": "bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7",
+                "field": "/repository",
+                "acquired_at": "2026-09-14T08:00:00Z"
+              }
+            },
+            "revision_binding": {
+              "status": "unresolved",
+              "reason": "Synthetic registry declaration supplies no exact package-version source revision."
+            },
+            "snapshot": {
+              "status": "unresolved",
+              "reason": "Exact package-version source revision is unresolved."
+            }
+          },
+          "content": {
+            "source_id": "sidecar-bytes",
+            "source_revision": "content-v1",
+            "field": "/",
+            "sha256": "fe4ca213f6654c405d994685184fb5b4247723650386921d2cf81bd4e7d3f0b9",
+            "byte_length": 974,
+            "representation": "exact_source_bytes"
+          },
+          "availability_occurrence": "sidecar-available"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "sidecar",
+              "occurrence": "sidecar-available"
+            },
+            "field": "/records/sidecar",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-20T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/sidecar"
+          },
+          {
+            "source_id": "sidecar-bytes",
+            "field": "/"
+          }
+        ]
+      },
+      {
+        "id": "metadata",
+        "kind": "entity",
+        "type": "evidence:registry_document",
+        "attributes": {
+          "content": {
+            "source_id": "registry",
+            "source_revision": "synthetic-revision-1",
+            "field": "/",
+            "sha256": "bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7",
+            "byte_length": 291,
+            "representation": "exact_source_bytes"
+          },
+          "availability_occurrence": "metadata-available"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "metadata",
+              "occurrence": "metadata-available"
+            },
+            "field": "/records/metadata",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-20T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/metadata"
+          },
+          {
+            "source_id": "registry",
+            "field": "/"
+          }
+        ]
+      },
+      {
+        "id": "observation",
+        "kind": "occurrence",
+        "type": "package:infrastructure_observation",
+        "attributes": {
+          "profile": "relationship_observation_v1",
+          "relation": "distributed_from",
+          "occurrence_key": "observer-capture-2026-08-01",
+          "collector": "fixture-observer",
+          "origin_source_id": "mapping",
+          "occurrence_namespace": "relationship-sightings",
+          "basis": "direct_relationship_observation",
+          "endpoint_selector": {
+            "kind": "dns_name",
+            "value": "download.example.test",
+            "normalization": "dns_ascii_lower_v1",
+            "provenance": {
+              "source": "mapping",
+              "record_id": "observation",
+              "source_revision": "mapping-v1",
+              "field": "/records/observation/endpoint_selector",
+              "basis": "reported"
+            },
+            "representation": "ascii"
+          },
+          "availability_occurrence": "observation-available"
+        },
+        "times": {
+          "observed": {
+            "binding": {
+              "object": "package",
+              "occurrence": "observation"
+            },
+            "field": "/records/observation/observed",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-08-01T00:00:00Z"
+          },
+          "collection_available": {
+            "binding": {
+              "object": "observation",
+              "occurrence": "observation-available"
+            },
+            "field": "/records/observation",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-20T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/observation"
+          }
+        ],
+        "subject": "package",
+        "object": "domain"
+      },
+      {
+        "id": "domain",
+        "kind": "entity",
+        "type": "inet:fqdn",
+        "attributes": {
+          "selector": {
+            "kind": "dns_name",
+            "value": "download.example.test",
+            "normalization": "dns_ascii_lower_v1",
+            "provenance": {
+              "source": "mapping",
+              "record_id": "domain",
+              "source_revision": "mapping-v1",
+              "field": "/records/domain/selector",
+              "basis": "reported"
+            },
+            "representation": "ascii"
+          },
+          "availability_occurrence": "domain-available"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "domain",
+              "occurrence": "domain-available"
+            },
+            "field": "/records/domain",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-20T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/domain"
+          }
+        ]
+      },
+      {
+        "id": "control",
+        "kind": "assertion",
+        "type": "policy:repository_membership",
+        "attributes": {
+          "policy": "mass_fork_mirrors",
+          "revision": "list-1",
+          "profile": "literal_uri_membership_v1",
+          "state": "not_member",
+          "coverage": "complete_for_evaluated_subject",
+          "repository_uri": {
+            "kind": "uri",
+            "value": "https://code.example/project/source",
+            "normalization": "literal_rfc3986_v1",
+            "provenance": {
+              "source": "mapping",
+              "record_id": "control",
+              "source_revision": "mapping-v1",
+              "field": "/records/control/repository_uri",
+              "basis": "reported"
+            }
+          },
+          "content": {
+            "source_id": "control-bytes",
+            "source_revision": "content-v1",
+            "field": "/",
+            "sha256": "f6c72fe8f9b15352ce3b4f9eacd2a49ed66757bfdeefa9680d4205319cacf2d2",
+            "byte_length": 416,
+            "representation": "exact_source_bytes"
+          },
+          "availability_occurrence": "control-available"
+        },
+        "times": {
+          "collection_available": {
+            "binding": {
+              "object": "control",
+              "occurrence": "control-available"
+            },
+            "field": "/records/control",
+            "source_revision": "mapping-v1",
+            "clock": {
+              "id": "synthetic-observer",
+              "reference": "UTC",
+              "uncertainty_seconds": 0
+            },
+            "timezone": "UTC",
+            "precision": "instant",
+            "interval_role": "occurrence",
+            "value": "2026-09-20T00:00:00Z"
+          }
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/control"
+          },
+          {
+            "source_id": "control-bytes",
+            "field": "/"
+          }
+        ]
+      },
+      {
+        "id": "package-available",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "package-case"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/package-available"
+          }
+        ],
+        "subject": "package"
+      },
+      {
+        "id": "repo-available",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "package-case"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/repo-available"
+          }
+        ],
+        "subject": "repo"
+      },
+      {
+        "id": "declaration-available",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "package-case"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/declaration-available"
+          }
+        ],
+        "subject": "declaration"
+      },
+      {
+        "id": "sidecar-available",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "package-case"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/sidecar-available"
+          }
+        ],
+        "subject": "sidecar"
+      },
+      {
+        "id": "metadata-available",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "package-case"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/metadata-available"
+          }
+        ],
+        "subject": "metadata"
+      },
+      {
+        "id": "observation-available",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "package-case"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/observation-available"
+          }
+        ],
+        "subject": "observation"
+      },
+      {
+        "id": "domain-available",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "package-case"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/domain-available"
+          }
+        ],
+        "subject": "domain"
+      },
+      {
+        "id": "control-available",
+        "kind": "occurrence",
+        "type": "evidence:availability",
+        "attributes": {
+          "collection_id": "package-case"
+        },
+        "times": {
+        },
+        "evidence": [
+          {
+            "source_id": "mapping",
+            "field": "/records/control-available"
+          }
+        ],
+        "subject": "control"
+      }
+    ]
+  },
+  "query": {
+    "parameters": {
+      "seed": "repo",
+      "query_date": "2026-09-14",
+      "policy_revision": "list-1"
+    },
+    "limits": {
+      "max_bindings": 10000,
+      "max_results": 100
+    }
+  },
+  "source_bytes": {
+    "sidecar-bytes": "{\"contract\":\"everypivot.package_repository_provenance\",\"contract_version\":\"1.0\",\"pattern_id\":\"CROSS_PACKAGE_REPO_TO_DOMAIN_INFRA\",\"pattern_version\":\"3.0.0\",\"evidence_mode\":\"evidence_only\",\"build_provenance\":\"not_verified\",\"package\":{\"registry\":\"https://registry.example\",\"name\":\"example-package\",\"version\":\"1.4.0\"},\"repository_uri\":\"https://code.example/project/source\",\"declaration\":{\"kind\":\"version_source_repository\",\"evidence\":{\"publisher\":\"Synthetic example registry\",\"collection\":\"synthetic-fixture\",\"uri\":\"https://registry.example/evidence/version-declaration\",\"revision\":\"synthetic-revision-1\",\"sha256\":\"bfd419c8fb70f3a3704552b4b4f77725911a6d00988a93de05967ffbb929cbf7\",\"field\":\"/repository\",\"acquired_at\":\"2026-09-14T08:00:00Z\"}},\"revision_binding\":{\"status\":\"unresolved\",\"reason\":\"Synthetic registry declaration supplies no exact package-version source revision.\"},\"snapshot\":{\"status\":\"unresolved\",\"reason\":\"Exact package-version source revision is unresolved.\"}}",
+    "registry": "{\n  \"synthetic\": true,\n  \"package\": {\n    \"registry\": \"https://registry.example\",\n    \"name\": \"example-package\",\n    \"version\": \"1.4.0\"\n  },\n  \"repository\": \"https://code.example/project/source\",\n  \"reference_kind\": \"version_source_repository\",\n  \"source_revision\": \"synthetic-revision-1\"\n}\n",
+    "control-bytes": "{\"policy\":\"mass_fork_mirrors\",\"revision\":\"list-1\",\"profile\":\"literal_uri_membership_v1\",\"state\":\"not_member\",\"coverage\":\"complete_for_evaluated_subject\",\"repository_uri\":{\"kind\":\"uri\",\"value\":\"https://code.example/project/source\",\"normalization\":\"literal_rfc3986_v1\",\"provenance\":{\"source\":\"mapping\",\"record_id\":\"control\",\"source_revision\":\"mapping-v1\",\"field\":\"/records/control/repository_uri\",\"basis\":\"reported\"}}}"
+  },
+  "expected_result_ids": [
+    "domain"
+  ]
+}

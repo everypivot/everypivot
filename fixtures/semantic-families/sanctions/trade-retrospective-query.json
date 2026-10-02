@@ -1,0 +1,23 @@
+{
+  "parameters": {
+    "source": "seed",
+    "purpose": "retrospective",
+    "reference_sources": [
+      "relationship-source",
+      "list-source",
+      "correction-source",
+      "list-correction-source"
+    ],
+    "entry_revisions": [
+      "entry"
+    ],
+    "period": {
+      "start": "2024-12-01",
+      "end": "2024-12-31"
+    }
+  },
+  "limits": {
+    "max_bindings": 100000,
+    "max_results": 100
+  }
+}

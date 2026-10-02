@@ -1,66 +1,70 @@
 id: CTI_CERT_REUSE_FQDN_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_CERT_REUSE_FQDN_CLUSTER.json
+  sha256: 18a0e202735fe17328b0253c4e739a058f8ea7899966dc0f81ce856f715db2b7
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
 hazards:
-- 'Managed certificates, CDNs, and shared hosts can create benign domain clusters.'
-- 'Certificate history can lag rotation events and leave stale associations in passive datasets.'
+- Whole-certificate identity and exact SPKI reuse are separate comparisons; renewal
+  with the same key does not preserve the whole certificate.
+- The explicitly selected older seed relationship remains reference evidence. A name
+  association does not become a seed presentation, and neither leg proves simultaneous
+  use or common ownership.
+- Candidate presentation uses an analyst/case-selected UTC period. Certificate validity,
+  first inventory, receipt and reprocessing do not substitute for that occurrence.
+- Intermediate certificate-class exclusions require an explicit selected filter; unknown
+  or conflicting class evidence is not clearance, and independent qualifying paths
+  remain.
 capability_requirements:
   required:
-  - 'tls_scanning'
-  - 'certificate_normalization'
+  - semantic_evidence_v1
+  - certificate_normalization
+  - selected_seed_certificate_relationship
+  - presentation_occurrence_and_name_correspondence
   optional:
-  - 'ct_history'
-  - 'passive_dns'
+  - collection_knowledge_witnesses
+  - source_classification_evidence
+  - tls_scanning
+  - ct_history
 review:
   last_reviewed: '2026-05-14'
   review_cadence_days: 90
   next_review: '2026-08-12'
-name: Cert Reuse → FQDN Cluster
+name: Selected Certificate Reference or Explicit SPKI Reuse → FQDN Presentations
 category: CTI
-description: Cluster domains by identical certificate (SPKI or cert SHA256) observed in CT logs or scanners.
+description: Selected evidenced historical seed relationship to candidate presentations.
+  Whole-certificate and SPKI comparisons, name and presentation reference bases remain
+  separate.
 source: inet:fqdn
 target: inet:fqdn
 assessment_mode: evidence_only
 hops:
-- via: tls_cert
+- via: selected_certificate_reference
   direction: out
   form: x509:cert
-- via: tls_cert
-  direction: in
+- via: explicit_certificate_or_spki_comparison
+  direction: out
+  form: x509:cert
+- via: observed_certificate_presentation
+  direction: out
+  form: inet:service
+- via: evidenced_presentation_name
+  direction: out
   form: inet:fqdn
 constraints:
-  temporal:
-    order:
-    - cert.not_before <= fqdn.seen
-    window_days: 825
-  degree_caps:
-    x509:cert: 2000
-  negative_nodes:
-  - form: x509:cert
-    list: letsencrypt_mass_certificates
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - ct
 - tls

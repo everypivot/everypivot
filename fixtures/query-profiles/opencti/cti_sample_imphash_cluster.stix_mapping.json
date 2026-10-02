@@ -11,14 +11,16 @@
     "as_of": "2026-05-24"
   },
   "stix": {
-    "bundle_id": "bundle--4a46f77c-9d2a-4d4c-8ac8-2f8c9062f7fd",
-    "extension_definition_ref": "extension-definition--3f6d5a22-c719-4f53-a07b-1e88f44bb5a1",
-    "note_ref": "note--97b560a0-4926-43f8-bd78-945a2c2a6f6c"
+    "bundle_id": "bundle--f0299967-c65d-40a0-a7ad-e4c44380c0f4",
+    "extension_definition_ref": "extension-definition--f88d909d-5287-4f9a-8413-c1bcbc178d29",
+    "note_ref": "note--97b560a0-4926-43f8-bd78-945a2c2a6f6c",
+    "created_by_ref": "identity--c0ab47b4-28e6-48b6-bc65-1ad2feee67c6",
+    "extension_created": "2026-09-17T08:28:15.057Z"
   },
   "source": {
     "id": "file:pe:imphash:7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f",
     "form": "file:pe:imphash",
-    "stix_ref": "file--253b8c62-bbe6-56c7-9236-b0cbbc1b29d1",
+    "stix_ref": "file--9cf9f39c-599e-57ae-b856-9f2c688f61c4",
     "name": "example-imphash-7b3f",
     "hashes": {
       "x_imphash": "7b3f7b3f7b3f7b3f7b3f7b3f7b3f7b3f"
@@ -68,5 +70,16 @@
     "The generated STIX bundle is a mapping artifact only; it does not assert maliciousness, compromise, malware-family membership, or final assessment.",
     "Suppressed traversal candidates must not be emitted as ordinary STIX relationship objects.",
     "OpenCTI ingestion, synchronization, marking, scoring, and workflow state are outside this fixture."
-  ]
+  ],
+  "modified": "2026-09-17T08:28:15.057Z",
+  "extension_creator": {
+    "type": "identity",
+    "spec_version": "2.1",
+    "id": "identity--c0ab47b4-28e6-48b6-bc65-1ad2feee67c6",
+    "created": "2026-09-17T08:28:15.057Z",
+    "modified": "2026-09-17T08:28:15.057Z",
+    "name": "EveryPivot Project",
+    "identity_class": "group",
+    "description": "EveryPivot Project is the creator of this extension. This project-level Identity conveys extension provenance only, not source reliability, analyst or reviewer authority, or accepted assessment status."
+  }
 }

@@ -3,6 +3,7 @@
 require 'digest'
 require 'json'
 require 'pathname'
+require_relative 'utf8_text'
 
 module EveryPivot
   # Checks a documentary candidate shape against the pinned SAIL v0.4 DRAFT
@@ -12,7 +13,8 @@ module EveryPivot
 
     MANIFEST_SHA256 = '5416bf429a34afccb4e6657807c26b83491a39bdcbd6c9a313530cadbf032881'
     VERSION = '0.4-draft'
-    SCHEMA_VERSIONS = %w[1.1 1.2 1.3 1.4 1.5].freeze
+    SCHEMA_VERSIONS = %w[1.1 1.2 1.3 1.4 1.5 1.6].freeze
+    CURRENT_SCHEMA_VERSIONS = %w[1.5 1.6].freeze
     SCOPES = %w[entity_level campaign_level incident_level].freeze
     BASES = %w[demonstrated assessed suspected theoretical].freeze
     HINT_FIELDS = %w[claim basis scope subject_role object_role object_kind].freeze
@@ -21,13 +23,18 @@ module EveryPivot
 
     attr_reader :contract_info
 
-    def initialize(repo_root: Pathname(__dir__).join('..'))
-      directory = Pathname(repo_root).join('schemas', 'sail-v0.4-draft')
+    def initialize(repo_root: nil)
+      root = if repo_root.nil?
+        Pathname(Utf8Text.decode(__dir__, path: 'tool directory')).join('..')
+      else
+        Pathname(Utf8Text.decode(repo_root.to_s, path: 'repository path'))
+      end
+      directory = root.join('schemas', 'sail-v0.4-draft')
       manifest_bytes = directory.join('manifest.json').binread
       digest = Digest::SHA256.hexdigest(manifest_bytes)
       raise ContractError, 'Pinned SAIL manifest SHA256 mismatch' unless digest == MANIFEST_SHA256
 
-      manifest = JSON.parse(manifest_bytes)
+      manifest = JSON.parse(Utf8Text.decode(manifest_bytes, path: directory.join('manifest.json')))
       files = manifest.fetch('files')
       raise ContractError, 'Incomplete SAIL contract pack' unless files.keys.sort == CONTRACT_FILES.sort
 
@@ -37,7 +44,8 @@ module EveryPivot
         unless Digest::SHA256.hexdigest(bytes) == entry.fetch('sha256')
           raise ContractError, "Pinned SAIL SHA256 mismatch: #{filename}"
         end
-        contracts[filename] = JSON.parse(bytes) if filename.end_with?('.json')
+        text = Utf8Text.decode(bytes, path: directory.join(filename))
+        contracts[filename] = JSON.parse(text) if filename.end_with?('.json')
       end
       matrix = contracts.fetch('predicate_type_matrix.v0.4.json')
       role_contract = contracts.fetch('semantic_roles.v0.4.json')
@@ -73,11 +81,44 @@ module EveryPivot
       }
     rescue ContractError
       raise
-    rescue SystemCallError, JSON::ParserError, KeyError, TypeError, NoMethodError => e
+    rescue Utf8Text::Error, SystemCallError, JSON::ParserError, KeyError, TypeError, NoMethodError => e
       raise ContractError, "SAIL contract pack unavailable or malformed: #{e.message}"
     end
 
+    # Assessment compatibility is diagnostic. This distribution gate concerns
+    # authoring-version and assessment eligibility only; shape and v1.6 execution
+    # references require their separate validators. Keeping v1.5 distributable
+    # does not give its documentary temporal strings executable semantics.
     def check(data, path: nil)
+      result = check_compatibility(data, path: path)
+      result['distribution'] = distribution_eligibility(data, result)
+      result
+    end
+
+    private
+
+    def distribution_eligibility(data, compatibility)
+      version = data.is_a?(Hash) ? data['pattern_schema_version'].to_s : ''
+      legacy = (SCHEMA_VERSIONS - CURRENT_SCHEMA_VERSIONS).include?(version)
+      current = CURRENT_SCHEMA_VERSIONS.include?(version)
+      eligible = current && compatibility['coverage']['complete'] &&
+        %w[evidence_only candidate_compatible].include?(compatibility['status'])
+      errors = []
+      if legacy
+        errors << {'code' => 'migration_required', 'message' =>
+          "schema v#{version} is legacy diagnostic material, not distributable; current distribution requires v1.5 or v1.6, an explicit assessment_mode and complete applicable fields"}
+      elsif !current
+        errors << {'code' => 'current_schema_required', 'message' =>
+          'current distribution requires supported schema v1.5 or v1.6'}
+      elsif !eligible
+        errors << {'code' => 'current_assessment_ineligible', 'message' =>
+          'current distribution requires an explicit valid mode and complete compatible applicable fields; see semantic diagnostics'}
+      end
+      {'eligible' => eligible, 'classification' => legacy ? 'legacy_diagnostic' : (current ? 'current' : 'unsupported'),
+       'errors' => errors}
+    end
+
+    def check_compatibility(data, path: nil)
       result = {
         'id' => data.is_a?(Hash) ? data['id'] : nil, 'path' => path.to_s,
         'status' => 'incompatible',
@@ -93,9 +134,9 @@ module EveryPivot
       version = data['pattern_schema_version'].to_s
       issue(result, 'errors', 'schema_version_unknown', 'pattern_schema_version is missing or unsupported') unless SCHEMA_VERSIONS.include?(version)
       mode = data['assessment_mode']
-      if version == '1.5'
+      if CURRENT_SCHEMA_VERSIONS.include?(version)
         unless %w[evidence_only candidate_assessment].include?(mode)
-          issue(result, 'errors', 'assessment_mode_invalid', 'v1.5 requires assessment_mode evidence_only or candidate_assessment')
+          issue(result, 'errors', 'assessment_mode_invalid', 'v1.5 and v1.6 require assessment_mode evidence_only or candidate_assessment')
         end
         if mode == 'evidence_only'
           issue(result, 'errors', 'evidence_only_has_assessment', 'evidence_only forbids assessment') if data.key?('assessment')
@@ -111,7 +152,7 @@ module EveryPivot
           end
         end
       elsif data.key?('assessment_mode') || data.key?('assessment_requirements')
-        issue(result, 'errors', 'assessment_mode_requires_v15', 'assessment_mode and assessment_requirements require schema v1.5')
+        issue(result, 'errors', 'assessment_mode_requires_v15', 'assessment_mode and assessment_requirements require schema v1.5 or v1.6')
       end
 
       unless data.key?('assessment')
@@ -119,7 +160,7 @@ module EveryPivot
           issue(result, 'warnings', 'legacy_assessment_absent', 'Legacy pattern has no assessment hint; compatibility is incomplete')
           result['status'] = result['errors'].empty? ? 'incomplete' : 'incompatible'
         else
-          issue(result, 'errors', 'assessment_missing', 'assessment is required unless v1.5 assessment_mode is evidence_only')
+          issue(result, 'errors', 'assessment_missing', 'assessment is required unless v1.5 or v1.6 assessment_mode is evidence_only')
         end
         return result
       end
@@ -184,7 +225,7 @@ module EveryPivot
         issue(result, 'errors', 'scope_not_allowed_for_subject', "assessment.scope #{hint['scope'].inspect} is not allowed for #{subject} + #{hint['claim']}")
       end
 
-      if %w[1.3 1.4 1.5].include?(version) && (missing_subject || missing_object)
+      if %w[1.3 1.4 1.5 1.6].include?(version) && (missing_subject || missing_object)
         issue(result, 'errors', 'complete_hint_required', "schema v#{version} requires subject_role and object_role or object_kind")
       end
       result['coverage']['complete'] = result['errors'].empty? && !missing_subject && !missing_object

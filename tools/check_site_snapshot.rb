@@ -4,18 +4,25 @@ require 'json'
 require 'optparse'
 require 'pathname'
 require 'date'
+require_relative 'utf8_text'
 
 def read_text(path, errors)
-  path.read
+  EveryPivot::Utf8Text.read(path)
 rescue Errno::ENOENT
   errors << "Missing #{path}"
+  ''
+rescue EveryPivot::Utf8Text::Error => e
+  errors << e.message
   ''
 end
 
 def parse_json(path, errors)
-  JSON.parse(path.read)
+  JSON.parse(EveryPivot::Utf8Text.read(path))
 rescue Errno::ENOENT
   errors << "Missing #{path}"
+  {}
+rescue EveryPivot::Utf8Text::Error => e
+  errors << e.message
   {}
 rescue JSON::ParserError => e
   errors << "Invalid JSON in #{path}: #{e.message}"
@@ -127,7 +134,7 @@ def homepage_snapshot(text, errors)
 end
 
 options = {
-  repo_root: Pathname(__dir__).join('..').expand_path
+  repo_root: Pathname(EveryPivot::Utf8Text.decode(__dir__, path: __FILE__)).join('..').expand_path
 }
 
 OptionParser.new do |parser|

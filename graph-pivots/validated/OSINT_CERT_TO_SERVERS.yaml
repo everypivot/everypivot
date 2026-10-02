@@ -1,64 +1,52 @@
 id: OSINT_CERT_TO_SERVERS
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/OSINT_CERT_TO_SERVERS.json
+  sha256: 4089cee02f6bfde495b13dd0b1ca5ced17487e7d3e1387545970ef87b5e2dc77
 validation_state: validated
 precision_tier: high
 robustness_class: exact_cryptographic
 hazards:
 - 'Managed certificates and shared load balancers can join unrelated hosts behind the same delivery surface.'
 - 'CT and scanner coverage can be incomplete or stale, so absence should not be interpreted as disproof.'
+- 'Certificate name fields and CT/precertificate records do not establish network presentation; supplied source assertions remain source-qualified.'
+- 'Presentation inquiries require case-selected UTC dates. Certificate validity, receipt and reprocessing do not refresh presentation time.'
+- 'Source and address class exclusions are explicit contract query policies; missing or conflicting classification is not clearance.'
 capability_requirements:
   required:
-  - 'tls_scanning'
   - 'certificate_normalization'
+  - 'semantic_evidence_v1'
   optional:
+  - 'tls_scanning'
   - 'ct_history'
+  - 'presentation_occurrence_and_name_correspondence'
+  - 'collection_knowledge_witnesses'
 review:
   last_reviewed: '2026-04-04'
   review_cadence_days: 90
   next_review: '2026-07-03'
-name: X.509 SPKI/Cert → Servers (IP/FQDN)
+name: Certificate Identity or Explicit SPKI Reuse → Observed Servers
 category: OSINT
-description: Enumerate servers that present an identical certificate or SPKI (public key).
+description: Return IPv4 addresses or FQDNs linked to an actual certificate presentation occurrence. Whole-certificate identity and explicitly selected SPKI reuse remain distinct; a renewed certificate sharing a key is a different certificate.
 source: x509:cert
 target: inet:ipv4|inet:fqdn
 assessment_mode: evidence_only
 hops:
-- via: presented_at
+- via: observed_certificate_presentation
   direction: out
   form: inet:ipv4|inet:fqdn
 constraints:
-  temporal:
-    order:
-    - cert.not_before <= host.seen
-    window_days: 825
-  degree_caps:
-    x509:cert: 10000
-  negative_nodes:
-  - form: x509:cert
-    list: letsencrypt_mass_certificates
-  - form: inet:ipv4
-    list: cdn_edges
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - ct
 - tls

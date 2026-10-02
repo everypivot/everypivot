@@ -1,26 +1,44 @@
 id: CROSS_ASN_ORG_TO_SANCTIONS
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: missing_negative_controls
 precision_tier: exploratory
 capability_requirements:
   required:
-  - 'rir_whois_or_rdap'
-  - 'sanctions_list_access'
+  - rir_whois_or_rdap
+  - sanctions_list_access
+  - semantic_execution_contract_v1
+  - source_revision_scoped_relations
+  - explicit_temporal_applicability
+  - amendment_context
   optional:
-  - 'bgp_history'
-  - 'entity_normalization'
+  - bgp_history
+  - entity_normalization
 hazards:
-- Shared cloud, hosting, reseller, and transit ASNs can map many unrelated customers to the same organization or sanction-adjacent entity.
-- Sanctions and ASN organization data change over time; corroborate allocation dates and customer-level evidence to avoid false positives.
-- Promotion needs negative controls for cloud, transit, reseller, and customer-assigned ASNs before any sanctions propagation.
-name: ASN Org → Sanctions
+- Shared cloud, hosting, reseller, and transit ASNs can map many unrelated customers
+  to the same organization or sanction-adjacent entity.
+- Sanctions and ASN organization data change over time; corroborate allocation dates
+  and customer-level evidence to avoid false positives.
+- Source-reported identity, relationship and list status require separate evidence;
+  no traversal supplies legal exposure, liability, control, source independence or
+  accepted assessment status.
+- A selected historical-status inquiry requires the actual applicable relationship
+  and list intervals. Later publication, receipt and correction do not backdate analyst
+  knowledge or refresh activity.
+name: ASN → Reported Organization → Sanctions Entries
 category: CROSS
-description: Check the organization owning an ASN against sanctions (useful in risk screening).
+description: Follow an evidenced ASN/organization relationship during the selected
+  period to selected sanctions entry revisions. This does not propagate a list entry
+  to unrelated customers, hosted infrastructure or every use of the ASN.
 source: net:asn
 target: sanction:entry
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CROSS_ASN_ORG_TO_SANCTIONS.json
+  sha256: 1696aa57887304e2bf42a5be0429faa9e3c10faa0a64461968c02356232098b9
 hops:
 - via: owned_by
   direction: out
@@ -29,37 +47,14 @@ hops:
   direction: out
   form: sanction:entry
 constraints:
-  temporal:
-    order:
-    - asn.firstseen <= sanction.listed
-    window_days: 3650
-  degree_caps:
-    net:asn: 1
-  negative_nodes:
-  - form: net:asn
-    list: hyperscaler_or_transit_asns
-  - form: net:asn
-    list: shared_hosting_provider_asns
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- popular_tool_penalty
-- novelty_flag
+features: []
 outputs:
-  top_paths: 3
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - bgp
 - sanctions

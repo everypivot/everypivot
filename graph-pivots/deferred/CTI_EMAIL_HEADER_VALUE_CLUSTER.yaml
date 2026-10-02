@@ -1,6 +1,6 @@
 id: CTI_EMAIL_HEADER_VALUE_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -11,54 +11,42 @@ hazards:
 - 'Header-value reuse is weak unless the value is rare and corroborated by attachment, sender, URL, or relay evidence.'
 capability_requirements:
   required:
-  - 'email_header_parsing'
-  - 'header_value_normalization'
+  - email_header_parsing
+  - header_value_normalization
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
-  - 'privacy_minimization'
-  - 'common_mailer_suppression'
-  - 'message_body_context'
+  - privacy_minimization
+  - message_body_context
 name: Email Header Value Cluster
 category: CTI
-description: Cluster email messages that share a rare normalized header value such as a mailer marker, charset, custom header, or relay artifact.
+description: Find preserved message captures containing the selected header value
+  in the selected header name and actual field occurrence. Original, gateway and export
+  representations remain distinct evidence; receipt is not extraction or knowledge
+  time.
 source: email:header:value
 target: email:message
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_EMAIL_HEADER_VALUE_CLUSTER.json
+  sha256: 6638c9e648211cc7a11ce82aef2b79f7f843407dbebc25423cd5aa9cc9dc8310
 hops:
 - via: header_value_present
   direction: in
   form: email:message
 constraints:
-  temporal:
-    order:
-    - header.extracted <= message.received
-    window_days: 30
-  degree_caps:
-    email:header:value: 50000
-    email:message: 100000
-  negative_nodes:
-  - form: email:header:value
-    list: common_mailer_or_gateway_headers
-  - form: email:message
-    list: bulk_or_marketing_messages
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- header_name
-- value_entropy
-- sender_domain_diversity
-- common_header_penalty
-- privacy_minimized_flag
-- novelty_flag
+features: []
 outputs:
-  top_paths: 5
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - mail_telemetry

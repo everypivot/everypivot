@@ -1,0 +1,2006 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_IP_TO_LISTING_ASSERTIONS",
+    "version": "1.0.0"
+  },
+  "description": "Historical source-assertion inquiry over an explicit analyst/case period. Supplied-source correction reports are retained; history beyond that scope is unknown. No current or unwithdrawn-status assurance, publisher claim about neighbours, risk score, ownership or accepted assessment.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-sbl-replacement-family-as-three-distinct-questions",
+  "parameters": {
+    "seed": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact source identity; labels alone cannot supply joins."
+    },
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Resolved analyst/case UTC dates selecting actual source-claim applicability, not receipt."
+    },
+    "period_origin": {
+      "type": "string",
+      "required": true,
+      "description": "Recorded origin of the selected range.",
+      "enum": [
+        "analyst",
+        "case"
+      ]
+    },
+    "claim_kind": {
+      "type": "string",
+      "required": true,
+      "description": "The particular source claim under inquiry.",
+      "enum": [
+        "listing_status",
+        "source_reported_activity"
+      ]
+    },
+    "reference_sources": {
+      "type": "string_array",
+      "required": true,
+      "description": "Explicit supplied source/revision scope; does not certify complete correction history.",
+      "item_reference": "source"
+    },
+    "apply_exclusions": {
+      "type": "boolean",
+      "required": false,
+      "description": "Apply explicitly selected investigation exclusions; shared-host classification alone is context.",
+      "enum": [
+        true,
+        false
+      ]
+    },
+    "exclusion_rules": {
+      "type": "string_array",
+      "required": false,
+      "description": "Selected investigation rule IDs.",
+      "requires_when": {
+        "parameter": "apply_exclusions",
+        "values": [
+          true
+        ]
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "exact_event",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "claim",
+          "kind": "assertion",
+          "types": [
+            "reputation:assertion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "claim.attributes.subject_kind"
+                },
+                "right": {
+                  "literal": "ipv4"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "claim.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "reputation:entry"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "entry.id"
+            },
+            "right": {
+              "ref": "claim.object"
+            }
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "infrastructure:classification"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "classification.subject"
+            },
+            "right": {
+              "ref": "claim.subject"
+            }
+          },
+          "optional": true
+        },
+        {
+          "name": "exclusion",
+          "kind": "assertion",
+          "types": [
+            "investigation:exclusion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.subject"
+                },
+                "right": {
+                  "ref": "claim.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "exclusion.attributes.rule_id"
+                },
+                "right": {
+                  "param": "exclusion_rules"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.claim_kind"
+            },
+            "right": {
+              "param": "claim_kind"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.time_basis"
+            },
+            "right": {
+              "literal": "event"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.assertion_namespace"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.statement"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.source_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.collection_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.entry_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.entry_revision"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.entry_revision"
+            },
+            "right": {
+              "ref": "entry.attributes.entry_revision"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "claim"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "claim.times.applies"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "form": "reputation:assertion",
+        "identity": [
+          {
+            "ref": "claim.id"
+          },
+          {
+            "ref": "entry.attributes.entry_revision"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "inquiry": {
+            "literal": "ip"
+          },
+          "finding_kind": {
+            "literal": "historical_source_assertion"
+          },
+          "source_assertion": {
+            "ref": "claim.id"
+          },
+          "statement": {
+            "ref": "claim.attributes.statement"
+          },
+          "source_scope": {
+            "ref": "claim.attributes.source_scope"
+          },
+          "entry": {
+            "ref": "entry.id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "requested_period": {
+            "param": "period"
+          },
+          "period_origin": {
+            "param": "period_origin"
+          },
+          "claim_kind": {
+            "param": "claim_kind"
+          },
+          "match_reason": {
+            "literal": "exact"
+          },
+          "classification_context": {
+            "ref": "classification.attributes.classification"
+          },
+          "history_limit": {
+            "literal": "reported_in_supplied_scope; all supplied source amendments retained; history beyond supplied revisions unknown; not current or certified unwithdrawn"
+          }
+        },
+        "binding": "claim"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "claim.times.collection_available"
+          },
+          "object": {
+            "ref": "claim.id"
+          },
+          "occurrence": {
+            "ref": "claim.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry.times.collection_available"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "entry.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "claim.times.applies"
+          },
+          "object": {
+            "ref": "claim.subject"
+          },
+          "occurrence": {
+            "ref": "claim.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "exclusion.times.applicable"
+          },
+          "object": {
+            "ref": "claim.subject"
+          },
+          "occurrence": {
+            "ref": "exclusion.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "claim.times.collection_available"
+        },
+        {
+          "ref": "entry.times.collection_available"
+        }
+      ],
+      "policies": [
+        {
+          "id": "selected_investigation_exclusion",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "claim.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "apply_exclusions",
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "exclude"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "claim.times.applies"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "retain"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "param": "exclusion_rules"
+                },
+                "right": {
+                  "ref": "exclusion.attributes.evaluated_rule_ids"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "claim.times.applies"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "claim.times.applies"
+                }
+              }
+            ]
+          },
+          "reason": "Explicit selected claim/subject/period investigation exclusion; generic shared-hosting classifications do not exclude."
+        }
+      ],
+      "amendments": {
+        "support": [
+          "claim"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "retain_reports"
+      }
+    },
+    {
+      "id": "exact_established_state",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "claim",
+          "kind": "assertion",
+          "types": [
+            "reputation:assertion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "claim.attributes.subject_kind"
+                },
+                "right": {
+                  "literal": "ipv4"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "claim.subject"
+                },
+                "right": {
+                  "ref": "seed.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "reputation:entry"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "entry.id"
+            },
+            "right": {
+              "ref": "claim.object"
+            }
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "infrastructure:classification"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "classification.subject"
+            },
+            "right": {
+              "ref": "claim.subject"
+            }
+          },
+          "optional": true
+        },
+        {
+          "name": "exclusion",
+          "kind": "assertion",
+          "types": [
+            "investigation:exclusion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.subject"
+                },
+                "right": {
+                  "ref": "claim.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "exclusion.attributes.rule_id"
+                },
+                "right": {
+                  "param": "exclusion_rules"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.claim_kind"
+            },
+            "right": {
+              "param": "claim_kind"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.time_basis"
+            },
+            "right": {
+              "literal": "established_state"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.assertion_namespace"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.statement"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.source_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.collection_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.entry_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.entry_revision"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.entry_revision"
+            },
+            "right": {
+              "ref": "entry.attributes.entry_revision"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "claim"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "claim.times.applies"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "some"
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "form": "reputation:assertion",
+        "identity": [
+          {
+            "ref": "claim.id"
+          },
+          {
+            "ref": "entry.attributes.entry_revision"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "inquiry": {
+            "literal": "ip"
+          },
+          "finding_kind": {
+            "literal": "historical_source_assertion"
+          },
+          "source_assertion": {
+            "ref": "claim.id"
+          },
+          "statement": {
+            "ref": "claim.attributes.statement"
+          },
+          "source_scope": {
+            "ref": "claim.attributes.source_scope"
+          },
+          "entry": {
+            "ref": "entry.id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "requested_period": {
+            "param": "period"
+          },
+          "period_origin": {
+            "param": "period_origin"
+          },
+          "claim_kind": {
+            "param": "claim_kind"
+          },
+          "match_reason": {
+            "literal": "exact"
+          },
+          "classification_context": {
+            "ref": "classification.attributes.classification"
+          },
+          "history_limit": {
+            "literal": "reported_in_supplied_scope; all supplied source amendments retained; history beyond supplied revisions unknown; not current or certified unwithdrawn"
+          }
+        },
+        "binding": "claim"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "claim.times.collection_available"
+          },
+          "object": {
+            "ref": "claim.id"
+          },
+          "occurrence": {
+            "ref": "claim.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry.times.collection_available"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "entry.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "claim.times.applies"
+          },
+          "object": {
+            "ref": "claim.subject"
+          },
+          "occurrence": {
+            "ref": "claim.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "exclusion.times.applicable"
+          },
+          "object": {
+            "ref": "claim.subject"
+          },
+          "occurrence": {
+            "ref": "exclusion.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "claim.times.collection_available"
+        },
+        {
+          "ref": "entry.times.collection_available"
+        }
+      ],
+      "policies": [
+        {
+          "id": "selected_investigation_exclusion",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "claim.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "apply_exclusions",
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "exclude"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "retain"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "param": "exclusion_rules"
+                },
+                "right": {
+                  "ref": "exclusion.attributes.evaluated_rule_ids"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "reason": "Explicit selected claim/subject/period investigation exclusion; generic shared-hosting classifications do not exclude."
+        }
+      ],
+      "amendments": {
+        "support": [
+          "claim"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "retain_reports"
+      }
+    },
+    {
+      "id": "covering_prefix_event",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "claim",
+          "kind": "assertion",
+          "types": [
+            "reputation:assertion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "claim.attributes.subject_kind"
+                },
+                "right": {
+                  "literal": "ipv4_prefix"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "claim.subject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "reputation:entry"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "entry.id"
+            },
+            "right": {
+              "ref": "claim.object"
+            }
+          }
+        },
+        {
+          "name": "listed_prefix",
+          "kind": "entity",
+          "types": [
+            "inet:net4"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "listed_prefix.id"
+            },
+            "right": {
+              "ref": "claim.subject"
+            }
+          }
+        },
+        {
+          "name": "prefix_scope",
+          "kind": "assertion",
+          "types": [
+            "network:prefix_scope"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "prefix_scope.subject"
+            },
+            "right": {
+              "ref": "claim.id"
+            }
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "infrastructure:classification"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "classification.subject"
+            },
+            "right": {
+              "ref": "claim.subject"
+            }
+          },
+          "optional": true
+        },
+        {
+          "name": "exclusion",
+          "kind": "assertion",
+          "types": [
+            "investigation:exclusion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.subject"
+                },
+                "right": {
+                  "ref": "claim.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "exclusion.attributes.rule_id"
+                },
+                "right": {
+                  "param": "exclusion_rules"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "prefix_scope.attributes.prefix.value"
+            },
+            "right": {
+              "ref": "listed_prefix.attributes.value"
+            }
+          },
+          {
+            "op": "ip_in_prefix",
+            "address": {
+              "ref": "seed.attributes.selector"
+            },
+            "prefix": {
+              "ref": "prefix_scope.id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.claim_kind"
+            },
+            "right": {
+              "param": "claim_kind"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.time_basis"
+            },
+            "right": {
+              "literal": "event"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.assertion_namespace"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.statement"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.source_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.collection_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.entry_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.entry_revision"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.entry_revision"
+            },
+            "right": {
+              "ref": "entry.attributes.entry_revision"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "claim"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "claim.times.applies"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "form": "reputation:assertion",
+        "identity": [
+          {
+            "ref": "claim.id"
+          },
+          {
+            "ref": "entry.attributes.entry_revision"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "inquiry": {
+            "literal": "ip"
+          },
+          "finding_kind": {
+            "literal": "historical_source_assertion"
+          },
+          "source_assertion": {
+            "ref": "claim.id"
+          },
+          "statement": {
+            "ref": "claim.attributes.statement"
+          },
+          "source_scope": {
+            "ref": "claim.attributes.source_scope"
+          },
+          "entry": {
+            "ref": "entry.id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "requested_period": {
+            "param": "period"
+          },
+          "period_origin": {
+            "param": "period_origin"
+          },
+          "claim_kind": {
+            "param": "claim_kind"
+          },
+          "match_reason": {
+            "literal": "covering_prefix"
+          },
+          "classification_context": {
+            "ref": "classification.attributes.classification"
+          },
+          "history_limit": {
+            "literal": "reported_in_supplied_scope; all supplied source amendments retained; history beyond supplied revisions unknown; not current or certified unwithdrawn"
+          }
+        },
+        "binding": "claim"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "claim.times.collection_available"
+          },
+          "object": {
+            "ref": "claim.id"
+          },
+          "occurrence": {
+            "ref": "claim.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry.times.collection_available"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "entry.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "listed_prefix.times.collection_available"
+          },
+          "object": {
+            "ref": "listed_prefix.id"
+          },
+          "occurrence": {
+            "ref": "listed_prefix.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "prefix_scope.times.collection_available"
+          },
+          "object": {
+            "ref": "prefix_scope.id"
+          },
+          "occurrence": {
+            "ref": "prefix_scope.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "claim.times.applies"
+          },
+          "object": {
+            "ref": "claim.subject"
+          },
+          "occurrence": {
+            "ref": "claim.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "exclusion.times.applicable"
+          },
+          "object": {
+            "ref": "claim.subject"
+          },
+          "occurrence": {
+            "ref": "exclusion.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "claim.times.collection_available"
+        },
+        {
+          "ref": "entry.times.collection_available"
+        },
+        {
+          "ref": "listed_prefix.times.collection_available"
+        },
+        {
+          "ref": "prefix_scope.times.collection_available"
+        }
+      ],
+      "policies": [
+        {
+          "id": "selected_investigation_exclusion",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "claim.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "apply_exclusions",
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "exclude"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "claim.times.applies"
+                }
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "retain"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "param": "exclusion_rules"
+                },
+                "right": {
+                  "ref": "exclusion.attributes.evaluated_rule_ids"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "claim.times.applies"
+                }
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "at",
+                "at": {
+                  "ref": "claim.times.applies"
+                }
+              }
+            ]
+          },
+          "reason": "Explicit selected claim/subject/period investigation exclusion; generic shared-hosting classifications do not exclude."
+        }
+      ],
+      "amendments": {
+        "support": [
+          "claim",
+          "prefix_scope"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "retain_reports"
+      }
+    },
+    {
+      "id": "covering_prefix_established_state",
+      "bindings": [
+        {
+          "name": "seed",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "seed.id"
+            },
+            "right": {
+              "param": "seed"
+            }
+          },
+          "query_seed": true
+        },
+        {
+          "name": "claim",
+          "kind": "assertion",
+          "types": [
+            "reputation:assertion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "claim.attributes.subject_kind"
+                },
+                "right": {
+                  "literal": "ipv4_prefix"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "claim.subject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "kind": "entity",
+          "types": [
+            "reputation:entry"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "entry.id"
+            },
+            "right": {
+              "ref": "claim.object"
+            }
+          }
+        },
+        {
+          "name": "listed_prefix",
+          "kind": "entity",
+          "types": [
+            "inet:net4"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "listed_prefix.id"
+            },
+            "right": {
+              "ref": "claim.subject"
+            }
+          }
+        },
+        {
+          "name": "prefix_scope",
+          "kind": "assertion",
+          "types": [
+            "network:prefix_scope"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "prefix_scope.subject"
+            },
+            "right": {
+              "ref": "claim.id"
+            }
+          }
+        },
+        {
+          "name": "classification",
+          "kind": "assertion",
+          "types": [
+            "infrastructure:classification"
+          ],
+          "where": {
+            "op": "eq",
+            "left": {
+              "ref": "classification.subject"
+            },
+            "right": {
+              "ref": "claim.subject"
+            }
+          },
+          "optional": true
+        },
+        {
+          "name": "exclusion",
+          "kind": "assertion",
+          "types": [
+            "investigation:exclusion"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.subject"
+                },
+                "right": {
+                  "ref": "claim.id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "exclusion.attributes.rule_id"
+                },
+                "right": {
+                  "param": "exclusion_rules"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "left": {
+              "ref": "prefix_scope.attributes.prefix.value"
+            },
+            "right": {
+              "ref": "listed_prefix.attributes.value"
+            }
+          },
+          {
+            "op": "ip_in_prefix",
+            "address": {
+              "ref": "seed.attributes.selector"
+            },
+            "prefix": {
+              "ref": "prefix_scope.id"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.claim_kind"
+            },
+            "right": {
+              "param": "claim_kind"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.time_basis"
+            },
+            "right": {
+              "literal": "established_state"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.assertion_namespace"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.statement"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "claim.attributes.source_scope"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.collection_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.entry_identity"
+            }
+          },
+          {
+            "op": "nonblank_text",
+            "value": {
+              "ref": "entry.attributes.entry_revision"
+            }
+          },
+          {
+            "op": "eq",
+            "left": {
+              "ref": "claim.attributes.entry_revision"
+            },
+            "right": {
+              "ref": "entry.attributes.entry_revision"
+            }
+          },
+          {
+            "op": "all_in",
+            "left": {
+              "evidence_sources": "claim"
+            },
+            "right": {
+              "param": "reference_sources"
+            }
+          },
+          {
+            "op": "within",
+            "value": {
+              "ref": "claim.times.applies"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "some"
+          }
+        ]
+      },
+      "result": {
+        "mode": "bound",
+        "form": "reputation:assertion",
+        "identity": [
+          {
+            "ref": "claim.id"
+          },
+          {
+            "ref": "entry.attributes.entry_revision"
+          }
+        ],
+        "fields": {
+          "claim_status": {
+            "literal": "evidence_only"
+          },
+          "inquiry": {
+            "literal": "ip"
+          },
+          "finding_kind": {
+            "literal": "historical_source_assertion"
+          },
+          "source_assertion": {
+            "ref": "claim.id"
+          },
+          "statement": {
+            "ref": "claim.attributes.statement"
+          },
+          "source_scope": {
+            "ref": "claim.attributes.source_scope"
+          },
+          "entry": {
+            "ref": "entry.id"
+          },
+          "entry_revision": {
+            "ref": "entry.attributes.entry_revision"
+          },
+          "requested_period": {
+            "param": "period"
+          },
+          "period_origin": {
+            "param": "period_origin"
+          },
+          "claim_kind": {
+            "param": "claim_kind"
+          },
+          "match_reason": {
+            "literal": "covering_prefix"
+          },
+          "classification_context": {
+            "ref": "classification.attributes.classification"
+          },
+          "history_limit": {
+            "literal": "reported_in_supplied_scope; all supplied source amendments retained; history beyond supplied revisions unknown; not current or certified unwithdrawn"
+          }
+        },
+        "binding": "claim"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "claim.times.collection_available"
+          },
+          "object": {
+            "ref": "claim.id"
+          },
+          "occurrence": {
+            "ref": "claim.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "entry.times.collection_available"
+          },
+          "object": {
+            "ref": "entry.id"
+          },
+          "occurrence": {
+            "ref": "entry.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "listed_prefix.times.collection_available"
+          },
+          "object": {
+            "ref": "listed_prefix.id"
+          },
+          "occurrence": {
+            "ref": "listed_prefix.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "prefix_scope.times.collection_available"
+          },
+          "object": {
+            "ref": "prefix_scope.id"
+          },
+          "occurrence": {
+            "ref": "prefix_scope.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "claim.times.applies"
+          },
+          "object": {
+            "ref": "claim.subject"
+          },
+          "occurrence": {
+            "ref": "claim.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "exclusion.times.applicable"
+          },
+          "object": {
+            "ref": "claim.subject"
+          },
+          "occurrence": {
+            "ref": "exclusion.id"
+          }
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "claim.times.collection_available"
+        },
+        {
+          "ref": "entry.times.collection_available"
+        },
+        {
+          "ref": "listed_prefix.times.collection_available"
+        },
+        {
+          "ref": "prefix_scope.times.collection_available"
+        }
+      ],
+      "policies": [
+        {
+          "id": "selected_investigation_exclusion",
+          "revision": "1.0",
+          "scope": "path",
+          "subject": {
+            "ref": "claim.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "apply_exclusions",
+          "required_evaluation": true,
+          "when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "exclude"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "allow_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "retain"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.reason"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "exclusion.attributes.rule_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "param": "exclusion_rules"
+                },
+                "right": {
+                  "ref": "exclusion.attributes.evaluated_rule_ids"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "conflict_when": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "exclusion.attributes.disposition"
+                },
+                "right": {
+                  "literal": "contested"
+                }
+              },
+              {
+                "op": "within",
+                "value": {
+                  "ref": "exclusion.times.applicable"
+                },
+                "period": {
+                  "param": "period"
+                },
+                "quantifier": "all"
+              }
+            ]
+          },
+          "reason": "Explicit selected claim/subject/period investigation exclusion; generic shared-hosting classifications do not exclude."
+        }
+      ],
+      "amendments": {
+        "support": [
+          "claim",
+          "prefix_scope"
+        ],
+        "sources": {
+          "param": "reference_sources"
+        },
+        "mode": "retain_reports"
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 id: CTI_IMAGE_TEXT_REUSE_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
@@ -15,17 +15,28 @@ capability_requirements:
   - image_extraction
   - ocr_extraction
   - text_normalization
+  - semantic_execution_contract_v1
+  - preserved_extraction_v1
+  - exact_content_hash_reproduction
+  - complete_finding_history
+  - scoped_control_evaluation
   optional:
   - perceptual_hashing
   - bounded_image_description
   - language_detection
-  - stock_image_suppression
 name: Image Text Reuse Cluster
 category: CTI
-description: Cluster image assets or webpages that share distinctive normalized OCR text extracted from rendered images.
+description: Find the particular preserved images whose evidenced OCR output has the
+  selected digest. A page result separately requires the exact page capture and image
+  association; crops and renders retain their own identities.
 source: image:ocr:text_hash
 target: file:image|inet:url
 assessment_mode: evidence_only
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_IMAGE_TEXT_REUSE_CLUSTER.json
+  sha256: 2429a9a957e11d1267ae69ea89a81b0a28e5c24f4b33be9bedea61377c9ec587
 hops:
 - via: ocr_text_extracted_from
   direction: in
@@ -34,40 +45,14 @@ hops:
   direction: out
   form: inet:url
 constraints:
-  temporal:
-    order:
-    - ocr_text.extracted <= image.observed <= page.observed
-    window_days: 365
-  degree_caps:
-    image:ocr:text_hash: 100000
-    file:image: 1000000
-  negative_nodes:
-  - form: image:ocr:text_hash
-    list: common_logo_boilerplate_or_template_text_hashes
-  - form: file:image
-    list: stock_image_or_meme_assets
-  - form: inet:url
-    list: common_hosting_or_cdn_domains
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- ocr_language
-- text_length
-- extractor_version
-- stock_or_template_penalty
-- image_context
-- temporal_consistency
+features: []
 outputs:
-  top_paths: 5
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - image_corpus
 - osint_web

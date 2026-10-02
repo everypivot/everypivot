@@ -1,0 +1,618 @@
+{
+  "contract": "everypivot.semantic_evidence",
+  "version": "1.0",
+  "collection_id": "synthetic-case-collection",
+  "sources": [
+    {
+      "id": "synthetic-ja3-report",
+      "publisher": "EveryPivot synthetic fixture author",
+      "document": "fixtures/semantic-families/ja3/source.json",
+      "revision": "fixture-r1",
+      "collection": "synthetic-case-collection",
+      "independent_origin": null,
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "9665a3e2a4674e7e58b466c43482d7a764440969ea09b96d53ea09cadc4bb002",
+        "scope": "exact UTF-8 bytes of fixtures/semantic-families/ja3/source.json"
+      }
+    }
+  ],
+  "records": [
+    {
+      "id": "e1",
+      "kind": "occurrence",
+      "type": "tls:exchange",
+      "attributes": {
+        "occurrence_id": "connection-17",
+        "leg_id": "observer-to-edge",
+        "client_endpoint": "192.0.2.11:54321",
+        "destination_endpoint": "192.0.2.20:443",
+        "vantage": "synthetic-pcap-vantage"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/e1"
+        }
+      ]
+    },
+    {
+      "id": "d-alpha",
+      "kind": "entity",
+      "type": "inet:fqdn",
+      "attributes": {
+        "value": "alpha.example.test",
+        "normalization": "dns_ascii_lower_v1",
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "alpha.example.test",
+          "provenance": {
+            "source": "synthetic-ja3-report",
+            "record_id": "d-alpha",
+            "source_revision": "fixture-r1",
+            "field": "/claims/d-alpha/name_selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/d-alpha"
+        }
+      ]
+    },
+    {
+      "id": "m-client",
+      "kind": "occurrence",
+      "type": "tls:client_hello",
+      "attributes": {
+        "selector": {
+          "kind": "ja3",
+          "role": "client",
+          "algorithm": "md5",
+          "normalization": "hex_case_v1",
+          "method_version": "synthetic-ja3-extractor-v1",
+          "representation": "hex",
+          "scope": "client_hello",
+          "value": "0123456789abcdef0123456789abcdef",
+          "provenance": {
+            "source": "synthetic-ja3-report",
+            "record_id": "m-client",
+            "source_revision": "fixture-r1",
+            "field": "/claims/m-client/selector",
+            "basis": "reported"
+          }
+        },
+        "message_role": "client",
+        "observed_state": "attempt_observed",
+        "occurrence_id": "network-message-client",
+        "exchange_id": "e1",
+        "leg_id": "observer-to-edge"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "m-client",
+            "occurrence": "m-client"
+          },
+          "field": "/claims/m-client/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-09-30T23:59:50Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/m-client"
+        }
+      ]
+    },
+    {
+      "id": "n-client",
+      "kind": "assertion",
+      "type": "tls:exchange_domain",
+      "attributes": {
+        "associated_message_id": "m-client",
+        "leg_id": "observer-to-edge",
+        "basis": "same_exchange_sni",
+        "name": "alpha.example.test",
+        "normalization": "dns_ascii_lower_v1",
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "alpha.example.test",
+          "provenance": {
+            "source": "synthetic-ja3-report",
+            "record_id": "n-client",
+            "source_revision": "fixture-r1",
+            "field": "/claims/n-client/name_selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/n-client"
+        }
+      ],
+      "subject": "e1",
+      "object": "d-alpha"
+    },
+    {
+      "id": "derive-client",
+      "kind": "occurrence",
+      "type": "tls:fingerprint_derivation",
+      "attributes": {
+        "selector": {
+          "kind": "ja3",
+          "role": "client",
+          "algorithm": "md5",
+          "normalization": "hex_case_v1",
+          "method_version": "synthetic-ja3-extractor-v1",
+          "representation": "hex",
+          "scope": "client_hello",
+          "value": "0123456789abcdef0123456789abcdef",
+          "provenance": {
+            "source": "synthetic-ja3-report",
+            "record_id": "derive-client",
+            "source_revision": "fixture-r1",
+            "field": "/claims/derive-client/selector",
+            "basis": "reported"
+          }
+        },
+        "message_role": "client",
+        "method": "synthetic-reported-extractor",
+        "method_version": "1",
+        "run_id": "derive-run-client"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "m-client",
+            "occurrence": "derive-client"
+          },
+          "field": "/claims/derive-client/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:01:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/derive-client"
+        }
+      ],
+      "subject": "m-client"
+    },
+    {
+      "id": "receive-client",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-case-collection"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "derive-client",
+            "occurrence": "receive-client"
+          },
+          "field": "/claims/receive-client/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:02:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/receive-client"
+        }
+      ],
+      "subject": "derive-client"
+    },
+    {
+      "id": "establish-client",
+      "kind": "occurrence",
+      "type": "tls:domain_association_establishment",
+      "attributes": {
+        "exchange_id": "e1",
+        "leg_id": "observer-to-edge",
+        "method": "synthetic-exchange-join",
+        "method_version": "1"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "n-client",
+            "occurrence": "establish-client"
+          },
+          "field": "/claims/establish-client/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:03:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/establish-client"
+        }
+      ],
+      "subject": "n-client",
+      "object": "m-client"
+    },
+    {
+      "id": "receive-name-client",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-case-collection"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "establish-client",
+            "occurrence": "receive-name-client"
+          },
+          "field": "/claims/receive-name-client/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:04:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/receive-name-client"
+        }
+      ],
+      "subject": "establish-client"
+    },
+    {
+      "id": "m-server",
+      "kind": "occurrence",
+      "type": "tls:server_hello",
+      "attributes": {
+        "selector": {
+          "kind": "ja3s",
+          "role": "server",
+          "algorithm": "md5",
+          "normalization": "hex_case_v1",
+          "method_version": "synthetic-ja3-extractor-v1",
+          "representation": "hex",
+          "scope": "server_hello",
+          "value": "0123456789abcdef0123456789abcdef",
+          "provenance": {
+            "source": "synthetic-ja3-report",
+            "record_id": "m-server",
+            "source_revision": "fixture-r1",
+            "field": "/claims/m-server/selector",
+            "basis": "reported"
+          }
+        },
+        "message_role": "server",
+        "observed_state": "response_observed",
+        "occurrence_id": "network-message-server",
+        "exchange_id": "e1",
+        "leg_id": "observer-to-edge",
+        "responder_endpoint": "192.0.2.20:443"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "m-server",
+            "occurrence": "m-server"
+          },
+          "field": "/claims/m-server/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:00:10Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/m-server"
+        }
+      ]
+    },
+    {
+      "id": "n-server",
+      "kind": "assertion",
+      "type": "tls:exchange_domain",
+      "attributes": {
+        "associated_message_id": "m-server",
+        "leg_id": "observer-to-edge",
+        "basis": "same_exchange_sni",
+        "name": "alpha.example.test",
+        "normalization": "dns_ascii_lower_v1",
+        "name_selector": {
+          "kind": "dns_name",
+          "representation": "ascii",
+          "normalization": "dns_ascii_lower_v1",
+          "value": "alpha.example.test",
+          "provenance": {
+            "source": "synthetic-ja3-report",
+            "record_id": "n-server",
+            "source_revision": "fixture-r1",
+            "field": "/claims/n-server/name_selector",
+            "basis": "reported"
+          }
+        }
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/n-server"
+        }
+      ],
+      "subject": "e1",
+      "object": "d-alpha"
+    },
+    {
+      "id": "derive-server",
+      "kind": "occurrence",
+      "type": "tls:fingerprint_derivation",
+      "attributes": {
+        "selector": {
+          "kind": "ja3s",
+          "role": "server",
+          "algorithm": "md5",
+          "normalization": "hex_case_v1",
+          "method_version": "synthetic-ja3-extractor-v1",
+          "representation": "hex",
+          "scope": "server_hello",
+          "value": "0123456789abcdef0123456789abcdef",
+          "provenance": {
+            "source": "synthetic-ja3-report",
+            "record_id": "derive-server",
+            "source_revision": "fixture-r1",
+            "field": "/claims/derive-server/selector",
+            "basis": "reported"
+          }
+        },
+        "message_role": "server",
+        "method": "synthetic-reported-extractor",
+        "method_version": "1",
+        "run_id": "derive-run-server"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "m-server",
+            "occurrence": "derive-server"
+          },
+          "field": "/claims/derive-server/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:01:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/derive-server"
+        }
+      ],
+      "subject": "m-server"
+    },
+    {
+      "id": "receive-server",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-case-collection"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "derive-server",
+            "occurrence": "receive-server"
+          },
+          "field": "/claims/receive-server/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:02:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/receive-server"
+        }
+      ],
+      "subject": "derive-server"
+    },
+    {
+      "id": "establish-server",
+      "kind": "occurrence",
+      "type": "tls:domain_association_establishment",
+      "attributes": {
+        "exchange_id": "e1",
+        "leg_id": "observer-to-edge",
+        "method": "synthetic-exchange-join",
+        "method_version": "1"
+      },
+      "times": {
+        "occurred": {
+          "binding": {
+            "object": "n-server",
+            "occurrence": "establish-server"
+          },
+          "field": "/claims/establish-server/occurred",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:03:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/establish-server"
+        }
+      ],
+      "subject": "n-server",
+      "object": "m-server"
+    },
+    {
+      "id": "receive-name-server",
+      "kind": "occurrence",
+      "type": "evidence:claim_receipt",
+      "attributes": {
+        "collection_id": "synthetic-case-collection"
+      },
+      "times": {
+        "received": {
+          "binding": {
+            "object": "establish-server",
+            "occurrence": "receive-name-server"
+          },
+          "field": "/claims/receive-name-server/received",
+          "source_revision": "fixture-r1",
+          "clock": {
+            "id": "synthetic-utc-clock",
+            "reference": "UTC",
+            "uncertainty_seconds": 0
+          },
+          "timezone": "UTC",
+          "precision": "instant",
+          "interval_role": "occurrence",
+          "value": "2026-10-01T00:04:00Z"
+        }
+      },
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/receive-name-server"
+        }
+      ],
+      "subject": "establish-server"
+    },
+    {
+      "id": "purpose-scan",
+      "kind": "assertion",
+      "type": "tls:exchange_purpose",
+      "attributes": {
+        "leg_id": "observer-to-edge",
+        "purpose": "scanner_generated"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/purpose-scan"
+        }
+      ],
+      "subject": "e1"
+    },
+    {
+      "id": "class-scanner",
+      "kind": "assertion",
+      "type": "tls:fingerprint_classification",
+      "attributes": {
+        "selector": {
+          "kind": "ja3",
+          "role": "client",
+          "algorithm": "md5",
+          "normalization": "hex_case_v1",
+          "method_version": "synthetic-ja3-extractor-v1",
+          "representation": "hex",
+          "scope": "client_hello",
+          "value": "0123456789abcdef0123456789abcdef",
+          "provenance": {
+            "source": "synthetic-ja3-report",
+            "record_id": "class-scanner",
+            "source_revision": "fixture-r1",
+            "field": "/claims/class-scanner/selector",
+            "basis": "reported"
+          }
+        },
+        "class": "scanner_profile",
+        "membership": "member",
+        "policy_basis": "selected_source_revision"
+      },
+      "times": {},
+      "evidence": [
+        {
+          "source_id": "synthetic-ja3-report",
+          "field": "/claims/class-scanner"
+        }
+      ]
+    }
+  ]
+}

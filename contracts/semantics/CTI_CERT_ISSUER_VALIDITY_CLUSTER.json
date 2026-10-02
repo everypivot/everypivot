@@ -1,0 +1,1552 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_CERT_ISSUER_VALIDITY_CLUSTER",
+    "version": "3.0.0"
+  },
+  "description": "Presentation of an actual identified certificate meeting an explicitly preserved issuer_validity profile; profile revision, field criteria and candidate occurrence period remain distinct.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-explicit-reusable-certificate-characteristic-profiles",
+  "parameters": {
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Explicit analyst/case inclusive UTC period; this pattern declares its own event purpose."
+    },
+    "source_ids": {
+      "type": "string_array",
+      "required": true,
+      "description": "Exact admitted source-revision IDs; no external or independent-source completeness claim.",
+      "min_items": 1,
+      "unique_items": true,
+      "item_reference": "source"
+    },
+    "profile": {
+      "type": "record_id",
+      "required": true,
+      "description": "Selected preserved versioned characteristic profile; no silent broadening."
+    },
+    "exclude_certificate_class": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicit supported class filter; profile match does not establish this class."
+    },
+    "exclude_infrastructure_class": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicit supported shared-termination or CDN-address class filter."
+    }
+  },
+  "branches": [
+    {
+      "id": "issuer_validity_ipv4",
+      "bindings": [
+        {
+          "name": "profile",
+          "kind": "entity",
+          "types": [
+            "x509:comparison_profile"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "profile.id"
+                },
+                "right": {
+                  "param": "profile"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "profile"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "certificate_profile_matches",
+                "certificate": {
+                  "ref": "certificate.id"
+                },
+                "profile": {
+                  "ref": "profile.id"
+                },
+                "family": "issuer_validity"
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.attributes.class_id"
+                },
+                "right": {
+                  "literal": "common_managed_certificate_profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate_class"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "infrastructure_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "infrastructure_class.subject"
+                },
+                "right": {
+                  "ref": "ip.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "infrastructure_class.attributes.class_id"
+                },
+                "right": {
+                  "literal": "cdn_edge"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "infrastructure_class.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "infrastructure_class"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "within",
+        "value": {
+          "ref": "presentation.times.occurred"
+        },
+        "period": {
+          "param": "period"
+        },
+        "quantifier": "contained"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "profile.times.collection_available"
+          },
+          "object": {
+            "ref": "profile.id"
+          },
+          "occurrence": {
+            "ref": "profile.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ip.times.collection_available"
+          },
+          "object": {
+            "ref": "ip.id"
+          },
+          "occurrence": {
+            "ref": "ip.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "binding": "ip",
+        "form": "inet:ipv4",
+        "identity": [
+          {
+            "ref": "profile.id"
+          },
+          {
+            "ref": "profile.attributes.content.sha256"
+          },
+          {
+            "ref": "ip.id"
+          },
+          {
+            "ref": "certificate.id"
+          },
+          {
+            "ref": "presentation.id"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "profile_matched_certificate_presentation"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_selector": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "target_selector": {
+            "ref": "ip.attributes.selector"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "profile": {
+            "ref": "profile.id"
+          },
+          "profile_content": {
+            "ref": "profile.attributes.content"
+          },
+          "evaluated_profile_fields": {
+            "ref": "certificate.attributes.profile_fields"
+          },
+          "certificate_class_membership": {
+            "ref": "certificate_class.attributes.membership"
+          },
+          "infrastructure_class_membership": {
+            "ref": "infrastructure_class.attributes.membership"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "certificate_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_certificate_class",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "infrastructure_class",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "ip.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_infrastructure_class",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "infrastructure_class.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "infrastructure_class.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "infrastructure_class.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "profile.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "ip.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        }
+      ]
+    },
+    {
+      "id": "issuer_validity_fqdn",
+      "bindings": [
+        {
+          "name": "profile",
+          "kind": "entity",
+          "types": [
+            "x509:comparison_profile"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "profile.id"
+                },
+                "right": {
+                  "param": "profile"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "profile"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "certificate_profile_matches",
+                "certificate": {
+                  "ref": "certificate.id"
+                },
+                "profile": {
+                  "ref": "profile.id"
+                },
+                "family": "issuer_validity"
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "name_association",
+          "kind": "assertion",
+          "types": [
+            "network:presentation_name"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_association.subject"
+                },
+                "right": {
+                  "ref": "presentation.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_association.attributes.service_record"
+                },
+                "right": {
+                  "ref": "service.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_association.attributes.service_context_id"
+                },
+                "right": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "name_association.attributes.basis"
+                },
+                "right": {
+                  "literal": [
+                    "requested_sni",
+                    "requested_host",
+                    "source_reported_same_presentation"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "name_association"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "domain",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "domain.id"
+                },
+                "right": {
+                  "ref": "name_association.object"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "domain.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "name_association.attributes.name_selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "domain.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "name_association.attributes.name_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "domain"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.attributes.class_id"
+                },
+                "right": {
+                  "literal": "common_managed_certificate_profile"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate_class"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "infrastructure_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "infrastructure_class.subject"
+                },
+                "right": {
+                  "ref": "ip.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "infrastructure_class.attributes.class_id"
+                },
+                "right": {
+                  "literal": "cdn_edge"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "infrastructure_class.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "infrastructure_class"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "within",
+        "value": {
+          "ref": "presentation.times.occurred"
+        },
+        "period": {
+          "param": "period"
+        },
+        "quantifier": "contained"
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "profile.times.collection_available"
+          },
+          "object": {
+            "ref": "profile.id"
+          },
+          "occurrence": {
+            "ref": "profile.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "name_association.times.collection_available"
+          },
+          "object": {
+            "ref": "name_association.id"
+          },
+          "occurrence": {
+            "ref": "name_association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "domain.times.collection_available"
+          },
+          "object": {
+            "ref": "domain.id"
+          },
+          "occurrence": {
+            "ref": "domain.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "binding": "domain",
+        "form": "inet:fqdn",
+        "identity": [
+          {
+            "ref": "profile.id"
+          },
+          {
+            "ref": "profile.attributes.content.sha256"
+          },
+          {
+            "ref": "domain.id"
+          },
+          {
+            "ref": "certificate.id"
+          },
+          {
+            "ref": "presentation.id"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "profile_matched_certificate_presentation"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_selector": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "target_selector": {
+            "ref": "domain.attributes.selector"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "profile": {
+            "ref": "profile.id"
+          },
+          "profile_content": {
+            "ref": "profile.attributes.content"
+          },
+          "evaluated_profile_fields": {
+            "ref": "certificate.attributes.profile_fields"
+          },
+          "certificate_class_membership": {
+            "ref": "certificate_class.attributes.membership"
+          },
+          "infrastructure_class_membership": {
+            "ref": "infrastructure_class.attributes.membership"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "certificate_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_certificate_class",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "infrastructure_class",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "ip.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_infrastructure_class",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "infrastructure_class.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "infrastructure_class.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "infrastructure_class.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        }
+      ],
+      "knowledge": [
+        {
+          "ref": "profile.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "name_association.times.collection_available"
+        },
+        {
+          "ref": "domain.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        }
+      ]
+    }
+  ]
+}

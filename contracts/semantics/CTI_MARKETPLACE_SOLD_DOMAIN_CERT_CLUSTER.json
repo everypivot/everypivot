@@ -1,0 +1,2174 @@
+{
+  "contract": "everypivot.semantic_pattern",
+  "version": "1.0",
+  "pattern": {
+    "id": "CTI_MARKETPLACE_SOLD_DOMAIN_CERT_CLUSTER",
+    "version": "3.0.0"
+  },
+  "description": "Selected genuine historical reported sale, exact domain-to-certificate association and later candidate presentation. Pre-existing certificates are eligible; revisions, status and asserted chronology remain visible.",
+  "authority": "docs/UNRESOLVED_SEMANTICS.md#accepted-historical-marketplace-sale-report-leads-with-visible-revisions-and-status-filters",
+  "parameters": {
+    "period": {
+      "type": "period",
+      "required": true,
+      "description": "Explicit analyst/case inclusive UTC period; this pattern declares its own event purpose."
+    },
+    "source_ids": {
+      "type": "string_array",
+      "required": true,
+      "description": "Exact admitted source-revision IDs; no external or independent-source completeness claim.",
+      "min_items": 1,
+      "unique_items": true,
+      "item_reference": "source"
+    },
+    "sale": {
+      "type": "record_id",
+      "required": true,
+      "description": "Exact selected immutable historical sale-report assertion; an offer is not a sale."
+    },
+    "exclude_withdrawn_reports": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicit historical-report status filter; retention does not assert the sale occurred."
+    },
+    "exclude_certificate_class": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicit supported intermediate certificate class filter."
+    },
+    "exclude_cdn_address": {
+      "type": "boolean",
+      "required": false,
+      "description": "Explicit supported endpoint address-class filter."
+    }
+  },
+  "branches": [
+    {
+      "id": "reported_sale_ipv4",
+      "bindings": [
+        {
+          "name": "sale",
+          "kind": "assertion",
+          "types": [
+            "marketplace:sale_report"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sale.id"
+                },
+                "right": {
+                  "param": "sale"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sale.attributes.assertion_kind"
+                },
+                "right": {
+                  "literal": "reported_sale"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "sale.attributes.assertion_namespace"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "sale.attributes.report_status"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sale"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sold_domain",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sold_domain.id"
+                },
+                "right": {
+                  "ref": "sale.subject"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sold_domain.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sale.attributes.domain_selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sold_domain.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "sale.attributes.domain_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sold_domain"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sale_name",
+          "kind": "assertion",
+          "types": [
+            "x509:certificate_name"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sale_name.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sale_name.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sale_name.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "sale_name.attributes.field_kind"
+                },
+                "right": {
+                  "literal": [
+                    "subject_common_name",
+                    "san_dns"
+                  ]
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "sale_name.attributes.association_basis"
+                },
+                "right": {
+                  "literal": [
+                    "reported_certificate_field",
+                    "locally_extracted_certificate_field",
+                    "ct_reported_certificate_field"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sale_name"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sale_name.attributes.name_selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sold_domain.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sale_name.attributes.name_selector"
+                    },
+                    "right": {
+                      "ref": "sold_domain.attributes.selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sale_name.object"
+                },
+                "right": {
+                  "ref": "sold_domain.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.attributes.class_id"
+                },
+                "right": {
+                  "literal": "mass_managed_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate_class"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "cdn_address",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "cdn_address.subject"
+                },
+                "right": {
+                  "ref": "ip.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "cdn_address.attributes.class_id"
+                },
+                "right": {
+                  "literal": "cdn_edge"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "cdn_address.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "cdn_address"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "within",
+            "value": {
+              "ref": "presentation.times.occurred"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "sale.times.reported_event"
+            },
+            "right": {
+              "ref": "presentation.times.occurred"
+            }
+          }
+        ]
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "sale.times.reported_event"
+          },
+          "object": {
+            "ref": "sale.id"
+          },
+          "occurrence": {
+            "ref": "sale.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "sale.times.collection_available"
+          },
+          "object": {
+            "ref": "sale.id"
+          },
+          "occurrence": {
+            "ref": "sale.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sold_domain.times.collection_available"
+          },
+          "object": {
+            "ref": "sold_domain.id"
+          },
+          "occurrence": {
+            "ref": "sold_domain.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sale_name.times.collection_available"
+          },
+          "object": {
+            "ref": "sale_name.id"
+          },
+          "occurrence": {
+            "ref": "sale_name.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "ip.times.collection_available"
+          },
+          "object": {
+            "ref": "ip.id"
+          },
+          "occurrence": {
+            "ref": "ip.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "binding": "ip",
+        "form": "inet:ipv4",
+        "identity": [
+          {
+            "ref": "sale.id"
+          },
+          {
+            "ref": "ip.id"
+          },
+          {
+            "ref": "certificate.id"
+          },
+          {
+            "ref": "presentation.id"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "historical_reported_sale_certificate_linked_presentation_lead"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_selector": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "target_selector": {
+            "ref": "ip.attributes.selector"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "sale_report": {
+            "ref": "sale.id"
+          },
+          "reported_event": {
+            "ref": "sale.times.reported_event"
+          },
+          "report_status": {
+            "ref": "sale.attributes.report_status"
+          },
+          "sold_domain": {
+            "ref": "sold_domain.id"
+          },
+          "association_basis": {
+            "ref": "sale_name.attributes.association_basis"
+          },
+          "sale_claim": {
+            "literal": "source reported assertion, not confirmed sale, transfer, buyer use or domain deployment"
+          },
+          "certificate_class_membership": {
+            "ref": "certificate_class.attributes.membership"
+          },
+          "cdn_address_membership": {
+            "ref": "cdn_address.attributes.membership"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "certificate_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_certificate_class",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "cdn_address",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "ip.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_cdn_address",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "cdn_address.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "cdn_address.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "cdn_address.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "reported_status",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "sale.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_withdrawn_reports",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "sale.attributes.report_status"
+            },
+            "right": {
+              "literal": "withdrawn"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "sale.attributes.report_status"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit literal report-status exclusion; transaction cancellation and report withdrawal are distinct."
+        }
+      ],
+      "amendments": {
+        "support": [
+          "sale",
+          "sale_name",
+          "presentation"
+        ],
+        "sources": {
+          "param": "source_ids"
+        },
+        "mode": "retain_reports",
+        "exclusion_parameter": "exclude_withdrawn_reports",
+        "exclusion_support": [
+          "sale"
+        ],
+        "excluded_states": [
+          "withdrawn"
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "sale.times.collection_available"
+        },
+        {
+          "ref": "sold_domain.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "sale_name.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "ip.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        }
+      ]
+    },
+    {
+      "id": "reported_sale_fqdn",
+      "bindings": [
+        {
+          "name": "sale",
+          "kind": "assertion",
+          "types": [
+            "marketplace:sale_report"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sale.id"
+                },
+                "right": {
+                  "param": "sale"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sale.attributes.assertion_kind"
+                },
+                "right": {
+                  "literal": "reported_sale"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "sale.attributes.assertion_namespace"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "sale.attributes.report_status"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sale"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sold_domain",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sold_domain.id"
+                },
+                "right": {
+                  "ref": "sale.subject"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sold_domain.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sale.attributes.domain_selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sold_domain.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "sale.attributes.domain_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sold_domain"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate",
+          "kind": "entity",
+          "types": [
+            "x509:cert"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate.attributes.artifact_role"
+                },
+                "right": {
+                  "literal": "certificate"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "sale_name",
+          "kind": "assertion",
+          "types": [
+            "x509:certificate_name"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sale_name.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sale_name.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sale_name.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "sale_name.attributes.field_kind"
+                },
+                "right": {
+                  "literal": [
+                    "subject_common_name",
+                    "san_dns"
+                  ]
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "sale_name.attributes.association_basis"
+                },
+                "right": {
+                  "literal": [
+                    "reported_certificate_field",
+                    "locally_extracted_certificate_field",
+                    "ct_reported_certificate_field"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "sale_name"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sale_name.attributes.name_selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "sold_domain.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "sale_name.attributes.name_selector"
+                    },
+                    "right": {
+                      "ref": "sold_domain.attributes.selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "sale_name.object"
+                },
+                "right": {
+                  "ref": "sold_domain.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "presentation",
+          "kind": "occurrence",
+          "types": [
+            "network:certificate_presentation"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "certificate.attributes.certificate_selector.kind"
+                    },
+                    "right": {
+                      "literal": "certificate_sha256"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "presentation.attributes.certificate_selector"
+                    },
+                    "right": {
+                      "ref": "certificate.attributes.certificate_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "presentation.attributes.observed_state"
+                },
+                "right": {
+                  "literal": "certificate_presented"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.occurrence_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "presentation.attributes.vantage"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "presentation.attributes.certificate_role"
+                },
+                "right": {
+                  "literal": [
+                    "leaf",
+                    "intermediate",
+                    "chain_member"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "presentation"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "service",
+          "kind": "entity",
+          "types": [
+            "inet:service"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.id"
+                },
+                "right": {
+                  "ref": "presentation.object"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "service.attributes.context_id"
+                },
+                "right": {
+                  "ref": "presentation.attributes.service_context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "nonblank_text",
+                "value": {
+                  "ref": "service.attributes.protocol"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "service"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip",
+          "kind": "entity",
+          "types": [
+            "inet:ipv4"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "ip.id"
+                },
+                "right": {
+                  "ref": "service.attributes.address_record"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "ip.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "presentation.attributes.address_selector.kind"
+                    },
+                    "right": {
+                      "literal": "ipv4"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "ip.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "presentation.attributes.address_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "ip"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "name_association",
+          "kind": "assertion",
+          "types": [
+            "network:presentation_name"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_association.subject"
+                },
+                "right": {
+                  "ref": "presentation.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_association.attributes.service_record"
+                },
+                "right": {
+                  "ref": "service.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "name_association.attributes.service_context_id"
+                },
+                "right": {
+                  "ref": "service.attributes.context_id"
+                }
+              },
+              {
+                "op": "in",
+                "left": {
+                  "ref": "name_association.attributes.basis"
+                },
+                "right": {
+                  "literal": [
+                    "requested_sni",
+                    "requested_host",
+                    "source_reported_same_presentation"
+                  ]
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "name_association"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "domain",
+          "kind": "entity",
+          "types": [
+            "inet:fqdn"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "domain.id"
+                },
+                "right": {
+                  "ref": "name_association.object"
+                }
+              },
+              {
+                "op": "all",
+                "args": [
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "domain.attributes.selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "left": {
+                      "ref": "name_association.attributes.name_selector.kind"
+                    },
+                    "right": {
+                      "literal": "dns_name"
+                    }
+                  },
+                  {
+                    "op": "typed_equal",
+                    "left": {
+                      "ref": "domain.attributes.selector"
+                    },
+                    "right": {
+                      "ref": "name_association.attributes.name_selector"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "domain"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "certificate_class",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.subject"
+                },
+                "right": {
+                  "ref": "certificate.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.attributes.class_id"
+                },
+                "right": {
+                  "literal": "mass_managed_certificate"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "certificate_class.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "certificate_class"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "cdn_address",
+          "kind": "assertion",
+          "types": [
+            "evidence:classification"
+          ],
+          "where": {
+            "op": "all",
+            "args": [
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "cdn_address.subject"
+                },
+                "right": {
+                  "ref": "ip.id"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "cdn_address.attributes.class_id"
+                },
+                "right": {
+                  "literal": "cdn_edge"
+                }
+              },
+              {
+                "op": "eq",
+                "left": {
+                  "ref": "cdn_address.attributes.policy_basis"
+                },
+                "right": {
+                  "literal": "selected_source_revision"
+                }
+              },
+              {
+                "op": "all_in",
+                "left": {
+                  "evidence_sources": "cdn_address"
+                },
+                "right": {
+                  "param": "source_ids"
+                }
+              }
+            ]
+          },
+          "optional": true
+        }
+      ],
+      "where": {
+        "op": "all",
+        "args": [
+          {
+            "op": "within",
+            "value": {
+              "ref": "presentation.times.occurred"
+            },
+            "period": {
+              "param": "period"
+            },
+            "quantifier": "contained"
+          },
+          {
+            "op": "time_compare",
+            "operator": "lte",
+            "left": {
+              "ref": "sale.times.reported_event"
+            },
+            "right": {
+              "ref": "presentation.times.occurred"
+            }
+          }
+        ]
+      },
+      "time_bindings": [
+        {
+          "value": {
+            "ref": "presentation.times.occurred"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "sale.times.reported_event"
+          },
+          "object": {
+            "ref": "sale.id"
+          },
+          "occurrence": {
+            "ref": "sale.id"
+          }
+        },
+        {
+          "value": {
+            "ref": "sale.times.collection_available"
+          },
+          "object": {
+            "ref": "sale.id"
+          },
+          "occurrence": {
+            "ref": "sale.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sold_domain.times.collection_available"
+          },
+          "object": {
+            "ref": "sold_domain.id"
+          },
+          "occurrence": {
+            "ref": "sold_domain.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "certificate.times.collection_available"
+          },
+          "object": {
+            "ref": "certificate.id"
+          },
+          "occurrence": {
+            "ref": "certificate.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "sale_name.times.collection_available"
+          },
+          "object": {
+            "ref": "sale_name.id"
+          },
+          "occurrence": {
+            "ref": "sale_name.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "presentation.times.collection_available"
+          },
+          "object": {
+            "ref": "presentation.id"
+          },
+          "occurrence": {
+            "ref": "presentation.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "service.times.collection_available"
+          },
+          "object": {
+            "ref": "service.id"
+          },
+          "occurrence": {
+            "ref": "service.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "name_association.times.collection_available"
+          },
+          "object": {
+            "ref": "name_association.id"
+          },
+          "occurrence": {
+            "ref": "name_association.attributes.availability_occurrence"
+          }
+        },
+        {
+          "value": {
+            "ref": "domain.times.collection_available"
+          },
+          "object": {
+            "ref": "domain.id"
+          },
+          "occurrence": {
+            "ref": "domain.attributes.availability_occurrence"
+          }
+        }
+      ],
+      "result": {
+        "mode": "bound",
+        "binding": "domain",
+        "form": "inet:fqdn",
+        "identity": [
+          {
+            "ref": "sale.id"
+          },
+          {
+            "ref": "domain.id"
+          },
+          {
+            "ref": "certificate.id"
+          },
+          {
+            "ref": "presentation.id"
+          }
+        ],
+        "fields": {
+          "claim": {
+            "literal": "historical_reported_sale_certificate_linked_presentation_lead"
+          },
+          "certificate": {
+            "ref": "certificate.id"
+          },
+          "certificate_selector": {
+            "ref": "certificate.attributes.certificate_selector"
+          },
+          "presentation": {
+            "ref": "presentation.id"
+          },
+          "presentation_time": {
+            "ref": "presentation.times.occurred"
+          },
+          "certificate_role": {
+            "ref": "presentation.attributes.certificate_role"
+          },
+          "service": {
+            "ref": "service.id"
+          },
+          "service_context": {
+            "ref": "service.attributes.context_id"
+          },
+          "protocol": {
+            "ref": "service.attributes.protocol"
+          },
+          "reported_port": {
+            "ref": "service.attributes.port"
+          },
+          "vantage": {
+            "ref": "presentation.attributes.vantage"
+          },
+          "reported_requested_name": {
+            "ref": "presentation.attributes.requested_name"
+          },
+          "reported_termination_role": {
+            "ref": "presentation.attributes.termination_role"
+          },
+          "reported_intermediaries": {
+            "ref": "presentation.attributes.intermediaries"
+          },
+          "target_selector": {
+            "ref": "domain.attributes.selector"
+          },
+          "evidence_mode": {
+            "literal": "evidence_only"
+          },
+          "sale_report": {
+            "ref": "sale.id"
+          },
+          "reported_event": {
+            "ref": "sale.times.reported_event"
+          },
+          "report_status": {
+            "ref": "sale.attributes.report_status"
+          },
+          "sold_domain": {
+            "ref": "sold_domain.id"
+          },
+          "association_basis": {
+            "ref": "sale_name.attributes.association_basis"
+          },
+          "sale_claim": {
+            "literal": "source reported assertion, not confirmed sale, transfer, buyer use or domain deployment"
+          },
+          "certificate_class_membership": {
+            "ref": "certificate_class.attributes.membership"
+          },
+          "cdn_address_membership": {
+            "ref": "cdn_address.attributes.membership"
+          }
+        }
+      },
+      "policies": [
+        {
+          "id": "certificate_class",
+          "revision": "1",
+          "scope": "path",
+          "subject": {
+            "ref": "certificate.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_certificate_class",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "certificate_class.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "cdn_address",
+          "revision": "1",
+          "scope": "occurrence",
+          "subject": {
+            "ref": "ip.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_cdn_address",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "cdn_address.attributes.membership"
+            },
+            "right": {
+              "literal": "member"
+            }
+          },
+          "allow_when": {
+            "op": "eq",
+            "left": {
+              "ref": "cdn_address.attributes.membership"
+            },
+            "right": {
+              "literal": "not_member"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "cdn_address.attributes.membership"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit selected-source-revision class filter; membership has no implicit historical, key, service-role or ownership transfer."
+        },
+        {
+          "id": "reported_status",
+          "revision": "1",
+          "scope": "source",
+          "subject": {
+            "ref": "sale.id"
+          },
+          "default_enabled": false,
+          "enabled_parameter": "exclude_withdrawn_reports",
+          "when": {
+            "op": "eq",
+            "left": {
+              "ref": "sale.attributes.report_status"
+            },
+            "right": {
+              "literal": "withdrawn"
+            }
+          },
+          "conflict_when": {
+            "op": "eq",
+            "left": {
+              "ref": "sale.attributes.report_status"
+            },
+            "right": {
+              "literal": "contested"
+            }
+          },
+          "reason": "Explicit literal report-status exclusion; transaction cancellation and report withdrawal are distinct."
+        }
+      ],
+      "amendments": {
+        "support": [
+          "sale",
+          "sale_name",
+          "presentation",
+          "name_association"
+        ],
+        "sources": {
+          "param": "source_ids"
+        },
+        "mode": "retain_reports",
+        "exclusion_parameter": "exclude_withdrawn_reports",
+        "exclusion_support": [
+          "sale"
+        ],
+        "excluded_states": [
+          "withdrawn"
+        ]
+      },
+      "knowledge": [
+        {
+          "ref": "sale.times.collection_available"
+        },
+        {
+          "ref": "sold_domain.times.collection_available"
+        },
+        {
+          "ref": "certificate.times.collection_available"
+        },
+        {
+          "ref": "sale_name.times.collection_available"
+        },
+        {
+          "ref": "presentation.times.collection_available"
+        },
+        {
+          "ref": "service.times.collection_available"
+        },
+        {
+          "ref": "name_association.times.collection_available"
+        },
+        {
+          "ref": "domain.times.collection_available"
+        }
+      ],
+      "knowledge_checks": [
+        {
+          "op": "time_compare",
+          "operator": "lte",
+          "left": {
+            "ref": "presentation.times.occurred"
+          },
+          "right": {
+            "ref": "presentation.times.collection_available"
+          }
+        }
+      ]
+    }
+  ]
+}

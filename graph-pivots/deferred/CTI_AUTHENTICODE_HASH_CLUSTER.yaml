@@ -1,70 +1,56 @@
 id: CTI_AUTHENTICODE_HASH_CLUSTER
-version: 2.0.0
-pattern_schema_version: 1.5
+version: 3.0.0
+pattern_schema_version: 1.6
+execution:
+  contract: everypivot.semantic_pattern
+  version: '1.0'
+  path: contracts/semantics/CTI_AUTHENTICODE_HASH_CLUSTER.json
+  sha256: f0ef1392f2af63d561fe89752a19c6a44ef742b130fcae50e021dd597c97c1cb
 validation_state: deferred
 deferred_reason: needs_fixtures
 precision_tier: exploratory
 robustness_class: multi_hop_inference
 hazards:
-- 'Authenticode, signer, issuer, and certificate-derived hashes can mix certificate identity, signature metadata, timestamping, and file lineage if adapters normalize them inconsistently.'
-- 'Common or shared enterprise signing services, timestamp authorities, test certificates, and mass-signing infrastructure can create high-degree clusters that require corroborating file lineage.'
-- 'Promotion needs fixtures that distinguish signature hash, signer certificate, issuer, serial, and file hash semantics before this can graduate.'
+- 'Equal image-content digests do not establish identical complete files, signatures, signers or behaviour. Image findings need no manufactured certificate or successful signature check.'
+- 'Primary, timestamp, chain and other material roles remain distinct. Timestamp material equality does not establish a verified timestamp or primary signer identity.'
+- 'A selected artifact-derived reference needs its own exact relationship evidence and knowledge scope. Candidate matches cannot repair a missing reference join.'
+- 'Synthetic portable fixtures do not establish native adapter acceptance, source authenticity or lane promotion.'
+- 'Certificate presence, reported signer association and a scoped source-reported check are distinct claims; this evaluator does not perform cryptographic signature verification.'
+- 'Whole-artifact, scheme-covered content, whole-certificate, SPKI and issuer/serial identities are distinct. Reuse establishes neither publisher trust, control, common ownership nor accepted assessment.'
+- 'Only an actual complete-finding establishment in the supplied collection history is dated. Reprocessing, receipt, validity dates and new sightings do not renew an older finding.'
+- 'Credential class is retained as context by default. Explicit selected class policies preserve unknown and conflicting evidence; a public certificate does not establish public access to its private key.'
+- 'Correction and withdrawal context is retained without replacing or refreshing the historical finding; absence of a supplied amendment does not establish maintained current support.'
 capability_requirements:
   required:
-  - 'authenticode_metadata_extraction'
-  - 'file_hash_normalization'
+  - 'semantic_evidence_v1'
+  - 'typed_artifact_and_material_identity'
+  - 'source_qualified_signing_or_digest_evidence'
+  - 'collection_finding_history'
+  - 'scoped_amendment_context'
   optional:
-  - 'signer_certificate_chain_resolution'
-  - 'timestamp_authority_classification'
-name: Authenticode Hash Cluster
+  - 'authenticode_metadata_extraction'
+  - 'scoped_signature_verification_reports'
+  - 'credential_classification_with_revision'
+  - 'collection_knowledge_witnesses'
+name: Typed Authenticode, Signature Material or Certificate → File Findings
 category: CTI
-description: Cluster signed files by normalized Authenticode or signature-derived hash material while preserving certificate and file-hash context.
-source: code:authenticode:hash
-target: file:hash|x509:cert
+description: 'Return exact file findings for an explicitly selected image-content digest, scoped signature-material digest, or certificate/key/issuer-serial relationship purpose. Candidate complete-finding availability uses a case-selected period; a separately evidenced historical artifact reference does not refresh candidate novelty. Certificate witnesses stay attached to their file findings rather than becoming an assumed terminal result.'
+source: code:authenticode:hash|code:signature:material|x509:cert
+target: file:hash
 assessment_mode: evidence_only
 hops:
-- via: signs_or_describes
+- via: has_typed_comparison_finding
   direction: out
   form: file:hash
-- via: derived_from_certificate
-  direction: out
-  form: x509:cert
 constraints:
-  temporal:
-    order:
-    - signature.firstseen <= file.firstseen
-    window_days: 3650
-  degree_caps:
-    code:authenticode:hash: 100000
-    x509:cert: 100000
-  negative_nodes:
-  - form: code:authenticode:hash
-    list: timestamp_authority_or_mass_signing_hashes
-  - form: x509:cert
-    list: enterprise_mass_signing_services
-  - form: x509:cert
-    list: test_or_default_signing_certificates
   provenance:
     min_unique_sources: 1
-features:
-- path_length
-- rarity_idf
-- path_count_capped
-- vendor_diversity
-- multi_source_ratio
-- temporal_consistency
-- days_since_support
-- signature_role
-- certificate_context
-- novelty_flag
+features: []
 outputs:
-  top_paths: 10
   yield:
   - source
   - target
-  - features
   - evidence_paths
-  - storm_query
 datasets:
 - malware_corpus
 - sandbox

@@ -1,0 +1,29 @@
+{
+  "parameters": {
+    "selector": {
+      "kind": "ja3s",
+      "role": "server",
+      "algorithm": "md5",
+      "normalization": "hex_case_v1",
+      "method_version": "synthetic-ja3-extractor-v1",
+      "representation": "hex",
+      "scope": "server_hello",
+      "value": "0123456789abcdef0123456789abcdef",
+      "provenance": {
+        "source": "synthetic-ja3-report",
+        "record_id": "analyst-selected-reference",
+        "source_revision": "fixture-r1",
+        "field": "/claims/analyst-selected-reference/selector",
+        "basis": "reported"
+      }
+    },
+    "period": {
+      "start": "2026-10-01",
+      "end": "2026-10-01"
+    }
+  },
+  "limits": {
+    "max_bindings": 10000,
+    "max_results": 100
+  }
+}

@@ -23,10 +23,12 @@ You are here when work is in progress on a feature branch or in the working tree
 
 ### Required
 - [ ] The change has a stated purpose that fits within the project's stated scope (see `REPO_SCOPE.md`).
-- [ ] Validators pass locally: `ruby tools/validate_pivots.rb --strict-metadata --strict-bridge`, `ruby tools/check_sail_bridge.rb --strict-incomplete`, `ruby tools/check_fixture_suite.rb`, `ruby tools/check_cti_promotion_lint.rb`, `ruby tools/check_query_profile_suite.rb`, `ruby tools/check_relation_catalog.rb`.
+- [ ] Validators pass locally: `ruby tools/validate_pivots.rb --strict-metadata --strict-bridge`, `ruby tools/check_sail_bridge.rb --strict-incomplete --current-distribution`, `ruby tools/check_fixture_suite.rb`, `ruby tools/check_cti_promotion_lint.rb`, `ruby tools/check_query_profile_suite.rb`, `ruby tools/check_relation_catalog.rb`.
 - [ ] If patterns are added or promoted: hazards, blocked assertions, fixtures, and the CTI promotion-boundary rules (`docs/CTI_PROMOTION_BOUNDARIES.md`) are satisfied.
 - [ ] If schema, validator, or relation catalog changed: dependent docs and exemplars updated.
-- [ ] Assessment-boundary regression checks pass: `ruby tools/test_sail_bridge.rb`, `ruby tools/test_registry_assessment.rb`, and `node tools/test_site_assessment.js`. These verify formal compatibility and transport/rendering behavior, not analytical truth or acceptance.
+- [ ] Assessment-boundary regression checks pass: `ruby tools/test_sail_bridge.rb`, `ruby tools/test_registry_assessment.rb`, `ruby tools/test_distribution_eligibility.rb`, `ruby tools/test_utf8_text.rb`, `ruby tools/test_build_release_pack.rb`, and `node tools/test_site_assessment.js`. These verify formal compatibility and transport/rendering behavior, not analytical truth or acceptance.
+
+- [ ] Executable-contract checks pass: `ruby tools/check_semantic_suite.rb --json` and `ruby tools/check_semantic_fixture_hashes.rb`. Synthetic results do not establish native adapter or analyst acceptance.
 
 ### Not required at this stage
 - The branch does not need to be pushed.
@@ -49,7 +51,7 @@ You are here once `release/vX.Y.Z` exists with the bumped version and all releas
 - [ ] `tools/check_site_links.rb` and `tools/check_site_snapshot.rb` pass.
 - [ ] `tools/check_reachable_history.rb` passes — no secret-shaped literal exists at any commit reachable from the release-prep branch tip. **This is the gate that catches secret-shaped strings introduced earlier in the branch's history**, not just in the current tree.
 - [ ] `reuse lint` passes (or the local equivalent — `tools/check_reuse_coverage.rb` if running offline) — every tracked file is covered by a `.reuse/dep5` stanza, and every stanza names files that exist.
-- [ ] Build a fresh stable pack with the reviewed version and date: `ruby tools/build_release_pack.rb --release vX.Y.Z --published-at YYYY-MM-DD --artifact-mode stable --authority-status canonical --output-dir /tmp/check-pack --force`. Unpack the exact delivery archive into a separate directory, then run its metadata, freshness, strict bridge, registry regression and compact browser tests. Preview packs intentionally omit the website and are not a substitute for this stable-pack check.
+- [ ] Build a fresh stable pack with the reviewed version and date: `ruby tools/build_release_pack.rb --release vX.Y.Z --published-at YYYY-MM-DD --artifact-mode stable --authority-status canonical --output-dir /tmp/check-pack --force`. Unpack the exact delivery archive into a separate directory, then run its metadata, freshness, strict bridge with `--current-distribution`, registry/distribution regressions, UTF-8 regressions and compact browser tests. Check the copied text readers under both `LANG=C LC_ALL=C` and an available UTF-8 locale. Preview packs intentionally omit the website and are not a substitute for this stable-pack check.
 - [ ] The release commit's message describes the diff if the diff is substantive — new doctrine, new tooling, schema changes, lifecycle promotions. See *Commit-message expectations* below.
 
 ### Not required at this stage
@@ -112,7 +114,7 @@ You are here once the Pages workflow for the merge to `main` has finished.
 
 ### Post-deploy
 
-- [ ] Confirm the release is reproducible from public files alone: download the release pack, unpack it, and run `ruby tools/validate_pivots.rb --strict-metadata --strict-bridge`, `ruby tools/check_sail_bridge.rb --strict-incomplete`, `ruby tools/check_fixture_suite.rb`, and `ruby tools/check_cti_promotion_lint.rb` from inside the unpacked pack.
+- [ ] Confirm the release is reproducible from public files alone: download the release pack, unpack it, and run `ruby tools/validate_pivots.rb --strict-metadata --strict-bridge`, `ruby tools/check_sail_bridge.rb --strict-incomplete --current-distribution`, `ruby tools/check_fixture_suite.rb`, and `ruby tools/check_cti_promotion_lint.rb` from inside the unpacked pack.
 - [ ] Monitor public issues and PRs for any credible challenge raised against the new release.
 
 ---
